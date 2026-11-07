@@ -5,7 +5,7 @@ import random
 from typing import Literal, get_args
 
 import numpy as np
-import pymupdf
+import pypdfium2
 from PIL import Image, ImageFilter
 from pydantic import BaseModel
 
@@ -25,6 +25,7 @@ STRENGTH_RANGES: dict[TransformName, tuple[float, float]] = {
 
 MIN_TRANSFORMS = 2
 RENDER_DPI = 150
+PDF_POINTS_PER_INCH = 72
 DEFAULT_JPEG_QUALITY = 90
 BACKGROUND_COLOUR = (196, 190, 178)  # a desk, showing around the skewed page
 MAX_PIXEL_VALUE = 255
@@ -65,9 +66,9 @@ def _pick_strength(name: TransformName, rng: random.Random) -> float:
 
 
 def _rasterise_first_page(pdf: bytes) -> Image.Image:
-    with pymupdf.open(stream=pdf, filetype="pdf") as document:
-        pixmap = document[0].get_pixmap(dpi=RENDER_DPI, alpha=False)
-    return Image.frombytes("RGB", (pixmap.width, pixmap.height), pixmap.samples)
+    with pypdfium2.PdfDocument(pdf) as document:
+        # convert() copies the pixels: the rendered bitmap is freed with the document.
+        return document[0].render(scale=RENDER_DPI / PDF_POINTS_PER_INCH).to_pil().convert("RGB")
 
 
 def _apply(image: Image.Image, transform: Transform, rng: random.Random) -> Image.Image:

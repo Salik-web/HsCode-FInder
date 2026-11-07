@@ -52,7 +52,7 @@ The rule here: reuse what you already know from Verdict, the Research Agent and 
 | Structured LLM output | Native JSON-schema mode, or the `instructor` library | Validation with automatic retries |
 | LLM access | OpenAI-compatible client behind your own `LLMClient` interface | Swap providers via config |
 | Vision models | Free tiers (e.g. Gemini Flash via Google AI Studio, open vision models via OpenRouter or Groq). Check current free limits | Zero budget; the bake-off compares them |
-| PDF / image handling | PyMuPDF, Pillow | Renders pages, reads the text layer when one exists |
+| PDF / image handling | pypdfium2, Pillow | Renders pages, reads the text layer when one exists |
 | Orchestration | Plain Python functions first; LangGraph in Phase 6 | LangGraph's interrupts fit the human-review step |
 | Database | PostgreSQL + pgvector (SQLAlchemy 2 + Alembic) | One DB for app data and tariff vectors |
 | Embeddings | `bge-small` / `e5-small` via sentence-transformers, run locally | Free and fast enough for ~10k tariff lines |
@@ -77,7 +77,7 @@ A modular monolith: one FastAPI app, one worker, one Postgres. Each pipeline sta
                    save file -> create job -> return job_id
                               |
                         [Worker]
-   1. preprocess   : PyMuPDF -> page images (+ text layer if present)
+   1. preprocess   : pypdfium2 -> page images (+ text layer if present)
    2. classify     : invoice | packing_list | bill_of_lading
    3. extract      : vision LLM -> JSON -> Pydantic (retry once with errors)
    4. validate     : deterministic business rules -> field status
@@ -159,7 +159,7 @@ Tip: let the LLM fill a simpler "raw" schema (plain values), then compute confid
 **5.1 Ingest and preprocess**
 
 - Accept PDF, JPG and PNG; reject anything else; cap at 10 MB and 5 pages.
-- Render each page to an image at ~150 DPI with PyMuPDF. If the PDF has a text layer, send that text too (it improves accuracy and is cheap).
+- Render each page to an image at ~150 DPI with pypdfium2. If the PDF has a text layer, send that text too (it improves accuracy and is cheap).
 - For photos: auto-rotate (EXIF), deskew, and downscale to the model's maximum resolution.
 
 **5.2 Classify**
