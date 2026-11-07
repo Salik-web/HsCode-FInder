@@ -1,11 +1,12 @@
 """Render invoices to PDF: Jinja2 HTML, printed by headless Chromium."""
 
+import re
 from collections.abc import Iterator
 from contextlib import contextmanager
 from decimal import Decimal
 from pathlib import Path
 
-import pymupdf
+import pypdfium2
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from playwright.sync_api import Error as PlaywrightError
 from playwright.sync_api import Page, sync_playwright
@@ -17,6 +18,13 @@ TEMPLATE_DIR = Path(__file__).with_name("templates")
 # Layout name -> date format. No day/month-ambiguous formats: ground truth must be recoverable.
 DATE_FORMATS = {"classic": "%d %B %Y", "modern": "%Y-%m-%d", "compact": "%d-%b-%Y"}
 TEMPLATES = tuple(DATE_FORMATS)
+
+# Chromium writes /CreationDate and /ModDate as D:YYYYMMDDHHMMSS plus a UTC offset.
+PDF_TIMESTAMP = re.compile(rb"D:\d{14}")
+FIXED_PDF_TIMESTAMP = b"D:20000101000000"
+
+# PDFium extracts a hyphen at a line wrap as this control character and joins the two lines.
+PDFIUM_WRAPPED_HYPHEN = "\x02"
 
 
 class RendererUnavailableError(RuntimeError):
@@ -76,22 +84,27 @@ def open_browser_page() -> Iterator[Page]:
             browser.close()
 
 
-def render_pdf(page: Page, html: str) -> bytes:
+def print_pdf(page: Page, html: str) -> bytes:
     page.set_content(html)
-    return normalise_pdf(page.pdf(prefer_css_page_size=True, print_background=True))
+    return page.pdf(prefer_css_page_size=True, print_background=True)
+
+
+def render_pdf(page: Page, html: str) -> bytes:
+    return normalise_pdf(print_pdf(page, html))
 
 
 def normalise_pdf(pdf: bytes) -> bytes:
-    """Strip timestamps and file IDs, so identical input gives an identical SHA-256."""
-    with pymupdf.open(stream=pdf, filetype="pdf") as document:
-        document.set_metadata({})
-        document.del_xml_metadata()
-        return document.tobytes(garbage=4, deflate=True, no_new_id=True)
+    """Fix Chromium's print timestamps, so identical input gives an identical SHA-256.
+
+    The replacement has the same length, because a PDF's cross-reference table stores byte
+    offsets that any change in length would invalidate.
+    """
+    return PDF_TIMESTAMP.sub(FIXED_PDF_TIMESTAMP, pdf)
 
 
 def count_pages(pdf: bytes) -> int:
-    with pymupdf.open(stream=pdf, filetype="pdf") as document:
-        return document.page_count
+    with pypdfium2.PdfDocument(pdf) as document:
+        return len(document)
 
 
 def find_missing_text(pdf: bytes, invoice: RawInvoice, template: str) -> list[str]:
@@ -100,14 +113,16 @@ def find_missing_text(pdf: bytes, invoice: RawInvoice, template: str) -> list[st
     A template bug here would silently corrupt every eval number, so generation checks
     each document. Comparison ignores case, commas and line wrapping, which vary by layout.
     """
-    with pymupdf.open(stream=pdf, filetype="pdf") as document:
-        printed = _normalise_text(" ".join(page.get_text() for page in document))
+    with pypdfium2.PdfDocument(pdf) as document:
+        pages = [page.get_textpage().get_text_bounded() for page in document]
+    printed = _normalise_text(" ".join(pages))
     expected = _expected_text(invoice, template)
     return [value for value in expected if _normalise_text(value) not in printed]
 
 
 def _normalise_text(text: str) -> str:
-    return " ".join(text.replace(",", "").casefold().split())
+    restored = text.replace(PDFIUM_WRAPPED_HYPHEN, "-")
+    return " ".join(restored.replace(",", "").casefold().split())
 
 
 def _expected_text(invoice: RawInvoice, template: str) -> list[str]:

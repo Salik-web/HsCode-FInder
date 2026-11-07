@@ -2,22 +2,28 @@
 
 import hashlib
 import random
+import time
 from pathlib import Path
 
-import pymupdf
+import pypdfium2
 import pytest
 from PIL import Image
 
+from app.schemas.raw import RawInvoice
 from synth import generate
 from synth.augment import STRENGTH_RANGES, TRANSFORM_ORDER, augment_pdf
 from synth.generate import MANIFEST_NAME, build_dataset
 from synth.generator import GroundTruth, generate_ground_truth, load_catalogue
 from synth.manifest import Manifest, ManifestEntry
 from synth.render import (
+    FIXED_PDF_TIMESTAMP,
+    PDFIUM_WRAPPED_HYPHEN,
     TEMPLATES,
     count_pages,
     find_missing_text,
+    normalise_pdf,
     open_browser_page,
+    print_pdf,
     render_html,
     render_pdf,
 )
@@ -25,6 +31,7 @@ from synth.render import (
 SEED = 42
 N_CLEAN = 6
 N_MESSY = 3
+TIMESTAMP_RESOLUTION_SECONDS = 1.1
 
 
 @pytest.fixture(scope="module")
@@ -117,19 +124,80 @@ def test_smaller_rerun_removes_stale_documents(tmp_path: Path) -> None:
     }
 
 
-@pytest.mark.parametrize("template", TEMPLATES)
-def test_longest_invoice_fits_one_page_and_shows_its_values(template: str) -> None:
+def pick_varied_invoices() -> dict[str, RawInvoice]:
+    """Pick the invoices most likely to break a layout, plus a deliberate worst case."""
     catalogue = load_catalogue()
-    candidates = (generate_ground_truth(SEED, index, catalogue) for index in range(2000))
-    longest = next(
-        truth
-        for truth in candidates
-        if len(truth.invoice.line_items) == 15 and truth.invoice.line_items[0].hs_code_on_doc
-    )
+    invoices = [generate_ground_truth(SEED, index, catalogue).invoice for index in range(300)]
+    with_hs = [invoice for invoice in invoices if invoice.line_items[0].hs_code_on_doc]
+    without_hs = [invoice for invoice in invoices if not invoice.line_items[0].hs_code_on_doc]
+    longest_with_hs = max(with_hs, key=lambda invoice: len(invoice.line_items))
+    parties = [party for invoice in invoices for party in (invoice.shipper, invoice.consignee)]
+    wordiest = max(parties, key=lambda party: len(party.name) + len(party.address))
+    return {
+        "one_line": min(invoices, key=lambda invoice: len(invoice.line_items)),
+        "longest_with_hs": longest_with_hs,
+        "longest_without_hs": max(without_hs, key=lambda invoice: len(invoice.line_items)),
+        "largest_total": max(invoices, key=lambda invoice: invoice.total_amount),
+        "smallest_total": min(invoices, key=lambda invoice: invoice.total_amount),
+        "non_ascii_party": next(i for i in invoices if not i.shipper.name.isascii()),
+        "ampersand_party": next(i for i in invoices if "&" in i.shipper.name),
+        "worst_case": longest_with_hs.model_copy(
+            update={"shipper": wordiest, "consignee": wordiest}
+        ),
+    }
+
+
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_every_layout_handles_every_kind_of_invoice(template: str) -> None:
     with open_browser_page() as page:
-        pdf = render_pdf(page, render_html(longest.invoice, template))
-    assert count_pages(pdf) == 1
-    assert find_missing_text(pdf, longest.invoice, template) == []
+        for name, invoice in pick_varied_invoices().items():
+            pdf = render_pdf(page, render_html(invoice, template))
+            assert count_pages(pdf) == 1, name
+            assert find_missing_text(pdf, invoice, template) == [], name
+
+
+def test_text_check_handles_a_hyphen_at_a_line_wrap() -> None:
+    """Regression: invoice 91 failed in `compact`, where this address wraps at its hyphen."""
+    invoice = generate_ground_truth(SEED, 0, load_catalogue()).invoice
+    shipper = invoice.shipper.model_copy(
+        update={"address": "H.No. 098 Prasad Ganj, Anantapuram-986086", "country": "IN"}
+    )
+    wrapped = invoice.model_copy(update={"shipper": shipper})
+    with open_browser_page() as page:
+        pdf = render_pdf(page, render_html(wrapped, "compact"))
+    with pypdfium2.PdfDocument(pdf) as document:
+        text = document[0].get_textpage().get_text_bounded()
+    assert PDFIUM_WRAPPED_HYPHEN in text, "address no longer wraps, so this test proves nothing"
+    assert find_missing_text(pdf, wrapped, "compact") == []
+
+
+def test_two_renders_produce_identical_bytes() -> None:
+    invoice = generate_ground_truth(SEED, 0, load_catalogue()).invoice
+    html = render_html(invoice, TEMPLATES[0])
+    with open_browser_page() as page:
+        first = print_pdf(page, html)
+    time.sleep(TIMESTAMP_RESOLUTION_SECONDS)  # so Chromium stamps a different time
+    with open_browser_page() as page:
+        second = print_pdf(page, html)
+    assert first != second, "raw PDFs should differ, or this test proves nothing"
+    assert normalise_pdf(first) == normalise_pdf(second)
+
+
+def test_normalising_keeps_the_pdf_valid_and_its_length() -> None:
+    invoice = generate_ground_truth(SEED, 0, load_catalogue()).invoice
+    template = TEMPLATES[0]
+    with open_browser_page() as page:
+        raw = print_pdf(page, render_html(invoice, template))
+    normalised = normalise_pdf(raw)
+    assert len(normalised) == len(raw)
+    assert find_missing_text(normalised, invoice, template) == []
+
+
+def test_normalising_only_changes_timestamps() -> None:
+    pdf = b"%PDF /CreationDate (D:20261107075521+00'00') /Title (D:2026) /Count 12345678901234"
+    assert normalise_pdf(pdf) == (
+        b"%PDF /CreationDate (D:20000101000000+00'00') /Title (D:2026) /Count 12345678901234"
+    )
 
 
 def test_text_check_catches_a_wrong_total(out_dir: Path, manifest: Manifest) -> None:
@@ -140,10 +208,12 @@ def test_text_check_catches_a_wrong_total(out_dir: Path, manifest: Manifest) -> 
     assert find_missing_text(pdf, tampered, entry.template) == [str(tampered.total_amount)]
 
 
-def test_pdf_metadata_holds_no_timestamps(out_dir: Path, manifest: Manifest) -> None:
-    with pymupdf.open(out_dir / clean_entries(manifest)[0].path) as document:
-        assert not document.metadata["creationDate"]
-        assert not document.metadata["modDate"]
+def test_pdf_metadata_holds_only_the_fixed_timestamp(out_dir: Path, manifest: Manifest) -> None:
+    fixed = FIXED_PDF_TIMESTAMP.decode()
+    with pypdfium2.PdfDocument(out_dir / clean_entries(manifest)[0].path) as document:
+        metadata = document.get_metadata_dict()
+    assert metadata["CreationDate"].startswith(fixed)
+    assert metadata["ModDate"].startswith(fixed)
 
 
 def test_augment_is_deterministic_for_a_seed(out_dir: Path, manifest: Manifest) -> None:

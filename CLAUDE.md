@@ -10,13 +10,17 @@ TradeDoc AI extracts structured data from trade documents (commercial invoices f
 Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H & J Corporation) and as a public portfolio project.
 
 ## Status
-- Current phase: **Phase 1 — Foundation + synthetic data** (gate evidence ready, awaiting Salik's approval)
-- Completed phases: none
+- Current phase: **Phase 2 — Extraction + eval harness + tracing** (not started)
+- Completed phases: Phase 1 — Foundation + synthetic data (approved by Salik, 2026-11-07)
 - Latest eval baseline: none yet
 - Known issues / open decisions:
-  - `synth/catalogue.csv` holds 30 unverified placeholder rows: HS codes, units and `kg_per_unit` are all estimates. Replace with real PCT entries. Unit prices are still random, not tied to the goods.
+  - `synth/catalogue.csv` holds 30 unverified placeholder rows: HS codes, units and `kg_per_unit` are all estimates. Replace with real PCT entries.
+  - Unit prices are random, not tied to the goods. Accepted for now.
+  - pypdfium2 has only been tested on our own Chromium PDFs. Verify it on scanned and real documents in Phase 3.
+  - PDFium extracts a hyphen at a line wrap as `\x02` and joins the lines (`Anantapuram-986086` becomes `Anantapuram\x02986086`). The Phase 2 text layer must restore it before the text reaches the LLM; `synth/render.py` handles this for its own check only.
+  - PDFium isn't thread-safe. The Phase 6 worker must not render PDFs from multiple threads; use separate processes.
+  - Only 3 invoice layouts exist, and real invoices all look different. Scores on synthetic data won't prove accuracy on unseen designs, so report the `public` and `real` sets (DESIGN.md §6) separately.
   - Docker isn't installed on the dev machine, so `docker-compose.yml` has only been parsed as YAML, never run. Needed before Phase 5.
-  - PDF library decision pending: PyMuPDF 2.x requires `onnxruntime` and other packages (about 128 MB extra on Linux, not needed for rendering or text) and is AGPL. Compared against pypdfium2 + pdfplumber; recommendation is pypdfium2 alone. Not switched yet.
   - Synthetic files are byte-identical only on the same machine and Chromium version (fonts and renderer affect the bytes). Ground-truth JSON doesn't depend on either.
 
 (Phases 1–7 and their "Done when" checks are defined in docs/DESIGN.md and the kickoff prompt. Never start the next phase until the current one's check passes and Salik approves.)
@@ -52,7 +56,7 @@ tests/          pytest; LLM always mocked
 ```
 
 ## Tech stack
-Python 3.12 · uv · FastAPI · Pydantic v2 · SQLAlchemy 2.0 + Alembic · PostgreSQL + pgvector · PyMuPDF · Playwright (Chromium, synthetic PDFs only) · Faker · sentence-transformers (local embeddings) · Langfuse · pytest · ruff · Next.js + Tailwind · Docker.
+Python 3.12 · uv · FastAPI · Pydantic v2 · SQLAlchemy 2.0 + Alembic · PostgreSQL + pgvector · pypdfium2 · Playwright (Chromium, synthetic PDFs only) · Faker · sentence-transformers (local embeddings) · Langfuse · pytest · ruff · Next.js + Tailwind · Docker.
 Free tiers only. Do not add a dependency without saying why and asking first.
 
 ## Design rules (non-negotiable)
