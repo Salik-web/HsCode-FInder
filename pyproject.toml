@@ -1,0 +1,42 @@
+[project]
+name = "tradedoc-ai"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "pillow>=13.0.0",
+    "pydantic>=2.14.3",
+    "pydantic-settings>=2.16.2",
+    "pymupdf>=2.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "ruff>=0.17.4",
+]
+synth = [
+    "faker>=40.44.0",
+    "jinja2>=3.1.6",
+    "numpy>=2.5.4",
+    "playwright>=1.64.1",
+]
+
+[tool.uv]
+default-groups = ["dev", "synth"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# F, ARG, ERA and RUF100 are the unused-code rules: unused imports and variables, unused
+# arguments, commented-out code and stale noqa comments.
+select = ["E", "W", "F", "I", "UP", "B", "ARG", "ERA", "T20", "RUF", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"synth/generate.py" = ["T20"]
