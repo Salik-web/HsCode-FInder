@@ -1,0 +1,16 @@
+# Secrets
+.env
+
+# Generated data (reproducible from the seed)
+data/
+
+# Real client documents: never commit these
+evals/datasets/real/
+real_documents/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
