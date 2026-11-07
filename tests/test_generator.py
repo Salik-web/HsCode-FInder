@@ -1,3 +1,4 @@
+import re
 from datetime import timedelta
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
@@ -13,7 +14,11 @@ from synth.generator import (
     CURRENCIES,
     MAX_INVOICE_AGE_DAYS,
     MAX_LINE_ITEMS,
+    MAX_LINE_WEIGHT_KG,
+    MAX_QUANTITY,
+    MEASURED_UNITS,
     MIN_LINE_ITEMS,
+    MIN_QUANTITY,
     PAKISTAN,
     CatalogueItem,
     GroundTruth,
@@ -23,6 +28,7 @@ from synth.generator import (
 
 SEED = 42
 SAMPLE_SIZE = 300
+YEAR_IN_INVOICE_NUMBER = re.compile(r"^(?:INV-(?P<long>\d{4})-|(?:CI/|EXP)(?P<short>\d{2}))")
 
 
 @pytest.fixture(scope="module")
@@ -48,9 +54,87 @@ def test_catalogue_keeps_commas_inside_quoted_descriptions(
 
 def test_catalogue_rejects_malformed_hs_code(tmp_path: Path) -> None:
     path = tmp_path / "bad.csv"
-    path.write_text("description,hs_code\nWidget,not-a-code\n", encoding="utf-8")
+    path.write_text(
+        "description,hs_code,unit,kg_per_unit\nWidget,not-a-code,PCS,1\n", encoding="utf-8"
+    )
     with pytest.raises(ValidationError):
         load_catalogue(path)
+
+
+@pytest.mark.parametrize(
+    "row",
+    ["Widget,8471.3010,BUCKET,1", "Widget,8471.3010,PCS,0", "Widget,8471.3010,PCS,-1"],
+)
+def test_catalogue_rejects_bad_unit_or_weight(tmp_path: Path, row: str) -> None:
+    path = tmp_path / "bad.csv"
+    path.write_text(f"description,hs_code,unit,kg_per_unit\n{row}\n", encoding="utf-8")
+    with pytest.raises(ValidationError):
+        load_catalogue(path)
+
+
+def test_lines_use_the_catalogue_unit(
+    documents: list[GroundTruth], catalogue: list[CatalogueItem]
+) -> None:
+    unit_for = {item.description: item.unit for item in catalogue}
+    for document in documents:
+        for line in document.invoice.line_items:
+            assert line.unit == unit_for[line.description]
+
+
+def test_counted_units_have_whole_quantities(documents: list[GroundTruth]) -> None:
+    for document in documents:
+        for line in document.invoice.line_items:
+            if line.unit not in MEASURED_UNITS:
+                assert line.quantity == line.quantity.to_integral_value()
+
+
+def test_quantities_stay_positive_and_under_the_line_weight_limit(
+    documents: list[GroundTruth], catalogue: list[CatalogueItem]
+) -> None:
+    kg_for = {item.description: item.kg_per_unit for item in catalogue}
+    for document in documents:
+        for line in document.invoice.line_items:
+            assert line.quantity >= MIN_QUANTITY
+            assert line.quantity <= MAX_QUANTITY
+            assert line.quantity * kg_for[line.description] <= MAX_LINE_WEIGHT_KG
+
+
+def test_item_heavier_than_the_line_limit_still_gets_quantity_one() -> None:
+    too_heavy = CatalogueItem(
+        description="Transformer", hs_code="8504.2300", unit="PCS", kg_per_unit=Decimal(5000)
+    )
+    line = generate_ground_truth(SEED, 0, [too_heavy]).invoice.line_items[0]
+    assert line.quantity == MIN_QUANTITY
+
+
+def test_net_weight_is_the_sum_of_line_weights(
+    documents: list[GroundTruth], catalogue: list[CatalogueItem]
+) -> None:
+    kg_for = {item.description: item.kg_per_unit for item in catalogue}
+    for document in documents:
+        invoice = document.invoice
+        exact = sum(line.quantity * kg_for[line.description] for line in invoice.line_items)
+        assert invoice.net_weight_kg == exact.quantize(CENT, rounding=ROUND_HALF_UP)
+
+
+def test_gross_weight_adds_three_to_ten_percent_packaging(documents: list[GroundTruth]) -> None:
+    half_cent = CENT / 2
+    for document in documents:
+        net = document.invoice.net_weight_kg
+        gross = document.invoice.gross_weight_kg
+        assert net * Decimal("1.03") - half_cent <= gross <= net * Decimal("1.10") + half_cent
+
+
+def test_year_in_invoice_number_matches_invoice_date(documents: list[GroundTruth]) -> None:
+    checked_years = set()
+    for document in documents:
+        invoice = document.invoice
+        match = YEAR_IN_INVOICE_NUMBER.match(invoice.invoice_number)
+        if match:
+            year = match.group("long") or f"20{match.group('short')}"
+            assert int(year) == invoice.invoice_date.year
+            checked_years.add(int(year))
+    assert checked_years == {2025, 2026}
 
 
 def test_line_counts_stay_in_bounds_and_reach_both_ends(documents: list[GroundTruth]) -> None:

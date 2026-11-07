@@ -6,7 +6,7 @@ from datetime import date, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 from functools import cache
 from pathlib import Path
-from typing import NamedTuple, Self
+from typing import Literal, NamedTuple, Self
 
 from faker import Faker
 from pydantic import BaseModel, Field, model_validator
@@ -27,19 +27,19 @@ MAX_INVOICE_AGE_DAYS = 365
 # Two-decimal currencies only, so rounding always fits the +/- 0.01 line amount guardrail.
 CURRENCIES = ("USD", "EUR", "GBP", "AED", "CNY", "PKR", "SAR", "SGD")
 
-WHOLE_UNITS = ("PCS", "SET", "CTN")
-MEASURED_UNITS = ("KG", "MTR")
+Unit = Literal["PCS", "SET", "PAIR", "CTN", "BAG", "KG", "MTR", "MT"]
+# These can be fractional on an invoice; every other unit is counted in whole numbers.
+MEASURED_UNITS = ("KG", "MTR", "MT")
 
 CENT = Decimal("0.01")
 MIN_UNIT_PRICE_CENTS = 50
 MAX_UNIT_PRICE_CENTS = 50_000
-MAX_WHOLE_QUANTITY = 500
-MIN_MEASURED_QUANTITY_CENTS = 100
-MAX_MEASURED_QUANTITY_CENTS = 100_000
-MIN_NET_WEIGHT_CENTS = 1_000
-MAX_NET_WEIGHT_CENTS = 2_500_000
+MIN_QUANTITY = 1
+MAX_QUANTITY = 1_000
+# Keeps heavy goods plausible: without it, a line could be 1,000 MT of steel.
+MAX_LINE_WEIGHT_KG = 2_000
 MIN_PACKAGING_PERCENT = 3
-MAX_PACKAGING_PERCENT = 15
+MAX_PACKAGING_PERCENT = 10
 
 CONSIGNEE_IN_PAKISTAN_PROBABILITY = 0.7
 SHIPPER_IN_PAKISTAN_PROBABILITY = 0.2
@@ -77,6 +77,8 @@ COUNTRY_NAMES = {country.code: country.name for country in (PAKISTAN, *FOREIGN_C
 class CatalogueItem(BaseModel):
     description: str = Field(min_length=1)
     hs_code: str = Field(pattern=r"^\d[\d.]*\d$")
+    unit: Unit
+    kg_per_unit: Decimal = Field(gt=0)
 
 
 class GroundTruth(BaseModel):
@@ -109,10 +111,11 @@ def generate_ground_truth(seed: int, index: int, catalogue: list[CatalogueItem])
     items = rng.sample(catalogue, _pick_line_count(rng, len(catalogue)))
     print_hs_codes = rng.random() < HS_PRINTED_PROBABILITY
     line_items = [_make_line_item(rng, item, print_hs_codes) for item in items]
-    net_weight, gross_weight = _make_weights(rng)
+    net_weight, gross_weight = _make_weights(rng, line_items, items)
+    invoice_date = ANCHOR_DATE - timedelta(days=rng.randint(0, MAX_INVOICE_AGE_DAYS))
     invoice = RawInvoice(
-        invoice_number=_make_invoice_number(rng),
-        invoice_date=ANCHOR_DATE - timedelta(days=rng.randint(0, MAX_INVOICE_AGE_DAYS)),
+        invoice_number=_make_invoice_number(rng, invoice_date),
+        invoice_date=invoice_date,
         shipper=_make_party(rng, shipper_country),
         consignee=_make_party(rng, consignee_country),
         incoterm=rng.choice(INCOTERMS),
@@ -164,16 +167,16 @@ def _make_address(rng: random.Random, fake: Faker, country: Country) -> str:
     return f"Plot {plot}, Block {block}, {rng.choice(country.cities)} {postcode}"
 
 
-def _make_invoice_number(rng: random.Random) -> str:
-    year = rng.randint(24, 26)
+def _make_invoice_number(rng: random.Random, invoice_date: date) -> str:
+    short_year = invoice_date.strftime("%y")
     serial = rng.randint(1, 99_999)
     style = rng.randrange(4)
     if style == 0:
-        return f"INV-20{year}-{serial:05d}"
+        return f"INV-{invoice_date.year}-{serial:05d}"
     if style == 1:
-        return f"CI/{year}/{serial:05d}"
+        return f"CI/{short_year}/{serial:05d}"
     if style == 2:
-        return f"EXP{year}{serial:05d}"
+        return f"EXP{short_year}{serial:05d}"
     return f"{rng.randint(100, 999)}-{serial:05d}"
 
 
@@ -181,28 +184,34 @@ def _cents_to_decimal(cents: int) -> Decimal:
     return (Decimal(cents) / 100).quantize(CENT)
 
 
-def _make_quantity(rng: random.Random) -> tuple[Decimal, str]:
-    if rng.random() < 0.5:
-        return Decimal(rng.randint(1, MAX_WHOLE_QUANTITY)), rng.choice(WHOLE_UNITS)
-    cents = rng.randint(MIN_MEASURED_QUANTITY_CENTS, MAX_MEASURED_QUANTITY_CENTS)
-    return _cents_to_decimal(cents), rng.choice(MEASURED_UNITS)
+def _make_quantity(rng: random.Random, item: CatalogueItem) -> Decimal:
+    weight_limit = int(MAX_LINE_WEIGHT_KG / item.kg_per_unit)
+    limit = max(MIN_QUANTITY, min(MAX_QUANTITY, weight_limit))
+    if item.unit in MEASURED_UNITS:
+        return _cents_to_decimal(rng.randint(MIN_QUANTITY * 100, limit * 100))
+    return Decimal(rng.randint(MIN_QUANTITY, limit))
 
 
 def _make_line_item(rng: random.Random, item: CatalogueItem, print_hs_code: bool) -> RawLineItem:
-    quantity, unit = _make_quantity(rng)
+    quantity = _make_quantity(rng, item)
     unit_price = _cents_to_decimal(rng.randint(MIN_UNIT_PRICE_CENTS, MAX_UNIT_PRICE_CENTS))
     return RawLineItem(
         description=item.description,
         quantity=quantity,
-        unit=unit,
+        unit=item.unit,
         unit_price=unit_price,
         amount=(quantity * unit_price).quantize(CENT, rounding=ROUND_HALF_UP),
         hs_code_on_doc=item.hs_code if print_hs_code else None,
     )
 
 
-def _make_weights(rng: random.Random) -> tuple[Decimal, Decimal]:
-    net = _cents_to_decimal(rng.randint(MIN_NET_WEIGHT_CENTS, MAX_NET_WEIGHT_CENTS))
+def _make_weights(
+    rng: random.Random, lines: list[RawLineItem], items: list[CatalogueItem]
+) -> tuple[Decimal, Decimal]:
+    line_weights = (
+        line.quantity * item.kg_per_unit for line, item in zip(lines, items, strict=True)
+    )
+    net = sum(line_weights, Decimal(0)).quantize(CENT, rounding=ROUND_HALF_UP)
     packaging_percent = rng.randint(MIN_PACKAGING_PERCENT, MAX_PACKAGING_PERCENT)
     gross = (net * (100 + packaging_percent) / 100).quantize(CENT, rounding=ROUND_HALF_UP)
     return net, gross

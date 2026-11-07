@@ -14,9 +14,9 @@ Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H &
 - Completed phases: none
 - Latest eval baseline: none yet
 - Known issues / open decisions:
-  - `synth/catalogue.csv` holds 30 unverified placeholder HS codes. Replace with real PCT entries.
+  - `synth/catalogue.csv` holds 30 unverified placeholder rows: HS codes, units and `kg_per_unit` are all estimates. Replace with real PCT entries. Unit prices are still random, not tied to the goods.
   - Docker isn't installed on the dev machine, so `docker-compose.yml` has only been parsed as YAML, never run. Needed before Phase 5.
-  - PyMuPDF 2.x requires `onnxruntime` and other heavy packages. Check the backend image size before the Phase 7 deploy.
+  - PDF library decision pending: PyMuPDF 2.x requires `onnxruntime` and other packages (about 128 MB extra on Linux, not needed for rendering or text) and is AGPL. Compared against pypdfium2 + pdfplumber; recommendation is pypdfium2 alone. Not switched yet.
   - Synthetic files are byte-identical only on the same machine and Chromium version (fonts and renderer affect the bytes). Ground-truth JSON doesn't depend on either.
 
 (Phases 1–7 and their "Done when" checks are defined in docs/DESIGN.md and the kickoff prompt. Never start the next phase until the current one's check passes and Salik approves.)
