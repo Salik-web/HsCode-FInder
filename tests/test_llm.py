@@ -1,5 +1,6 @@
 """LLM layer: provider error mapping, cache, fallback and tracing. No real network calls."""
 
+import hashlib
 import json
 from decimal import Decimal
 from pathlib import Path
@@ -66,6 +67,10 @@ def provider_config(**changes: Any) -> ProviderConfig:
         "model": "model-a",
         "input_usd_per_million_tokens": Decimal("0.30"),
         "output_usd_per_million_tokens": Decimal("2.50"),
+        "reasoning_effort": None,
+        "strict_schema": False,
+        "tokens_per_minute": None,
+        "requests_per_minute": None,
     }
     return ProviderConfig(**(values | changes))
 
@@ -89,9 +94,11 @@ def completion_body(content: str | None, finish_reason: str = "stop", usage: boo
     return body
 
 
-def provider_with(handler: Any, max_retries: int = 0) -> OpenAICompatibleClient:
+def provider_with(
+    handler: Any, max_retries: int = 0, config: ProviderConfig | None = None
+) -> OpenAICompatibleClient:
     client = OpenAICompatibleClient(
-        provider_config(), timeout_seconds=5, max_retries=max_retries, max_tokens=100
+        config or provider_config(), timeout_seconds=5, max_retries=max_retries, max_tokens=100
     )
     client._client = openai.OpenAI(
         api_key="test-key",
@@ -127,6 +134,34 @@ def test_provider_sends_schema_images_and_zero_temperature() -> None:
     assert body["response_format"]["json_schema"]["name"] == "RawInvoice"
     image_part = body["messages"][1]["content"][1]
     assert image_part["image_url"]["url"].startswith("data:image/png;base64,")
+    assert "reasoning_effort" not in body  # not configured, so the provider default applies
+    assert "strict" not in body["response_format"]["json_schema"]
+
+
+def test_strict_schema_is_sent_and_keyed_when_configured() -> None:
+    sent: list[dict] = []
+
+    def handler(request: httpx2.Request) -> httpx2.Response:
+        sent.append(json.loads(request.content))
+        return httpx2.Response(200, json=completion_body("{}"))
+
+    client = provider_with(handler, config=provider_config(strict_schema=True))
+    client.complete(make_request())
+    assert sent[0]["response_format"]["json_schema"]["strict"] is True
+    assert client.call_options == {"strict_schema": "true"}
+
+
+def test_reasoning_effort_is_sent_when_configured() -> None:
+    sent: list[dict] = []
+
+    def handler(request: httpx2.Request) -> httpx2.Response:
+        sent.append(json.loads(request.content))
+        return httpx2.Response(200, json=completion_body("{}"))
+
+    client = provider_with(handler, config=provider_config(reasoning_effort="none"))
+    client.complete(make_request())
+    assert sent[0]["reasoning_effort"] == "none"
+    assert client.call_options == {"reasoning_effort": "none"}
 
 
 def test_missing_usage_is_unknown_not_zero() -> None:
@@ -186,10 +221,33 @@ def test_empty_content_is_an_error() -> None:
 # --- config --------------------------------------------------------------------------------
 
 
-def test_missing_key_names_the_setting_to_add() -> None:
-    settings = Settings(_env_file=None, gemini_api_key=None)
-    with pytest.raises(MissingApiKeyError, match="GEMINI_API_KEY"):
+@pytest.mark.parametrize("provider", ["gemini", "openrouter", "groq"])
+def test_missing_key_names_the_setting_to_add(provider: str) -> None:
+    settings = Settings(_env_file=None, llm_provider=provider)
+    with pytest.raises(MissingApiKeyError, match=f"{provider.upper()}_API_KEY"):
         settings.primary_provider()
+
+
+def test_groq_is_the_default_with_qwen_and_thinking_off() -> None:
+    settings = Settings(_env_file=None, groq_api_key=SecretStr("k"))
+    primary = settings.primary_provider()
+    fallback = settings.fallback_provider_config()
+    assert primary.base_url == "https://api.groq.com/openai/v1"
+    assert primary.model == "qwen/qwen3.8-27b"
+    assert primary.reasoning_effort == "none"
+    assert primary.strict_schema is True
+    assert fallback is not None
+    assert fallback.model == "qwen/qwen3.8-27b"
+    assert fallback.reasoning_effort == "none"
+    assert primary.tokens_per_minute is not None
+
+
+def test_empty_settings_mean_unset(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("LLM_REASONING_EFFORT", "")
+    monkeypatch.setenv("LLM_TOKENS_PER_MINUTE", "")
+    primary = Settings(_env_file=None, groq_api_key=SecretStr("k")).primary_provider()
+    assert primary.reasoning_effort is None
+    assert primary.tokens_per_minute is None
 
 
 def test_switching_provider_is_configuration_only() -> None:
@@ -212,7 +270,7 @@ def test_no_fallback_configured_gives_none() -> None:
 
 
 def test_cache_key_is_stable() -> None:
-    assert cache_key(make_request(), "m") == cache_key(make_request(), "m")
+    assert cache_key(make_request(), "m", {}) == cache_key(make_request(), "m", {})
 
 
 @pytest.mark.parametrize(
@@ -226,16 +284,41 @@ def test_cache_key_is_stable() -> None:
     ],
 )
 def test_cache_key_changes_with_any_input(change: dict) -> None:
-    assert cache_key(make_request(**change), "m") != cache_key(make_request(), "m")
+    assert cache_key(make_request(**change), "m", {}) != cache_key(make_request(), "m", {})
+
+
+def test_cache_key_changes_with_call_options() -> None:
+    thinking_off = cache_key(make_request(), "m", {"reasoning_effort": "none"})
+    assert thinking_off != cache_key(make_request(), "m", {})
+    assert thinking_off != cache_key(make_request(), "m", {"reasoning_effort": "default"})
+
+
+def test_cache_key_without_options_matches_the_original_formula() -> None:
+    """Regression: adding call options must not orphan the Gemini baseline's cache."""
+    request = make_request()
+    digest = hashlib.sha256(request.model_dump_json().encode()).hexdigest()
+    parts = [request.document_sha256, "m", request.prompt_version, request.attempt, digest]
+    original = hashlib.sha256(json.dumps(parts).encode()).hexdigest()
+    assert cache_key(request, "m", {}) == original
+
+
+def test_cache_reads_entries_written_before_call_options(tmp_path: Path) -> None:
+    client = CachingClient(FakeClient("model-a", [make_response()]), tmp_path, {})
+    client.complete(make_request())
+    (path,) = tmp_path.rglob("*.json")
+    entry = json.loads(path.read_text())
+    del entry["call_options"]
+    path.write_text(json.dumps(entry))
+    assert CachingClient(FakeClient("model-a", []), tmp_path, {}).complete(make_request()).cached
 
 
 def test_cache_key_changes_with_model() -> None:
-    assert cache_key(make_request(), "m1") != cache_key(make_request(), "m2")
+    assert cache_key(make_request(), "m1", {}) != cache_key(make_request(), "m2", {})
 
 
 def test_second_call_is_served_from_disk(tmp_path: Path) -> None:
     inner = FakeClient("model-a", [make_response()])
-    client = CachingClient(inner, tmp_path)
+    client = CachingClient(inner, tmp_path, {})
     first = client.complete(make_request())
     second = client.complete(make_request())
     assert len(inner.requests) == 1
@@ -245,15 +328,15 @@ def test_second_call_is_served_from_disk(tmp_path: Path) -> None:
 
 
 def test_cache_survives_a_new_client_instance(tmp_path: Path) -> None:
-    CachingClient(FakeClient("model-a", [make_response()]), tmp_path).complete(make_request())
+    CachingClient(FakeClient("model-a", [make_response()]), tmp_path, {}).complete(make_request())
     fresh_inner = FakeClient("model-a", [])
-    assert CachingClient(fresh_inner, tmp_path).complete(make_request()).cached
+    assert CachingClient(fresh_inner, tmp_path, {}).complete(make_request()).cached
     assert fresh_inner.requests == []
 
 
 def test_failures_are_not_cached(tmp_path: Path) -> None:
     inner = FakeClient("model-a", [RateLimitedError("quota"), make_response()])
-    client = CachingClient(inner, tmp_path)
+    client = CachingClient(inner, tmp_path, {})
     with pytest.raises(RateLimitedError):
         client.complete(make_request())
     assert client.complete(make_request()).cached is False
@@ -261,7 +344,7 @@ def test_failures_are_not_cached(tmp_path: Path) -> None:
 
 
 def test_cache_leaves_no_temporary_files(tmp_path: Path) -> None:
-    CachingClient(FakeClient("model-a", [make_response()]), tmp_path).complete(make_request())
+    CachingClient(FakeClient("model-a", [make_response()]), tmp_path, {}).complete(make_request())
     files = [path for path in tmp_path.rglob("*") if path.is_file()]
     assert len(files) == 1
     assert files[0].suffix == ".json"

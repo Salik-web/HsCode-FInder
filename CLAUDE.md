@@ -14,7 +14,8 @@ Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H &
 - Completed phases: Phase 1 — Foundation + synthetic data (approved by Salik, 2026-11-07)
 - Latest eval baseline: partial, `gemini-3.5-flash` + prompt v1, 2026-11-11: clean dev 10/53 and messy dev 2/16 scored, all 100%. See evals/CHANGELOG.md.
 - Known issues / open decisions:
-  - Gemini free tier allows 20 requests per model per day, so the 69 dev documents plus the 31 unseen ones take about five days on one model. Rerunning a command resumes from cache. Choosing to wait, switch model or pay is Salik's call.
+  - Baseline model switched to Groq `qwen/qwen3.6-27b` (fallback `qwen/qwen3.8-27b`), thinking off (`reasoning_effort=none`), to stay on the free tier (Salik, 2026-11-11). Gemini's free tier allows only 20 requests per model per day; its 12 cached results are kept for the Phase 7 bake-off (`LLM_PROVIDER=gemini LLM_MODEL=gemini-3.5-flash LLM_REASONING_EFFORT=`).
+  - Groq per-minute limits are respected by client-side throttling (`app/llm/throttle.py`, `LLM_TOKENS_PER_MINUTE` / `LLM_REQUESTS_PER_MINUTE`), not by retries.
   - Langfuse keys aren't in `.env`, so tracing is built and unit-tested but has never sent a real trace.
   - `gemini-3.7-flash` and `gemini-3.8-flash` hang on this key; `gemini-3.6-flash` returned 503. The 429 quota record names `gemini-3.6-flash` while responses say `gemini-3.5-flash`, so Google may be serving 3.5 from 3.6.
   - About 30% of buyers who are the consignee print "Same as consignee" (or a synonym). Ground truth holds the full buyer; reports score these as the `reference` slice.

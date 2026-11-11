@@ -1,4 +1,4 @@
-"""Assemble the client stack from settings: cache -> tracing -> provider, per model."""
+"""Assemble the client stack from settings: cache -> throttle -> tracing -> provider."""
 
 import logging
 
@@ -9,6 +9,7 @@ from app.llm.cache import CachingClient
 from app.llm.client import LLMClient
 from app.llm.fallback import FallbackClient
 from app.llm.openai_compatible import OpenAICompatibleClient
+from app.llm.throttle import ThrottledClient
 from app.llm.tracing import Tracer, TracingClient
 
 logger = logging.getLogger(__name__)
@@ -29,15 +30,18 @@ def build_client(settings: Settings, use_fallback: bool) -> LLMClient:
 
 
 def _provider_stack(config: ProviderConfig, settings: Settings, tracer: Tracer | None) -> LLMClient:
-    client: LLMClient = OpenAICompatibleClient(
+    provider = OpenAICompatibleClient(
         config,
         timeout_seconds=settings.llm_timeout_seconds,
         max_retries=settings.llm_max_retries,
         max_tokens=settings.llm_max_output_tokens,
     )
+    client: LLMClient = provider
     if tracer is not None:
         client = TracingClient(client, tracer)
-    return CachingClient(client, settings.cache_dir)
+    # Inside the cache, so answers served from disk never wait for the budget.
+    client = ThrottledClient(client, config.tokens_per_minute, config.requests_per_minute)
+    return CachingClient(client, settings.cache_dir, provider.call_options)
 
 
 def _build_tracer(settings: Settings) -> Tracer | None:

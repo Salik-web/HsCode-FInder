@@ -45,6 +45,7 @@ class RunConfig(PipelineConfig):
     dataset: Dataset
     split: Split
     model: str
+    reasoning_effort: str | None
 
 
 def run_eval(
@@ -142,6 +143,8 @@ def _metadata(config: RunConfig, records: list[DocumentRecord], started: datetim
     calls = [call for record in records for call in record.llm_calls]
     model_slug = UNSAFE_FILENAME_CHARACTERS.sub("_", config.model).strip("_")
     parts = [f"{started:%Y%m%dT%H%M%S}", config.dataset, config.split, model_slug]
+    if config.reasoning_effort is not None:
+        parts.append(f"reasoning-{config.reasoning_effort}")
     run_id = "_".join([*parts, config.prompt_version])
     return RunMetadata(
         run_id=run_id,
@@ -151,6 +154,7 @@ def _metadata(config: RunConfig, records: list[DocumentRecord], started: datetim
         dataset=config.dataset,
         split=config.split,
         model=config.model,
+        reasoning_effort=config.reasoning_effort,
         prompt_version=config.prompt_version,
         schema_version=SCHEMA_VERSION,
         documents_total=len(records),
@@ -206,7 +210,11 @@ def main(argv: list[str] | None = None) -> None:
     documents = load_documents(settings.data_dir, args.dataset, args.split, args.limit)
     client = build_client(settings, use_fallback=args.fallback)
     config = RunConfig(
-        prompt_version=args.prompt, dataset=args.dataset, split=args.split, model=client.model
+        prompt_version=args.prompt,
+        dataset=args.dataset,
+        split=args.split,
+        model=client.model,
+        reasoning_effort=settings.primary_provider().reasoning_effort,
     )
     report, path = run_eval(
         documents, client, config, settings.reports_dir, settings.llm_concurrency

@@ -76,7 +76,11 @@ def evaluate(
     docs: list[EvalDocument], client: object, reports_dir: Path, split: Split = "dev"
 ) -> tuple[EvalReport, Path]:
     config = RunConfig(
-        prompt_version="v1", dataset=docs[0].entry.dataset, split=split, model="oracle"
+        prompt_version="v1",
+        dataset=docs[0].entry.dataset,
+        split=split,
+        model="oracle",
+        reasoning_effort=None,
     )
     return run_eval(docs, client, config, reports_dir, concurrency=2)  # type: ignore[arg-type]
 
@@ -161,8 +165,16 @@ def test_quota_stops_the_run_and_a_rerun_finishes_from_cache(
     limited = OracleClient(
         truths(docs), {d.entry.sha256: [RateLimitedError("quota")] for d in docs[3:]}
     )
-    config = RunConfig(prompt_version="v1", dataset="synthetic_clean", split="dev", model="oracle")
-    first, first_path = run_eval(docs, CachingClient(limited, cache_dir), config, reports_dir, 1)
+    config = RunConfig(
+        prompt_version="v1",
+        dataset="synthetic_clean",
+        split="dev",
+        model="oracle",
+        reasoning_effort=None,
+    )
+    first, first_path = run_eval(
+        docs, CachingClient(limited, cache_dir, {}), config, reports_dir, 1
+    )
     assert not first.meta.complete
     assert first.meta.documents_scored == 3
     assert "INCOMPLETE" in first_path.read_text(encoding="utf-8")
@@ -175,14 +187,18 @@ def test_quota_stops_the_run_and_a_rerun_finishes_from_cache(
     assert first.layout_groups["seen"].summary.documents == 3
 
     healthy = OracleClient(truths(docs))
-    second, second_path = run_eval(docs, CachingClient(healthy, cache_dir), config, reports_dir, 1)
+    second, second_path = run_eval(
+        docs, CachingClient(healthy, cache_dir, {}), config, reports_dir, 1
+    )
     assert second.meta.complete
     assert len(healthy.requests) == len(docs) - 3  # the first three came from cache
     assert second.meta.llm_calls_cached == 3
     assert set(all_fields(second).values()) == {1.0}
     assert first.meta.run_id in second_path.read_text(encoding="utf-8")  # diffed against it
 
-    third, _ = run_eval(docs, CachingClient(OracleClient({}), cache_dir), config, reports_dir, 1)
+    third, _ = run_eval(
+        docs, CachingClient(OracleClient({}), cache_dir, {}), config, reports_dir, 1
+    )
     assert third.meta.llm_calls_made == 0
     assert third.meta.llm_calls_cached == len(docs)
 
