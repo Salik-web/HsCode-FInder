@@ -64,6 +64,9 @@ class OperationalStats(BaseModel):
     first_try_answered: int | None = None
     first_try_valid: int | None = None
     retried: int | None = None
+    # Key names renamed or dropped before validation, over every call (app/pipeline/repair.py).
+    keys_repaired: int | None = None
+    keys_ignored: int | None = None
     retry_rate: float | None
     cost_per_document_usd: Decimal | None  # None when any call's cost is unknown
     latency_p50_ms: int | None
@@ -138,6 +141,8 @@ def operational_stats(records: list[DocumentRecord]) -> OperationalStats:
         first_try_valid=sum(not call.validation_errors for call in first_calls),
         retried=retried,
         retry_rate=_rate(records, retried),
+        keys_repaired=sum(len(c.keys_repaired) for r in records for c in r.llm_calls),
+        keys_ignored=sum(len(c.keys_ignored) for r in records for c in r.llm_calls),
         cost_per_document_usd=cost_per_document,
         latency_p50_ms=percentile(latencies, P50),
         latency_p95_ms=percentile(latencies, P95),
@@ -249,6 +254,10 @@ def _retry_cell(sliced: SliceReport) -> str:
     return f"{_percent(ops.retry_rate)} ({ops.retried}/{ops.documents})"
 
 
+def _count_cell(count: int | None) -> str:
+    return "not recorded" if count is None else str(count)
+
+
 def _cost_cell(sliced: SliceReport) -> str:
     """No documents means no cost to report, which is different from an unknown cost."""
     if sliced.operations.documents == 0:
@@ -309,6 +318,8 @@ def _headline_table(report: EvalReport) -> list[str]:
         row("Failed rate", lambda s: _percent(s.operations.failed_rate)),
         row("First-try valid JSON", _first_try_cell),
         row("Retry rate", _retry_cell),
+        row("Keys repaired", lambda s: _count_cell(s.operations.keys_repaired)),
+        row("Keys ignored", lambda s: _count_cell(s.operations.keys_ignored)),
         row("Cost per document", _cost_cell),
         row("Latency p50", lambda s: _ms(s.operations.latency_p50_ms)),
         row("Latency p95", lambda s: _ms(s.operations.latency_p95_ms)),
@@ -462,6 +473,13 @@ def _failure_section(record: DocumentRecord, score: DocumentScore) -> list[str]:
         "| --- | --- | --- | --- |",
     ]
     # Critical header fields also appear in `fields`; list each distinct error once.
+    for call in record.llm_calls:
+        if call.keys_repaired or call.keys_ignored:
+            lines += [
+                f"Attempt {call.attempt}: keys repaired {call.keys_repaired}, "
+                f"ignored {call.keys_ignored}",
+                "",
+            ]
     wrong = [f for f in [*score.fields, *score.critical] if f.outcome != "correct"]
     for field in {(f.field, f.outcome, f.expected, f.predicted): f for f in wrong}.values():
         lines.append(

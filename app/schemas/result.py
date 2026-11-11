@@ -31,6 +31,10 @@ class LLMCall(BaseModel):
     cost_usd: Decimal | None
     cached: bool
     validation_errors: list[str]
+    # Key names fixed or dropped before validation (app/pipeline/repair.py). Reports
+    # written before repair existed have none.
+    keys_repaired: list[str] = []
+    keys_ignored: list[str] = []
 
 
 class PipelineResult(BaseModel):

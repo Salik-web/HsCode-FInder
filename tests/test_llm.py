@@ -71,6 +71,7 @@ def provider_config(**changes: Any) -> ProviderConfig:
         "output_usd_per_million_tokens": Decimal("2.50"),
         "reasoning_effort": None,
         "strict_schema": False,
+        "response_format": "json_schema",
         "tokens_per_minute": None,
         "output_tokens_per_minute": None,
         "requests_per_minute": None,
@@ -139,6 +140,19 @@ def test_provider_sends_schema_images_and_zero_temperature() -> None:
     assert image_part["image_url"]["url"].startswith("data:image/png;base64,")
     assert "reasoning_effort" not in body  # not configured, so the provider default applies
     assert "strict" not in body["response_format"]["json_schema"]
+
+
+def test_json_object_mode_sends_no_schema_and_is_keyed() -> None:
+    sent: list[dict] = []
+
+    def handler(request: httpx2.Request) -> httpx2.Response:
+        sent.append(json.loads(request.content))
+        return httpx2.Response(200, json=completion_body("{}"))
+
+    client = provider_with(handler, config=provider_config(response_format="json_object"))
+    client.complete(make_request())
+    assert sent[0]["response_format"] == {"type": "json_object"}
+    assert client.call_options == {"response_format": "json_object"}
 
 
 def test_strict_schema_is_sent_and_keyed_when_configured() -> None:

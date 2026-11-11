@@ -96,11 +96,74 @@ def test_invalid_twice_goes_to_needs_review_with_no_invoice() -> None:
     assert all(call.validation_errors for call in outcome.calls)
 
 
-def test_extra_keys_are_rejected_not_silently_dropped(truth: RawInvoice) -> None:
-    extra = truth.model_dump(mode="json") | {"seller": "Someone"}
-    client = FakeClient("model-a", [answer(json.dumps(extra)), answer(json.dumps(extra))])
+def test_extra_keys_are_ignored_and_counted(truth: RawInvoice) -> None:
+    extra = truth.model_dump(mode="json") | {"document_type": "Invoice"}
+    client = FakeClient("model-a", [answer(json.dumps(extra))])
     outcome = extract_invoice(document(), load_prompt("invoice", "v1"), client)
+    assert outcome.stage.status == "ok"
+    assert outcome.invoice == truth
+    assert outcome.calls[0].keys_ignored == ["document_type"]
+    assert outcome.calls[0].validation_errors == []
+
+
+def test_misspelt_key_is_repaired_and_counted(truth: RawInvoice) -> None:
+    data = json.loads(compact_json(truth))
+    data = {(" shipper" if key == "shipper" else key): value for key, value in data.items()}
+    client = FakeClient("model-a", [answer(json.dumps(data))])
+    outcome = extract_invoice(document(), load_prompt("invoice", "v3"), client)
+    assert outcome.stage.status == "ok"
+    assert outcome.invoice == truth
+    assert outcome.calls[0].keys_repaired == ["(top level): ' shipper' -> 'shipper'"]
+
+
+def test_unrepairable_key_still_fails_and_is_retried(truth: RawInvoice) -> None:
+    data = json.loads(compact_json(truth))
+    data["shiftper"] = data.pop("shipper")
+    client = FakeClient("model-a", [answer(json.dumps(data)), answer(compact_json(truth))])
+    outcome = extract_invoice(document(), load_prompt("invoice", "v3"), client)
+    assert outcome.stage.status == "ok"
+    assert outcome.calls[0].keys_ignored == ["shiftper"]
+    assert outcome.calls[0].validation_errors == ["shipper: Field required"]
+    assert len(outcome.calls) == 2
+
+
+def test_identical_retry_fails_immediately() -> None:
+    # Same answer apart from a trailing newline still counts as repeated.
+    repeated = [answer('{"document": 1}'), answer('{"document": 1}' + "\n")]
+    client = FakeClient("model-a", repeated)
+    outcome = extract_invoice(document(), load_prompt("invoice", "v3"), client)
     assert outcome.stage.status == "needs_review"
+    assert "repeated the previous answer" in outcome.stage.error
+    assert outcome.calls[1].validation_errors == [
+        "(whole answer): the retry repeated the previous answer unchanged"
+    ]
+
+
+def test_v3_retry_lists_the_exact_allowed_keys() -> None:
+    client = FakeClient("model-a", [answer("not json"), answer("still not json")])
+    extract_invoice(document(), load_prompt("invoice", "v3"), client)
+    retry = client.requests[1].text
+    assert "not valid JSON" in retry
+    assert "- top level: invoice_number, invoice_date, shipper," in retry
+    assert "inside shipper, buyer, consignee, notify_party: name, address, country" in retry
+
+
+def test_v3_system_prompt_lists_the_keys_and_v2_is_unchanged() -> None:
+    client = FakeClient("model-a", [answer("x"), answer("y")])
+    extract_invoice(document(), load_prompt("invoice", "v3"), client)
+    assert "- top level: invoice_number" in client.requests[0].system
+    assert "{{" not in client.requests[0].system
+    v2 = load_prompt("invoice", "v2")
+    assert v2.system_message("ANY KEYS") == v2.system  # no placeholder: requests unchanged
+
+
+def test_float_numbers_stay_exact(truth: RawInvoice) -> None:
+    data = json.loads(compact_json(truth))
+    data["total_amount"] = 1234.10  # a JSON number, not a string
+    outcome = extract_invoice(
+        document(), load_prompt("invoice", "v3"), FakeClient("m", [answer(json.dumps(data))])
+    )
+    assert str(outcome.invoice.total_amount) == "1234.1"
 
 
 @pytest.mark.parametrize(
@@ -187,7 +250,7 @@ def test_prompt_v1_has_every_section() -> None:
     prompt = load_prompt("invoice", "v1")
     assert prompt.version == "v1"
     assert "{{" not in prompt.user_message("text")
-    assert "{{" not in prompt.retry_message(None, ["a: b"])
+    assert "{{" not in prompt.retry_message(None, ["a: b"], "keys")
 
 
 @pytest.mark.parametrize("version", ["v999", "../v1", "1"])

@@ -333,3 +333,20 @@ def test_reports_from_before_the_first_try_counts_still_load() -> None:
     for path in reports:
         report = EvalReport.model_validate_json(path.read_bytes())
         assert report.layout_groups["seen"].operations.first_try_answered is None
+
+
+def test_repaired_and_ignored_keys_are_counted(data_dir: Path, tmp_path: Path) -> None:
+    docs = documents(data_dir)
+    data = docs[0].truth.invoice.model_dump(mode="json")
+    data[" currency"] = data.pop("currency")
+    data["document_type"] = "Commercial Invoice"
+    client = OracleClient(truths(docs), {docs[0].entry.sha256: [json.dumps(data)]})
+    report, path = evaluate(docs, client, tmp_path)
+    operations = report.layout_groups["seen"].operations
+    assert operations.keys_repaired == 1
+    assert operations.keys_ignored == 1
+    assert operations.first_try_valid == len(docs)
+    assert set(all_fields(report).values()) == {1.0}
+    markdown = path.read_text(encoding="utf-8")
+    assert "| Keys repaired | 1 | 0 |" in markdown
+    assert "| Keys ignored | 1 | 0 |" in markdown
