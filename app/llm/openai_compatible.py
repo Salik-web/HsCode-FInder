@@ -40,6 +40,27 @@ class OpenAICompatibleClient:
         return self._provider.model
 
     @property
+    def call_options(self) -> dict[str, str]:
+        """Provider options that change the answer, so the cache must key on them too.
+
+        Only options that are switched on appear, so keys made without them stay valid.
+        """
+        options = self._reasoning_option()
+        if self._provider.strict_schema:
+            options["strict_schema"] = "true"
+        return options
+
+    def _reasoning_option(self) -> dict[str, str]:
+        effort = self._provider.reasoning_effort
+        return {} if effort is None else {"reasoning_effort": effort}
+
+    def _json_schema(self, request: LLMRequest) -> dict[str, Any]:
+        schema: dict[str, Any] = {"name": request.schema_name, "schema": request.response_schema}
+        if self._provider.strict_schema:
+            schema["strict"] = True
+        return schema
+
+    @property
     def _name(self) -> str:
         return self._provider.name
 
@@ -49,12 +70,10 @@ class OpenAICompatibleClient:
             completion = self._client.chat.completions.create(
                 model=self.model,
                 messages=_messages(request),
-                response_format={
-                    "type": "json_schema",
-                    "json_schema": {"name": request.schema_name, "schema": request.response_schema},
-                },
+                response_format={"type": "json_schema", "json_schema": self._json_schema(request)},
                 temperature=0,
                 max_tokens=self._max_tokens,
+                **self._reasoning_option(),
             )
         except openai.RateLimitError as error:
             raise RateLimitedError(f"{self._name} rate limit: {error.message}") from error

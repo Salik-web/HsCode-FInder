@@ -70,6 +70,8 @@ class RunMetadata(BaseModel):
     dataset: str
     split: Split
     model: str
+    # None: the provider's default. Reports from before this field existed have None.
+    reasoning_effort: str | None = None
     prompt_version: str
     schema_version: str
     documents_total: int
@@ -236,7 +238,8 @@ def _header(meta: RunMetadata) -> list[str]:
         f"# Eval run {meta.run_id}",
         "",
         f"- Dataset: `{meta.dataset}`, split `{meta.split}`",
-        f"- Model: `{meta.model}`, prompt `{meta.prompt_version}`, schema `{meta.schema_version}`",
+        f"- Model: `{meta.model}`, reasoning `{meta.reasoning_effort or 'provider default'}`, "
+        f"prompt `{meta.prompt_version}`, schema `{meta.schema_version}`",
         f"- Git: `{git}`, run at {meta.created_at:%Y-%m-%d %H:%M} UTC",
         f"- Documents scored: {meta.documents_scored} of {meta.documents_total}; "
         f"LLM calls made: {meta.llm_calls_made}, from cache: {meta.llm_calls_cached}",
