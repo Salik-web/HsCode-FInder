@@ -8,6 +8,9 @@ data/
 evals/datasets/real/
 real_documents/
 
+# LLM response cache (reproducible from the API, may be large)
+.cache/
+
 # Python
 .venv/
 __pycache__/

@@ -20,9 +20,9 @@
 </style>
 </head>
 <body>
-{% macro party(label, p) %}
+{% macro party(label, p, reference=none) %}
   <h2>{{ label }}</h2>
-  <p>{{ p.name }}<br>{{ p.address }}<br>{{ p.country | country_name }}</p>
+  <p>{% if reference %}{{ reference }}{% else %}{{ p.name }}<br>{{ p.address }}<br>{{ p.country | country_name }}{% endif %}</p>
 {% endmacro %}
 <aside>
   <h1>{{ labels.document_title }}</h1>
@@ -31,7 +31,7 @@
   <h2>{{ labels.invoice_date }}</h2>
   <p>{{ invoice.invoice_date.strftime(date_format) }}</p>
   {{ party(labels.shipper, invoice.shipper) }}
-  {{ party(labels.buyer, invoice.buyer) }}
+  {{ party(labels.buyer, invoice.buyer, buyer_reference) }}
   {{ party(labels.consignee, invoice.consignee) }}
   {% if invoice.notify_party %}{{ party(labels.notify_party, invoice.notify_party) }}{% endif %}
   <h2>{{ labels.incoterm }}</h2>

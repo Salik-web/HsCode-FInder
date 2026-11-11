@@ -11,6 +11,7 @@ from app.schemas.raw import RawInvoice, RawParty
 from synth import generator
 from synth.generator import (
     ANCHOR_DATE,
+    BUYER_REFERENCE_PHRASES,
     CENT,
     COUNTRY_NAMES,
     CURRENCIES,
@@ -278,6 +279,46 @@ def test_party_choices_never_change_other_fields(
     assert [i.model_dump(include=party_fields) for i in forced] != [
         i.model_dump(include=party_fields) for i in normal
     ]
+
+
+def test_about_thirty_percent_of_shared_buyers_are_printed_as_a_reference(
+    documents: list[GroundTruth],
+) -> None:
+    shared = [d for d in documents if d.invoice.buyer == d.invoice.consignee]
+    referenced = [d for d in shared if d.buyer_reference is not None]
+    assert 0.2 <= len(referenced) / len(shared) <= 0.4
+    assert {d.buyer_reference for d in referenced} == set(BUYER_REFERENCE_PHRASES)
+
+
+def test_only_a_buyer_identical_to_the_consignee_is_printed_as_a_reference(
+    documents: list[GroundTruth],
+) -> None:
+    for document in documents:
+        if document.buyer_reference is not None:
+            assert document.invoice.buyer == document.invoice.consignee
+
+
+def test_ground_truth_rejects_a_reference_to_a_different_company(
+    documents: list[GroundTruth],
+) -> None:
+    distinct = next(d for d in documents if d.invoice.buyer != d.invoice.consignee)
+    with pytest.raises(ValidationError, match="buyer_reference"):
+        GroundTruth(
+            invoice=distinct.invoice,
+            true_hs_codes=distinct.true_hs_codes,
+            buyer_reference=BUYER_REFERENCE_PHRASES[0],
+        )
+
+
+@pytest.mark.parametrize("probability", [0.0, 1.0])
+def test_buyer_reference_never_changes_the_invoice(
+    catalogue: list[CatalogueItem], monkeypatch: pytest.MonkeyPatch, probability: float
+) -> None:
+    normal = [generate_ground_truth(SEED, i, catalogue) for i in range(30)]
+    monkeypatch.setattr(generator, "BUYER_REFERENCE_PROBABILITY", probability)
+    forced = [generate_ground_truth(SEED, i, catalogue) for i in range(30)]
+    assert [d.invoice for d in forced] == [d.invoice for d in normal]
+    assert [d.buyer_reference for d in forced] != [d.buyer_reference for d in normal]
 
 
 def test_pakistan_addresses_name_a_pakistani_city(documents: list[GroundTruth]) -> None:

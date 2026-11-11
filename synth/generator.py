@@ -47,6 +47,15 @@ BUYER_IS_CONSIGNEE_PROBABILITY = 0.6
 # A different buyer is either local to the consignee or a trader in a third country.
 BUYER_IN_CONSIGNEE_COUNTRY_PROBABILITY = 0.5
 NOTIFY_PARTY_PROBABILITY = 0.4
+# When buyer and consignee are one company, some invoices print a reference to the consignee
+# block instead of repeating it. The ground truth still holds the full, resolved buyer.
+BUYER_REFERENCE_PROBABILITY = 0.3
+BUYER_REFERENCE_PHRASES = (
+    "Same as consignee",
+    "As per consignee",
+    "Same as consignee details",
+    "As consignee",
+)
 
 
 class Country(NamedTuple):
@@ -91,11 +100,20 @@ class GroundTruth(BaseModel):
 
     invoice: RawInvoice
     true_hs_codes: list[str]
+    # The phrase printed in the buyer block instead of the buyer's details; None when the
+    # buyer is printed in full. Evals score these buyers as their own slice.
+    buyer_reference: str | None
 
     @model_validator(mode="after")
     def one_hs_code_per_line(self) -> Self:
         if len(self.true_hs_codes) != len(self.invoice.line_items):
             raise ValueError("true_hs_codes must align with line_items")
+        return self
+
+    @model_validator(mode="after")
+    def reference_only_to_the_same_company(self) -> Self:
+        if self.buyer_reference is not None and self.invoice.buyer != self.invoice.consignee:
+            raise ValueError("buyer_reference needs a buyer identical to the consignee")
         return self
 
 
@@ -137,7 +155,12 @@ def generate_ground_truth(seed: int, index: int, catalogue: list[CatalogueItem])
         gross_weight_kg=gross_weight,
         net_weight_kg=net_weight,
     )
-    return GroundTruth(invoice=invoice, true_hs_codes=[item.hs_code for item in items])
+    return GroundTruth(
+        invoice=invoice,
+        true_hs_codes=[item.hs_code for item in items],
+        # Its own stream too, so choosing a reference never changes a value in the invoice.
+        buyer_reference=_pick_buyer_reference(derive_rng(seed, "buyer_reference", index), invoice),
+    )
 
 
 def _pick_line_count(rng: random.Random, catalogue_size: int) -> int:
@@ -186,6 +209,12 @@ def _make_notify_party(rng: random.Random, consignee_country: Country) -> RawPar
     if rng.random() >= NOTIFY_PARTY_PROBABILITY:
         return None
     return _make_party(rng, consignee_country)
+
+
+def _pick_buyer_reference(rng: random.Random, invoice: RawInvoice) -> str | None:
+    if invoice.buyer != invoice.consignee or rng.random() >= BUYER_REFERENCE_PROBABILITY:
+        return None
+    return rng.choice(BUYER_REFERENCE_PHRASES)
 
 
 def _make_address(rng: random.Random, fake: Faker, country: Country) -> str:

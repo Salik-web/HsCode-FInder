@@ -111,6 +111,18 @@ def test_notify_party_block_is_hidden_when_there_is_none(template: str) -> None:
     assert "@notify_party@" not in render_html(invoice, template, marker_labels()).casefold()
 
 
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_buyer_reference_replaces_the_buyer_details(template: str) -> None:
+    invoice = invoice_with_hs_codes()
+    distinct_buyer = invoice.buyer.model_copy(update={"name": "@buyer_name@"})
+    invoice = invoice.model_copy(update={"buyer": distinct_buyer})
+    html = render_html(invoice, template, marker_labels(), "@reference@")
+    assert "@buyer@" in html.casefold()
+    assert "@reference@" in html
+    assert "@buyer_name@" not in html
+    assert "@buyer_name@" in render_html(invoice, template, marker_labels())
+
+
 def test_no_wording_is_shared_between_fields() -> None:
     owners: dict[str, str] = {}
     for field, options in LABEL_SYNONYMS.items():

@@ -88,8 +88,9 @@ def _write_clean_document(
     template = template_for(index)
     truth = generate_ground_truth(seed, index, catalogue)
     labels = pick_labels(derive_rng(seed, "labels", index))
-    pdf = render_pdf(page, render_html(truth.invoice, template, labels))
-    missing = find_missing_text(pdf, truth.invoice, template)
+    html = render_html(truth.invoice, template, labels, truth.buyer_reference)
+    pdf = render_pdf(page, html)
+    missing = find_missing_text(pdf, truth.invoice, template, truth.buyer_reference)
     if missing:
         raise PrintedTextMismatchError(f"{doc_id} ({template}) doesn't show: {missing}")
     pdf_path = f"{CLEAN_DIR}/{doc_id}.pdf"

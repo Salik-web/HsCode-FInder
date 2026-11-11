@@ -31,12 +31,12 @@
 </style>
 </head>
 <body>
-{% macro party(label, p) %}
+{% macro party(label, p, reference=none) %}
   <div>
     <div class="caption">{{ label }}</div>
-    <div>{{ p.name }}</div>
+    <div>{% if reference %}{{ reference }}{% else %}{{ p.name }}</div>
     <div>{{ p.address }}</div>
-    <div>{{ p.country | country_name }}</div>
+    <div>{{ p.country | country_name }}{% endif %}</div>
   </div>
 {% endmacro %}
 <div class="head">
@@ -53,7 +53,7 @@
   </div>
 </div>
 <div class="parties">
-  {{ party(labels.buyer, invoice.buyer) }}
+  {{ party(labels.buyer, invoice.buyer, buyer_reference) }}
   {{ party(labels.consignee, invoice.consignee) }}
   {% if invoice.notify_party %}{{ party(labels.notify_party, invoice.notify_party) }}{% endif %}
 </div>
