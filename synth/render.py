@@ -57,10 +57,14 @@ def _build_environment() -> Environment:
 ENVIRONMENT = _build_environment()
 
 
-def render_html(invoice: RawInvoice, template: str, labels: Labels) -> str:
+def render_html(
+    invoice: RawInvoice, template: str, labels: Labels, buyer_reference: str | None = None
+) -> str:
+    """Render one invoice; `buyer_reference` replaces the buyer's details when given."""
     return ENVIRONMENT.get_template(f"{template}.html.j2").render(
         invoice=invoice,
         labels=labels,
+        buyer_reference=buyer_reference,
         date_format=DATE_FORMATS[template],
         show_hs=any(line.hs_code_on_doc for line in invoice.line_items),
     )
@@ -104,7 +108,9 @@ def count_pages(pdf: bytes) -> int:
         return len(document)
 
 
-def find_missing_text(pdf: bytes, invoice: RawInvoice, template: str) -> list[str]:
+def find_missing_text(
+    pdf: bytes, invoice: RawInvoice, template: str, buyer_reference: str | None = None
+) -> list[str]:
     """Return ground-truth values absent from the PDF's text.
 
     A template bug here would silently corrupt every eval number, so generation checks
@@ -113,7 +119,7 @@ def find_missing_text(pdf: bytes, invoice: RawInvoice, template: str) -> list[st
     with pypdfium2.PdfDocument(pdf) as document:
         pages = [page.get_textpage().get_text_bounded() for page in document]
     printed = _normalise_text(" ".join(pages))
-    expected = _expected_text(invoice, template)
+    expected = _expected_text(invoice, template, buyer_reference)
     return [value for value in expected if _normalise_text(value) not in printed]
 
 
@@ -123,7 +129,7 @@ def _normalise_text(text: str) -> str:
     return collapsed.replace("- ", "-")
 
 
-def _expected_text(invoice: RawInvoice, template: str) -> list[str]:
+def _expected_text(invoice: RawInvoice, template: str, buyer_reference: str | None) -> list[str]:
     values = [
         invoice.invoice_number,
         invoice.invoice_date.strftime(DATE_FORMATS[template]),
@@ -133,7 +139,11 @@ def _expected_text(invoice: RawInvoice, template: str) -> list[str]:
         str(invoice.net_weight_kg),
         str(invoice.gross_weight_kg),
     ]
-    parties = [invoice.shipper, invoice.buyer, invoice.consignee, invoice.notify_party]
+    parties = [invoice.shipper, invoice.consignee, invoice.notify_party]
+    if buyer_reference is None:
+        parties.append(invoice.buyer)
+    else:
+        values.append(buyer_reference)
     for party in parties:
         if party is not None:
             values += [party.name, party.address, COUNTRY_NAMES[party.country]]

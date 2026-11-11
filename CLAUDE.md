@@ -10,10 +10,14 @@ TradeDoc AI extracts structured data from trade documents (commercial invoices f
 Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H & J Corporation) and as a public portfolio project.
 
 ## Status
-- Current phase: **Phase 2 — Extraction + eval harness + tracing** (not started)
+- Current phase: **Phase 2 — Extraction + eval harness + tracing** (built and tested; baseline incomplete)
 - Completed phases: Phase 1 — Foundation + synthetic data (approved by Salik, 2026-11-07)
-- Latest eval baseline: none yet
+- Latest eval baseline: partial, `gemini-3.5-flash` + prompt v1, 2026-11-11: clean dev 10/53 and messy dev 2/16 scored, all 100%. See evals/CHANGELOG.md.
 - Known issues / open decisions:
+  - Gemini free tier allows 20 requests per model per day, so the 69 dev documents plus the 31 unseen ones take about five days on one model. Rerunning a command resumes from cache. Choosing to wait, switch model or pay is Salik's call.
+  - Langfuse keys aren't in `.env`, so tracing is built and unit-tested but has never sent a real trace.
+  - `gemini-3.7-flash` and `gemini-3.8-flash` hang on this key; `gemini-3.6-flash` returned 503. The 429 quota record names `gemini-3.6-flash` while responses say `gemini-3.5-flash`, so Google may be serving 3.5 from 3.6.
+  - About 30% of buyers who are the consignee print "Same as consignee" (or a synonym). Ground truth holds the full buyer; reports score these as the `reference` slice.
   - `synth/catalogue.csv` holds 30 unverified placeholder rows: HS codes, units and `kg_per_unit` are all estimates. Replace with real PCT entries.
   - Unit prices are random, not tied to the goods. Accepted for now.
   - pypdfium2 has only been tested on our own Chromium PDFs. Verify it on scanned and real documents in Phase 3.
@@ -37,6 +41,9 @@ uv run pytest tests/test_metrics.py -q              # metrics tests (run after A
 uv run ruff check . --fix && uv run ruff format .   # lint + format
 uv run python -m synth.generate --n 100 --messy 30 --seed 42
 uv run python -m evals.run --dataset synthetic_clean --split dev --limit 20
+uv run python -m evals.run --dataset synthetic_messy --split dev --model gemini-3.5-flash --prompt v1
+uv run python -m evals.run --dataset synthetic_clean --split test_unseen_layout   # reporting only
+uv run python -m evals.run --dataset synthetic_clean --split dev --fallback       # let the fallback model answer on rate limits
 uv run alembic upgrade head                         # DB migrations (Phase 6+)
 uv run uvicorn app.api.main:app --reload            # API (Phase 6+)
 ```
@@ -47,14 +54,14 @@ Keep this list accurate. If you add a command, add it here.
 app/api/        FastAPI routes only — thin, no business logic
 app/pipeline/   pure functions: preprocess, classify, extract, validate, hs_suggest
 app/schemas/    Pydantic models (RawInvoice from LLM, Invoice with Field[T])
-app/llm/        LLMClient protocol, OpenAI-compatible provider, disk cache
+app/llm/        LLMClient protocol, OpenAI-compatible provider, disk cache, fallback, Langfuse tracing, factory
 app/db/         SQLAlchemy 2.0 models + Alembic migrations
 prompts/        versioned prompts: prompts/<doc_type>/v<N>.md (never edit an old version)
-evals/          metrics.py, run.py, datasets/ (manifests), reports/
+evals/          metrics.py, dataset.py, report.py, run.py (CLI), reports/, CHANGELOG.md
 synth/          generator, layouts (+ label synonyms), Jinja2 templates, render, augment, manifest, generate (CLI), catalogue.csv
 tariff/         PCT schedule ingestion -> pgvector
 web/            Next.js + Tailwind review UI
-tests/          pytest; LLM always mocked
+tests/          pytest; LLM always mocked (tests/fakes.py)
 ```
 
 ## Tech stack

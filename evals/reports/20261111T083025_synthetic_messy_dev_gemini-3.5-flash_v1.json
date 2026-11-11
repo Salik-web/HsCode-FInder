@@ -1,0 +1,2627 @@
+{
+  "meta": {
+    "run_id": "20261111T083025_synthetic_messy_dev_gemini-3.5-flash_v1",
+    "created_at": "2026-11-11T08:30:25.663304Z",
+    "git_sha": "de94f82ea3bc964e91af516b443216d877205cbb",
+    "git_dirty": true,
+    "dataset": "synthetic_messy",
+    "split": "dev",
+    "model": "gemini-3.5-flash",
+    "prompt_version": "v1",
+    "schema_version": "1.0",
+    "documents_total": 16,
+    "documents_scored": 2,
+    "llm_calls_made": 0,
+    "llm_calls_cached": 2
+  },
+  "layout_groups": {
+    "seen": {
+      "summary": {
+        "documents": 2,
+        "fields": [
+          {
+            "field": "invoice_number",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "invoice_date",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "incoterm",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "currency",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "total_amount",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "gross_weight_kg",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "net_weight_kg",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "shipper.name",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "shipper.address",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "shipper.country",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "buyer.name",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "buyer.address",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "buyer.country",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "consignee.name",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "consignee.address",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "consignee.country",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "notify_party.name",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "notify_party.address",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "notify_party.country",
+            "total": 2,
+            "correct": 2,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.description",
+            "total": 27,
+            "correct": 27,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.quantity",
+            "total": 27,
+            "correct": 27,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.unit",
+            "total": 27,
+            "correct": 27,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.unit_price",
+            "total": 27,
+            "correct": 27,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.amount",
+            "total": 27,
+            "correct": 27,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "total": 27,
+            "correct": 27,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          }
+        ],
+        "line_precision": 1.0,
+        "line_recall": 1.0,
+        "line_f1": 1.0,
+        "critical_field_accuracy": 1.0,
+        "all_critical_correct_rate": 1.0
+      },
+      "operations": {
+        "documents": 2,
+        "needs_review_rate": 0.0,
+        "failed_rate": 0.0,
+        "retry_rate": 0.0,
+        "cost_per_document_usd": "0",
+        "latency_p50_ms": 24632,
+        "latency_p95_ms": 27519
+      }
+    },
+    "unseen": {
+      "summary": {
+        "documents": 0,
+        "fields": [],
+        "line_precision": null,
+        "line_recall": null,
+        "line_f1": null,
+        "critical_field_accuracy": null,
+        "all_critical_correct_rate": null
+      },
+      "operations": {
+        "documents": 0,
+        "needs_review_rate": null,
+        "failed_rate": null,
+        "retry_rate": null,
+        "cost_per_document_usd": null,
+        "latency_p50_ms": null,
+        "latency_p95_ms": null
+      }
+    }
+  },
+  "templates": {
+    "airy": {
+      "summary": {
+        "documents": 1,
+        "fields": [
+          {
+            "field": "invoice_number",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "invoice_date",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "incoterm",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "currency",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "total_amount",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "gross_weight_kg",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "net_weight_kg",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "shipper.name",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "shipper.address",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "shipper.country",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "buyer.name",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "buyer.address",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "buyer.country",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "consignee.name",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "consignee.address",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "consignee.country",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "notify_party.name",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "notify_party.address",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "notify_party.country",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.description",
+            "total": 12,
+            "correct": 12,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.quantity",
+            "total": 12,
+            "correct": 12,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.unit",
+            "total": 12,
+            "correct": 12,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.unit_price",
+            "total": 12,
+            "correct": 12,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.amount",
+            "total": 12,
+            "correct": 12,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "total": 12,
+            "correct": 12,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          }
+        ],
+        "line_precision": 1.0,
+        "line_recall": 1.0,
+        "line_f1": 1.0,
+        "critical_field_accuracy": 1.0,
+        "all_critical_correct_rate": 1.0
+      },
+      "operations": {
+        "documents": 1,
+        "needs_review_rate": 0.0,
+        "failed_rate": 0.0,
+        "retry_rate": 0.0,
+        "cost_per_document_usd": "0",
+        "latency_p50_ms": 24632,
+        "latency_p95_ms": 24632
+      }
+    },
+    "boxed": {
+      "summary": {
+        "documents": 0,
+        "fields": [],
+        "line_precision": null,
+        "line_recall": null,
+        "line_f1": null,
+        "critical_field_accuracy": null,
+        "all_critical_correct_rate": null
+      },
+      "operations": {
+        "documents": 0,
+        "needs_review_rate": null,
+        "failed_rate": null,
+        "retry_rate": null,
+        "cost_per_document_usd": null,
+        "latency_p50_ms": null,
+        "latency_p95_ms": null
+      }
+    },
+    "classic": {
+      "summary": {
+        "documents": 1,
+        "fields": [
+          {
+            "field": "invoice_number",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "invoice_date",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "incoterm",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "currency",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "total_amount",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "gross_weight_kg",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "net_weight_kg",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "shipper.name",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "shipper.address",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "shipper.country",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "buyer.name",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "buyer.address",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "buyer.country",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "consignee.name",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "consignee.address",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "consignee.country",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "notify_party.name",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "notify_party.address",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "notify_party.country",
+            "total": 1,
+            "correct": 1,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.description",
+            "total": 15,
+            "correct": 15,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.quantity",
+            "total": 15,
+            "correct": 15,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.unit",
+            "total": 15,
+            "correct": 15,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.unit_price",
+            "total": 15,
+            "correct": 15,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.amount",
+            "total": 15,
+            "correct": 15,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "total": 15,
+            "correct": 15,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          }
+        ],
+        "line_precision": 1.0,
+        "line_recall": 1.0,
+        "line_f1": 1.0,
+        "critical_field_accuracy": 1.0,
+        "all_critical_correct_rate": 1.0
+      },
+      "operations": {
+        "documents": 1,
+        "needs_review_rate": 0.0,
+        "failed_rate": 0.0,
+        "retry_rate": 0.0,
+        "cost_per_document_usd": "0",
+        "latency_p50_ms": 27519,
+        "latency_p95_ms": 27519
+      }
+    },
+    "compact": {
+      "summary": {
+        "documents": 0,
+        "fields": [],
+        "line_precision": null,
+        "line_recall": null,
+        "line_f1": null,
+        "critical_field_accuracy": null,
+        "all_critical_correct_rate": null
+      },
+      "operations": {
+        "documents": 0,
+        "needs_review_rate": null,
+        "failed_rate": null,
+        "retry_rate": null,
+        "cost_per_document_usd": null,
+        "latency_p50_ms": null,
+        "latency_p95_ms": null
+      }
+    },
+    "modern": {
+      "summary": {
+        "documents": 0,
+        "fields": [],
+        "line_precision": null,
+        "line_recall": null,
+        "line_f1": null,
+        "critical_field_accuracy": null,
+        "all_critical_correct_rate": null
+      },
+      "operations": {
+        "documents": 0,
+        "needs_review_rate": null,
+        "failed_rate": null,
+        "retry_rate": null,
+        "cost_per_document_usd": null,
+        "latency_p50_ms": null,
+        "latency_p95_ms": null
+      }
+    },
+    "summary": {
+      "summary": {
+        "documents": 0,
+        "fields": [],
+        "line_precision": null,
+        "line_recall": null,
+        "line_f1": null,
+        "critical_field_accuracy": null,
+        "all_critical_correct_rate": null
+      },
+      "operations": {
+        "documents": 0,
+        "needs_review_rate": null,
+        "failed_rate": null,
+        "retry_rate": null,
+        "cost_per_document_usd": null,
+        "latency_p50_ms": null,
+        "latency_p95_ms": null
+      }
+    }
+  },
+  "buyer_forms": {
+    "reference": {
+      "seen": [],
+      "unseen": []
+    },
+    "repeated": {
+      "seen": [
+        {
+          "field": "buyer.name",
+          "total": 2,
+          "correct": 2,
+          "wrong": 0,
+          "missed": 0,
+          "hallucinated": 0,
+          "no_output": 0,
+          "accuracy": 1.0
+        },
+        {
+          "field": "buyer.address",
+          "total": 2,
+          "correct": 2,
+          "wrong": 0,
+          "missed": 0,
+          "hallucinated": 0,
+          "no_output": 0,
+          "accuracy": 1.0
+        },
+        {
+          "field": "buyer.country",
+          "total": 2,
+          "correct": 2,
+          "wrong": 0,
+          "missed": 0,
+          "hallucinated": 0,
+          "no_output": 0,
+          "accuracy": 1.0
+        }
+      ],
+      "unseen": []
+    },
+    "distinct": {
+      "seen": [],
+      "unseen": []
+    }
+  },
+  "documents": [
+    {
+      "id": "inv_00000_messy",
+      "template": "classic",
+      "layout_group": "seen",
+      "buyer_form": "repeated",
+      "status": "scored",
+      "preprocess_status": "ok",
+      "extract_status": "ok",
+      "error": null,
+      "score": {
+        "fields": [
+          {
+            "field": "invoice_number",
+            "outcome": "correct",
+            "expected": "CI/25/99554",
+            "predicted": "CI/25/99554"
+          },
+          {
+            "field": "invoice_date",
+            "outcome": "correct",
+            "expected": "2025-10-24",
+            "predicted": "2025-10-24"
+          },
+          {
+            "field": "incoterm",
+            "outcome": "correct",
+            "expected": "FOB",
+            "predicted": "FOB"
+          },
+          {
+            "field": "currency",
+            "outcome": "correct",
+            "expected": "USD",
+            "predicted": "USD"
+          },
+          {
+            "field": "total_amount",
+            "outcome": "correct",
+            "expected": "1202579.07",
+            "predicted": "1202579.07"
+          },
+          {
+            "field": "gross_weight_kg",
+            "outcome": "correct",
+            "expected": "4772.61",
+            "predicted": "4772.61"
+          },
+          {
+            "field": "net_weight_kg",
+            "outcome": "correct",
+            "expected": "4419.08",
+            "predicted": "4419.08"
+          },
+          {
+            "field": "shipper.name",
+            "outcome": "correct",
+            "expected": "Barkholz AG",
+            "predicted": "Barkholz AG"
+          },
+          {
+            "field": "shipper.address",
+            "outcome": "correct",
+            "expected": "Türkan-Bähr-Straße 12 81062 Bamberg",
+            "predicted": "Türkan-Bähr-Straße 12 81062 Bamberg"
+          },
+          {
+            "field": "shipper.country",
+            "outcome": "correct",
+            "expected": "DE",
+            "predicted": "DE"
+          },
+          {
+            "field": "buyer.name",
+            "outcome": "correct",
+            "expected": "Ossama Ltd",
+            "predicted": "Ossama Ltd"
+          },
+          {
+            "field": "buyer.address",
+            "outcome": "correct",
+            "expected": "Plot 162, Block D, Multan 29435",
+            "predicted": "Plot 162, Block D, Multan 29435"
+          },
+          {
+            "field": "buyer.country",
+            "outcome": "correct",
+            "expected": "PK",
+            "predicted": "PK"
+          },
+          {
+            "field": "consignee.name",
+            "outcome": "correct",
+            "expected": "Ossama Ltd",
+            "predicted": "Ossama Ltd"
+          },
+          {
+            "field": "consignee.address",
+            "outcome": "correct",
+            "expected": "Plot 162, Block D, Multan 29435",
+            "predicted": "Plot 162, Block D, Multan 29435"
+          },
+          {
+            "field": "consignee.country",
+            "outcome": "correct",
+            "expected": "PK",
+            "predicted": "PK"
+          },
+          {
+            "field": "notify_party.name",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "notify_party.address",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "notify_party.country",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Lithium-ion batteries 48V",
+            "predicted": "Lithium-ion batteries 48V"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "4",
+            "predicted": "4"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PCS",
+            "predicted": "PCS"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "357.88",
+            "predicted": "357.88"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "1431.52",
+            "predicted": "1431.52"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "PET resin bottle grade",
+            "predicted": "PET resin bottle grade"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "117.44",
+            "predicted": "117.44"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "KG",
+            "predicted": "KG"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "5.03",
+            "predicted": "5.03"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "590.72",
+            "predicted": "590.72"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Black tea in bulk packs",
+            "predicted": "Black tea in bulk packs"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "120.74",
+            "predicted": "120.74"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "KG",
+            "predicted": "KG"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "15.29",
+            "predicted": "15.29"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "1846.11",
+            "predicted": "1846.11"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Printing paper A4 80 gsm",
+            "predicted": "Printing paper A4 80 gsm"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "57",
+            "predicted": "57"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "CTN",
+            "predicted": "CTN"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "476.06",
+            "predicted": "476.06"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "27135.42",
+            "predicted": "27135.42"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Radial car tyres 205/55 R16",
+            "predicted": "Radial car tyres 205/55 R16"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "38",
+            "predicted": "38"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PCS",
+            "predicted": "PCS"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "165.54",
+            "predicted": "165.54"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "6290.52",
+            "predicted": "6290.52"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Smartphones 5G",
+            "predicted": "Smartphones 5G"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "201",
+            "predicted": "201"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PCS",
+            "predicted": "PCS"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "469.88",
+            "predicted": "469.88"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "94445.88",
+            "predicted": "94445.88"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Cotton terry towels",
+            "predicted": "Cotton terry towels"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "191",
+            "predicted": "191"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PCS",
+            "predicted": "PCS"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "272.69",
+            "predicted": "272.69"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "52083.79",
+            "predicted": "52083.79"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Stainless steel surgical scissors",
+            "predicted": "Stainless steel surgical scissors"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "144",
+            "predicted": "144"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PCS",
+            "predicted": "PCS"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "318.85",
+            "predicted": "318.85"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "45914.40",
+            "predicted": "45914.40"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Motorcycle spare parts",
+            "predicted": "Motorcycle spare parts"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "199",
+            "predicted": "199"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "SET",
+            "predicted": "SET"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "282.37",
+            "predicted": "282.37"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "56191.63",
+            "predicted": "56191.63"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Printed cotton bed linen",
+            "predicted": "Printed cotton bed linen"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "527",
+            "predicted": "527"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "SET",
+            "predicted": "SET"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "471.45",
+            "predicted": "471.45"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "248454.15",
+            "predicted": "248454.15"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Leather industrial work gloves",
+            "predicted": "Leather industrial work gloves"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "707",
+            "predicted": "707"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PAIR",
+            "predicted": "PAIR"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "326.00",
+            "predicted": "326.00"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "230482.00",
+            "predicted": "230482.00"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Ball bearings",
+            "predicted": "Ball bearings"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "633",
+            "predicted": "633"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PCS",
+            "predicted": "PCS"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "368.34",
+            "predicted": "368.34"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "233159.22",
+            "predicted": "233159.22"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Ceramic floor tiles",
+            "predicted": "Ceramic floor tiles"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "39",
+            "predicted": "39"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "CTN",
+            "predicted": "CTN"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "79.56",
+            "predicted": "79.56"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "3102.84",
+            "predicted": "3102.84"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Single-phase electric motors",
+            "predicted": "Single-phase electric motors"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "1",
+            "predicted": "1"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PCS",
+            "predicted": "PCS"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "19.51",
+            "predicted": "19.51"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "19.51",
+            "predicted": "19.51"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Hand-stitched footballs",
+            "predicted": "Hand-stitched footballs"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "416",
+            "predicted": "416"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PCS",
+            "predicted": "PCS"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "484.21",
+            "predicted": "484.21"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "201431.36",
+            "predicted": "201431.36"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          }
+        ],
+        "lines": {
+          "gold": 15,
+          "predicted": 15,
+          "matched": 15
+        },
+        "critical": [
+          {
+            "field": "invoice_number",
+            "outcome": "correct",
+            "expected": "CI/25/99554",
+            "predicted": "CI/25/99554"
+          },
+          {
+            "field": "total_amount",
+            "outcome": "correct",
+            "expected": "1202579.07",
+            "predicted": "1202579.07"
+          },
+          {
+            "field": "currency",
+            "outcome": "correct",
+            "expected": "USD",
+            "predicted": "USD"
+          },
+          {
+            "field": "incoterm",
+            "outcome": "correct",
+            "expected": "FOB",
+            "predicted": "FOB"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "1431.52",
+            "predicted": "1431.52"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "590.72",
+            "predicted": "590.72"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "1846.11",
+            "predicted": "1846.11"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "27135.42",
+            "predicted": "27135.42"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "6290.52",
+            "predicted": "6290.52"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "94445.88",
+            "predicted": "94445.88"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "52083.79",
+            "predicted": "52083.79"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "45914.40",
+            "predicted": "45914.40"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "56191.63",
+            "predicted": "56191.63"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "248454.15",
+            "predicted": "248454.15"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "230482.00",
+            "predicted": "230482.00"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "233159.22",
+            "predicted": "233159.22"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "3102.84",
+            "predicted": "3102.84"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "19.51",
+            "predicted": "19.51"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "201431.36",
+            "predicted": "201431.36"
+          }
+        ],
+        "all_critical_correct": true
+      },
+      "llm_calls": [
+        {
+          "attempt": 1,
+          "model": "gemini-3.5-flash",
+          "input_tokens": 1880,
+          "output_tokens": 947,
+          "latency_ms": 27519,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": []
+        }
+      ]
+    },
+    {
+      "id": "inv_00003_messy",
+      "template": "airy",
+      "layout_group": "seen",
+      "buyer_form": "repeated",
+      "status": "scored",
+      "preprocess_status": "ok",
+      "extract_status": "ok",
+      "error": null,
+      "score": {
+        "fields": [
+          {
+            "field": "invoice_number",
+            "outcome": "correct",
+            "expected": "INV-2025-57843",
+            "predicted": "INV-2025-57843"
+          },
+          {
+            "field": "invoice_date",
+            "outcome": "correct",
+            "expected": "2025-12-11",
+            "predicted": "2025-12-11"
+          },
+          {
+            "field": "incoterm",
+            "outcome": "correct",
+            "expected": "CIP",
+            "predicted": "CIP"
+          },
+          {
+            "field": "currency",
+            "outcome": "correct",
+            "expected": "SGD",
+            "predicted": "SGD"
+          },
+          {
+            "field": "total_amount",
+            "outcome": "correct",
+            "expected": "870631.28",
+            "predicted": "870631.28"
+          },
+          {
+            "field": "gross_weight_kg",
+            "outcome": "correct",
+            "expected": "12488.93",
+            "predicted": "12488.93"
+          },
+          {
+            "field": "net_weight_kg",
+            "outcome": "correct",
+            "expected": "11457.73",
+            "predicted": "11457.73"
+          },
+          {
+            "field": "shipper.name",
+            "outcome": "correct",
+            "expected": "Wensen & van Klaarwater",
+            "predicted": "Wensen & van Klaarwater"
+          },
+          {
+            "field": "shipper.address",
+            "outcome": "correct",
+            "expected": "Mayapad 56 8193PS De Glind",
+            "predicted": "Mayapad 56 8193PS De Glind"
+          },
+          {
+            "field": "shipper.country",
+            "outcome": "correct",
+            "expected": "NL",
+            "predicted": "NL"
+          },
+          {
+            "field": "buyer.name",
+            "outcome": "correct",
+            "expected": "Ibrahim, Rabb and Gulshan",
+            "predicted": "Ibrahim, Rabb and Gulshan"
+          },
+          {
+            "field": "buyer.address",
+            "outcome": "correct",
+            "expected": "Plot 102, Block E, Sialkot 65310",
+            "predicted": "Plot 102, Block E, Sialkot 65310"
+          },
+          {
+            "field": "buyer.country",
+            "outcome": "correct",
+            "expected": "PK",
+            "predicted": "PK"
+          },
+          {
+            "field": "consignee.name",
+            "outcome": "correct",
+            "expected": "Ibrahim, Rabb and Gulshan",
+            "predicted": "Ibrahim, Rabb and Gulshan"
+          },
+          {
+            "field": "consignee.address",
+            "outcome": "correct",
+            "expected": "Plot 102, Block E, Sialkot 65310",
+            "predicted": "Plot 102, Block E, Sialkot 65310"
+          },
+          {
+            "field": "consignee.country",
+            "outcome": "correct",
+            "expected": "PK",
+            "predicted": "PK"
+          },
+          {
+            "field": "notify_party.name",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "notify_party.address",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "notify_party.country",
+            "outcome": "correct",
+            "expected": null,
+            "predicted": null
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Paracetamol API in bulk",
+            "predicted": "Paracetamol API in bulk"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "701.99",
+            "predicted": "701.99"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "KG",
+            "predicted": "KG"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "295.92",
+            "predicted": "295.92"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "207732.88",
+            "predicted": "207732.88"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": "2924.2990",
+            "predicted": "2924.2990"
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Laptop computers 14 inch",
+            "predicted": "Laptop computers 14 inch"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "758",
+            "predicted": "758"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PCS",
+            "predicted": "PCS"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "52.59",
+            "predicted": "52.59"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "39863.22",
+            "predicted": "39863.22"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": "8471.3010",
+            "predicted": "8471.3010"
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "PET resin bottle grade",
+            "predicted": "PET resin bottle grade"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "515.56",
+            "predicted": "515.56"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "KG",
+            "predicted": "KG"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "310.97",
+            "predicted": "310.97"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "160323.69",
+            "predicted": "160323.69"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": "3907.6100",
+            "predicted": "3907.6100"
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Solar photovoltaic panels 550W",
+            "predicted": "Solar photovoltaic panels 550W"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "46",
+            "predicted": "46"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PCS",
+            "predicted": "PCS"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "355.06",
+            "predicted": "355.06"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "16332.76",
+            "predicted": "16332.76"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": "8541.4300",
+            "predicted": "8541.4300"
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Single-phase electric motors",
+            "predicted": "Single-phase electric motors"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "51",
+            "predicted": "51"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PCS",
+            "predicted": "PCS"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "488.01",
+            "predicted": "488.01"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "24888.51",
+            "predicted": "24888.51"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": "8501.4000",
+            "predicted": "8501.4000"
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Cotton terry towels",
+            "predicted": "Cotton terry towels"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "908",
+            "predicted": "908"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PCS",
+            "predicted": "PCS"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "69.60",
+            "predicted": "69.60"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "63196.80",
+            "predicted": "63196.80"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": "6302.6000",
+            "predicted": "6302.6000"
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Cotton yarn, combed, 30s count",
+            "predicted": "Cotton yarn, combed, 30s count"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "522.23",
+            "predicted": "522.23"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "KG",
+            "predicted": "KG"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "305.12",
+            "predicted": "305.12"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "159342.82",
+            "predicted": "159342.82"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": "5205.2400",
+            "predicted": "5205.2400"
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Copper winding wire",
+            "predicted": "Copper winding wire"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "541.15",
+            "predicted": "541.15"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "KG",
+            "predicted": "KG"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "197.55",
+            "predicted": "197.55"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "106904.18",
+            "predicted": "106904.18"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": "8544.1100",
+            "predicted": "8544.1100"
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Centrifugal water pumps",
+            "predicted": "Centrifugal water pumps"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "84",
+            "predicted": "84"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PCS",
+            "predicted": "PCS"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "477.79",
+            "predicted": "477.79"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "40134.36",
+            "predicted": "40134.36"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": "8413.7010",
+            "predicted": "8413.7010"
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Radial car tyres 205/55 R16",
+            "predicted": "Radial car tyres 205/55 R16"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "129",
+            "predicted": "129"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PCS",
+            "predicted": "PCS"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "180.45",
+            "predicted": "180.45"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "23278.05",
+            "predicted": "23278.05"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": "4011.1000",
+            "predicted": "4011.1000"
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Motorcycle spare parts",
+            "predicted": "Motorcycle spare parts"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "549",
+            "predicted": "549"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "SET",
+            "predicted": "SET"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "41.73",
+            "predicted": "41.73"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "22909.77",
+            "predicted": "22909.77"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": "8714.1000",
+            "predicted": "8714.1000"
+          },
+          {
+            "field": "line.description",
+            "outcome": "correct",
+            "expected": "Lithium-ion batteries 48V",
+            "predicted": "Lithium-ion batteries 48V"
+          },
+          {
+            "field": "line.quantity",
+            "outcome": "correct",
+            "expected": "24",
+            "predicted": "24"
+          },
+          {
+            "field": "line.unit",
+            "outcome": "correct",
+            "expected": "PCS",
+            "predicted": "PCS"
+          },
+          {
+            "field": "line.unit_price",
+            "outcome": "correct",
+            "expected": "238.51",
+            "predicted": "238.51"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "5724.24",
+            "predicted": "5724.24"
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "outcome": "correct",
+            "expected": "8507.6000",
+            "predicted": "8507.6000"
+          }
+        ],
+        "lines": {
+          "gold": 12,
+          "predicted": 12,
+          "matched": 12
+        },
+        "critical": [
+          {
+            "field": "invoice_number",
+            "outcome": "correct",
+            "expected": "INV-2025-57843",
+            "predicted": "INV-2025-57843"
+          },
+          {
+            "field": "total_amount",
+            "outcome": "correct",
+            "expected": "870631.28",
+            "predicted": "870631.28"
+          },
+          {
+            "field": "currency",
+            "outcome": "correct",
+            "expected": "SGD",
+            "predicted": "SGD"
+          },
+          {
+            "field": "incoterm",
+            "outcome": "correct",
+            "expected": "CIP",
+            "predicted": "CIP"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "207732.88",
+            "predicted": "207732.88"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "39863.22",
+            "predicted": "39863.22"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "160323.69",
+            "predicted": "160323.69"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "16332.76",
+            "predicted": "16332.76"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "24888.51",
+            "predicted": "24888.51"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "63196.80",
+            "predicted": "63196.80"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "159342.82",
+            "predicted": "159342.82"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "106904.18",
+            "predicted": "106904.18"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "40134.36",
+            "predicted": "40134.36"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "23278.05",
+            "predicted": "23278.05"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "22909.77",
+            "predicted": "22909.77"
+          },
+          {
+            "field": "line.amount",
+            "outcome": "correct",
+            "expected": "5724.24",
+            "predicted": "5724.24"
+          }
+        ],
+        "all_critical_correct": true
+      },
+      "llm_calls": [
+        {
+          "attempt": 1,
+          "model": "gemini-3.5-flash",
+          "input_tokens": 1880,
+          "output_tokens": 930,
+          "latency_ms": 24632,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": []
+        }
+      ]
+    },
+    {
+      "id": "inv_00011_messy",
+      "template": "airy",
+      "layout_group": "seen",
+      "buyer_form": "reference",
+      "status": "not_scored",
+      "preprocess_status": "ok",
+      "extract_status": "failed",
+      "error": "RateLimitedError: gemini rate limit: Error code: 429",
+      "score": null,
+      "llm_calls": []
+    },
+    {
+      "id": "inv_00026_messy",
+      "template": "compact",
+      "layout_group": "seen",
+      "buyer_form": "distinct",
+      "status": "not_scored",
+      "preprocess_status": "ok",
+      "extract_status": "failed",
+      "error": "RateLimitedError: gemini rate limit: Error code: 429",
+      "score": null,
+      "llm_calls": []
+    },
+    {
+      "id": "inv_00034_messy",
+      "template": "compact",
+      "layout_group": "seen",
+      "buyer_form": "repeated",
+      "status": "not_scored",
+      "preprocess_status": "ok",
+      "extract_status": "not_run",
+      "error": "skipped after the LLM became unavailable",
+      "score": null,
+      "llm_calls": []
+    },
+    {
+      "id": "inv_00043_messy",
+      "template": "airy",
+      "layout_group": "seen",
+      "buyer_form": "reference",
+      "status": "not_scored",
+      "preprocess_status": "ok",
+      "extract_status": "not_run",
+      "error": "skipped after the LLM became unavailable",
+      "score": null,
+      "llm_calls": []
+    },
+    {
+      "id": "inv_00045_messy",
+      "template": "boxed",
+      "layout_group": "seen",
+      "buyer_form": "reference",
+      "status": "not_scored",
+      "preprocess_status": "ok",
+      "extract_status": "not_run",
+      "error": "skipped after the LLM became unavailable",
+      "score": null,
+      "llm_calls": []
+    },
+    {
+      "id": "inv_00049_messy",
+      "template": "modern",
+      "layout_group": "seen",
+      "buyer_form": "repeated",
+      "status": "not_scored",
+      "preprocess_status": "ok",
+      "extract_status": "not_run",
+      "error": "skipped after the LLM became unavailable",
+      "score": null,
+      "llm_calls": []
+    },
+    {
+      "id": "inv_00056_messy",
+      "template": "classic",
+      "layout_group": "seen",
+      "buyer_form": "repeated",
+      "status": "not_scored",
+      "preprocess_status": "ok",
+      "extract_status": "not_run",
+      "error": "skipped after the LLM became unavailable",
+      "score": null,
+      "llm_calls": []
+    },
+    {
+      "id": "inv_00058_messy",
+      "template": "compact",
+      "layout_group": "seen",
+      "buyer_form": "repeated",
+      "status": "not_scored",
+      "preprocess_status": "ok",
+      "extract_status": "not_run",
+      "error": "skipped after the LLM became unavailable",
+      "score": null,
+      "llm_calls": []
+    },
+    {
+      "id": "inv_00061_messy",
+      "template": "boxed",
+      "layout_group": "seen",
+      "buyer_form": "repeated",
+      "status": "not_scored",
+      "preprocess_status": "ok",
+      "extract_status": "not_run",
+      "error": "skipped after the LLM became unavailable",
+      "score": null,
+      "llm_calls": []
+    },
+    {
+      "id": "inv_00077_messy",
+      "template": "boxed",
+      "layout_group": "seen",
+      "buyer_form": "repeated",
+      "status": "not_scored",
+      "preprocess_status": "ok",
+      "extract_status": "not_run",
+      "error": "skipped after the LLM became unavailable",
+      "score": null,
+      "llm_calls": []
+    },
+    {
+      "id": "inv_00080_messy",
+      "template": "classic",
+      "layout_group": "seen",
+      "buyer_form": "repeated",
+      "status": "not_scored",
+      "preprocess_status": "ok",
+      "extract_status": "not_run",
+      "error": "skipped after the LLM became unavailable",
+      "score": null,
+      "llm_calls": []
+    },
+    {
+      "id": "inv_00081_messy",
+      "template": "modern",
+      "layout_group": "seen",
+      "buyer_form": "distinct",
+      "status": "not_scored",
+      "preprocess_status": "ok",
+      "extract_status": "not_run",
+      "error": "skipped after the LLM became unavailable",
+      "score": null,
+      "llm_calls": []
+    },
+    {
+      "id": "inv_00095_messy",
+      "template": "summary",
+      "layout_group": "seen",
+      "buyer_form": "repeated",
+      "status": "not_scored",
+      "preprocess_status": "ok",
+      "extract_status": "not_run",
+      "error": "skipped after the LLM became unavailable",
+      "score": null,
+      "llm_calls": []
+    },
+    {
+      "id": "inv_00096_messy",
+      "template": "classic",
+      "layout_group": "seen",
+      "buyer_form": "repeated",
+      "status": "not_scored",
+      "preprocess_status": "ok",
+      "extract_status": "not_run",
+      "error": "skipped after the LLM became unavailable",
+      "score": null,
+      "llm_calls": []
+    }
+  ]
+}

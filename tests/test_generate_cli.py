@@ -213,6 +213,15 @@ def test_every_layout_handles_every_kind_of_invoice(template: str) -> None:
             assert find_missing_text(pdf, invoice, template) == [], name
 
 
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_text_check_expects_the_reference_instead_of_the_buyer(template: str) -> None:
+    invoice = pick_varied_invoices()["buyer_is_consignee_no_notify"]
+    with open_browser_page() as page:
+        pdf = render_pdf(page, render_html(invoice, template, LABELS, "Same as consignee"))
+    assert find_missing_text(pdf, invoice, template, "Same as consignee") == []
+    assert find_missing_text(pdf, invoice, template, "As per consignee") == ["As per consignee"]
+
+
 @pytest.mark.parametrize("template", MULTI_PAGE_TEMPLATES)
 def test_long_invoices_span_two_pages_and_short_ones_do_not(template: str) -> None:
     varied = pick_varied_invoices()
