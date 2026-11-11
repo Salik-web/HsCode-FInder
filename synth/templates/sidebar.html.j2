@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ labels.document_title }}</title>
+<style>
+  @page { size: A4; margin: 0; }
+  html, body { height: 100%; }
+  body { font-family: "Trebuchet MS", Arial, sans-serif; font-size: 9pt; color: #2a2a2a; margin: 0; display: flex; }
+  aside { width: 62mm; background: #2f3e46; color: #eef1f2; padding: 11mm 7mm; box-sizing: border-box; min-height: 297mm; }
+  aside h1 { font-size: 16pt; font-weight: normal; margin: 0 0 6mm; }
+  aside h2 { font-size: 7.5pt; letter-spacing: 1px; text-transform: uppercase; color: #a9bcc4; margin: 4.5mm 0 1mm; font-weight: normal; }
+  aside p { margin: 0; line-height: 1.35; font-size: 8.5pt; }
+  main { flex: 1; padding: 11mm 8mm; box-sizing: border-box; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 7.5pt; background: #dfe7ea; padding: 5px 4px; }
+  td { padding: 6px 4px; border-bottom: 1px dotted #9aa8ae; font-size: 8.5pt; vertical-align: top; }
+  .number { text-align: right; white-space: nowrap; }
+  .total { display: flex; justify-content: space-between; margin-top: 8mm; padding: 3mm 0; border-top: 2px solid #2f3e46; border-bottom: 2px solid #2f3e46; font-size: 12pt; font-weight: bold; }
+</style>
+</head>
+<body>
+{% macro party(label, p) %}
+  <h2>{{ label }}</h2>
+  <p>{{ p.name }}<br>{{ p.address }}<br>{{ p.country | country_name }}</p>
+{% endmacro %}
+<aside>
+  <h1>{{ labels.document_title }}</h1>
+  <h2>{{ labels.invoice_number }}</h2>
+  <p>{{ invoice.invoice_number }}</p>
+  <h2>{{ labels.invoice_date }}</h2>
+  <p>{{ invoice.invoice_date.strftime(date_format) }}</p>
+  {{ party(labels.shipper, invoice.shipper) }}
+  {{ party(labels.buyer, invoice.buyer) }}
+  {{ party(labels.consignee, invoice.consignee) }}
+  {% if invoice.notify_party %}{{ party(labels.notify_party, invoice.notify_party) }}{% endif %}
+  <h2>{{ labels.incoterm }}</h2>
+  <p>{{ invoice.incoterm }}</p>
+  <h2>{{ labels.currency }}</h2>
+  <p>{{ invoice.currency }}</p>
+  <h2>{{ labels.net_weight }}</h2>
+  <p>{{ invoice.net_weight_kg | money }} KG</p>
+  <h2>{{ labels.gross_weight }}</h2>
+  <p>{{ invoice.gross_weight_kg | money }} KG</p>
+</aside>
+<main>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th class="number">{{ labels.quantity }}</th>
+        <th>{{ labels.description }}</th>
+        <th>{{ labels.unit }}</th>
+        {% if show_hs %}<th>{{ labels.hs_code }}</th>{% endif %}
+        <th class="number">{{ labels.unit_price }}</th>
+        <th class="number">{{ labels.amount }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for line in invoice.line_items %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td class="number">{{ line.quantity | quantity }}</td>
+        <td>{{ line.description }}</td>
+        <td>{{ line.unit }}</td>
+        {% if show_hs %}<td>{{ line.hs_code_on_doc }}</td>{% endif %}
+        <td class="number">{{ line.unit_price | money }}</td>
+        <td class="number">{{ line.amount | money }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="total"><span>{{ labels.total }}</span><span>{{ invoice.total_amount | money }} {{ invoice.currency }}</span></div>
+</main>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ labels.document_title }}</title>
+<style>
+  @page { size: A4; margin: 11mm; }
+  body { font-family: Tahoma, Verdana, sans-serif; font-size: 8.5pt; color: #000; margin: 0; }
+  .form { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; border: 2px solid #000; border-bottom: none; }
+  .cell { border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 3px 5px 6px; min-height: 28px; }
+  .end { border-right: none; }
+  .half { grid-column: span 2; min-height: 64px; }
+  .full { grid-column: span 4; border-right: none; min-height: 50px; }
+  .title { grid-column: span 4; border-right: none; text-align: right; font-size: 15pt; font-weight: bold; text-transform: uppercase; padding: 6px 8px; }
+  .tag { display: block; font-size: 6.5pt; text-transform: uppercase; color: #333; margin-bottom: 2px; }
+  table { width: 100%; border-collapse: collapse; border: 2px solid #000; border-top: none; }
+  th { border: 1px solid #000; background: #000; color: #fff; font-size: 7.5pt; padding: 3px 4px; text-align: left; }
+  td { border: 1px solid #000; padding: 4px; }
+  .number { text-align: right; white-space: nowrap; }
+  .sum td { font-weight: bold; font-size: 10pt; }
+  .stamp { margin-top: 18px; display: flex; justify-content: flex-end; }
+  .stamp div { border: 1px dashed #000; width: 60mm; height: 22mm; padding: 3px 5px; font-size: 7pt; }
+</style>
+</head>
+<body>
+{% macro party(number, label, p, css) %}
+  <div class="cell {{ css }}">
+    <span class="tag">{{ number }}. {{ label }}</span>
+    {{ p.name }}<br>{{ p.address }}<br>{{ p.country | country_name }}
+  </div>
+{% endmacro %}
+<div class="form">
+  <div class="cell title">{{ labels.document_title }}</div>
+  {{ party(1, labels.shipper, invoice.shipper, "half") }}
+  {{ party(2, labels.buyer, invoice.buyer, "half end") }}
+  {% if invoice.notify_party %}
+  {{ party(3, labels.consignee, invoice.consignee, "half") }}
+  {{ party(4, labels.notify_party, invoice.notify_party, "half end") }}
+  {% else %}
+  {{ party(3, labels.consignee, invoice.consignee, "full") }}
+  {% endif %}
+  <div class="cell"><span class="tag">5. {{ labels.invoice_number }}</span>{{ invoice.invoice_number }}</div>
+  <div class="cell"><span class="tag">6. {{ labels.invoice_date }}</span>{{ invoice.invoice_date.strftime(date_format) }}</div>
+  <div class="cell"><span class="tag">7. {{ labels.incoterm }}</span>{{ invoice.incoterm }}</div>
+  <div class="cell end"><span class="tag">8. {{ labels.currency }}</span>{{ invoice.currency }}</div>
+  <div class="cell"><span class="tag">9. {{ labels.net_weight }} (KG)</span>{{ invoice.net_weight_kg | money }}</div>
+  <div class="cell"><span class="tag">10. {{ labels.gross_weight }} (KG)</span>{{ invoice.gross_weight_kg | money }}</div>
+  <div class="cell"><span class="tag">11. Packages</span>As per packing list</div>
+  <div class="cell end"><span class="tag">12. Remarks</span>None</div>
+</div>
+<table>
+  <thead>
+    <tr>
+      {% if show_hs %}<th>{{ labels.hs_code }}</th>{% endif %}
+      <th>{{ labels.description }}</th>
+      <th>{{ labels.unit }}</th>
+      <th class="number">{{ labels.quantity }}</th>
+      <th class="number">{{ labels.unit_price }}</th>
+      <th class="number">{{ labels.amount }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for line in invoice.line_items %}
+    <tr>
+      {% if show_hs %}<td>{{ line.hs_code_on_doc }}</td>{% endif %}
+      <td>{{ line.description }}</td>
+      <td>{{ line.unit }}</td>
+      <td class="number">{{ line.quantity | quantity }}</td>
+      <td class="number">{{ line.unit_price | money }}</td>
+      <td class="number">{{ line.amount | money }}</td>
+    </tr>
+    {% endfor %}
+    <tr class="sum">
+      <td colspan="{{ 5 if show_hs else 4 }}" class="number">{{ labels.total }} ({{ invoice.currency }})</td>
+      <td class="number">{{ invoice.total_amount | money }}</td>
+    </tr>
+  </tbody>
+</table>
+<div class="stamp"><div>Company stamp and signature</div></div>
+</body>
+</html>

@@ -2,6 +2,7 @@
 
 import hashlib
 import random
+import re
 import time
 from pathlib import Path
 
@@ -14,11 +15,18 @@ from synth import generate
 from synth.augment import STRENGTH_RANGES, TRANSFORM_ORDER, augment_pdf
 from synth.generate import MANIFEST_NAME, build_dataset
 from synth.generator import GroundTruth, generate_ground_truth, load_catalogue
-from synth.manifest import Manifest, ManifestEntry
+from synth.layouts import (
+    LABEL_SYNONYMS,
+    MULTI_PAGE_TEMPLATES,
+    TEMPLATES,
+    UNSEEN_TEMPLATES,
+    Labels,
+    pick_labels,
+)
+from synth.manifest import UNSEEN_SPLIT, Manifest, ManifestEntry
 from synth.render import (
     FIXED_PDF_TIMESTAMP,
     PDFIUM_WRAPPED_HYPHEN,
-    TEMPLATES,
     count_pages,
     find_missing_text,
     normalise_pdf,
@@ -29,9 +37,18 @@ from synth.render import (
 )
 
 SEED = 42
-N_CLEAN = 6
+N_CLEAN = len(TEMPLATES)  # one document per layout
 N_MESSY = 3
 TIMESTAMP_RESOLUTION_SECONDS = 1.1
+# Long enough to wrap inside the digit run even in the widest layout (`ledger`, full width).
+DIGIT_HYPHEN_ADDRESS = (
+    f"Gewerbepark {'-'.join(['12', '34', '56', '78', '90'] * 8)} 58635 Lobenstein"
+)
+LABELS = pick_labels(random.Random(SEED))
+# The widest wording, which is the hardest for a narrow column or a single-page layout.
+LONGEST_LABELS = Labels(
+    **{field: max(options, key=len) for field, options in LABEL_SYNONYMS.items()}
+)
 
 
 @pytest.fixture(scope="module")
@@ -97,6 +114,24 @@ def test_messy_documents_share_source_split_and_truth(manifest: Manifest) -> Non
         assert entry.ground_truth == source.ground_truth
 
 
+def test_messy_sources_are_single_page(manifest: Manifest) -> None:
+    clean_by_id = {entry.id: entry for entry in clean_entries(manifest)}
+    for entry in messy_entries(manifest):
+        assert clean_by_id[entry.source_id].pages == 1
+
+
+def test_every_layout_appears_in_the_dataset(manifest: Manifest) -> None:
+    assert {entry.template for entry in clean_entries(manifest)} == set(TEMPLATES)
+
+
+def test_manifest_marks_held_out_layouts_as_unseen(manifest: Manifest) -> None:
+    assert manifest.unseen_templates == list(UNSEEN_TEMPLATES)
+    for entry in manifest.documents:
+        is_unseen = entry.template in UNSEEN_TEMPLATES
+        assert (entry.split == UNSEEN_SPLIT) == is_unseen
+        assert (entry.layout_group == "unseen") == is_unseen
+
+
 def test_messy_documents_record_their_transforms(manifest: Manifest) -> None:
     for entry in messy_entries(manifest):
         assert len(entry.transforms) >= 2
@@ -131,8 +166,16 @@ def pick_varied_invoices() -> dict[str, RawInvoice]:
     with_hs = [invoice for invoice in invoices if invoice.line_items[0].hs_code_on_doc]
     without_hs = [invoice for invoice in invoices if not invoice.line_items[0].hs_code_on_doc]
     longest_with_hs = max(with_hs, key=lambda invoice: len(invoice.line_items))
-    parties = [party for invoice in invoices for party in (invoice.shipper, invoice.consignee)]
+    parties = [
+        party
+        for invoice in invoices
+        for party in (invoice.shipper, invoice.buyer, invoice.consignee, invoice.notify_party)
+        if party is not None
+    ]
     wordiest = max(parties, key=lambda party: len(party.name) + len(party.address))
+    # Regression: Cambria left stray characters in the text layer of this name, which PDFium
+    # read back as "İçİ taş İnİ şaat" even though the page looked right.
+    dotted_i = wordiest.model_copy(update={"name": "İçtaş İnşaat", "country": "TR"})
     return {
         "one_line": min(invoices, key=lambda invoice: len(invoice.line_items)),
         "longest_with_hs": longest_with_hs,
@@ -141,19 +184,44 @@ def pick_varied_invoices() -> dict[str, RawInvoice]:
         "smallest_total": min(invoices, key=lambda invoice: invoice.total_amount),
         "non_ascii_party": next(i for i in invoices if not i.shipper.name.isascii()),
         "ampersand_party": next(i for i in invoices if "&" in i.shipper.name),
+        "dotted_capital_i": invoices[87].model_copy(update={"shipper": dotted_i}),
+        "separate_buyer_and_notify": next(
+            i for i in invoices if i.buyer != i.consignee and i.notify_party is not None
+        ),
+        "buyer_is_consignee_no_notify": next(
+            i for i in invoices if i.buyer == i.consignee and i.notify_party is None
+        ),
+        # Every party block at its longest, on the longest invoice: the most crowded page.
         "worst_case": longest_with_hs.model_copy(
-            update={"shipper": wordiest, "consignee": wordiest}
+            update={
+                "shipper": wordiest,
+                "buyer": wordiest,
+                "consignee": wordiest,
+                "notify_party": wordiest,
+            }
         ),
     }
 
 
 @pytest.mark.parametrize("template", TEMPLATES)
 def test_every_layout_handles_every_kind_of_invoice(template: str) -> None:
+    max_pages = 2 if template in MULTI_PAGE_TEMPLATES else 1
     with open_browser_page() as page:
         for name, invoice in pick_varied_invoices().items():
-            pdf = render_pdf(page, render_html(invoice, template))
-            assert count_pages(pdf) == 1, name
+            pdf = render_pdf(page, render_html(invoice, template, LONGEST_LABELS))
+            assert count_pages(pdf) <= max_pages, name
             assert find_missing_text(pdf, invoice, template) == [], name
+
+
+@pytest.mark.parametrize("template", MULTI_PAGE_TEMPLATES)
+def test_long_invoices_span_two_pages_and_short_ones_do_not(template: str) -> None:
+    varied = pick_varied_invoices()
+    with open_browser_page() as page:
+        long_pdf = render_pdf(page, render_html(varied["longest_with_hs"], template, LABELS))
+        short_pdf = render_pdf(page, render_html(varied["one_line"], template, LABELS))
+    assert count_pages(long_pdf) == 2
+    assert count_pages(short_pdf) == 1
+    assert find_missing_text(long_pdf, varied["longest_with_hs"], template) == []
 
 
 def test_text_check_handles_a_hyphen_at_a_line_wrap() -> None:
@@ -164,16 +232,33 @@ def test_text_check_handles_a_hyphen_at_a_line_wrap() -> None:
     )
     wrapped = invoice.model_copy(update={"shipper": shipper})
     with open_browser_page() as page:
-        pdf = render_pdf(page, render_html(wrapped, "compact"))
+        pdf = render_pdf(page, render_html(wrapped, "compact", LABELS))
     with pypdfium2.PdfDocument(pdf) as document:
         text = document[0].get_textpage().get_text_bounded()
     assert PDFIUM_WRAPPED_HYPHEN in text, "address no longer wraps, so this test proves nothing"
     assert find_missing_text(pdf, wrapped, "compact") == []
 
 
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_text_check_handles_a_hyphen_kept_before_a_line_break(template: str) -> None:
+    """Regression: after a digit, PDFium keeps a wrapped hyphen and the line break (`4-` + break).
+
+    A long run of digit-hyphen pairs makes the wrap land on one, whatever the column width.
+    """
+    invoice = generate_ground_truth(SEED, 0, load_catalogue()).invoice
+    shipper = invoice.shipper.model_copy(update={"address": DIGIT_HYPHEN_ADDRESS, "country": "DE"})
+    wrapped = invoice.model_copy(update={"shipper": shipper})
+    with open_browser_page() as page:
+        pdf = render_pdf(page, render_html(wrapped, template, LABELS))
+    with pypdfium2.PdfDocument(pdf) as document:
+        text = " ".join(page.get_textpage().get_text_bounded() for page in document)
+    assert re.search(r"\d-\r\n\d", text), "no wrap after a digit-hyphen, so this proves nothing"
+    assert find_missing_text(pdf, wrapped, template) == []
+
+
 def test_two_renders_produce_identical_bytes() -> None:
     invoice = generate_ground_truth(SEED, 0, load_catalogue()).invoice
-    html = render_html(invoice, TEMPLATES[0])
+    html = render_html(invoice, TEMPLATES[0], LABELS)
     with open_browser_page() as page:
         first = print_pdf(page, html)
     time.sleep(TIMESTAMP_RESOLUTION_SECONDS)  # so Chromium stamps a different time
@@ -187,7 +272,7 @@ def test_normalising_keeps_the_pdf_valid_and_its_length() -> None:
     invoice = generate_ground_truth(SEED, 0, load_catalogue()).invoice
     template = TEMPLATES[0]
     with open_browser_page() as page:
-        raw = print_pdf(page, render_html(invoice, template))
+        raw = print_pdf(page, render_html(invoice, template, LABELS))
     normalised = normalise_pdf(raw)
     assert len(normalised) == len(raw)
     assert find_missing_text(normalised, invoice, template) == []

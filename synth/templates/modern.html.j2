@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Invoice</title>
+<title>{{ labels.document_title }}</title>
 <style>
   @page { size: A4; margin: 0; }
   body { font-family: "Segoe UI", Arial, sans-serif; font-size: 9.5pt; color: #1d2733; margin: 0; }
-  .band { background: #14506b; color: #fff; padding: 20px 16mm; display: flex; justify-content: space-between; align-items: center; }
+  .band { background: #14506b; color: #fff; padding: 18px 16mm; display: flex; justify-content: space-between; align-items: center; }
   .band h1 { font-size: 22pt; font-weight: 300; letter-spacing: 1px; margin: 0; }
   .band .ref { text-align: right; font-size: 9.5pt; line-height: 1.5; }
-  .content { padding: 8mm 16mm; }
-  .cards { display: flex; gap: 12px; }
-  .card { flex: 1; background: #eef4f7; border-left: 4px solid #14506b; padding: 8px 10px; }
-  .card h3 { font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; color: #14506b; margin: 0 0 4px; }
+  .content { padding: 7mm 16mm; }
+  .cards { display: flex; flex-wrap: wrap; gap: 8px 12px; }
+  .card { flex: 1 1 45%; background: #eef4f7; border-left: 4px solid #14506b; padding: 6px 10px; box-sizing: border-box; }
+  .card h3 { font-size: 8pt; text-transform: uppercase; letter-spacing: 1px; color: #14506b; margin: 0 0 3px; }
   .card .name { font-weight: 600; }
   .facts { display: flex; gap: 12px; margin: 10px 0; }
   .fact { flex: 1; border-bottom: 1px solid #c6d4dc; padding-bottom: 4px; }
@@ -24,48 +24,47 @@
   .number { text-align: right; white-space: nowrap; }
   .summary { display: flex; justify-content: flex-end; margin-top: 10px; }
   .total { background: #14506b; color: #fff; padding: 7px 14px; font-size: 12pt; font-weight: 600; }
-  .note { margin-top: 14px; font-size: 8pt; color: #5b6b78; }
+  .note { margin-top: 12px; font-size: 8pt; color: #5b6b78; }
 </style>
 </head>
 <body>
-{% set show_hs = invoice.line_items | selectattr("hs_code_on_doc") | list | length > 0 %}
+{% macro party(label, p) %}
+  <div class="card">
+    <h3>{{ label }}</h3>
+    <div class="name">{{ p.name }}</div>
+    <div>{{ p.address }}</div>
+    <div>{{ p.country | country_name }}</div>
+  </div>
+{% endmacro %}
 <div class="band">
-  <h1>Invoice</h1>
+  <h1>{{ labels.document_title }}</h1>
   <div class="ref">
-    Invoice # {{ invoice.invoice_number }}<br>
-    Issued {{ invoice.invoice_date.strftime(date_format) }}
+    {{ labels.invoice_number }} {{ invoice.invoice_number }}<br>
+    {{ labels.invoice_date }} {{ invoice.invoice_date.strftime(date_format) }}
   </div>
 </div>
 <div class="content">
   <div class="cards">
-    <div class="card">
-      <h3>From</h3>
-      <div class="name">{{ invoice.shipper.name }}</div>
-      <div>{{ invoice.shipper.address }}</div>
-      <div>{{ invoice.shipper.country | country_name }}</div>
-    </div>
-    <div class="card">
-      <h3>Ship to</h3>
-      <div class="name">{{ invoice.consignee.name }}</div>
-      <div>{{ invoice.consignee.address }}</div>
-      <div>{{ invoice.consignee.country | country_name }}</div>
-    </div>
+    {{ party(labels.shipper, invoice.shipper) }}
+    {{ party(labels.buyer, invoice.buyer) }}
+    {{ party(labels.consignee, invoice.consignee) }}
+    {% if invoice.notify_party %}{{ party(labels.notify_party, invoice.notify_party) }}{% endif %}
   </div>
   <div class="facts">
-    <div class="fact"><span>Incoterm</span>{{ invoice.incoterm }}</div>
-    <div class="fact"><span>Currency</span>{{ invoice.currency }}</div>
-    <div class="fact"><span>Net weight (kg)</span>{{ invoice.net_weight_kg | money }}</div>
-    <div class="fact"><span>Gross weight (kg)</span>{{ invoice.gross_weight_kg | money }}</div>
+    <div class="fact"><span>{{ labels.incoterm }}</span>{{ invoice.incoterm }}</div>
+    <div class="fact"><span>{{ labels.currency }}</span>{{ invoice.currency }}</div>
+    <div class="fact"><span>{{ labels.net_weight }} (kg)</span>{{ invoice.net_weight_kg | money }}</div>
+    <div class="fact"><span>{{ labels.gross_weight }} (kg)</span>{{ invoice.gross_weight_kg | money }}</div>
   </div>
   <table>
     <thead>
       <tr>
-        <th>Item</th>
-        {% if show_hs %}<th>HS</th>{% endif %}
-        <th class="number">Qty</th>
-        <th>UOM</th>
-        <th class="number">Rate</th>
-        <th class="number">Line total</th>
+        <th>{{ labels.description }}</th>
+        {% if show_hs %}<th>{{ labels.hs_code }}</th>{% endif %}
+        <th class="number">{{ labels.quantity }}</th>
+        <th>{{ labels.unit }}</th>
+        <th class="number">{{ labels.unit_price }}</th>
+        <th class="number">{{ labels.amount }}</th>
       </tr>
     </thead>
     <tbody>
@@ -82,7 +81,7 @@
     </tbody>
   </table>
   <div class="summary">
-    <div class="total">Total due: {{ invoice.currency }} {{ invoice.total_amount | money }}</div>
+    <div class="total">{{ labels.total }}: {{ invoice.currency }} {{ invoice.total_amount | money }}</div>
   </div>
   <p class="note">All amounts are in {{ invoice.currency }}. Goods remain the property of the seller until paid in full.</p>
 </div>

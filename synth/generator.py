@@ -43,6 +43,10 @@ MAX_PACKAGING_PERCENT = 10
 
 CONSIGNEE_IN_PAKISTAN_PROBABILITY = 0.7
 SHIPPER_IN_PAKISTAN_PROBABILITY = 0.2
+BUYER_IS_CONSIGNEE_PROBABILITY = 0.6
+# A different buyer is either local to the consignee or a trader in a third country.
+BUYER_IN_CONSIGNEE_COUNTRY_PROBABILITY = 0.5
+NOTIFY_PARTY_PROBABILITY = 0.4
 
 
 class Country(NamedTuple):
@@ -71,7 +75,8 @@ FOREIGN_COUNTRIES = (
     Country("TR", "Turkey", "tr_TR", ("Istanbul", "Izmir", "Bursa", "Gaziantep", "Mersin")),
     Country("IN", "India", "en_IN"),
 )
-COUNTRY_NAMES = {country.code: country.name for country in (PAKISTAN, *FOREIGN_COUNTRIES)}
+ALL_COUNTRIES = (PAKISTAN, *FOREIGN_COUNTRIES)
+COUNTRY_NAMES = {country.code: country.name for country in ALL_COUNTRIES}
 
 
 class CatalogueItem(BaseModel):
@@ -113,11 +118,18 @@ def generate_ground_truth(seed: int, index: int, catalogue: list[CatalogueItem])
     line_items = [_make_line_item(rng, item, print_hs_codes) for item in items]
     net_weight, gross_weight = _make_weights(rng, line_items, items)
     invoice_date = ANCHOR_DATE - timedelta(days=rng.randint(0, MAX_INVOICE_AGE_DAYS))
+    invoice_number = _make_invoice_number(rng, invoice_date)
+    shipper = _make_party(rng, shipper_country)
+    consignee = _make_party(rng, consignee_country)
+    # A separate stream, so adding these parties left every other field unchanged.
+    party_rng = derive_rng(seed, "parties", index)
     invoice = RawInvoice(
-        invoice_number=_make_invoice_number(rng, invoice_date),
+        invoice_number=invoice_number,
         invoice_date=invoice_date,
-        shipper=_make_party(rng, shipper_country),
-        consignee=_make_party(rng, consignee_country),
+        shipper=shipper,
+        buyer=_make_buyer(party_rng, shipper_country, consignee_country, consignee),
+        consignee=consignee,
+        notify_party=_make_notify_party(party_rng, consignee_country),
         incoterm=rng.choice(INCOTERMS),
         currency=rng.choice(CURRENCIES),
         line_items=line_items,
@@ -156,6 +168,24 @@ def _make_party(rng: random.Random, country: Country) -> RawParty:
         address=_make_address(rng, fake, country),
         country=country.code,
     )
+
+
+def _make_buyer(
+    rng: random.Random, shipper_country: Country, consignee_country: Country, consignee: RawParty
+) -> RawParty:
+    if rng.random() < BUYER_IS_CONSIGNEE_PROBABILITY:
+        return consignee.model_copy()
+    if rng.random() < BUYER_IN_CONSIGNEE_COUNTRY_PROBABILITY:
+        return _make_party(rng, consignee_country)
+    third_countries = [c for c in ALL_COUNTRIES if c not in (shipper_country, consignee_country)]
+    return _make_party(rng, rng.choice(third_countries))
+
+
+def _make_notify_party(rng: random.Random, consignee_country: Country) -> RawParty | None:
+    """Usually the consignee's clearing agent or bank, so it sits in the destination country."""
+    if rng.random() >= NOTIFY_PARTY_PROBABILITY:
+        return None
+    return _make_party(rng, consignee_country)
 
 
 def _make_address(rng: random.Random, fake: Faker, country: Country) -> str:

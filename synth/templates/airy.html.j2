@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ labels.document_title }}</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 18mm 20mm;
+    @bottom-right { content: "Page " counter(page) " of " counter(pages); font-family: "Palatino Linotype", serif; font-size: 8pt; color: #555; }
+  }
+  body { font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif; font-size: 10.5pt; color: #222; margin: 0; }
+  .head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; }
+  .seller { max-width: 55%; }
+  .seller .name { font-size: 14pt; }
+  .caption { font-size: 8.5pt; color: #777; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+  .title { text-align: right; }
+  .title h1 { font-size: 20pt; font-weight: normal; margin: 0 0 8px; }
+  .title div { line-height: 1.6; }
+  .parties { display: flex; gap: 22px; margin-bottom: 20px; }
+  .parties > div { flex: 1; }
+  .terms { display: flex; gap: 44px; margin-bottom: 22px; }
+  .terms span { color: #777; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-weight: normal; font-size: 8.5pt; color: #777; text-transform: uppercase; letter-spacing: 1px; padding: 8px 6px; }
+  td { padding: 17px 6px; vertical-align: top; }
+  tr { break-inside: avoid; }
+  .number { text-align: right; white-space: nowrap; }
+  .closing { break-inside: avoid; margin-top: 22px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .total { font-size: 14pt; }
+</style>
+</head>
+<body>
+{% macro party(label, p) %}
+  <div>
+    <div class="caption">{{ label }}</div>
+    <div>{{ p.name }}</div>
+    <div>{{ p.address }}</div>
+    <div>{{ p.country | country_name }}</div>
+  </div>
+{% endmacro %}
+<div class="head">
+  <div class="seller">
+    <div class="caption">{{ labels.shipper }}</div>
+    <div class="name">{{ invoice.shipper.name }}</div>
+    <div>{{ invoice.shipper.address }}</div>
+    <div>{{ invoice.shipper.country | country_name }}</div>
+  </div>
+  <div class="title">
+    <h1>{{ labels.document_title }}</h1>
+    <div>{{ labels.invoice_number }}: {{ invoice.invoice_number }}</div>
+    <div>{{ labels.invoice_date }}: {{ invoice.invoice_date.strftime(date_format) }}</div>
+  </div>
+</div>
+<div class="parties">
+  {{ party(labels.buyer, invoice.buyer) }}
+  {{ party(labels.consignee, invoice.consignee) }}
+  {% if invoice.notify_party %}{{ party(labels.notify_party, invoice.notify_party) }}{% endif %}
+</div>
+<div class="terms">
+  <div><span>{{ labels.incoterm }}</span> {{ invoice.incoterm }}</div>
+  <div><span>{{ labels.currency }}</span> {{ invoice.currency }}</div>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th class="number">{{ labels.quantity }}</th>
+      <th>{{ labels.unit }}</th>
+      <th>{{ labels.description }}</th>
+      {% if show_hs %}<th>{{ labels.hs_code }}</th>{% endif %}
+      <th class="number">{{ labels.unit_price }}</th>
+      <th class="number">{{ labels.amount }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for line in invoice.line_items %}
+    <tr>
+      <td class="number">{{ line.quantity | quantity }}</td>
+      <td>{{ line.unit }}</td>
+      <td>{{ line.description }}</td>
+      {% if show_hs %}<td>{{ line.hs_code_on_doc }}</td>{% endif %}
+      <td class="number">{{ line.unit_price | money }}</td>
+      <td class="number">{{ line.amount | money }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="closing">
+  <div>
+    <div>{{ labels.net_weight }}: {{ invoice.net_weight_kg | money }} kg</div>
+    <div>{{ labels.gross_weight }}: {{ invoice.gross_weight_kg | money }} kg</div>
+  </div>
+  <div class="total">{{ labels.total }} {{ invoice.currency }} {{ invoice.total_amount | money }}</div>
+</div>
+</body>
+</html>

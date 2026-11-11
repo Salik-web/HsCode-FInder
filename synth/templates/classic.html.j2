@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Commercial Invoice</title>
+<title>{{ labels.document_title }}</title>
 <style>
   @page { size: A4; margin: 14mm 15mm; }
   body { font-family: "Times New Roman", Times, serif; font-size: 10.5pt; color: #111; margin: 0; }
   .letterhead { text-align: center; border-bottom: 3px double #111; padding-bottom: 8px; }
   .letterhead h1 { font-size: 15pt; margin: 0 0 3px; }
   .letterhead p { margin: 0; font-size: 9pt; }
-  h2 { text-align: center; font-size: 13pt; letter-spacing: 3px; margin: 12px 0; }
+  h2 { text-align: center; font-size: 13pt; letter-spacing: 3px; text-transform: uppercase; margin: 12px 0; }
   table { width: 100%; border-collapse: collapse; }
   .meta td, .parties td { border: 1px solid #111; padding: 5px 7px; vertical-align: top; }
   .parties { margin-top: 8px; }
@@ -22,52 +22,55 @@
   .total td { font-weight: bold; font-size: 10pt; }
   .weights { margin-top: 10px; }
   .declaration { margin-top: 14px; font-size: 9pt; }
-  .signature { margin-top: 26px; text-align: right; }
+  .signature { margin-top: 22px; text-align: right; }
 </style>
 </head>
 <body>
-{% set show_hs = invoice.line_items | selectattr("hs_code_on_doc") | list | length > 0 %}
+{% macro party(label, p) %}
+  <div class="label">{{ label }}</div>
+  {{ p.name }}<br>
+  {{ p.address }}<br>
+  {{ p.country | country_name }}
+{% endmacro %}
 <div class="letterhead">
   <h1>{{ invoice.shipper.name }}</h1>
   <p>{{ invoice.shipper.address }}, {{ invoice.shipper.country | country_name }}</p>
 </div>
-<h2>COMMERCIAL INVOICE</h2>
+<h2>{{ labels.document_title }}</h2>
 <table class="meta">
   <tr>
-    <td><span class="label">Invoice No:</span> {{ invoice.invoice_number }}</td>
-    <td><span class="label">Date:</span> {{ invoice.invoice_date.strftime(date_format) }}</td>
+    <td><span class="label">{{ labels.invoice_number }}:</span> {{ invoice.invoice_number }}</td>
+    <td><span class="label">{{ labels.invoice_date }}:</span> {{ invoice.invoice_date.strftime(date_format) }}</td>
   </tr>
   <tr>
-    <td><span class="label">Terms of Delivery:</span> {{ invoice.incoterm }}</td>
-    <td><span class="label">Currency:</span> {{ invoice.currency }}</td>
+    <td><span class="label">{{ labels.incoterm }}:</span> {{ invoice.incoterm }}</td>
+    <td><span class="label">{{ labels.currency }}:</span> {{ invoice.currency }}</td>
   </tr>
 </table>
 <table class="parties">
   <tr>
-    <td>
-      <div class="label">Shipper / Exporter</div>
-      {{ invoice.shipper.name }}<br>
-      {{ invoice.shipper.address }}<br>
-      {{ invoice.shipper.country | country_name }}
-    </td>
-    <td>
-      <div class="label">Consignee</div>
-      {{ invoice.consignee.name }}<br>
-      {{ invoice.consignee.address }}<br>
-      {{ invoice.consignee.country | country_name }}
-    </td>
+    <td>{{ party(labels.shipper, invoice.shipper) }}</td>
+    <td>{{ party(labels.buyer, invoice.buyer) }}</td>
+  </tr>
+  <tr>
+    {% if invoice.notify_party %}
+    <td>{{ party(labels.consignee, invoice.consignee) }}</td>
+    <td>{{ party(labels.notify_party, invoice.notify_party) }}</td>
+    {% else %}
+    <td colspan="2">{{ party(labels.consignee, invoice.consignee) }}</td>
+    {% endif %}
   </tr>
 </table>
 <table class="items">
   <thead>
     <tr>
       <th>No.</th>
-      <th>Description of Goods</th>
-      {% if show_hs %}<th>HS Code</th>{% endif %}
-      <th>Quantity</th>
-      <th>Unit</th>
-      <th>Unit Price</th>
-      <th>Amount</th>
+      <th>{{ labels.description }}</th>
+      {% if show_hs %}<th>{{ labels.hs_code }}</th>{% endif %}
+      <th>{{ labels.quantity }}</th>
+      <th>{{ labels.unit }}</th>
+      <th>{{ labels.unit_price }}</th>
+      <th>{{ labels.amount }}</th>
     </tr>
   </thead>
   <tbody>
@@ -83,14 +86,14 @@
     </tr>
     {% endfor %}
     <tr class="total">
-      <td colspan="{{ 6 if show_hs else 5 }}" class="number">Total {{ invoice.currency }}</td>
+      <td colspan="{{ 6 if show_hs else 5 }}" class="number">{{ labels.total }} {{ invoice.currency }}</td>
       <td class="number">{{ invoice.total_amount | money }}</td>
     </tr>
   </tbody>
 </table>
 <p class="weights">
-  <span class="label">Net Weight:</span> {{ invoice.net_weight_kg | money }} KG &nbsp;&nbsp;
-  <span class="label">Gross Weight:</span> {{ invoice.gross_weight_kg | money }} KG
+  <span class="label">{{ labels.net_weight }}:</span> {{ invoice.net_weight_kg | money }} KG &nbsp;&nbsp;
+  <span class="label">{{ labels.gross_weight }}:</span> {{ invoice.gross_weight_kg | money }} KG
 </p>
 <p class="declaration">We certify that this invoice is true and correct and that the goods described are as shipped.</p>
 <p class="signature">Authorised Signature ____________________</p>

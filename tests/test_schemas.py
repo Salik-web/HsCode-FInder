@@ -30,7 +30,9 @@ def make_invoice(incoterm: str | None = "FOB") -> RawInvoice:
             "invoice_number": "INV-1",
             "invoice_date": date(2026, 1, 2),
             "shipper": make_party(),
+            "buyer": make_party(),
             "consignee": make_party(),
+            "notify_party": None,
             "incoterm": incoterm,
             "currency": "USD",
             "line_items": [make_line()],
@@ -80,6 +82,21 @@ def test_raw_invoice_allows_null_for_not_found() -> None:
 def test_raw_invoice_requires_every_key() -> None:
     payload = make_invoice().model_dump()
     del payload["currency"]
+    with pytest.raises(ValidationError):
+        RawInvoice.model_validate(payload)
+
+
+def test_notify_party_can_be_absent_but_its_key_is_required() -> None:
+    payload = make_invoice().model_dump()
+    assert payload["notify_party"] is None
+    del payload["notify_party"]
+    with pytest.raises(ValidationError):
+        RawInvoice.model_validate(payload)
+
+
+def test_buyer_is_required() -> None:
+    payload = make_invoice().model_dump()
+    payload["buyer"] = None
     with pytest.raises(ValidationError):
         RawInvoice.model_validate(payload)
 
