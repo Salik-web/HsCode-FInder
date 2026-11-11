@@ -153,6 +153,24 @@ def test_output_invalid_twice_scores_as_no_output(data_dir: Path, tmp_path: Path
     operations = report.layout_groups["seen"].operations
     assert operations.needs_review_rate == pytest.approx(1 / len(docs))
     assert operations.retry_rate == pytest.approx(1 / len(docs))
+    assert operations.first_try_answered == len(docs)
+    assert operations.first_try_valid == len(docs) - 1
+
+
+def test_first_try_rate_counts_documents_fixed_by_the_retry(data_dir: Path, tmp_path: Path) -> None:
+    docs = documents(data_dir)
+    fixed = {docs[0].entry.sha256: ["not json", docs[0].truth.invoice.model_dump_json()]}
+    too_large = {docs[1].entry.sha256: [RequestTooLargeError("too large")]}
+    report, path = evaluate(docs, OracleClient(truths(docs), fixed | too_large), tmp_path)
+    operations = report.layout_groups["seen"].operations
+    # The too-large document never got an answer, so it isn't in the denominator.
+    assert operations.first_try_answered == len(docs) - 1
+    assert operations.first_try_valid == len(docs) - 2
+    assert operations.retried == 1
+    markdown = path.read_text(encoding="utf-8")
+    first_try = f"{(len(docs) - 2) / (len(docs) - 1) * 100:.1f}% ({len(docs) - 2}/{len(docs) - 1})"
+    assert f"| First-try valid JSON | {first_try} | — (0/0) |" in markdown
+    assert f"| Retry rate | {100 / len(docs):.1f}% (1/{len(docs)}) |" in markdown
 
 
 def test_non_retryable_llm_error_scores_as_no_output(data_dir: Path, tmp_path: Path) -> None:
@@ -306,3 +324,12 @@ def test_empty_group_shows_no_cost_rather_than_unknown(data_dir: Path, tmp_path:
     docs = documents(data_dir)
     _, path = evaluate(docs, OracleClient(truths(docs)), tmp_path)
     assert "| Cost per document | $0.00010 | — |" in path.read_text(encoding="utf-8")
+
+
+def test_reports_from_before_the_first_try_counts_still_load() -> None:
+    """Regression: the diff step loads every earlier report, including the Gemini ones."""
+    reports = sorted(Path("evals/reports").glob("*gemini*.json"))
+    assert reports
+    for path in reports:
+        report = EvalReport.model_validate_json(path.read_bytes())
+        assert report.layout_groups["seen"].operations.first_try_answered is None

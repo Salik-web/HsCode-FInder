@@ -17,7 +17,14 @@ from pydantic import BaseModel
 
 from app.schemas.result import LLMCall, StageStatus
 from evals.dataset import BuyerForm
-from evals.metrics import DocumentScore, FieldAccuracy, Summary, accuracy_by_field, summarise
+from evals.metrics import (
+    DocumentScore,
+    FieldAccuracy,
+    Summary,
+    accuracy_by_field,
+    ratio,
+    summarise,
+)
 from synth.manifest import LayoutGroup, Split
 
 DETAIL_SPLITS: tuple[Split, ...] = ("dev",)
@@ -51,6 +58,12 @@ class OperationalStats(BaseModel):
     documents: int
     needs_review_rate: float | None
     failed_rate: float | None
+    # Schema reliability: of documents whose first call got an answer, how many answered
+    # with valid JSON in the schema. With provider strict mode off, this is the watch.
+    # None in reports written before these counts existed.
+    first_try_answered: int | None = None
+    first_try_valid: int | None = None
+    retried: int | None = None
     retry_rate: float | None
     cost_per_document_usd: Decimal | None  # None when any call's cost is unknown
     latency_p50_ms: int | None
@@ -110,6 +123,8 @@ def operational_stats(records: list[DocumentRecord]) -> OperationalStats:
     latencies = [sum(call.latency_ms for call in r.llm_calls) for r in records if r.llm_calls]
     costs = [call.cost_usd for record in records for call in record.llm_calls]
     known_costs = [cost for cost in costs if cost is not None]
+    first_calls = [call for r in records for call in r.llm_calls if call.attempt == 1]
+    retried = sum(len(r.llm_calls) > 1 for r in records)
     cost_per_document = None
     if records and len(known_costs) == len(costs):
         cost_per_document = sum(known_costs, Decimal(0)) / len(records)
@@ -119,7 +134,10 @@ def operational_stats(records: list[DocumentRecord]) -> OperationalStats:
         failed_rate=_rate(
             records, sum("failed" in (r.preprocess_status, r.extract_status) for r in records)
         ),
-        retry_rate=_rate(records, sum(len(r.llm_calls) > 1 for r in records)),
+        first_try_answered=len(first_calls),
+        first_try_valid=sum(not call.validation_errors for call in first_calls),
+        retried=retried,
+        retry_rate=_rate(records, retried),
         cost_per_document_usd=cost_per_document,
         latency_p50_ms=percentile(latencies, P50),
         latency_p95_ms=percentile(latencies, P95),
@@ -216,6 +234,21 @@ def _usd(value: Decimal | None) -> str:
     return "unknown" if value is None else f"${value:.5f}"
 
 
+def _first_try_cell(sliced: SliceReport) -> str:
+    ops = sliced.operations
+    if ops.first_try_valid is None or ops.first_try_answered is None:
+        return "not recorded"
+    rate = ratio(ops.first_try_valid, ops.first_try_answered)
+    return f"{_percent(rate)} ({ops.first_try_valid}/{ops.first_try_answered})"
+
+
+def _retry_cell(sliced: SliceReport) -> str:
+    ops = sliced.operations
+    if ops.retried is None:
+        return _percent(ops.retry_rate)
+    return f"{_percent(ops.retry_rate)} ({ops.retried}/{ops.documents})"
+
+
 def _cost_cell(sliced: SliceReport) -> str:
     """No documents means no cost to report, which is different from an unknown cost."""
     if sliced.operations.documents == 0:
@@ -274,7 +307,8 @@ def _headline_table(report: EvalReport) -> list[str]:
         row("Line F1", lambda s: _percent(s.summary.line_f1)),
         row("needs_review rate", lambda s: _percent(s.operations.needs_review_rate)),
         row("Failed rate", lambda s: _percent(s.operations.failed_rate)),
-        row("Retry rate", lambda s: _percent(s.operations.retry_rate)),
+        row("First-try valid JSON", _first_try_cell),
+        row("Retry rate", _retry_cell),
         row("Cost per document", _cost_cell),
         row("Latency p50", lambda s: _ms(s.operations.latency_p50_ms)),
         row("Latency p95", lambda s: _ms(s.operations.latency_p95_ms)),
