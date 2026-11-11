@@ -30,13 +30,16 @@ class InvalidPromptError(ValueError):
     """A prompt file is missing a section or a placeholder."""
 
 
+ALLOWED_KEYS = "{{allowed_keys}}"  # optional in System and Retry; filled from the schema
+
+
 class Prompt(BaseModel):
     version: str
-    system: str
+    system: str  # may contain {{allowed_keys}}
     user: str  # contains {{text_layer}}
     text_layer: str  # contains {{text}}
     no_text_layer: str
-    retry: str  # contains {{errors}}
+    retry: str  # contains {{errors}}; may contain {{allowed_keys}}
     output_format: OutputFormat
 
     def user_message(self, text_layer: str | None) -> str:
@@ -45,8 +48,12 @@ class Prompt(BaseModel):
             block = self.text_layer.replace("{{text}}", text_layer)
         return self.user.replace("{{text_layer}}", block)
 
-    def retry_message(self, text_layer: str | None, errors: list[str]) -> str:
+    def system_message(self, allowed_keys: str) -> str:
+        return self.system.replace(ALLOWED_KEYS, allowed_keys)
+
+    def retry_message(self, text_layer: str | None, errors: list[str], allowed_keys: str) -> str:
         retry = self.retry.replace("{{errors}}", "\n".join(f"- {error}" for error in errors))
+        retry = retry.replace(ALLOWED_KEYS, allowed_keys)
         return f"{self.user_message(text_layer)}\n\n{retry}"
 
 

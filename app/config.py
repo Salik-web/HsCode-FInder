@@ -9,6 +9,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ProviderName = Literal["gemini", "openrouter", "groq"]
 Role = Literal["llm", "fallback"]  # the settings prefix for each model's options
+# json_schema sends our schema to the provider; json_object only asks for a JSON object,
+# and the prompt names the keys. Our own validation applies either way.
+ResponseFormat = Literal["json_schema", "json_object"]
 
 # Every provider speaks the OpenAI chat API, so adding one is a base URL and a key setting.
 PROVIDER_BASE_URLS: dict[ProviderName, str] = {
@@ -37,6 +40,7 @@ class ProviderConfig(BaseModel):
     # Ask the provider to enforce the JSON schema itself. Our Pydantic validation applies
     # either way; on Groq strict mode often returns an empty or truncated object instead.
     strict_schema: bool
+    response_format: ResponseFormat
     # Client-side throttling to stay under the provider's per-minute limits. None: no limit.
     tokens_per_minute: int | None
     output_tokens_per_minute: int | None
@@ -60,6 +64,9 @@ class Settings(BaseSettings):
     llm_model: str = "qwen/qwen3.8-27b"
     llm_reasoning_effort: str | None = "none"
     llm_strict_schema: bool = False
+    # Groq pastes a json_schema into the prompt (about 1,000 tokens a call) and doesn't
+    # enforce it; json_object plus the key list in prompt v3 costs less under the daily cap.
+    llm_response_format: ResponseFormat = "json_object"
     # Groq free tier for this model: 8,000 tokens and 1,000 output tokens a minute, 1,000
     # requests a day. The output cap also limits a single call.
     llm_tokens_per_minute: int | None = 8_000
@@ -72,6 +79,7 @@ class Settings(BaseSettings):
     fallback_model: str = "qwen/qwen3.8-27b"
     fallback_reasoning_effort: str | None = "none"
     fallback_strict_schema: bool = False
+    fallback_response_format: ResponseFormat = "json_object"
     fallback_tokens_per_minute: int | None = 8_000
     fallback_output_tokens_per_minute: int | None = 1_000
     fallback_requests_per_minute: int | None = 30
@@ -129,6 +137,7 @@ class Settings(BaseSettings):
             output_usd_per_million_tokens=getattr(self, f"{role}_output_usd_per_million_tokens"),
             reasoning_effort=getattr(self, f"{role}_reasoning_effort"),
             strict_schema=getattr(self, f"{role}_strict_schema"),
+            response_format=getattr(self, f"{role}_response_format"),
             tokens_per_minute=getattr(self, f"{role}_tokens_per_minute"),
             output_tokens_per_minute=getattr(self, f"{role}_output_tokens_per_minute"),
             requests_per_minute=getattr(self, f"{role}_requests_per_minute"),

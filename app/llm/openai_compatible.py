@@ -54,17 +54,21 @@ class OpenAICompatibleClient:
         options = self._reasoning_option()
         if self._provider.strict_schema:
             options["strict_schema"] = "true"
+        if self._provider.response_format != "json_schema":
+            options["response_format"] = self._provider.response_format
         return options
 
     def _reasoning_option(self) -> dict[str, str]:
         effort = self._provider.reasoning_effort
         return {} if effort is None else {"reasoning_effort": effort}
 
-    def _json_schema(self, request: LLMRequest) -> dict[str, Any]:
+    def _response_format(self, request: LLMRequest) -> dict[str, Any]:
+        if self._provider.response_format == "json_object":
+            return {"type": "json_object"}
         schema: dict[str, Any] = {"name": request.schema_name, "schema": request.response_schema}
         if self._provider.strict_schema:
             schema["strict"] = True
-        return schema
+        return {"type": "json_schema", "json_schema": schema}
 
     @property
     def _name(self) -> str:
@@ -76,7 +80,7 @@ class OpenAICompatibleClient:
             completion = self._client.chat.completions.create(
                 model=self.model,
                 messages=_messages(request),
-                response_format={"type": "json_schema", "json_schema": self._json_schema(request)},
+                response_format=self._response_format(request),
                 temperature=0,
                 max_tokens=self._max_tokens,
                 **self._reasoning_option(),

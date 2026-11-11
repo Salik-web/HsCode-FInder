@@ -5,7 +5,9 @@ Design rule 1: output that fails validation twice is never returned; the stage r
 the output counts as a failed validation too, with the same single retry.
 """
 
+import json
 import logging
+from decimal import Decimal
 from functools import cache
 from typing import Any
 
@@ -22,6 +24,7 @@ from app.llm.client import (
 )
 from app.pipeline.preprocess import PreparedDocument
 from app.pipeline.prompts import OutputFormat, Prompt
+from app.pipeline.repair import NO_REPAIRS, KeyRepairs, describe_allowed_keys, repair_keys
 from app.schemas.compact import CompactInvoice
 from app.schemas.raw import RawInvoice
 from app.schemas.result import LLMCall, StageResult
@@ -40,6 +43,23 @@ OUTPUT_MODELS: dict[OutputFormat, type[RawInvoice]] = {
 RETRYABLE_ERRORS = (RateLimitedError, LLMUnavailableError)
 
 
+REPEATED_ANSWER = "(whole answer): the retry repeated the previous answer unchanged"
+
+
+class OutputRejectedError(ValueError):
+    """The model's answer isn't usable: not JSON, or not valid against the schema."""
+
+    def __init__(self, errors: list[str], repairs: KeyRepairs) -> None:
+        super().__init__("; ".join(errors))
+        self.errors = errors
+        self.repairs = repairs
+
+
+class ParsedOutput(BaseModel):
+    invoice: RawInvoice
+    repairs: KeyRepairs
+
+
 class ExtractionOutcome(BaseModel):
     stage: StageResult
     invoice: RawInvoice | None
@@ -52,10 +72,29 @@ def response_schema(output_format: OutputFormat) -> dict[str, Any]:
     return OUTPUT_MODELS[output_format].model_json_schema(mode="serialization")
 
 
-def parse_output(content: str, output_format: OutputFormat) -> RawInvoice:
-    """Validate the model's JSON in its output format and return it as a RawInvoice."""
-    parsed = OUTPUT_MODELS[output_format].model_validate_json(content)
-    return parsed.to_raw() if isinstance(parsed, CompactInvoice) else parsed
+@cache
+def allowed_keys(output_format: OutputFormat) -> str:
+    return describe_allowed_keys(OUTPUT_MODELS[output_format])
+
+
+def parse_output(content: str, output_format: OutputFormat) -> ParsedOutput:
+    """Parse, repair key names, then validate; raise OutputRejectedError if unusable.
+
+    Numbers parse as Decimal, never float, so amounts stay exact.
+    """
+    try:
+        data = json.loads(content, parse_float=Decimal)
+    except json.JSONDecodeError as error:
+        message = f"(whole answer): not valid JSON: {error.msg}"
+        raise OutputRejectedError([message], NO_REPAIRS) from error
+    model = OUTPUT_MODELS[output_format]
+    repaired, repairs = repair_keys(data, model)
+    try:
+        parsed = model.model_validate(repaired)
+    except ValidationError as error:
+        raise OutputRejectedError(format_validation_errors(error), repairs) from error
+    invoice = parsed.to_raw() if isinstance(parsed, CompactInvoice) else parsed
+    return ParsedOutput(invoice=invoice, repairs=repairs)
 
 
 def format_validation_errors(error: ValidationError) -> list[str]:
@@ -72,11 +111,13 @@ def extract_invoice(
 ) -> ExtractionOutcome:
     calls: list[LLMCall] = []
     errors: list[str] = []
+    previous_content: str | None = None
+    keys = allowed_keys(prompt.output_format)
     for attempt in range(1, MAX_ATTEMPTS + 1):
         text = (
             prompt.user_message(document.text_layer)
             if attempt == 1
-            else prompt.retry_message(document.text_layer, errors)
+            else prompt.retry_message(document.text_layer, errors, keys)
         )
         try:
             response = client.complete(_request(document, prompt, text, attempt))
@@ -95,15 +136,21 @@ def extract_invoice(
                 retryable=isinstance(error, RETRYABLE_ERRORS),
             )
             return ExtractionOutcome(stage=stage, invoice=None, calls=calls)
+        if previous_content is not None and response.content.strip() == previous_content:
+            # The retry ignored the errors; asking again would only repeat it.
+            calls.append(_call_record(attempt, response, [REPEATED_ANSWER], NO_REPAIRS))
+            review = StageResult(status="needs_review", error=REPEATED_ANSWER, retryable=False)
+            return ExtractionOutcome(stage=review, invoice=None, calls=calls)
+        previous_content = response.content.strip()
         try:
-            invoice = parse_output(response.content, prompt.output_format)
-        except ValidationError as error:
-            errors = format_validation_errors(error)
-            calls.append(_call_record(attempt, response, errors))
+            parsed = parse_output(response.content, prompt.output_format)
+        except OutputRejectedError as error:
+            errors = error.errors
+            calls.append(_call_record(attempt, response, errors, error.repairs))
             continue
-        calls.append(_call_record(attempt, response, []))
+        calls.append(_call_record(attempt, response, [], parsed.repairs))
         ok = StageResult(status="ok", error=None, retryable=False)
-        return ExtractionOutcome(stage=ok, invoice=invoice, calls=calls)
+        return ExtractionOutcome(stage=ok, invoice=parsed.invoice, calls=calls)
     review = StageResult(
         status="needs_review",
         error=f"output failed validation {MAX_ATTEMPTS} times",
@@ -114,7 +161,7 @@ def extract_invoice(
 
 def _request(document: PreparedDocument, prompt: Prompt, text: str, attempt: int) -> LLMRequest:
     return LLMRequest(
-        system=prompt.system,
+        system=prompt.system_message(allowed_keys(prompt.output_format)),
         text=text,
         images=document.pages,
         response_schema=response_schema(prompt.output_format),
@@ -139,7 +186,9 @@ def _rejected_call_record(attempt: int, error: SchemaViolationError, errors: lis
     )
 
 
-def _call_record(attempt: int, response: LLMResponse, errors: list[str]) -> LLMCall:
+def _call_record(
+    attempt: int, response: LLMResponse, errors: list[str], repairs: KeyRepairs
+) -> LLMCall:
     return LLMCall(
         attempt=attempt,
         model=response.model,
@@ -149,4 +198,6 @@ def _call_record(attempt: int, response: LLMResponse, errors: list[str]) -> LLMC
         cost_usd=response.cost_usd,
         cached=response.cached,
         validation_errors=errors,
+        keys_repaired=repairs.repaired,
+        keys_ignored=repairs.ignored,
     )
