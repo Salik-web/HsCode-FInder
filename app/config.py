@@ -34,10 +34,12 @@ class ProviderConfig(BaseModel):
     output_usd_per_million_tokens: Decimal
     # Sent as `reasoning_effort` when set (e.g. "none" turns Qwen 3 thinking off on Groq).
     reasoning_effort: str | None
-    # Ask the provider to enforce the JSON schema. Groq's Qwen ignores the schema without it.
+    # Ask the provider to enforce the JSON schema itself. Our Pydantic validation applies
+    # either way; on Groq strict mode often returns an empty or truncated object instead.
     strict_schema: bool
     # Client-side throttling to stay under the provider's per-minute limits. None: no limit.
     tokens_per_minute: int | None
+    output_tokens_per_minute: int | None
     requests_per_minute: int | None
 
 
@@ -57,9 +59,11 @@ class Settings(BaseSettings):
     # The only Groq model that accepts images (checked 2026-11-11); qwen3.6-27b isn't served.
     llm_model: str = "qwen/qwen3.8-27b"
     llm_reasoning_effort: str | None = "none"
-    llm_strict_schema: bool = True
-    # Groq free tier for this model: 8,000 tokens a minute, 1,000 requests a day.
+    llm_strict_schema: bool = False
+    # Groq free tier for this model: 8,000 tokens and 1,000 output tokens a minute, 1,000
+    # requests a day. The output cap also limits a single call.
     llm_tokens_per_minute: int | None = 8_000
+    llm_output_tokens_per_minute: int | None = 1_000
     llm_requests_per_minute: int | None = 30
     llm_input_usd_per_million_tokens: Decimal = Decimal(0)
     llm_output_usd_per_million_tokens: Decimal = Decimal(0)
@@ -67,8 +71,9 @@ class Settings(BaseSettings):
     fallback_provider: ProviderName | None = "groq"
     fallback_model: str = "qwen/qwen3.8-27b"
     fallback_reasoning_effort: str | None = "none"
-    fallback_strict_schema: bool = True
+    fallback_strict_schema: bool = False
     fallback_tokens_per_minute: int | None = 8_000
+    fallback_output_tokens_per_minute: int | None = 1_000
     fallback_requests_per_minute: int | None = 30
     fallback_input_usd_per_million_tokens: Decimal = Decimal(0)
     fallback_output_usd_per_million_tokens: Decimal = Decimal(0)
@@ -76,7 +81,9 @@ class Settings(BaseSettings):
     llm_timeout_seconds: float = 120.0
     # The OpenAI client retries 5xx, timeouts and (as a last resort) 429 with backoff.
     llm_max_retries: int = 3
-    llm_max_output_tokens: int = 16_000
+    # Groq's output limit per minute is also its per-call ceiling. Thinking models (Gemini)
+    # spend output tokens on reasoning: raise this to 16000 for them.
+    llm_max_output_tokens: int = 1_000
     # Free tiers allow a few requests a minute, so only a little concurrency pays off.
     llm_concurrency: int = 2
 
@@ -88,8 +95,10 @@ class Settings(BaseSettings):
         "llm_reasoning_effort",
         "fallback_reasoning_effort",
         "llm_tokens_per_minute",
+        "llm_output_tokens_per_minute",
         "llm_requests_per_minute",
         "fallback_tokens_per_minute",
+        "fallback_output_tokens_per_minute",
         "fallback_requests_per_minute",
         mode="before",
     )
@@ -121,5 +130,6 @@ class Settings(BaseSettings):
             reasoning_effort=getattr(self, f"{role}_reasoning_effort"),
             strict_schema=getattr(self, f"{role}_strict_schema"),
             tokens_per_minute=getattr(self, f"{role}_tokens_per_minute"),
+            output_tokens_per_minute=getattr(self, f"{role}_output_tokens_per_minute"),
             requests_per_minute=getattr(self, f"{role}_requests_per_minute"),
         )

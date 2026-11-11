@@ -18,6 +18,23 @@ class LLMUnavailableError(LLMError):
     """The provider timed out or couldn't be reached."""
 
 
+class RequestTooLargeError(LLMError):
+    """The request can never fit the provider's limits; waiting won't help."""
+
+
+class SchemaViolationError(LLMError):
+    """The provider rejected the model's output for not matching the JSON schema.
+
+    Carries what a successful call would, so extraction can log the attempt and retry
+    with the error, exactly as when our own validation rejects an answer.
+    """
+
+    def __init__(self, message: str, model: str, latency_ms: int) -> None:
+        super().__init__(message)
+        self.model = model
+        self.latency_ms = latency_ms
+
+
 class ImageInput(BaseModel):
     # Page images are binary, so JSON (cache digests) carries them as base64.
     model_config = ConfigDict(ser_json_bytes="base64", val_json_bytes="base64")

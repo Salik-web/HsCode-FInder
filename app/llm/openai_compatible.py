@@ -14,11 +14,17 @@ from app.llm.client import (
     LLMResponse,
     LLMUnavailableError,
     RateLimitedError,
+    RequestTooLargeError,
+    SchemaViolationError,
     Usage,
 )
 
 TOKENS_PER_MILLION = Decimal(1_000_000)
 MS_PER_SECOND = 1000
+# Groq's 429 for a request that exceeds a per-minute limit on its own: no wait fixes it.
+TOO_LARGE_MARKER = "request too large"
+# Groq's 400 when strict mode rejects the generated JSON.
+SCHEMA_REJECTED_CODE = "json_validate_failed"
 
 
 class OpenAICompatibleClient:
@@ -76,13 +82,22 @@ class OpenAICompatibleClient:
                 **self._reasoning_option(),
             )
         except openai.RateLimitError as error:
+            if TOO_LARGE_MARKER in error.message.lower():
+                raise RequestTooLargeError(f"{self._name}: {error.message}") from error
             raise RateLimitedError(f"{self._name} rate limit: {error.message}") from error
         except (openai.APITimeoutError, openai.APIConnectionError) as error:
             raise LLMUnavailableError(f"{self._name} unreachable: {error}") from error
+        except openai.BadRequestError as error:
+            if error.code == SCHEMA_REJECTED_CODE:
+                raise SchemaViolationError(
+                    f"{self._name} rejected the output: {error.message}",
+                    model=self.model,
+                    latency_ms=_elapsed_ms(started),
+                ) from error
+            raise LLMError(f"{self._name} HTTP 400: {error.message}") from error
         except openai.APIStatusError as error:
             raise LLMError(f"{self._name} HTTP {error.status_code}: {error.message}") from error
-        latency_ms = round((time.perf_counter() - started) * MS_PER_SECOND)
-        return self._to_response(completion, latency_ms)
+        return self._to_response(completion, _elapsed_ms(started))
 
     def _to_response(self, completion: Any, latency_ms: int) -> LLMResponse:
         if not completion.choices or completion.choices[0].message.content is None:
@@ -110,6 +125,10 @@ class OpenAICompatibleClient:
         input_cost = usage.input_tokens * provider.input_usd_per_million_tokens
         output_cost = usage.output_tokens * provider.output_usd_per_million_tokens
         return (input_cost + output_cost) / TOKENS_PER_MILLION
+
+
+def _elapsed_ms(started: float) -> int:
+    return round((time.perf_counter() - started) * MS_PER_SECOND)
 
 
 def _messages(request: LLMRequest) -> list[dict[str, Any]]:

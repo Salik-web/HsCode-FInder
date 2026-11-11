@@ -423,6 +423,7 @@ def _failure_section(record: DocumentRecord, score: DocumentScore) -> list[str]:
         f"Lines: {score.lines.gold} true, {score.lines.predicted} predicted, "
         f"{score.lines.matched} matched.",
         "",
+        *([f"Error: {record.error}", ""] if record.error else []),
         "| Field | Outcome | Expected | Predicted |",
         "| --- | --- | --- | --- |",
     ]
