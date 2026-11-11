@@ -19,11 +19,13 @@ from synth.generator import (
     generate_ground_truth,
     load_catalogue,
 )
+from synth.layouts import pick_labels, template_for
 from synth.manifest import (
     Manifest,
     ManifestEntry,
     Split,
     assign_splits,
+    layout_group_for,
     select_messy_sources,
 )
 from synth.render import (
@@ -33,7 +35,6 @@ from synth.render import (
     open_browser_page,
     render_html,
     render_pdf,
-    template_for,
 )
 
 SYNTHETIC_DIR = "synthetic"
@@ -50,7 +51,7 @@ def build_dataset(n: int, messy: int, seed: int, out_dir: Path) -> Manifest:
     """Write `n` clean and `messy` degraded documents plus the manifest to `out_dir`."""
     _prepare_folders(out_dir)
     catalogue = load_catalogue()
-    splits = assign_splits([document_id(index) for index in range(n)], seed)
+    splits = assign_splits({document_id(index): template_for(index) for index in range(n)}, seed)
     with open_browser_page() as page:
         clean = [
             _write_clean_document(page, index, seed, catalogue, splits, out_dir)
@@ -86,7 +87,8 @@ def _write_clean_document(
     doc_id = document_id(index)
     template = template_for(index)
     truth = generate_ground_truth(seed, index, catalogue)
-    pdf = render_pdf(page, render_html(truth.invoice, template))
+    labels = pick_labels(derive_rng(seed, "labels", index))
+    pdf = render_pdf(page, render_html(truth.invoice, template, labels))
     missing = find_missing_text(pdf, truth.invoice, template)
     if missing:
         raise PrintedTextMismatchError(f"{doc_id} ({template}) doesn't show: {missing}")
@@ -98,6 +100,7 @@ def _write_clean_document(
         id=doc_id,
         dataset="synthetic_clean",
         split=splits[doc_id],
+        layout_group=layout_group_for(splits[doc_id]),
         path=pdf_path,
         ground_truth=truth_path,
         sha256=hashlib.sha256(pdf).hexdigest(),
@@ -116,6 +119,7 @@ def _write_messy_document(source: ManifestEntry, seed: int, out_dir: Path) -> Ma
         id=doc_id,
         dataset="synthetic_messy",
         split=source.split,
+        layout_group=source.layout_group,
         path=image_path,
         ground_truth=source.ground_truth,
         sha256=hashlib.sha256(image).hexdigest(),

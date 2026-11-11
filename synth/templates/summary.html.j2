@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ labels.document_title }}</title>
+<style>
+  @page { size: A4; margin: 13mm 14mm; }
+  body { font-family: Calibri, Arial, sans-serif; font-size: 10.5pt; color: #1b1b1b; margin: 0; }
+  .parties { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm 10mm; margin-bottom: 7mm; }
+  .parties h3 { font-size: 9pt; color: #8a2b2b; margin: 0 0 2px; }
+  h1 { font-size: 17pt; color: #8a2b2b; border-top: 3px solid #8a2b2b; padding-top: 5px; margin: 0 0 5mm; }
+  table.items { width: 100%; border-collapse: collapse; }
+  .items th { text-align: left; border-bottom: 1.5px solid #1b1b1b; padding: 4px 5px; font-size: 9pt; }
+  .items td { padding: 4px 5px; border-bottom: 1px solid #d0cfcf; font-size: 9.5pt; }
+  .number { text-align: right; white-space: nowrap; }
+  .details { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 7mm; }
+  table.facts { border-collapse: collapse; }
+  .facts td { padding: 2px 14px 2px 0; }
+  .facts td:first-child { color: #8a2b2b; }
+  .total { text-align: right; font-size: 13pt; font-weight: bold; }
+</style>
+</head>
+<body>
+{% macro party(label, p) %}
+  <div>
+    <h3>{{ label }}</h3>
+    {{ p.name }}<br>{{ p.address }}<br>{{ p.country | country_name }}
+  </div>
+{% endmacro %}
+<div class="parties">
+  {{ party(labels.shipper, invoice.shipper) }}
+  {{ party(labels.buyer, invoice.buyer) }}
+  {{ party(labels.consignee, invoice.consignee) }}
+  {% if invoice.notify_party %}{{ party(labels.notify_party, invoice.notify_party) }}{% endif %}
+</div>
+<h1>{{ labels.document_title }}</h1>
+<table class="items">
+  <thead>
+    <tr>
+      <th>{{ labels.description }}</th>
+      <th class="number">{{ labels.unit_price }}</th>
+      <th class="number">{{ labels.quantity }}</th>
+      <th>{{ labels.unit }}</th>
+      <th class="number">{{ labels.amount }}</th>
+      {% if show_hs %}<th>{{ labels.hs_code }}</th>{% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for line in invoice.line_items %}
+    <tr>
+      <td>{{ line.description }}</td>
+      <td class="number">{{ line.unit_price }}</td>
+      <td class="number">{{ line.quantity }}</td>
+      <td>{{ line.unit }}</td>
+      <td class="number">{{ line.amount }}</td>
+      {% if show_hs %}<td>{{ line.hs_code_on_doc }}</td>{% endif %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="details">
+  <table class="facts">
+    <tr><td>{{ labels.invoice_number }}</td><td>{{ invoice.invoice_number }}</td></tr>
+    <tr><td>{{ labels.invoice_date }}</td><td>{{ invoice.invoice_date.strftime(date_format) }}</td></tr>
+    <tr><td>{{ labels.incoterm }}</td><td>{{ invoice.incoterm }}</td></tr>
+    <tr><td>{{ labels.currency }}</td><td>{{ invoice.currency }}</td></tr>
+    <tr><td>{{ labels.net_weight }}</td><td>{{ invoice.net_weight_kg }} kg</td></tr>
+    <tr><td>{{ labels.gross_weight }}</td><td>{{ invoice.gross_weight_kg }} kg</td></tr>
+  </table>
+  <div class="total">{{ labels.total }}<br>{{ invoice.currency }} {{ invoice.total_amount }}</div>
+</div>
+</body>
+</html>

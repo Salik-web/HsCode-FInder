@@ -35,7 +35,9 @@ class RawInvoice(RawModel):
     invoice_number: str | None
     invoice_date: date | None
     shipper: RawParty
-    consignee: RawParty
+    buyer: RawParty  # sold-to / bill-to: who pays; often, not always, the consignee
+    consignee: RawParty  # ship-to / deliver-to: who receives the goods
+    notify_party: RawParty | None  # None when the document names no notify party
     incoterm: Incoterm | None
     currency: str | None  # ISO-4217
     line_items: list[RawLineItem]

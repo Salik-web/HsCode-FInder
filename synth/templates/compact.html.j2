@@ -2,60 +2,59 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Tax Invoice</title>
+<title>{{ labels.document_title }}</title>
 <style>
   @page { size: A4; margin: 10mm; }
   body { font-family: Consolas, "Courier New", monospace; font-size: 8.5pt; color: #000; margin: 0; }
   .top { display: flex; justify-content: space-between; border-bottom: 1px dashed #000; padding-bottom: 5px; }
-  .top h1 { font-size: 11pt; margin: 0; }
-  .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 7px 0; }
+  .top h1 { font-size: 11pt; text-transform: uppercase; margin: 0; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px 8px; margin: 7px 0; }
   .block { border: 1px solid #000; padding: 4px 5px; }
-  .block b { display: block; }
+  .block b { display: block; text-transform: uppercase; }
   table { width: 100%; border-collapse: collapse; }
-  th { text-align: left; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 2px 3px; }
+  th { text-align: left; text-transform: uppercase; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 2px 3px; }
   td { padding: 2px 3px; }
   .number { text-align: right; white-space: nowrap; }
   .foot { border-top: 1px dashed #000; margin-top: 4px; padding-top: 4px; display: flex; justify-content: space-between; }
-  .sum { font-weight: bold; }
+  .sum { font-weight: bold; text-transform: uppercase; }
 </style>
 </head>
 <body>
-{% set show_hs = invoice.line_items | selectattr("hs_code_on_doc") | list | length > 0 %}
+{% macro party(label, p) %}
+  <div class="block">
+    <b>{{ label }}</b>
+    {{ p.name }}<br>
+    {{ p.address }}<br>
+    {{ p.country | country_name }}
+  </div>
+{% endmacro %}
 <div class="top">
-  <h1>EXPORT INVOICE</h1>
-  <div>DOC NO {{ invoice.invoice_number }} | DT {{ invoice.invoice_date.strftime(date_format) | upper }}</div>
+  <h1>{{ labels.document_title }}</h1>
+  <div>{{ labels.invoice_number | upper }} {{ invoice.invoice_number }} | {{ labels.invoice_date | upper }} {{ invoice.invoice_date.strftime(date_format) | upper }}</div>
 </div>
 <div class="grid">
-  <div class="block">
-    <b>SELLER</b>
-    {{ invoice.shipper.name }}<br>
-    {{ invoice.shipper.address }}<br>
-    {{ invoice.shipper.country | country_name }}
-  </div>
-  <div class="block">
-    <b>BUYER / CONSIGNEE</b>
-    {{ invoice.consignee.name }}<br>
-    {{ invoice.consignee.address }}<br>
-    {{ invoice.consignee.country | country_name }}
-  </div>
+  {{ party(labels.shipper, invoice.shipper) }}
+  {{ party(labels.buyer, invoice.buyer) }}
+  {{ party(labels.consignee, invoice.consignee) }}
+  {% if invoice.notify_party %}{{ party(labels.notify_party, invoice.notify_party) }}{% endif %}
   <div class="block">
     <b>SHIPMENT</b>
-    INCOTERM: {{ invoice.incoterm }}<br>
-    CCY: {{ invoice.currency }}<br>
-    N.W. {{ invoice.net_weight_kg }} KGS<br>
-    G.W. {{ invoice.gross_weight_kg }} KGS
+    {{ labels.incoterm | upper }}: {{ invoice.incoterm }}<br>
+    {{ labels.currency | upper }}: {{ invoice.currency }}<br>
+    {{ labels.net_weight | upper }} {{ invoice.net_weight_kg }} KGS<br>
+    {{ labels.gross_weight | upper }} {{ invoice.gross_weight_kg }} KGS
   </div>
 </div>
 <table>
   <thead>
     <tr>
       <th>SR</th>
-      <th>GOODS</th>
-      {% if show_hs %}<th>H.S.</th>{% endif %}
-      <th class="number">QTY</th>
-      <th>UNIT</th>
-      <th class="number">PRICE</th>
-      <th class="number">VALUE</th>
+      <th>{{ labels.description }}</th>
+      {% if show_hs %}<th>{{ labels.hs_code }}</th>{% endif %}
+      <th class="number">{{ labels.quantity }}</th>
+      <th>{{ labels.unit }}</th>
+      <th class="number">{{ labels.unit_price }}</th>
+      <th class="number">{{ labels.amount }}</th>
     </tr>
   </thead>
   <tbody>
@@ -74,7 +73,7 @@
 </table>
 <div class="foot">
   <span>ITEMS: {{ invoice.line_items | length }}</span>
-  <span class="sum">GRAND TOTAL {{ invoice.currency }} {{ invoice.total_amount }}</span>
+  <span class="sum">{{ labels.total }} {{ invoice.currency }} {{ invoice.total_amount }}</span>
 </div>
 </body>
 </html>

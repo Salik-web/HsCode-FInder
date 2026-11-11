@@ -130,7 +130,9 @@ class Invoice(BaseModel):
     invoice_number: Field[str]
     invoice_date: Field[date]
     shipper: Party
-    consignee: Party
+    buyer: Party  # sold-to / bill-to
+    consignee: Party  # ship-to / deliver-to
+    notify_party: Party | None
     incoterm: Field[
         Literal["EXW", "FCA", "FAS", "FOB", "CFR", "CIF", "CPT", "CIP", "DAP", "DPU", "DDP"]
     ]
@@ -142,6 +144,17 @@ class Invoice(BaseModel):
 ```
 
 Tip: let the LLM fill a simpler "raw" schema (plain values), then compute confidence and status in code. Don't let the model grade its own confidence alone.
+
+**Parties are separate fields, never merged.**
+
+| Field | Also labelled | Meaning |
+| --- | --- | --- |
+| `shipper` | Exporter, Consignor, Shipped By | Who ships the goods |
+| `buyer` | Sold To, Bill To, Purchaser | Who buys and pays |
+| `consignee` | Ship To, Deliver To, Consigned To | Who receives the goods |
+| `notify_party` | Notify, Also Notify | Who is told of arrival, often the clearing agent; `None` when absent |
+
+Buyer and consignee are often the same company, but not always. When they're the same, both fields hold the same values. "Seller", "Supplier" and "Importer" are deliberately unused in synthetic data, because on real documents they can each refer to more than one party.
 
 **Database tables**
 
@@ -212,6 +225,8 @@ This is the heart of the project. Build it before you optimise anything.
 
 Split each set into **dev (70%)** for prompt iteration and **test (30%)** that you only run for reporting, so you don't overfit prompts to the test set.
 
+Synthetic sets have 8 layouts and vary their field labels per document. In synthetic data the buyer is the consignee about 60% of the time, and about 40% of invoices name a notify party. Two layouts (`sidebar`, `ledger`) are held out entirely in a third split, **test_unseen_layout**. They never appear in dev or test, and only the remaining 6 layouts split 70/30. Like test, test_unseen_layout is for reporting only.
+
 **Metrics**
 
 - Per-field accuracy: exact match for IDs and codes, ± tolerance for numbers, normalised fuzzy match (≥ 0.9) for names and addresses
@@ -221,6 +236,7 @@ Split each set into **dev (70%)** for prompt iteration and **test (30%)** that y
 - HS: top-1 and top-3 accuracy at 4-digit heading and 6-digit levels
 - Calibration: accuracy within each confidence bucket. Fields marked "ok" with high confidence should almost always be right
 - Cost per document, p50/p95 latency, failure/retry rate
+- Seen vs unseen layouts: every eval report shows accuracy separately for each group, never one blended number. The gap between them shows how much a score depends on knowing the layout
 
 **Harness**
 
@@ -288,6 +304,7 @@ tradedoc-ai/
 │   └── reports/
 ├── synth/
 │   ├── generator.py    # Faker -> ground-truth JSON
+│   ├── layouts.py      # layout list, held-out layouts, label synonyms
 │   ├── templates/      # Jinja2 HTML invoice/packing list layouts
 │   ├── render.py       # Playwright (Chromium) -> PDF
 │   ├── augment.py      # blur, rotate, skew, noise, JPEG artefacts

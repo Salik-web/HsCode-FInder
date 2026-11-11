@@ -17,9 +17,11 @@ Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H &
   - `synth/catalogue.csv` holds 30 unverified placeholder rows: HS codes, units and `kg_per_unit` are all estimates. Replace with real PCT entries.
   - Unit prices are random, not tied to the goods. Accepted for now.
   - pypdfium2 has only been tested on our own Chromium PDFs. Verify it on scanned and real documents in Phase 3.
-  - PDFium extracts a hyphen at a line wrap as `\x02` and joins the lines (`Anantapuram-986086` becomes `Anantapuram\x02986086`). The Phase 2 text layer must restore it before the text reaches the LLM; `synth/render.py` handles this for its own check only.
+  - PDFium mangles hyphens at a line wrap in two ways. After a letter it substitutes `\x02` and joins the lines (`Anantapuram-986086` becomes `Anantapuram\x02986086`). After a digit it keeps the hyphen and the line break (`4-3` becomes `4-` then `3`). This is observed behaviour, not documented. The Phase 2 text layer must clean both before the text reaches the LLM; `synth/render.py` handles this for its own check only.
+  - A PDF's text layer can be wrong even when the page looks right. Cambria left stray characters in one PDF: PDFium read `İçtaş İnşaat` as `İçİ taş İnİ şaat`, while PyMuPDF read it correctly. So `summary` uses Calibri, and Phase 2 should treat the text layer as a hint and the page image as the source of truth.
   - PDFium isn't thread-safe. The Phase 6 worker must not render PDFs from multiple threads; use separate processes.
-  - Only 3 invoice layouts exist, and real invoices all look different. Scores on synthetic data won't prove accuracy on unseen designs, so report the `public` and `real` sets (DESIGN.md §6) separately.
+  - Synthetic layouts are still only 8 designs by one author, and `test_unseen_layout` shares their fonts, label lists and catalogue. It measures layout generalisation, not real-world accuracy, so report the `public` and `real` sets (DESIGN.md §6) separately.
+  - Messy images are single-page only, so two-page invoices are tested in clean form only.
   - Docker isn't installed on the dev machine, so `docker-compose.yml` has only been parsed as YAML, never run. Needed before Phase 5.
   - Synthetic files are byte-identical only on the same machine and Chromium version (fonts and renderer affect the bytes). Ground-truth JSON doesn't depend on either.
 
@@ -49,7 +51,7 @@ app/llm/        LLMClient protocol, OpenAI-compatible provider, disk cache
 app/db/         SQLAlchemy 2.0 models + Alembic migrations
 prompts/        versioned prompts: prompts/<doc_type>/v<N>.md (never edit an old version)
 evals/          metrics.py, run.py, datasets/ (manifests), reports/
-synth/          generator, Jinja2 templates, render, augment, manifest, generate (CLI), catalogue.csv
+synth/          generator, layouts (+ label synonyms), Jinja2 templates, render, augment, manifest, generate (CLI), catalogue.csv
 tariff/         PCT schedule ingestion -> pgvector
 web/            Next.js + Tailwind review UI
 tests/          pytest; LLM always mocked
@@ -119,7 +121,8 @@ Think like a senior engineer on every change: the best design, the fastest path 
 
 ## Eval workflow
 - **Never change a prompt, model or pipeline step without re-running evals.**
-- Iterate on the `dev` split. Run `test` only for reporting, never for tuning.
+- Iterate on the `dev` split. Run `test` and `test_unseen_layout` only for reporting, never for tuning.
+- Every eval report shows accuracy separately for seen and unseen layouts, using `layout_group` in the manifest. Never report one blended number.
 - After each eval run, record in `evals/CHANGELOG.md`: date, prompt version, model, key metrics, what changed and why.
 - When accuracy drops, read the worst failures before changing anything.
 
@@ -137,5 +140,5 @@ Think like a senior engineer on every change: the best design, the fastest path 
 - Return or store unvalidated LLM output.
 - Let the LLM do the arithmetic that guardrails check.
 - Edit an existing prompt version file — create a new one.
-- Tune prompts on the test split.
+- Tune prompts on the test or test_unseen_layout splits, or on the held-out layouts' templates.
 - Skip tests or evals to "save time".

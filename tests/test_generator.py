@@ -7,6 +7,8 @@ import pytest
 from pydantic import ValidationError
 
 from app.schemas.constants import INCOTERMS
+from app.schemas.raw import RawInvoice, RawParty
+from synth import generator
 from synth.generator import (
     ANCHOR_DATE,
     CENT,
@@ -29,6 +31,11 @@ from synth.generator import (
 SEED = 42
 SAMPLE_SIZE = 300
 YEAR_IN_INVOICE_NUMBER = re.compile(r"^(?:INV-(?P<long>\d{4})-|(?:CI/|EXP)(?P<short>\d{2}))")
+
+
+def parties_of(invoice: RawInvoice) -> list[RawParty]:
+    parties = [invoice.shipper, invoice.buyer, invoice.consignee, invoice.notify_party]
+    return [party for party in parties if party is not None]
 
 
 @pytest.fixture(scope="module")
@@ -182,8 +189,8 @@ def test_categorical_fields_come_from_allowed_lists(documents: list[GroundTruth]
         invoice = document.invoice
         assert invoice.incoterm in INCOTERMS
         assert invoice.currency in CURRENCIES
-        assert invoice.shipper.country in COUNTRY_NAMES
-        assert invoice.consignee.country in COUNTRY_NAMES
+        for party in parties_of(invoice):
+            assert party.country in COUNTRY_NAMES
 
 
 def test_every_incoterm_and_currency_is_used(documents: list[GroundTruth]) -> None:
@@ -213,17 +220,71 @@ def test_dates_stay_inside_the_fixed_window(documents: list[GroundTruth]) -> Non
 
 def test_party_text_is_single_line_and_not_empty(documents: list[GroundTruth]) -> None:
     for document in documents:
-        for party in (document.invoice.shipper, document.invoice.consignee):
+        for party in parties_of(document.invoice):
             assert party.name
             assert party.address
             assert "\n" not in party.address
+
+
+def test_buyer_is_the_consignee_about_sixty_percent_of_the_time(
+    documents: list[GroundTruth],
+) -> None:
+    same = sum(document.invoice.buyer == document.invoice.consignee for document in documents)
+    assert 0.52 <= same / SAMPLE_SIZE <= 0.68
+
+
+def test_a_different_buyer_is_never_in_the_shippers_country(documents: list[GroundTruth]) -> None:
+    for document in documents:
+        invoice = document.invoice
+        if invoice.buyer != invoice.consignee:
+            assert invoice.buyer.name != invoice.consignee.name
+            assert invoice.buyer.country != invoice.shipper.country
+
+
+def test_different_buyers_are_local_or_in_a_third_country(documents: list[GroundTruth]) -> None:
+    placements = {
+        document.invoice.buyer.country == document.invoice.consignee.country
+        for document in documents
+        if document.invoice.buyer != document.invoice.consignee
+    }
+    assert placements == {True, False}
+
+
+def test_notify_party_is_optional_and_in_the_consignees_country(
+    documents: list[GroundTruth],
+) -> None:
+    notify_parties = [
+        document.invoice for document in documents if document.invoice.notify_party is not None
+    ]
+    assert 0.3 <= len(notify_parties) / SAMPLE_SIZE <= 0.5
+    for invoice in notify_parties:
+        assert invoice.notify_party.country == invoice.consignee.country
+        assert invoice.notify_party != invoice.consignee
+
+
+@pytest.mark.parametrize("probability", [0.0, 1.0])
+def test_party_choices_never_change_other_fields(
+    catalogue: list[CatalogueItem], monkeypatch: pytest.MonkeyPatch, probability: float
+) -> None:
+    """Buyer and notify party draw from their own stream, so forcing them changes nothing else."""
+    party_fields = {"buyer", "notify_party"}
+    normal = [generate_ground_truth(SEED, i, catalogue).invoice for i in range(30)]
+    monkeypatch.setattr(generator, "BUYER_IS_CONSIGNEE_PROBABILITY", probability)
+    monkeypatch.setattr(generator, "NOTIFY_PARTY_PROBABILITY", probability)
+    forced = [generate_ground_truth(SEED, i, catalogue).invoice for i in range(30)]
+    assert [i.model_dump(exclude=party_fields) for i in forced] == [
+        i.model_dump(exclude=party_fields) for i in normal
+    ]
+    assert [i.model_dump(include=party_fields) for i in forced] != [
+        i.model_dump(include=party_fields) for i in normal
+    ]
 
 
 def test_pakistan_addresses_name_a_pakistani_city(documents: list[GroundTruth]) -> None:
     parties = [
         party
         for document in documents
-        for party in (document.invoice.shipper, document.invoice.consignee)
+        for party in parties_of(document.invoice)
         if party.country == "PK"
     ]
     assert parties

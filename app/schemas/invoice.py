@@ -47,7 +47,9 @@ class Invoice(BaseModel):
     invoice_number: Field[str]
     invoice_date: Field[date]
     shipper: Party
-    consignee: Party
+    buyer: Party  # sold-to / bill-to
+    consignee: Party  # ship-to / deliver-to
+    notify_party: Party | None
     incoterm: Field[Incoterm]
     currency: Field[str]  # ISO-4217
     line_items: list[LineItem]
