@@ -40,7 +40,12 @@ def _provider_stack(config: ProviderConfig, settings: Settings, tracer: Tracer |
     if tracer is not None:
         client = TracingClient(client, tracer)
     # Inside the cache, so answers served from disk never wait for the budget.
-    client = ThrottledClient(client, config.tokens_per_minute, config.requests_per_minute)
+    client = ThrottledClient(
+        client,
+        tokens_per_minute=config.tokens_per_minute,
+        requests_per_minute=config.requests_per_minute,
+        output_tokens_per_minute=config.output_tokens_per_minute,
+    )
     return CachingClient(client, settings.cache_dir, provider.call_options)
 
 

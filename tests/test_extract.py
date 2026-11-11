@@ -13,6 +13,8 @@ from app.llm.client import (
     LLMResponse,
     LLMUnavailableError,
     RateLimitedError,
+    RequestTooLargeError,
+    SchemaViolationError,
     Usage,
 )
 from app.pipeline import prompts
@@ -29,6 +31,7 @@ from app.pipeline.prompts import (
     _split_sections,
     load_prompt,
 )
+from app.schemas.compact import LINE_COLUMNS
 from app.schemas.raw import RawInvoice
 from synth.generator import generate_ground_truth, load_catalogue
 from tests.fakes import FakeClient
@@ -164,7 +167,7 @@ def test_request_carries_versioning_and_cache_identity() -> None:
 
 
 def test_schema_asks_for_decimals_as_strings() -> None:
-    line_item = response_schema()["$defs"]["RawLineItem"]["properties"]["amount"]
+    line_item = response_schema("raw")["$defs"]["RawLineItem"]["properties"]["amount"]
     assert {"type": "string"} in line_item["anyOf"]
     assert {"type": "number"} not in line_item["anyOf"]
 
@@ -209,6 +212,105 @@ def test_prompt_missing_a_placeholder_is_rejected(
     load_prompt.cache_clear()
     try:
         with pytest.raises(InvalidPromptError, match="text_layer"):
+            load_prompt("invoice", "v1")
+    finally:
+        load_prompt.cache_clear()
+
+
+# --- prompt v2: compact output ---------------------------------------------------------
+
+
+def compact_json(invoice: RawInvoice) -> str:
+    """The answer a perfect model gives in the compact format."""
+    data = invoice.model_dump(mode="json")
+    data["line_items"] = [[line[column] for column in LINE_COLUMNS] for line in data["line_items"]]
+    return json.dumps(data, separators=(",", ":"))
+
+
+def test_v1_produces_raw_output_and_v2_compact() -> None:
+    assert load_prompt("invoice", "v1").output_format == "raw"
+    assert load_prompt("invoice", "v2").output_format == "compact"
+
+
+def test_v1_request_is_unchanged_by_the_compact_format() -> None:
+    """Regression: v1's schema and name must stay byte-identical, or its cache is lost."""
+    assert response_schema("raw") == RawInvoice.model_json_schema(mode="serialization")
+    client = FakeClient("model-a", [answer("x"), answer("x")])
+    extract_invoice(document(), load_prompt("invoice", "v1"), client)
+    assert client.requests[0].schema_name == "RawInvoice"
+
+
+def test_v2_compact_answer_converts_to_the_same_invoice(truth: RawInvoice) -> None:
+    client = FakeClient("model-a", [answer(compact_json(truth))])
+    outcome = extract_invoice(document(), load_prompt("invoice", "v2"), client)
+    assert outcome.stage.status == "ok"
+    assert outcome.invoice == truth
+    assert client.requests[0].schema_name == "CompactInvoice"
+    assert "line_items" in client.requests[0].response_schema["properties"]
+
+
+def test_v2_compact_output_is_much_smaller(truth: RawInvoice) -> None:
+    assert len(compact_json(truth)) < 0.7 * len(truth.model_dump_json())
+
+
+@pytest.mark.parametrize(
+    "bad_line",
+    [
+        ["Tyres", "2", "PCS", "10.50", "21.00"],  # five columns
+        ["Tyres", "2", "PCS", "10.50", "21.00", None, "extra"],  # seven
+        ["Tyres", "two", "PCS", "10.50", "21.00", None],  # quantity not a number
+        ["Tyres", "2", "PCS", "1,050.00", "21.00", None],  # thousands separator
+    ],
+)
+def test_malformed_compact_lines_are_retried(truth: RawInvoice, bad_line: list) -> None:
+    broken = json.loads(compact_json(truth))
+    broken["line_items"][0] = bad_line
+    client = FakeClient("model-a", [answer(json.dumps(broken)), answer(compact_json(truth))])
+    outcome = extract_invoice(document(), load_prompt("invoice", "v2"), client)
+    assert outcome.stage.status == "ok"
+    assert outcome.calls[0].validation_errors[0].startswith("line_items.0")
+    assert outcome.invoice == truth
+
+
+def test_provider_schema_rejection_is_retried_with_the_error(truth: RawInvoice) -> None:
+    rejected = SchemaViolationError("missing properties: 'currency'", "model-a", 900)
+    client = FakeClient("model-a", [rejected, answer(compact_json(truth))])
+    outcome = extract_invoice(document(), load_prompt("invoice", "v2"), client)
+    assert outcome.stage.status == "ok"
+    first = outcome.calls[0]
+    assert first.attempt == 1
+    assert first.latency_ms == 900
+    assert first.input_tokens is None
+    assert "missing properties" in first.validation_errors[0]
+    assert "missing properties" in client.requests[1].text
+
+
+def test_provider_schema_rejection_twice_goes_to_needs_review() -> None:
+    rejected = SchemaViolationError("bad", "model-a", 10)
+    client = FakeClient("model-a", [rejected, rejected])
+    outcome = extract_invoice(document(), load_prompt("invoice", "v2"), client)
+    assert outcome.stage.status == "needs_review"
+    assert outcome.invoice is None
+    assert len(outcome.calls) == 2
+
+
+def test_request_too_large_is_a_permanent_failure() -> None:
+    client = FakeClient("model-a", [RequestTooLargeError("output tokens per minute")])
+    outcome = extract_invoice(document(), load_prompt("invoice", "v2"), client)
+    assert outcome.stage.status == "failed"
+    assert outcome.stage.retryable is False
+    assert len(client.requests) == 1
+
+
+def test_unknown_output_format_is_rejected(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    folder = tmp_path / "invoice"
+    folder.mkdir()
+    v2 = (prompts.PROMPTS_DIR / "invoice" / "v2.md").read_text(encoding="utf-8")
+    (folder / "v1.md").write_text(v2.replace("\ncompact\n", "\nyaml\n"), encoding="utf-8")
+    monkeypatch.setattr(prompts, "PROMPTS_DIR", tmp_path)
+    load_prompt.cache_clear()
+    try:
+        with pytest.raises(InvalidPromptError, match="output format"):
             load_prompt("invoice", "v1")
     finally:
         load_prompt.cache_clear()

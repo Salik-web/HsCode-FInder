@@ -7,6 +7,7 @@ new file and a new version (old versions are never edited).
 import re
 from functools import cache
 from pathlib import Path
+from typing import Literal, get_args
 
 from pydantic import BaseModel
 
@@ -14,6 +15,11 @@ PROMPTS_DIR = Path(__file__).resolve().parents[2] / "prompts"
 SECTION_HEADING = re.compile(r"^# (.+)$", re.MULTILINE)
 VERSION_PATTERN = re.compile(r"^v\d+$")
 REQUIRED_SECTIONS = ("System", "User", "Text layer", "No text layer", "Retry")
+OUTPUT_FORMAT_SECTION = "Output format"
+# raw: line items as keyed objects (RawInvoice). compact: as fixed-order arrays.
+OutputFormat = Literal["raw", "compact"]
+# Prompts written before the section existed (v1) produce raw output.
+DEFAULT_OUTPUT_FORMAT: OutputFormat = "raw"
 
 
 class PromptNotFoundError(FileNotFoundError):
@@ -31,6 +37,7 @@ class Prompt(BaseModel):
     text_layer: str  # contains {{text}}
     no_text_layer: str
     retry: str  # contains {{errors}}
+    output_format: OutputFormat
 
     def user_message(self, text_layer: str | None) -> str:
         block = self.no_text_layer
@@ -61,9 +68,17 @@ def load_prompt(doc_type: str, version: str) -> Prompt:
         text_layer=sections["Text layer"],
         no_text_layer=sections["No text layer"],
         retry=sections["Retry"],
+        output_format=_output_format(sections, path),
     )
     _check_placeholders(prompt, path)
     return prompt
+
+
+def _output_format(sections: dict[str, str], path: Path) -> OutputFormat:
+    value = sections.get(OUTPUT_FORMAT_SECTION, DEFAULT_OUTPUT_FORMAT)
+    if value not in get_args(OutputFormat):
+        raise InvalidPromptError(f"{path}: unknown output format {value!r}")
+    return value
 
 
 def _split_sections(text: str) -> dict[str, str]:

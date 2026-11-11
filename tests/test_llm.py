@@ -20,6 +20,8 @@ from app.llm.client import (
     LLMResponse,
     LLMUnavailableError,
     RateLimitedError,
+    RequestTooLargeError,
+    SchemaViolationError,
     Usage,
 )
 from app.llm.fallback import FallbackClient
@@ -70,6 +72,7 @@ def provider_config(**changes: Any) -> ProviderConfig:
         "reasoning_effort": None,
         "strict_schema": False,
         "tokens_per_minute": None,
+        "output_tokens_per_minute": None,
         "requests_per_minute": None,
     }
     return ProviderConfig(**(values | changes))
@@ -206,6 +209,34 @@ def test_bad_request_maps_to_llm_error() -> None:
         client.complete(make_request())
 
 
+def test_request_too_large_is_permanent_not_a_rate_limit() -> None:
+    message = (
+        "Request too large for model `qwen/qwen3.8-27b` on output tokens per minute (OTPM): "
+        "Limit 1000, Requested 1272."
+    )
+    client = provider_with(
+        lambda _: httpx2.Response(429, json={"error": {"message": message}}, headers=NO_WAIT)
+    )
+    with pytest.raises(RequestTooLargeError, match="OTPM"):
+        client.complete(make_request())
+
+
+def test_groq_strict_schema_rejection_maps_to_schema_violation() -> None:
+    body = {
+        "error": {
+            "message": "Generated JSON does not match the expected schema.",
+            "type": "invalid_request_error",
+            "code": "json_validate_failed",
+            "failed_generation": "",
+        }
+    }
+    client = provider_with(lambda _: httpx2.Response(400, json=body))
+    with pytest.raises(SchemaViolationError) as caught:
+        client.complete(make_request())
+    assert caught.value.model == "model-a"
+    assert caught.value.latency_ms >= 0
+
+
 def test_truncated_output_is_an_error_not_partial_json() -> None:
     client = provider_with(lambda _: httpx2.Response(200, json=completion_body('{"a"', "length")))
     with pytest.raises(LLMError, match="token limit"):
@@ -235,7 +266,7 @@ def test_groq_is_the_default_with_qwen_and_thinking_off() -> None:
     assert primary.base_url == "https://api.groq.com/openai/v1"
     assert primary.model == "qwen/qwen3.8-27b"
     assert primary.reasoning_effort == "none"
-    assert primary.strict_schema is True
+    assert primary.strict_schema is False  # Groq's strict mode truncates objects
     assert fallback is not None
     assert fallback.model == "qwen/qwen3.8-27b"
     assert fallback.reasoning_effort == "none"

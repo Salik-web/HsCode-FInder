@@ -11,7 +11,14 @@ from pathlib import Path
 import pytest
 
 from app.llm.cache import CachingClient
-from app.llm.client import LLMError, LLMRequest, LLMResponse, RateLimitedError, Usage
+from app.llm.client import (
+    LLMError,
+    LLMRequest,
+    LLMResponse,
+    RateLimitedError,
+    RequestTooLargeError,
+    Usage,
+)
 from app.schemas.raw import RawInvoice
 from evals.dataset import DatasetFileMismatchError, EvalDocument, load_documents
 from evals.report import EvalReport
@@ -154,6 +161,21 @@ def test_non_retryable_llm_error_scores_as_no_output(data_dir: Path, tmp_path: P
     report, _ = evaluate(docs, client, tmp_path)
     assert report.meta.complete
     assert report.layout_groups["seen"].operations.failed_rate == pytest.approx(1 / len(docs))
+
+
+def test_request_too_large_fails_that_document_and_the_run_continues(
+    data_dir: Path, tmp_path: Path
+) -> None:
+    docs = documents(data_dir)
+    too_large = RequestTooLargeError("Request too large: output tokens per minute")
+    client = OracleClient(truths(docs), {docs[0].entry.sha256: [too_large]})
+    report, path = evaluate(docs, client, tmp_path)
+    assert report.meta.complete
+    assert report.meta.documents_scored == len(docs)
+    record = next(r for r in report.documents if r.id == docs[0].entry.id)
+    assert record.extract_status == "failed"
+    assert {field.outcome for field in record.score.fields} == {"no_output"}
+    assert "RequestTooLargeError" in path.read_text(encoding="utf-8")
 
 
 def test_quota_stops_the_run_and_a_rerun_finishes_from_cache(
