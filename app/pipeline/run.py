@@ -13,6 +13,7 @@ from app.llm.client import LLMClient
 from app.pipeline.extract import extract_invoice
 from app.pipeline.preprocess import InvalidDocumentError, PreparedDocument, prepare_document
 from app.pipeline.prompts import load_prompt
+from app.pipeline.rules import apply_rules
 from app.schemas.result import PipelineResult, StageResult
 
 NOT_RUN = StageResult(status="not_run", error=None, retryable=False)
@@ -55,16 +56,27 @@ def complete_pipeline(
         extract=NOT_RUN,
         invoice=None,
         llm_calls=[],
+        rules_applied=[],
+        field_checks=[],
     )
     if preprocessed.document is None:
         return result
     outcome = extract_invoice(preprocessed.document, prompt, client)
-    return result.model_copy(
+    result = result.model_copy(
         update={
             "page_count": len(preprocessed.document.pages),
             "extract": outcome.stage,
-            "invoice": outcome.invoice,
             "llm_calls": outcome.calls,
+        }
+    )
+    if outcome.invoice is None:
+        return result
+    rules = apply_rules(outcome.invoice)
+    return result.model_copy(
+        update={
+            "invoice": rules.invoice,
+            "rules_applied": rules.applied,
+            "field_checks": rules.checks,
         }
     )
 

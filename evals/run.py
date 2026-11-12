@@ -46,6 +46,7 @@ class RunConfig(PipelineConfig):
     split: Split
     model: str
     reasoning_effort: str | None
+    offline: bool = False
 
 
 def run_eval(
@@ -76,6 +77,7 @@ def _run_llm_stages(
 
     A daily quota won't recover within the run, so continuing would only spend each
     remaining document's retries. Those documents return None and count as not_scored.
+    An offline run never stops: a cache miss costs nothing.
     """
     quota_hit = threading.Event()
 
@@ -83,7 +85,8 @@ def _run_llm_stages(
         if quota_hit.is_set():
             return None
         result = complete_pipeline(item, config, client)
-        if result.extract.status == "failed" and result.extract.retryable:
+        unavailable = result.extract.status == "failed" and result.extract.retryable
+        if unavailable and not config.offline:
             quota_hit.set()
             logger.warning("LLM unavailable, stopping new documents: %s", result.extract.error)
         return result
@@ -122,6 +125,8 @@ def _record(document: EvalDocument, result: PipelineResult | None) -> DocumentRe
         error=result.preprocess.error or result.extract.error,
         score=score,
         llm_calls=result.llm_calls,
+        rules_applied=result.rules_applied,
+        field_checks=result.field_checks,
     )
 
 
@@ -172,6 +177,11 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--model", help="override LLM_MODEL from the environment")
     parser.add_argument("--prompt", default=DEFAULT_PROMPT_VERSION, help="prompt version")
     parser.add_argument(
+        "--offline",
+        action="store_true",
+        help="score from the LLM cache only; anything not cached is not_scored, never fetched",
+    )
+    parser.add_argument(
         "--fallback",
         action="store_true",
         help="let the fallback model answer when the primary is rate-limited "
@@ -208,13 +218,14 @@ def main(argv: list[str] | None = None) -> None:
     if args.model:
         settings = settings.model_copy(update={"llm_model": args.model})
     documents = load_documents(settings.data_dir, args.dataset, args.split, args.limit)
-    client = build_client(settings, use_fallback=args.fallback)
+    client = build_client(settings, use_fallback=args.fallback, offline=args.offline)
     config = RunConfig(
         prompt_version=args.prompt,
         dataset=args.dataset,
         split=args.split,
         model=client.model,
         reasoning_effort=settings.primary_provider().reasoning_effort,
+        offline=args.offline,
     )
     report, path = run_eval(
         documents, client, config, settings.reports_dir, settings.llm_concurrency

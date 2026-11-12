@@ -6,12 +6,12 @@ from datetime import date, timedelta
 from decimal import ROUND_HALF_UP, Decimal
 from functools import cache
 from pathlib import Path
-from typing import Literal, NamedTuple, Self
+from typing import NamedTuple, Self
 
 from faker import Faker
 from pydantic import BaseModel, Field, model_validator
 
-from app.schemas.constants import INCOTERMS
+from app.schemas.constants import INCOTERMS, Unit
 from app.schemas.raw import RawInvoice, RawLineItem, RawParty
 
 CATALOGUE_PATH = Path(__file__).with_name("catalogue.csv")
@@ -27,7 +27,6 @@ MAX_INVOICE_AGE_DAYS = 365
 # Two-decimal currencies only, so rounding always fits the +/- 0.01 line amount guardrail.
 CURRENCIES = ("USD", "EUR", "GBP", "AED", "CNY", "PKR", "SAR", "SGD")
 
-Unit = Literal["PCS", "SET", "PAIR", "CTN", "BAG", "KG", "MTR", "MT"]
 # These can be fractional on an invoice; every other unit is counted in whole numbers.
 MEASURED_UNITS = ("KG", "MTR", "MT")
 

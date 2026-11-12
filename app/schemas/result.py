@@ -20,6 +20,15 @@ class StageResult(BaseModel):
     retryable: bool
 
 
+class FieldCheck(BaseModel):
+    """A value a deterministic rule rejected. The value is kept; a person decides."""
+
+    path: str  # e.g. "line_items[3].unit"
+    status: Literal["failed_check"]
+    rule: str  # e.g. "unit_list"
+    detail: str
+
+
 class LLMCall(BaseModel):
     """One model call. Metadata only: never the document or the model's output text."""
 
@@ -35,6 +44,10 @@ class LLMCall(BaseModel):
     # written before repair existed have none.
     keys_repaired: list[str] = []
     keys_ignored: list[str] = []
+    # Number strings rewritten as plain decimals, and those left because their format was
+    # ambiguous (app/pipeline/numbers.py). Paths only, never values.
+    numbers_normalised: list[str] = []
+    numbers_ambiguous: list[str] = []
 
 
 class PipelineResult(BaseModel):
@@ -47,3 +60,7 @@ class PipelineResult(BaseModel):
     extract: StageResult
     invoice: RawInvoice | None  # set only when extract is ok: validated output or nothing
     llm_calls: list[LLMCall]
+    # Changes deterministic rules made after validation, and values they rejected
+    # (app/pipeline/rules.py).
+    rules_applied: list[str]
+    field_checks: list[FieldCheck]

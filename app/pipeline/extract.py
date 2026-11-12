@@ -19,9 +19,11 @@ from app.llm.client import (
     LLMRequest,
     LLMResponse,
     LLMUnavailableError,
+    NotCachedError,
     RateLimitedError,
     SchemaViolationError,
 )
+from app.pipeline.numbers import NumberReport, normalise_numbers, with_placeholders
 from app.pipeline.preprocess import PreparedDocument
 from app.pipeline.prompts import OutputFormat, Prompt
 from app.pipeline.repair import NO_REPAIRS, KeyRepairs, describe_allowed_keys, repair_keys
@@ -40,24 +42,36 @@ OUTPUT_MODELS: dict[OutputFormat, type[RawInvoice]] = {
     "compact": CompactInvoice,
 }
 # Waiting may fix these; any other LLM error would fail the same way again.
-RETRYABLE_ERRORS = (RateLimitedError, LLMUnavailableError)
+RETRYABLE_ERRORS = (RateLimitedError, LLMUnavailableError, NotCachedError)
 
 
 REPEATED_ANSWER = "(whole answer): the retry repeated the previous answer unchanged"
+NO_NUMBER_CHANGES = NumberReport(normalised=[], ambiguous=[])
 
 
 class OutputRejectedError(ValueError):
     """The model's answer isn't usable: not JSON, or not valid against the schema."""
 
-    def __init__(self, errors: list[str], repairs: KeyRepairs) -> None:
+    def __init__(self, errors: list[str], repairs: KeyRepairs, numbers: NumberReport) -> None:
         super().__init__("; ".join(errors))
         self.errors = errors
         self.repairs = repairs
+        self.numbers = numbers
+
+
+class AmbiguousNumbersError(ValueError):
+    """Valid output whose number formats can't be read with certainty: a person decides."""
+
+    def __init__(self, repairs: KeyRepairs, numbers: NumberReport) -> None:
+        super().__init__(f"ambiguous number format at {', '.join(numbers.ambiguous)}")
+        self.repairs = repairs
+        self.numbers = numbers
 
 
 class ParsedOutput(BaseModel):
     invoice: RawInvoice
     repairs: KeyRepairs
+    numbers: NumberReport
 
 
 class ExtractionOutcome(BaseModel):
@@ -78,23 +92,34 @@ def allowed_keys(output_format: OutputFormat) -> str:
 
 
 def parse_output(content: str, output_format: OutputFormat) -> ParsedOutput:
-    """Parse, repair key names, then validate; raise OutputRejectedError if unusable.
+    """Parse, repair key names, normalise number strings, then validate.
 
-    Numbers parse as Decimal, never float, so amounts stay exact.
+    Raises OutputRejectedError when the answer is unusable (worth one retry), and
+    AmbiguousNumbersError when it's valid but a number's format can't be read with
+    certainty (a person decides). JSON numbers parse as Decimal, never float.
     """
     try:
         data = json.loads(content, parse_float=Decimal)
     except json.JSONDecodeError as error:
         message = f"(whole answer): not valid JSON: {error.msg}"
-        raise OutputRejectedError([message], NO_REPAIRS) from error
+        raise OutputRejectedError([message], NO_REPAIRS, NO_NUMBER_CHANGES) from error
     model = OUTPUT_MODELS[output_format]
     repaired, repairs = repair_keys(data, model)
+    normalised, numbers = normalise_numbers(repaired, model)
+    # Validate everything except the ambiguous numbers: other errors are worth a retry,
+    # but an ambiguous format alone isn't something the model can settle.
+    checkable = (
+        with_placeholders(normalised, numbers.ambiguous) if numbers.ambiguous else normalised
+    )
     try:
-        parsed = model.model_validate(repaired)
+        parsed = model.model_validate(checkable)
     except ValidationError as error:
-        raise OutputRejectedError(format_validation_errors(error), repairs) from error
+        errors = format_validation_errors(error)
+        raise OutputRejectedError(errors, repairs, numbers) from error
+    if numbers.ambiguous:
+        raise AmbiguousNumbersError(repairs, numbers)
     invoice = parsed.to_raw() if isinstance(parsed, CompactInvoice) else parsed
-    return ParsedOutput(invoice=invoice, repairs=repairs)
+    return ParsedOutput(invoice=invoice, repairs=repairs, numbers=numbers)
 
 
 def format_validation_errors(error: ValidationError) -> list[str]:
@@ -138,7 +163,9 @@ def extract_invoice(
             return ExtractionOutcome(stage=stage, invoice=None, calls=calls)
         if previous_content is not None and response.content.strip() == previous_content:
             # The retry ignored the errors; asking again would only repeat it.
-            calls.append(_call_record(attempt, response, [REPEATED_ANSWER], NO_REPAIRS))
+            calls.append(
+                _call_record(attempt, response, [REPEATED_ANSWER], NO_REPAIRS, NO_NUMBER_CHANGES)
+            )
             review = StageResult(status="needs_review", error=REPEATED_ANSWER, retryable=False)
             return ExtractionOutcome(stage=review, invoice=None, calls=calls)
         previous_content = response.content.strip()
@@ -146,9 +173,14 @@ def extract_invoice(
             parsed = parse_output(response.content, prompt.output_format)
         except OutputRejectedError as error:
             errors = error.errors
-            calls.append(_call_record(attempt, response, errors, error.repairs))
+            calls.append(_call_record(attempt, response, errors, error.repairs, error.numbers))
             continue
-        calls.append(_call_record(attempt, response, [], parsed.repairs))
+        except AmbiguousNumbersError as error:
+            # Asking the model again can't settle how the document writes its numbers.
+            calls.append(_call_record(attempt, response, [], error.repairs, error.numbers))
+            review = StageResult(status="needs_review", error=str(error), retryable=False)
+            return ExtractionOutcome(stage=review, invoice=None, calls=calls)
+        calls.append(_call_record(attempt, response, [], parsed.repairs, parsed.numbers))
         ok = StageResult(status="ok", error=None, retryable=False)
         return ExtractionOutcome(stage=ok, invoice=parsed.invoice, calls=calls)
     review = StageResult(
@@ -187,7 +219,11 @@ def _rejected_call_record(attempt: int, error: SchemaViolationError, errors: lis
 
 
 def _call_record(
-    attempt: int, response: LLMResponse, errors: list[str], repairs: KeyRepairs
+    attempt: int,
+    response: LLMResponse,
+    errors: list[str],
+    repairs: KeyRepairs,
+    numbers: NumberReport,
 ) -> LLMCall:
     return LLMCall(
         attempt=attempt,
@@ -200,4 +236,6 @@ def _call_record(
         validation_errors=errors,
         keys_repaired=repairs.repaired,
         keys_ignored=repairs.ignored,
+        numbers_normalised=numbers.normalised,
+        numbers_ambiguous=numbers.ambiguous,
     )
