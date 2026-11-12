@@ -8,6 +8,7 @@ SCHEMA_VERSION: SchemaVersion = "1.0"
 Incoterm = Literal["EXW", "FCA", "FAS", "FOB", "CFR", "CIF", "CPT", "CIP", "DAP", "DPU", "DDP"]
 INCOTERMS: tuple[str, ...] = get_args(Incoterm)
 
-# Units of measure the system accepts. Synthetic invoices print only these.
-Unit = Literal["PCS", "SET", "PAIR", "CTN", "BAG", "KG", "MTR", "MT"]
+# Units of measure the system accepts. NOS ("numbers") is its own unit, not a synonym of
+# PCS (Salik, 2026-11-12). To be aligned with Pakistan Customs/WeBOC unit codes.
+Unit = Literal["PCS", "NOS", "SET", "PAIR", "CTN", "BAG", "KG", "MTR", "MT"]
 UNITS: tuple[str, ...] = get_args(Unit)

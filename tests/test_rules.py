@@ -129,7 +129,7 @@ def test_exact_synonyms_and_case_map_to_the_list(printed: str, canonical: str) -
     assert check is None
 
 
-@pytest.mark.parametrize("printed", ["MET", "SE", "M", "TON", "NOS", "PCSS", "BOX", "LTR"])
+@pytest.mark.parametrize("printed", ["MET", "SE", "M", "TON", "PCSS", "BOX", "LTR"])
 def test_unknown_and_near_miss_units_fail_the_check_and_keep_their_value(printed: str) -> None:
     unit, change, check = check_unit(printed, "line_items[2].unit")
     assert unit == printed  # never guessed
@@ -157,3 +157,16 @@ def test_rules_report_every_unit_line_by_line() -> None:
         "line_items[3].unit",
     ]
     assert outcome.applied == ["line_items[0].unit: 'PIECES' -> 'PCS'"]
+
+
+@pytest.mark.parametrize("printed", ["NOS", "nos", "Nos."])
+def test_nos_is_its_own_unit_not_a_synonym_of_pcs(printed: str) -> None:
+    assert check_unit(printed, "u")[0] == "NOS"
+    assert check_unit(printed, "u")[2] is None
+    assert "NOS" not in UNIT_SYNONYMS
+
+
+@pytest.mark.parametrize("printed", ["TON", "TONS", "M"])
+def test_ambiguous_units_stay_failing(printed: str) -> None:
+    """TON (short, long or metric) and M (metre or thousand) have no single meaning."""
+    assert check_unit(printed, "u")[2] is not None
