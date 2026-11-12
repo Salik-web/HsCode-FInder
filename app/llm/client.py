@@ -18,6 +18,10 @@ class LLMUnavailableError(LLMError):
     """The provider timed out or couldn't be reached."""
 
 
+class NotCachedError(LLMError):
+    """An offline run needed an answer that isn't in the cache."""
+
+
 class RequestTooLargeError(LLMError):
     """The request can never fit the provider's limits; waiting won't help."""
 

@@ -60,3 +60,27 @@ def test_result_never_contains_unvalidated_output() -> None:
     assert result.extract.status == "needs_review"
     assert result.invoice is None
     assert "{}" not in result.model_dump_json()
+
+
+def test_rules_run_after_extraction_and_are_recorded() -> None:
+    truth = generate_ground_truth(42, 5, load_catalogue()).invoice
+    lines = [truth.line_items[0].model_copy(update={"unit": "MET"}), *truth.line_items[1:]]
+    buyer = truth.buyer.model_copy(update={"name": "Same as consignee"})
+    answer = answer_with_truth().model_copy(
+        update={
+            "content": truth.model_copy(
+                update={"line_items": lines, "buyer": buyer}
+            ).model_dump_json()
+        }
+    )
+    result = run_pipeline(image_pdf(1), CONFIG, FakeClient("model-a", [answer]))
+    assert result.invoice.buyer == truth.consignee
+    assert any("resolved_by_rule" in change for change in result.rules_applied)
+    assert [check.path for check in result.field_checks] == ["line_items[0].unit"]
+    assert result.invoice.line_items[0].unit == "MET"  # kept, flagged, never guessed
+
+
+def test_failed_extraction_runs_no_rules() -> None:
+    result = run_pipeline(image_pdf(1), CONFIG, FakeClient("model-a", [RateLimitedError("q")]))
+    assert result.rules_applied == []
+    assert result.field_checks == []

@@ -483,3 +483,32 @@ def test_failed_call_is_traced_as_an_error_and_reraised() -> None:
     assert observation.fields["level"] == "ERROR"
     assert observation.fields["status_message"] == "RateLimitedError"
     assert observation.ended
+
+
+# --- offline -----------------------------------------------------------------------------
+
+
+def test_offline_client_answers_only_from_the_cache(tmp_path: Path) -> None:
+    from app.llm.client import NotCachedError
+    from app.llm.offline import OfflineClient
+
+    CachingClient(FakeClient("model-a", [make_response()]), tmp_path, {}).complete(make_request())
+    offline = CachingClient(OfflineClient("model-a"), tmp_path, {})
+    assert offline.complete(make_request()).cached
+    with pytest.raises(NotCachedError):
+        offline.complete(make_request(attempt=2))
+
+
+def test_offline_build_never_creates_a_provider_call(monkeypatch: pytest.MonkeyPatch) -> None:
+    from app.llm.factory import build_client
+
+    def refuse(*_: object, **__: object) -> None:
+        raise AssertionError("network used in offline mode")
+
+    monkeypatch.setattr(OpenAICompatibleClient, "complete", refuse)
+    settings = Settings(_env_file=None, groq_api_key=SecretStr("k"), cache_dir=Path("missing"))
+    client = build_client(settings, use_fallback=False, offline=True)
+    from app.llm.client import NotCachedError
+
+    with pytest.raises(NotCachedError):
+        client.complete(make_request())

@@ -350,3 +350,56 @@ def test_repaired_and_ignored_keys_are_counted(data_dir: Path, tmp_path: Path) -
     markdown = path.read_text(encoding="utf-8")
     assert "| Keys repaired | 1 | 0 |" in markdown
     assert "| Keys ignored | 1 | 0 |" in markdown
+
+
+def test_offline_run_scores_cached_documents_and_never_stops(
+    data_dir: Path, tmp_path: Path
+) -> None:
+    from app.llm.offline import OfflineClient
+
+    docs = documents(data_dir)
+    cache_dir = tmp_path / "cache"
+    # Cache answers for every document except the first.
+    for doc in docs[1:]:
+        warm = CachingClient(OracleClient(truths(docs)), cache_dir, {})
+        config = RunConfig(
+            prompt_version="v1",
+            dataset="synthetic_clean",
+            split="dev",
+            model="oracle",
+            reasoning_effort=None,
+        )
+        run_eval([doc], warm, config, tmp_path / "warm_reports", 1)
+    offline_config = RunConfig(
+        prompt_version="v1",
+        dataset="synthetic_clean",
+        split="dev",
+        model="oracle",
+        reasoning_effort=None,
+        offline=True,
+    )
+    client = CachingClient(OfflineClient("oracle"), cache_dir, {})
+    report, _ = run_eval(docs, client, offline_config, tmp_path / "reports", 1)
+    assert report.meta.documents_scored == len(docs) - 1  # the first wasn't cached
+    assert report.meta.llm_calls_made == 0
+    not_scored = [r for r in report.documents if r.status == "not_scored"]
+    assert [r.id for r in not_scored] == [docs[0].entry.id]
+    assert "NotCachedError" in not_scored[0].error
+
+
+def test_rule_counts_appear_in_the_report(data_dir: Path, tmp_path: Path) -> None:
+    docs = documents(data_dir)
+    target = docs[0].truth.invoice
+    lines = [target.line_items[0].model_copy(update={"unit": "MET"}), *target.line_items[1:]]
+    data = target.model_copy(update={"line_items": lines}).model_dump(mode="json")
+    data["buyer"]["name"] = "Same as consignee"
+    data["total_amount"] = f"{target.total_amount:,.2f}"
+    client = OracleClient(truths(docs), {docs[0].entry.sha256: [json.dumps(data)]})
+    report, path = evaluate(docs, client, tmp_path)
+    operations = report.layout_groups["seen"].operations
+    assert operations.references_resolved == 1
+    assert operations.unit_checks_failed == 1
+    markdown = path.read_text(encoding="utf-8")
+    assert "| Buyer references resolved by rule | 1 | 0 |" in markdown
+    assert "| Unit checks failed | 1 | 0 |" in markdown
+    assert "Check failed: line_items[0].unit" in markdown

@@ -15,7 +15,8 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-from app.schemas.result import LLMCall, StageStatus
+from app.pipeline.rules import REFERENCE_RULE, UNIT_RULE
+from app.schemas.result import FieldCheck, LLMCall, StageStatus
 from evals.dataset import BuyerForm
 from evals.metrics import (
     DocumentScore,
@@ -52,6 +53,9 @@ class DocumentRecord(BaseModel):
     error: str | None
     score: DocumentScore | None
     llm_calls: list[LLMCall]
+    # Rule changes and failed checks after validation; reports from before rules had none.
+    rules_applied: list[str] = []
+    field_checks: list[FieldCheck] = []
 
 
 class OperationalStats(BaseModel):
@@ -67,6 +71,11 @@ class OperationalStats(BaseModel):
     # Key names renamed or dropped before validation, over every call (app/pipeline/repair.py).
     keys_repaired: int | None = None
     keys_ignored: int | None = None
+    # Deterministic fixes (app/pipeline/numbers.py, rules.py); None in older reports.
+    numbers_normalised: int | None = None
+    numbers_ambiguous: int | None = None
+    references_resolved: int | None = None
+    unit_checks_failed: int | None = None
     retry_rate: float | None
     cost_per_document_usd: Decimal | None  # None when any call's cost is unknown
     latency_p50_ms: int | None
@@ -143,6 +152,12 @@ def operational_stats(records: list[DocumentRecord]) -> OperationalStats:
         retry_rate=_rate(records, retried),
         keys_repaired=sum(len(c.keys_repaired) for r in records for c in r.llm_calls),
         keys_ignored=sum(len(c.keys_ignored) for r in records for c in r.llm_calls),
+        numbers_normalised=sum(len(c.numbers_normalised) for r in records for c in r.llm_calls),
+        numbers_ambiguous=sum(len(c.numbers_ambiguous) for r in records for c in r.llm_calls),
+        references_resolved=sum(REFERENCE_RULE in r.rules_applied for r in records),
+        unit_checks_failed=sum(
+            check.rule == UNIT_RULE for r in records for check in r.field_checks
+        ),
         cost_per_document_usd=cost_per_document,
         latency_p50_ms=percentile(latencies, P50),
         latency_p95_ms=percentile(latencies, P95),
@@ -258,6 +273,10 @@ def _count_cell(count: int | None) -> str:
     return "not recorded" if count is None else str(count)
 
 
+def _references_cell(sliced: SliceReport) -> str:
+    return _count_cell(sliced.operations.references_resolved)
+
+
 def _cost_cell(sliced: SliceReport) -> str:
     """No documents means no cost to report, which is different from an unknown cost."""
     if sliced.operations.documents == 0:
@@ -320,6 +339,10 @@ def _headline_table(report: EvalReport) -> list[str]:
         row("Retry rate", _retry_cell),
         row("Keys repaired", lambda s: _count_cell(s.operations.keys_repaired)),
         row("Keys ignored", lambda s: _count_cell(s.operations.keys_ignored)),
+        row("Numbers normalised", lambda s: _count_cell(s.operations.numbers_normalised)),
+        row("Numbers ambiguous", lambda s: _count_cell(s.operations.numbers_ambiguous)),
+        row("Buyer references resolved by rule", _references_cell),
+        row("Unit checks failed", lambda s: _count_cell(s.operations.unit_checks_failed)),
         row("Cost per document", _cost_cell),
         row("Latency p50", lambda s: _ms(s.operations.latency_p50_ms)),
         row("Latency p95", lambda s: _ms(s.operations.latency_p95_ms)),
@@ -473,6 +496,10 @@ def _failure_section(record: DocumentRecord, score: DocumentScore) -> list[str]:
         "| --- | --- | --- | --- |",
     ]
     # Critical header fields also appear in `fields`; list each distinct error once.
+    lines += [f"Rule: {change}" for change in record.rules_applied]
+    lines += [f"Check failed: {check.path}: {check.detail}" for check in record.field_checks]
+    if record.rules_applied or record.field_checks:
+        lines.append("")
     for call in record.llm_calls:
         if call.keys_repaired or call.keys_ignored:
             lines += [

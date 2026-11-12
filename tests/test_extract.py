@@ -322,7 +322,7 @@ def test_v2_compact_output_is_much_smaller(truth: RawInvoice) -> None:
         ["Tyres", "2", "PCS", "10.50", "21.00"],  # five columns
         ["Tyres", "2", "PCS", "10.50", "21.00", None, "extra"],  # seven
         ["Tyres", "two", "PCS", "10.50", "21.00", None],  # quantity not a number
-        ["Tyres", "2", "PCS", "1,050.00", "21.00", None],  # thousands separator
+        ["Tyres", "2", "PCS", "12..5", "21.00", None],  # malformed, not just formatted
     ],
 )
 def test_malformed_compact_lines_are_retried(truth: RawInvoice, bad_line: list) -> None:
@@ -377,3 +377,45 @@ def test_unknown_output_format_is_rejected(tmp_path: Path, monkeypatch: pytest.M
             load_prompt("invoice", "v1")
     finally:
         load_prompt.cache_clear()
+
+
+def test_formatted_numbers_are_normalised_without_a_retry(truth: RawInvoice) -> None:
+    data = json.loads(compact_json(truth))
+    data["line_items"][0][4] = f"{truth.line_items[0].amount:,.2f}"
+    data["total_amount"] = f"USD {truth.total_amount:,.2f}"
+    client = FakeClient("model-a", [answer(json.dumps(data))])
+    outcome = extract_invoice(document(), load_prompt("invoice", "v3"), client)
+    assert outcome.stage.status == "ok"
+    assert outcome.invoice == truth
+    assert "total_amount" in outcome.calls[0].numbers_normalised
+    assert outcome.calls[0].validation_errors == []
+
+
+def test_ambiguous_number_goes_to_review_without_a_retry(truth: RawInvoice) -> None:
+    data = json.loads(compact_json(truth))
+    for row in data["line_items"]:
+        row[1:5] = ["1,000", row[2], "1", "1000"]  # nothing else shows the decimal mark
+    data["total_amount"] = "1000"
+    data["gross_weight_kg"] = data["net_weight_kg"] = None
+    client = FakeClient("model-a", [answer(json.dumps(data))])
+    outcome = extract_invoice(document(), load_prompt("invoice", "v3"), client)
+    assert outcome.stage.status == "needs_review"
+    assert outcome.stage.error.startswith("ambiguous number format at line_items[0].quantity")
+    assert outcome.invoice is None
+    assert len(client.requests) == 1
+    assert outcome.calls[0].numbers_ambiguous[0] == "line_items[0].quantity"
+    assert outcome.calls[0].validation_errors == []
+
+
+def test_ambiguous_number_with_other_errors_is_retried(truth: RawInvoice) -> None:
+    """Regression: an ambiguous value must not hide other errors, nor be read as one."""
+    data = json.loads(compact_json(truth))
+    for row in data["line_items"]:
+        row[1:5] = ["1,000", row[2], "1", "1000"]
+    data["total_amount"] = "1000"
+    data["gross_weight_kg"] = data["net_weight_kg"] = None
+    del data["currency"]
+    client = FakeClient("model-a", [answer(json.dumps(data)), answer(compact_json(truth))])
+    outcome = extract_invoice(document(), load_prompt("invoice", "v3"), client)
+    assert outcome.calls[0].validation_errors == ["currency: Field required"]
+    assert outcome.stage.status == "ok"

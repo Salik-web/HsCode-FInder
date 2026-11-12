@@ -8,6 +8,7 @@ from app.config import ProviderConfig, Settings
 from app.llm.cache import CachingClient
 from app.llm.client import LLMClient
 from app.llm.fallback import FallbackClient
+from app.llm.offline import OfflineClient
 from app.llm.openai_compatible import OpenAICompatibleClient
 from app.llm.throttle import ThrottledClient
 from app.llm.tracing import Tracer, TracingClient
@@ -15,27 +16,35 @@ from app.llm.tracing import Tracer, TracingClient
 logger = logging.getLogger(__name__)
 
 
-def build_client(settings: Settings, use_fallback: bool) -> LLMClient:
+def build_client(settings: Settings, use_fallback: bool, offline: bool = False) -> LLMClient:
     """Build the configured client. Switching provider or model is configuration only.
 
     The cache sits outside tracing, so a cache hit isn't traced as an LLM call, and each
     model has its own cache, so a fallback answer is never stored as the primary's.
+    `offline` answers from the cache only and never calls a provider.
     """
-    tracer = _build_tracer(settings)
-    primary = _provider_stack(settings.primary_provider(), settings, tracer)
+    tracer = None if offline else _build_tracer(settings)
+    primary = _provider_stack(settings.primary_provider(), settings, tracer, offline)
     fallback_config = settings.fallback_provider_config() if use_fallback else None
     if fallback_config is None:
         return primary
-    return FallbackClient(primary, _provider_stack(fallback_config, settings, tracer))
+    return FallbackClient(primary, _provider_stack(fallback_config, settings, tracer, offline))
 
 
-def _provider_stack(config: ProviderConfig, settings: Settings, tracer: Tracer | None) -> LLMClient:
+def _provider_stack(
+    config: ProviderConfig, settings: Settings, tracer: Tracer | None, offline: bool
+) -> LLMClient:
     provider = OpenAICompatibleClient(
         config,
         timeout_seconds=settings.llm_timeout_seconds,
         max_retries=settings.llm_max_retries,
         max_tokens=settings.llm_max_output_tokens,
     )
+    if offline:
+        # The provider object still supplies the cache-key options; it's never called.
+        return CachingClient(
+            OfflineClient(provider.model), settings.cache_dir, provider.call_options
+        )
     client: LLMClient = provider
     if tracer is not None:
         client = TracingClient(client, tracer)
