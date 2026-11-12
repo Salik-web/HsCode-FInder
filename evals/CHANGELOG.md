@@ -2,6 +2,15 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-12: v3 + deterministic fixes, re-scored from cache (0 API calls)
+
+- Same model, prompt `v3` and 18 documents as the previous entry; git `7599309`; `evals.run --offline`, so every answer came from the cache.
+- Reports: `reports/20261112T123816_synthetic_clean_dev_qwen_qwen3.8-27b_reasoning-none_v3.md`, `reports/20261112T123831_synthetic_messy_dev_qwen_qwen3.8-27b_reasoning-none_v3.md`.
+- Reference-buyer rule: inv_00002's buyer "As consignee" now resolves to the consignee. Reference buyers 5/6 -> 6/6; all fields (clean) 1085/1090 -> 1088/1090.
+- Unit list: `line.unit` accuracy stays 129/131 (nothing is guessed), but both wrong units (inv_00025 `MET`, `SE`) are now `failed_check`, with no false flags on the 129 right ones.
+- Number normalisation: inv_00003_messy's first answer (`"207,732.88"` style amounts) is now valid. Messy first-try valid 1/2 -> 2/2, retries 1 -> 0, 13 numbers normalised, 0 ambiguous.
+- Unchanged: critical-field accuracy clean 100%, messy 97.1%; the one critical error left is inv_00003_messy's incoterm (CIP read as CIF on a blurred photo).
+
 ## 2026-11-12: v3 on the v2 baseline's 18 documents
 
 - Model `qwen/qwen3.8-27b` on Groq, thinking off, JSON object mode, prompt `v3` (exact key list in the system prompt and the retry), key repair on, schema `1.0`, git `61b0030`.
