@@ -2,6 +2,17 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-12: v3 on the v2 baseline's 18 documents
+
+- Model `qwen/qwen3.8-27b` on Groq, thinking off, JSON object mode, prompt `v3` (exact key list in the system prompt and the retry), key repair on, schema `1.0`, git `61b0030`.
+- Reports: `reports/20261112T121955_synthetic_clean_dev_qwen_qwen3.8-27b_reasoning-none_v3.md`, `reports/20261112T122001_synthetic_messy_dev_qwen_qwen3.8-27b_reasoning-none_v3.md`. Same documents as the v2 baseline: the first 16 clean dev and the first 2 messy dev by id, all seen layouts.
+- Clean (n=16), v2 -> v3: first-try valid JSON 8/16 -> 16/16, retries 8 -> 0, `needs_review` 2 -> 0, critical-field accuracy 85.1% -> 100%, all critical right 14/16 -> 16/16, all fields 96.1% -> 99.5%, tokens per document 5,686 -> 3,859 (-32%), latency p50 2.2 s -> 1.8 s.
+- Messy (n=2), v2 -> v3: first-try valid 2/2 -> 1/2 (inv_00003_messy wrote amounts that weren't plain decimals; the retry fixed it), all critical right 1/2 both (incoterm CIP read as CIF in both versions: a reading error on a blurred photo).
+- Keys repaired 0 and ignored 0 in v3: the key list in the prompt alone fixed key names. The repair code is a safety net; on the cached v2 answers it raises first-try validity from 10/18 to 14/18.
+- New errors in v3 (both clean, both non-critical): inv_00002 (a "Same as consignee" buyer) has the buyer name "As consignee" with no address or country (v2 was right; reference buyers 6/6 -> 5/6); inv_00025 units "MET" for MT and "SE" for SET, the same garbling seen in v2 key names but in values, which key repair can't catch.
+- Tokens per call: first-attempt input 3,211 -> 3,375 and output 529 -> 484 (clean). JSON object mode did not cut input by ~1,000 as expected; the saving per document comes from no retries and shorter output.
+- Small sample (18 documents, one model, seen layouts only); one document moves a clean rate by 6 points.
+
 ## 2026-11-11: v2 baseline on Groq (partial by decision)
 
 - Model `qwen/qwen3.8-27b` on Groq (free tier), thinking off (`reasoning_effort=none`), provider strict mode off, prompt `v2` (compact line items), schema `1.0`, git `ff12136`.
