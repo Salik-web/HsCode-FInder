@@ -12,12 +12,26 @@ Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H &
 ## Status
 - Current phase: **Phase 3 started early (schema reliability)**, approved by Salik on 2026-11-11. Phase 2 is built and tested, and its baseline was cut short by decision (see below); the Phase 2 gate wasn't formally passed.
 - Completed phases: Phase 1 — Foundation + synthetic data (approved by Salik, 2026-11-07)
-- Branch: `feat/phase3-schema-reliability`, not merged. `main` is at `ff12136` (Groq provider, prompt v2, first-try JSON metrics).
+- Branch: everything is merged into `main`; no open feature branches.
 - Latest eval baseline: **v2 on Groq** `qwen/qwen3.8-27b`, thinking off, 2026-11-11: 18 documents (the first 16 clean dev and the first 2 messy dev by id, all seen layouts). Clean: critical-field accuracy 85.1%, all critical right 14/16, first-try valid JSON 8/16, `needs_review` 2/16; messy: 2/2 valid first try, all critical right 1/2. See evals/CHANGELOG.md.
-- **Where we are (2026-11-12, 12:25 UTC):** v3 is scored on the v2 baseline's 18 documents (evals/CHANGELOG.md, 2026-11-12). Clean: first-try valid JSON 8/16 -> 16/16, critical-field accuracy 85.1% -> 100%, tokens per document -32%. Messy: unchanged, 1/2 all critical right. **Waiting for Salik's approval before any full run.**
-  - Open from the v3 run: the reference buyer on inv_00002 came back as the name "As consignee" (a v3 regression on 1 document); garbled values (`MET` for MT, `SE` for SET) on inv_00025, which key repair can't catch.
+- Latest result on those 18 documents: **prompt v3 + deterministic fixes** (key repair, reference-buyer rule, unit list, number normalisation), re-scored from cache on 2026-11-12. Clean: first-try valid 16/16, critical-field accuracy 100%, all fields 1088/1090 (the 2 misses are garbled units, both flagged `failed_check`). Messy: first-try valid 2/2, all critical right 1/2 (incoterm misread on a blurred photo). See evals/CHANGELOG.md.
+- **Where we stopped (2026-11-12, 13:45 UTC): the full v3 run, approved by Salik, is part-way through.** Order: test_unseen_layout clean, then messy, then the rest of dev (clean, then messy). Send Salik an interim report once unseen is done, then continue with dev.
+  - test_unseen_layout clean: **13/24 scored** and cached (checked with `--offline`: 13 from cache, 0 calls). Groq's daily token limit stopped it; rounds at 13:15 and 13:36 UTC added 1 and 0 documents.
+  - test_unseen_layout messy: 0/7. dev clean: the first 16/53 are cached (from the 18-document comparison); 37 to go. dev messy: the first 2/16 are cached; 14 to go.
+  - No final reports for the full run are in `evals/reports` yet; interim runs went to a scratch folder.
+  - The loop was stopped while sleeping, so no call was interrupted. Its process, its sleep and its shell wrappers were killed, and no bash, sleep, evals.run or python process remained.
+- **Resume the full run.** Each command stops at the first quota error and resumes from the cache next time, so repeat it until it prints the full count. Keep interim reports out of the repo with `REPORTS_DIR`:
+  ```bash
+  export REPORTS_DIR=/tmp/interim_reports   # any folder outside evals/reports
+  uv run python -m evals.run --dataset synthetic_clean --split test_unseen_layout --prompt v3   # until Scored 24/24
+  uv run python -m evals.run --dataset synthetic_messy --split test_unseen_layout --prompt v3   # until Scored 7/7
+  # -> interim report to Salik
+  uv run python -m evals.run --dataset synthetic_clean --split dev --prompt v3                  # until Scored 53/53
+  uv run python -m evals.run --dataset synthetic_messy --split dev --prompt v3                  # until Scored 16/16
+  ```
+  When a split is fully scored, write its final report into `evals/reports` from the cache at no cost (`unset REPORTS_DIR`, then the same command with `--offline`), and log it in `evals/CHANGELOG.md`. Groq allows about 200,000 tokens a day, about 50 v3 documents, so the 2 remaining dev splits probably take another day. If you run the commands in a background loop, check afterwards that no `bash`, `sleep` or `evals.run` process is left (see the lesson below).
+  - Lesson: on Windows, stopping a background shell loop ended only its wrapper. Two loops kept running overnight on 2026-11-11 (5 extra v2 calls; one v3 retry made twice). After stopping a background loop, check with `Get-CimInstance Win32_Process` and kill leftovers by PID.
   - To replay the v2 baseline from cache, set `LLM_RESPONSE_FORMAT=json_schema` with `--prompt v2`: JSON object mode changed the cache key.
-  - Lesson: on Windows, stopping a background shell loop ended only its wrapper. Two loops kept running overnight (5 extra v2 calls; one v3 retry made twice). After stopping a background loop, check with `Get-CimInstance Win32_Process` that no `bash`, `sleep` or `evals.run` process is left.
 - Known issues / open decisions:
   - Model is Groq `qwen/qwen3.8-27b` with thinking off (`reasoning_effort=none`), chosen by Salik to stay on the free tier (2026-11-11). Gemini's free tier allows only 20 requests per model per day; its 12 cached results are kept for the Phase 7 bake-off (`LLM_PROVIDER=gemini LLM_MODEL=gemini-3.5-flash LLM_REASONING_EFFORT= LLM_RESPONSE_FORMAT=json_schema LLM_MAX_OUTPUT_TOKENS=16000`, prompt v1).
   - **Units:** the accepted list is PCS, NOS, SET, PAIR, CTN, BAG, KG, MTR, MT (`app/schemas/constants.py`) plus exact synonyms in `app/pipeline/rules.py`. NOS is its own unit, never mapped to PCS; TON and M stay failing as ambiguous (Salik, 2026-11-12). **Align the list with Pakistan Customs/WeBOC unit codes once Salik confirms them with his operations contacts.**
