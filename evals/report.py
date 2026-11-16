@@ -278,7 +278,9 @@ def write_report(report: EvalReport, reports_dir: Path, previous: EvalReport | N
 def find_previous(reports_dir: Path, current: RunMetadata) -> EvalReport | None:
     """The latest earlier run on the same dataset and split, whatever its model or prompt."""
     candidates = []
-    for path in reports_dir.glob("*.json"):
+    # Eval report names hold the dataset and split. Other reports share the folder (the
+    # guardrail eval), so never parse a file as an eval report by its extension alone.
+    for path in reports_dir.glob(f"*_{current.dataset}_{current.split}_*.json"):
         report = EvalReport.model_validate_json(path.read_bytes())
         meta = report.meta
         if (meta.dataset, meta.split) == (current.dataset, current.split) and (
@@ -594,21 +596,18 @@ def _failure_section(record: DocumentRecord, score: DocumentScore) -> list[str]:
         f"{score.lines.matched} matched.",
         "",
         *([f"Error: {record.error}", ""] if record.error else []),
-        "| Field | Outcome | Expected | Predicted |",
-        "| --- | --- | --- | --- |",
     ]
+    # Notes go above the table: a line between table rows would end the table.
+    notes = [f"- Rule: {change}" for change in record.rules_applied]
+    notes += [_check_note(record, index) for index in range(len(record.field_checks))]
+    notes += [
+        f"- Attempt {call.attempt}: keys repaired {call.keys_repaired}, ignored {call.keys_ignored}"
+        for call in record.llm_calls
+        if call.keys_repaired or call.keys_ignored
+    ]
+    lines += [*notes, ""] if notes else []
+    lines += ["| Field | Outcome | Expected | Predicted |", "| --- | --- | --- | --- |"]
     # Critical header fields also appear in `fields`; list each distinct error once.
-    lines += [f"Rule: {change}" for change in record.rules_applied]
-    lines += [f"Check failed: {check.path}: {check.detail}" for check in record.field_checks]
-    if record.rules_applied or record.field_checks:
-        lines.append("")
-    for call in record.llm_calls:
-        if call.keys_repaired or call.keys_ignored:
-            lines += [
-                f"Attempt {call.attempt}: keys repaired {call.keys_repaired}, "
-                f"ignored {call.keys_ignored}",
-                "",
-            ]
     wrong = [f for f in [*score.fields, *score.critical] if f.outcome != "correct"]
     for field in {(f.field, f.outcome, f.expected, f.predicted): f for f in wrong}.values():
         lines.append(
@@ -616,6 +615,16 @@ def _failure_section(record: DocumentRecord, score: DocumentScore) -> list[str]:
             f"| {_truncate(field.predicted)} |"
         )
     return [*lines, ""]
+
+
+def _check_note(record: DocumentRecord, index: int) -> str:
+    check = record.field_checks[index]
+    note = f"- Check failed: {check.path}: {check.detail}"
+    if record.alarms is None:
+        return note
+    if record.alarms[index].value_correct:
+        return f"{note} (false alarm, the value is right)"
+    return f"{note} (value is wrong)"
 
 
 def render_markdown(report: EvalReport, previous: EvalReport | None) -> str:

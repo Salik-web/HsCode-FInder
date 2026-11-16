@@ -508,6 +508,28 @@ def test_oracle_answers_raise_no_guardrail_alarms(data_dir: Path, tmp_path: Path
     assert f"| Fully correct documents flagged (false alarms) | 0.0% (0/{len(docs)}) | — |" in text
 
 
+def test_a_check_on_a_wrong_value_is_a_true_alarm(data_dir: Path, tmp_path: Path) -> None:
+    """Regression too: check notes used to sit inside the failure table and break it."""
+    docs = documents(data_dir)
+    target = docs[0]
+    wrong = target.truth.invoice.model_copy(update={"currency": "XXX"})
+    client = OracleClient(truths(docs), {target.entry.sha256: [wrong.model_dump_json()]})
+    report, path = evaluate(docs, client, tmp_path)
+    ops = report.layout_groups["seen"].operations
+    assert (ops.alarms_on_wrong_values, ops.alarms_on_correct_values) == (1, 0)
+    assert report.documents is not None
+    record = next(r for r in report.documents if r.id == target.entry.id)
+    assert record.alarms is not None
+    assert [(a.path, a.rule, a.value_correct) for a in record.alarms] == [
+        ("currency", "iso_currency", False)
+    ]
+    text = path.read_text(encoding="utf-8")
+    section = text.split(f"### {target.entry.id} ")[1].split("\n### ")[0]
+    assert "- Check failed: currency: 'XXX' is not an ISO 4217 currency (value is wrong)" in section
+    table = section.split("| --- | --- | --- | --- |\n")[1].strip().splitlines()
+    assert table and all(row.startswith("| ") for row in table)
+
+
 def test_reports_from_before_the_guardrails_still_load() -> None:
     for path in sorted(Path("evals/reports").glob("*.json")):
         report = EvalReport.model_validate_json(path.read_bytes())
