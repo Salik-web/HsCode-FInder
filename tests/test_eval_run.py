@@ -24,7 +24,7 @@ from app.schemas.result import LLMCall
 from evals.dataset import DatasetFileMismatchError, EvalDocument, load_documents
 from evals.report import DocumentRecord, EvalReport, operational_stats
 from evals.run import RunConfig, run_eval
-from synth.generate import SYNTHETIC_DIR, build_dataset
+from synth.generate import SYNTHETIC_DIR, build_dataset, build_diagnostic, diagnostic_dir
 from synth.manifest import Dataset, Split
 
 SEED = 42
@@ -404,6 +404,22 @@ def test_rule_counts_appear_in_the_report(data_dir: Path, tmp_path: Path) -> Non
     assert "| Buyer references resolved by rule | 1 | 0 |" in markdown
     assert "| Unit checks failed | 1 | 0 |" in markdown
     assert "Check failed: line_items[0].unit" in markdown
+
+
+def test_diagnostic_batch_loads_from_its_folder_with_details(
+    data_dir: Path, tmp_path: Path
+) -> None:
+    root = tmp_path / "data"
+    folder = diagnostic_dir(root, "ledger")
+    build_diagnostic("ledger", 2, SEED + 1, folder)
+    docs = load_documents(root, "synthetic_clean", "diagnostic", folder=folder.name)
+    assert [doc.entry.id for doc in docs] == ["diag_00000", "diag_00001"]
+    report, _ = evaluate(docs, OracleClient(truths(docs)), tmp_path / "reports", "diagnostic")
+    assert report.documents is not None
+    assert len(report.documents) == 2
+    assert report.layout_groups["unseen"].summary.documents == 2
+    # The main dataset never holds a diagnostic document.
+    assert load_documents(data_dir, "synthetic_clean", "diagnostic") == []
 
 
 def timed_record(*calls: tuple[int, int | None, int | None]) -> DocumentRecord:

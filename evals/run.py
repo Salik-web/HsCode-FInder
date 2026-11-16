@@ -33,7 +33,7 @@ from evals.report import (
     find_previous,
     write_report,
 )
-from synth.manifest import Dataset, Split
+from synth.manifest import SYNTHETIC_DIR, Dataset, Split
 
 logger = logging.getLogger(__name__)
 
@@ -174,6 +174,12 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser.add_argument("--dataset", choices=get_args(Dataset), required=True)
     parser.add_argument("--split", choices=get_args(Split), required=True)
     parser.add_argument("--limit", type=int, help="score only the first N documents")
+    parser.add_argument(
+        "--folder",
+        default=SYNTHETIC_DIR,
+        help="folder under DATA_DIR with the manifest, e.g. diagnostic_ledger "
+        "(default: the main dataset)",
+    )
     parser.add_argument("--model", help="override LLM_MODEL from the environment")
     parser.add_argument("--prompt", default=DEFAULT_PROMPT_VERSION, help="prompt version")
     parser.add_argument(
@@ -217,7 +223,7 @@ def main(argv: list[str] | None = None) -> None:
     settings = Settings()
     if args.model:
         settings = settings.model_copy(update={"llm_model": args.model})
-    documents = load_documents(settings.data_dir, args.dataset, args.split, args.limit)
+    documents = load_documents(settings.data_dir, args.dataset, args.split, args.limit, args.folder)
     client = build_client(settings, use_fallback=args.fallback, offline=args.offline)
     config = RunConfig(
         prompt_version=args.prompt,

@@ -7,9 +7,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 from synth.generator import GroundTruth
-from synth.manifest import Dataset, Manifest, ManifestEntry, Split
-
-SYNTHETIC_MANIFEST = Path("synthetic") / "manifest.json"
+from synth.manifest import MANIFEST_NAME, SYNTHETIC_DIR, Dataset, Manifest, ManifestEntry, Split
 
 # How the buyer appears on the page: a reference to the consignee ("Same as consignee"),
 # the consignee's details printed again, or a different company.
@@ -41,10 +39,17 @@ class EvalDocument(BaseModel):
 
 
 def load_documents(
-    data_dir: Path, dataset: Dataset, split: Split, limit: int | None = None
+    data_dir: Path,
+    dataset: Dataset,
+    split: Split,
+    limit: int | None = None,
+    folder: str = SYNTHETIC_DIR,
 ) -> list[EvalDocument]:
-    """Documents of one dataset and split, in id order, optionally only the first `limit`."""
-    manifest_path = data_dir / SYNTHETIC_MANIFEST
+    """Documents of one dataset and split, in id order, optionally only the first `limit`.
+
+    `folder` under DATA_DIR holds the manifest: the main dataset, or a diagnostic batch.
+    """
+    manifest_path = data_dir / folder / MANIFEST_NAME
     manifest = Manifest.model_validate_json(manifest_path.read_bytes())
     root = manifest_path.parent
     entries = sorted(

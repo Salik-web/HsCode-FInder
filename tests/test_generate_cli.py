@@ -13,7 +13,13 @@ from PIL import Image
 from app.schemas.raw import RawInvoice
 from synth import generate
 from synth.augment import STRENGTH_RANGES, TRANSFORM_ORDER, augment_pdf
-from synth.generate import MANIFEST_NAME, build_dataset
+from synth.generate import (
+    MANIFEST_NAME,
+    SharedSeedError,
+    build_dataset,
+    build_diagnostic,
+    diagnostic_dir,
+)
 from synth.generator import GroundTruth, generate_ground_truth, load_catalogue
 from synth.layouts import (
     LABEL_SYNONYMS,
@@ -23,7 +29,7 @@ from synth.layouts import (
     Labels,
     pick_labels,
 )
-from synth.manifest import UNSEEN_SPLIT, Manifest, ManifestEntry
+from synth.manifest import DIAGNOSTIC_SPLIT, UNSEEN_SPLIT, Manifest, ManifestEntry
 from synth.render import (
     FIXED_PDF_TIMESTAMP,
     PDFIUM_WRAPPED_HYPHEN,
@@ -336,6 +342,71 @@ def test_augment_strengths_stay_in_range(out_dir: Path, manifest: Manifest) -> N
     ],
 )
 def test_cli_rejects_invalid_counts(argv: list[str]) -> None:
+    with pytest.raises(SystemExit):
+        generate.main(argv)
+
+
+DIAGNOSTIC_SEED = 7
+
+
+@pytest.fixture(scope="module")
+def diagnostic(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, Manifest]:
+    path = tmp_path_factory.mktemp("diagnostic")
+    return path, build_diagnostic("ledger", 3, DIAGNOSTIC_SEED, path)
+
+
+def test_diagnostic_batch_is_one_layout_outside_every_split(
+    diagnostic: tuple[Path, Manifest],
+) -> None:
+    _, batch = diagnostic
+    assert len(batch.documents) == 3
+    for entry in batch.documents:
+        assert entry.template == "ledger"
+        assert entry.split == DIAGNOSTIC_SPLIT
+        assert entry.layout_group == "unseen"
+        assert entry.dataset == "synthetic_clean"
+        assert entry.id.startswith("diag_")
+
+
+def test_diagnostic_batch_shares_no_content_with_the_main_dataset(
+    diagnostic: tuple[Path, Manifest], out_dir: Path, manifest: Manifest
+) -> None:
+    folder, batch = diagnostic
+
+    def invoice_numbers(root: Path, entries: list[ManifestEntry]) -> set[str]:
+        paths = [root / entry.ground_truth for entry in entries]
+        truths = [GroundTruth.model_validate_json(path.read_bytes()) for path in paths]
+        return {str(truth.invoice.invoice_number) for truth in truths}
+
+    assert not {e.sha256 for e in batch.documents} & {e.sha256 for e in manifest.documents}
+    main_numbers = invoice_numbers(out_dir, clean_entries(manifest))
+    assert not invoice_numbers(folder, batch.documents) & main_numbers
+
+
+def test_diagnostic_cli_refuses_the_main_dataset_seed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Same seed and index would rebuild a dev or test invoice in the diagnostic layout."""
+    monkeypatch.setenv("DATA_DIR", str(tmp_path))
+    generate.main(["--n", "1", "--messy", "0", "--seed", str(DIAGNOSTIC_SEED)])
+    with pytest.raises(SharedSeedError):
+        generate.main(["--diagnostic", "ledger", "--n", "1", "--seed", str(DIAGNOSTIC_SEED)])
+    generate.main(["--diagnostic", "ledger", "--n", "1", "--seed", str(DIAGNOSTIC_SEED + 1)])
+    assert (diagnostic_dir(tmp_path, "ledger") / MANIFEST_NAME).exists()
+    # The main dataset is left as it was.
+    main = Manifest.model_validate_json((tmp_path / "synthetic" / MANIFEST_NAME).read_bytes())
+    assert [entry.id for entry in main.documents] == ["inv_00000"]
+
+
+@pytest.mark.parametrize(
+    "argv",
+    [
+        ["--n", "3", "--seed", "1"],
+        ["--diagnostic", "ledger", "--n", "2", "--messy", "0", "--seed", "1"],
+        ["--diagnostic", "no_such_layout", "--n", "2", "--seed", "1"],
+    ],
+)
+def test_cli_rejects_a_messy_count_in_the_wrong_mode(argv: list[str]) -> None:
     with pytest.raises(SystemExit):
         generate.main(argv)
 
