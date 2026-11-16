@@ -1,14 +1,15 @@
 import hashlib
+import json
 from decimal import Decimal
 
 from app.llm.client import LLMResponse, RateLimitedError, Usage
 from app.pipeline.run import PipelineConfig, run_pipeline
 from app.schemas.constants import SCHEMA_VERSION
-from synth.generator import generate_ground_truth, load_catalogue
+from synth.generator import ANCHOR_DATE, generate_ground_truth, load_catalogue
 from tests.fakes import FakeClient
 from tests.test_preprocess import image_pdf
 
-CONFIG = PipelineConfig(prompt_version="v1")
+CONFIG = PipelineConfig(prompt_version="v1", as_of=ANCHOR_DATE)
 
 
 def answer_with_truth() -> LLMResponse:
@@ -84,3 +85,13 @@ def test_failed_extraction_runs_no_rules() -> None:
     result = run_pipeline(image_pdf(1), CONFIG, FakeClient("model-a", [RateLimitedError("q")]))
     assert result.rules_applied == []
     assert result.field_checks == []
+
+
+def test_mapped_code_synonyms_are_recorded_before_the_rules() -> None:
+    truth = generate_ground_truth(42, 5, load_catalogue()).invoice
+    content = truth.model_dump(mode="json") | {"incoterm": "CNF"}
+    response = answer_with_truth().model_copy(update={"content": json.dumps(content)})
+    result = run_pipeline(image_pdf(1), CONFIG, FakeClient("model-a", [response]))
+    assert result.invoice is not None
+    assert result.invoice.incoterm == "CFR"
+    assert result.rules_applied[0] == "incoterm: 'CNF' -> 'CFR'"

@@ -12,6 +12,7 @@ from app.pipeline.rules import (
     apply_rules,
     check_unit,
     is_reference_phrase,
+    map_code_synonyms,
 )
 from app.schemas.constants import UNITS
 from app.schemas.raw import RawInvoice, RawLineItem, RawParty
@@ -170,3 +171,55 @@ def test_nos_is_its_own_unit_not_a_synonym_of_pcs(printed: str) -> None:
 def test_ambiguous_units_stay_failing(printed: str) -> None:
     """TON (short, long or metric) and M (metre or thousand) have no single meaning."""
     assert check_unit(printed, "u")[2] is not None
+
+
+# --- code synonyms -------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("field", "printed", "code"),
+    [
+        ("incoterm", "C&F", "CFR"),
+        ("incoterm", "CNF", "CFR"),
+        ("incoterm", " c&f ", "CFR"),
+        ("currency", "RMB", "CNY"),
+        ("currency", "US$", "USD"),
+        ("currency", "rmb", "CNY"),
+    ],
+)
+def test_exact_code_synonyms_map_and_record_the_printed_value(
+    field: str, printed: str, code: str
+) -> None:
+    mapped, changes = map_code_synonyms({field: printed, "other": "kept"})
+    assert mapped == {field: code, "other": "kept"}
+    assert changes == [f"{field}: {printed!r} -> {code!r}"]
+
+
+@pytest.mark.parametrize(
+    ("field", "printed"),
+    [
+        ("incoterm", "DDU"),  # not the same rule as DAP
+        ("incoterm", "C & F"),  # not an exact synonym
+        ("incoterm", "CFR"),  # already the code
+        ("currency", "Rs"),  # Pakistani, Indian, Sri Lankan ... rupee: ambiguous
+        ("currency", "EURO"),
+        ("currency", "CNY"),
+    ],
+)
+def test_everything_else_is_left_as_printed(field: str, printed: str) -> None:
+    assert map_code_synonyms({field: printed}) == ({field: printed}, [])
+
+
+def test_synonym_mapping_never_touches_missing_or_non_text_values() -> None:
+    data = {"incoterm": None, "currency": 5}
+    assert map_code_synonyms(data) == (data, [])
+    assert map_code_synonyms(["not", "a", "dict"]) == (["not", "a", "dict"], [])
+
+
+def test_every_synonym_maps_to_an_accepted_code() -> None:
+    from app.pipeline.rules import CURRENCY_SYNONYMS, INCOTERM_SYNONYMS
+    from app.schemas.constants import INCOTERMS
+    from app.schemas.iso_codes import CURRENCIES
+
+    assert set(INCOTERM_SYNONYMS.values()) <= set(INCOTERMS)
+    assert set(CURRENCY_SYNONYMS.values()) <= CURRENCIES

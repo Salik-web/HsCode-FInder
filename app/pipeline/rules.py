@@ -3,6 +3,8 @@
 - Reference buyers: a buyer block that says "Same as consignee" names no company. When
   the model copies that phrase as the buyer's name, the buyer is the consignee: copy it,
   and record that a rule did it.
+- Codes: exact synonyms of an Incoterm or currency ("C&F" for CFR, "RMB" for CNY) map
+  to the code before validation; the change records the value as printed.
 - Units: only a fixed list is accepted. Exact, well-known synonyms map to it
   ("PIECES" -> "PCS"). Anything else keeps its value and is marked failed_check: a
   near-miss like "MET" could be MT or MTR, and guessing would hide the error.
@@ -60,6 +62,15 @@ UNIT_SYNONYMS: dict[str, str] = {
 REFERENCE_RULE = "buyer resolved_by_rule: the buyer block refers to the consignee"
 UNIT_RULE = "unit_list"
 
+# Exact synonyms of a code, as printed on real invoices (Salik, 2026-11-16). Each has one
+# meaning. Deliberately absent: DDU (not the same rule as DAP) and Rs (several rupees).
+INCOTERM_SYNONYMS: dict[str, str] = {"C&F": "CFR", "CNF": "CFR"}
+CURRENCY_SYNONYMS: dict[str, str] = {"RMB": "CNY", "US$": "USD"}
+CODE_SYNONYMS: dict[str, dict[str, str]] = {
+    "incoterm": INCOTERM_SYNONYMS,
+    "currency": CURRENCY_SYNONYMS,
+}
+
 
 class RuleOutcome(BaseModel):
     invoice: RawInvoice
@@ -79,6 +90,28 @@ def apply_rules(invoice: RawInvoice) -> RuleOutcome:
     return RuleOutcome(
         invoice=invoice.model_copy(update={"line_items": lines}), applied=applied, checks=checks
     )
+
+
+def map_code_synonyms(data: object) -> tuple[object, list[str]]:
+    """Replace an exact synonym of an Incoterm or currency with its code, before validation.
+
+    It runs before validation because the Incoterm is a closed list there. Only case and
+    surrounding spaces are ignored ("c&f"); "C & F" is not an exact synonym and stays
+    as printed. Each change names the printed value, so the original is never lost.
+    """
+    if not isinstance(data, dict):
+        return data, []
+    mapped = dict(data)
+    changes = []
+    for field, synonyms in CODE_SYNONYMS.items():
+        printed = mapped.get(field)
+        if not isinstance(printed, str):
+            continue
+        code = synonyms.get(printed.strip().upper())
+        if code is not None:
+            mapped[field] = code
+            changes.append(f"{field}: {printed!r} -> {code!r}")
+    return mapped, changes
 
 
 def is_reference_phrase(text: str | None) -> bool:

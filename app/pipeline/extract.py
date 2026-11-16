@@ -27,6 +27,7 @@ from app.pipeline.numbers import NumberReport, normalise_numbers, with_placehold
 from app.pipeline.preprocess import PreparedDocument
 from app.pipeline.prompts import OutputFormat, Prompt
 from app.pipeline.repair import NO_REPAIRS, KeyRepairs, describe_allowed_keys, repair_keys
+from app.pipeline.rules import map_code_synonyms
 from app.schemas.compact import CompactInvoice
 from app.schemas.raw import RawInvoice
 from app.schemas.result import LLMCall, StageResult
@@ -72,12 +73,15 @@ class ParsedOutput(BaseModel):
     invoice: RawInvoice
     repairs: KeyRepairs
     numbers: NumberReport
+    synonyms: list[str] = []  # codes mapped before validation, e.g. "incoterm: 'C&F' -> 'CFR'"
 
 
 class ExtractionOutcome(BaseModel):
     stage: StageResult
     invoice: RawInvoice | None
     calls: list[LLMCall]
+    # Changes made to the answer that was returned (code synonyms), for rules_applied.
+    changes: list[str] = []
 
 
 @cache
@@ -106,11 +110,10 @@ def parse_output(content: str, output_format: OutputFormat) -> ParsedOutput:
     model = OUTPUT_MODELS[output_format]
     repaired, repairs = repair_keys(data, model)
     normalised, numbers = normalise_numbers(repaired, model)
+    mapped, synonyms = map_code_synonyms(normalised)
     # Validate everything except the ambiguous numbers: other errors are worth a retry,
     # but an ambiguous format alone isn't something the model can settle.
-    checkable = (
-        with_placeholders(normalised, numbers.ambiguous) if numbers.ambiguous else normalised
-    )
+    checkable = with_placeholders(mapped, numbers.ambiguous) if numbers.ambiguous else mapped
     try:
         parsed = model.model_validate(checkable)
     except ValidationError as error:
@@ -119,7 +122,7 @@ def parse_output(content: str, output_format: OutputFormat) -> ParsedOutput:
     if numbers.ambiguous:
         raise AmbiguousNumbersError(repairs, numbers)
     invoice = parsed.to_raw() if isinstance(parsed, CompactInvoice) else parsed
-    return ParsedOutput(invoice=invoice, repairs=repairs, numbers=numbers)
+    return ParsedOutput(invoice=invoice, repairs=repairs, numbers=numbers, synonyms=synonyms)
 
 
 def format_validation_errors(error: ValidationError) -> list[str]:
@@ -182,7 +185,9 @@ def extract_invoice(
             return ExtractionOutcome(stage=review, invoice=None, calls=calls)
         calls.append(_call_record(attempt, response, [], parsed.repairs, parsed.numbers))
         ok = StageResult(status="ok", error=None, retryable=False)
-        return ExtractionOutcome(stage=ok, invoice=parsed.invoice, calls=calls)
+        return ExtractionOutcome(
+            stage=ok, invoice=parsed.invoice, calls=calls, changes=parsed.synonyms
+        )
     review = StageResult(
         status="needs_review",
         error=f"output failed validation {MAX_ATTEMPTS} times",

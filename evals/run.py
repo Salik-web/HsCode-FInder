@@ -33,6 +33,7 @@ from evals.report import (
     find_previous,
     write_report,
 )
+from synth.generator import ANCHOR_DATE
 from synth.manifest import SYNTHETIC_DIR, Dataset, Split
 
 logger = logging.getLogger(__name__)
@@ -162,6 +163,7 @@ def _metadata(config: RunConfig, records: list[DocumentRecord], started: datetim
         reasoning_effort=config.reasoning_effort,
         prompt_version=config.prompt_version,
         schema_version=SCHEMA_VERSION,
+        as_of=config.as_of,
         documents_total=len(records),
         documents_scored=sum(record.status == "scored" for record in records),
         llm_calls_made=sum(not call.cached for call in calls),
@@ -231,6 +233,8 @@ def main(argv: list[str] | None = None) -> None:
         split=args.split,
         model=client.model,
         reasoning_effort=settings.primary_provider().reasoning_effort,
+        # Synthetic invoices are dated back from the generator's anchor, never from today.
+        as_of=ANCHOR_DATE,
         offline=args.offline,
     )
     report, path = run_eval(

@@ -5,6 +5,7 @@ one thread while LLM calls may run concurrently (see evals/run.py).
 """
 
 import hashlib
+from datetime import date
 from typing import Literal
 
 from pydantic import BaseModel
@@ -13,7 +14,7 @@ from app.llm.client import LLMClient
 from app.pipeline.extract import extract_invoice
 from app.pipeline.preprocess import InvalidDocumentError, PreparedDocument, prepare_document
 from app.pipeline.prompts import load_prompt
-from app.pipeline.rules import apply_rules
+from app.pipeline.validate import verify_invoice
 from app.schemas.result import PipelineResult, StageResult
 
 NOT_RUN = StageResult(status="not_run", error=None, retryable=False)
@@ -21,6 +22,9 @@ NOT_RUN = StageResult(status="not_run", error=None, retryable=False)
 
 class PipelineConfig(BaseModel):
     prompt_version: str
+    # The day invoice dates are judged against: today in the API, a fixed day in evals,
+    # so a report doesn't change with the day it is run.
+    as_of: date
     doc_type: Literal["invoice"] = "invoice"
 
 
@@ -71,11 +75,11 @@ def complete_pipeline(
     )
     if outcome.invoice is None:
         return result
-    rules = apply_rules(outcome.invoice)
+    rules = verify_invoice(outcome.invoice, config.as_of)
     return result.model_copy(
         update={
             "invoice": rules.invoice,
-            "rules_applied": rules.applied,
+            "rules_applied": [*outcome.changes, *rules.applied],
             "field_checks": rules.checks,
         }
     )
