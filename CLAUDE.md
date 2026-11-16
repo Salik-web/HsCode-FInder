@@ -13,6 +13,7 @@ Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H &
 - Current phase: **Phase 3 started early (schema reliability)**, approved by Salik on 2026-11-11. Phase 2 is built and tested, and its baseline was cut short by decision (see below); the Phase 2 gate wasn't formally passed.
 - Completed phases: Phase 1 — Foundation + synthetic data (approved by Salik, 2026-11-07)
 - Branch: everything is merged into `main`; no open feature branches. Salik pushes.
+- **Phase 4 started 2026-11-16** at Salik's request while Groq quota recovers, before the Phase 3 gate is formally closed (the full v3 run is still finishing). Built: `app/pipeline/validate.py` (deterministic checks), exact code synonyms, the injected-error set and the guardrail eval. Catch rate 60/60 = 100% on the injected set; 0 false alarms on 113 clean ground-truth invoices; 0 fully correct v3 extractions flagged. See evals/CHANGELOG.md. **Next session, after tomorrow's runs: confidence scoring and the calibration table** (the rest of the Phase 4 gate).
 - Latest eval baseline: **v2 on Groq** `qwen/qwen3.8-27b`, thinking off, 2026-11-11: 18 documents (the first 16 clean dev and the first 2 messy dev by id, all seen layouts). Clean: critical-field accuracy 85.1%, all critical right 14/16, first-try valid JSON 8/16, `needs_review` 2/16; messy: 2/2 valid first try, all critical right 1/2. See evals/CHANGELOG.md.
 - Latest result on those 18 documents: **prompt v3 + deterministic fixes** (key repair, reference-buyer rule, unit list, number normalisation), re-scored from cache on 2026-11-12. Clean: first-try valid 16/16, critical-field accuracy 100%, all fields 1088/1090 (the 2 misses are garbled units, both flagged `failed_check`). Messy: first-try valid 2/2, all critical right 1/2 (incoterm misread on a blurred photo). See evals/CHANGELOG.md.
 - **Where we stopped (2026-11-16, 07:05 UTC): the full v3 run, approved by Salik, is part-way through.** test_unseen_layout is done and the interim report was sent to Salik. Groq's daily token limit then stopped dev.
@@ -42,6 +43,8 @@ Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H &
   - Lesson: on Windows, stopping a background shell loop ended only its wrapper. Two loops kept running overnight on 2026-11-11 (5 extra v2 calls; one v3 retry made twice). After stopping a background loop, check with `Get-CimInstance Win32_Process` and kill leftovers by PID.
   - To replay the v2 baseline from cache, set `LLM_RESPONSE_FORMAT=json_schema` with `--prompt v2`: JSON object mode changed the cache key.
 - Known issues / open decisions:
+  - **Charges and discounts, prompt v4 (planned by Salik, 2026-11-16, after tomorrow's runs):** real invoices often show freight, insurance, discounts and other charges between the subtotal and the total. v4 extracts them as fields, and the total check becomes lines + charges − discount = total with a rounding-only tolerance. A mismatch with no charges found goes to `needs_review`. The generator must produce invoices with charges too. Until then, the total check (rounding only, half a cent per line plus half for the total) flags the total on any real invoice with charges.
+  - **Code synonyms (Salik, 2026-11-16):** exact only, mapped before validation, with the printed value recorded in `rules_applied`: C&F and CNF -> CFR, RMB -> CNY, US$ -> USD (`app/pipeline/rules.py`). DDU stays flagged (not the same rule as DAP), and so does Rs (ambiguous across rupee currencies).
   - Model is Groq `qwen/qwen3.8-27b` with thinking off (`reasoning_effort=none`), chosen by Salik to stay on the free tier (2026-11-11). Gemini's free tier allows only 20 requests per model per day; its 12 cached results are kept for the Phase 7 bake-off (`LLM_PROVIDER=gemini LLM_MODEL=gemini-3.5-flash LLM_REASONING_EFFORT= LLM_RESPONSE_FORMAT=json_schema LLM_MAX_OUTPUT_TOKENS=16000`, prompt v1).
   - **Units:** the accepted list is PCS, NOS, SET, PAIR, CTN, BAG, KG, MTR, MT (`app/schemas/constants.py`) plus exact synonyms in `app/pipeline/rules.py`. NOS is its own unit, never mapped to PCS; TON and M stay failing as ambiguous (Salik, 2026-11-12). **Align the list with Pakistan Customs/WeBOC unit codes once Salik confirms them with his operations contacts.**
   - Number formats: when both "," and "." appear, the last one is the decimal mark (confirmed by Salik, 2026-11-12). A single separator with exactly 3 digits after it is settled only by the document's other numbers; otherwise the document goes to `needs_review`. Currency is never used as evidence.
@@ -81,6 +84,8 @@ uv run ruff check . --fix && uv run ruff format .   # lint + format
 uv run python -m synth.generate --n 100 --messy 30 --seed 42
 uv run python -m synth.generate --diagnostic ledger --n 10 --seed 1116   # one layout, own folder, outside every split
 uv run python -m evals.run --dataset synthetic_clean --split diagnostic --folder diagnostic_ledger --prompt v3
+uv run python -m synth.inject --n 60 --seed 2026                     # injected-error set, own folder and split
+uv run python -m evals.guardrails                                    # catch rate + false alarms, no LLM calls
 uv run python -m evals.run --dataset synthetic_clean --split dev --limit 20
 uv run python -m evals.run --dataset synthetic_messy --split dev --model gemini-3.5-flash --prompt v1
 uv run python -m evals.run --dataset synthetic_clean --split test_unseen_layout   # reporting only
@@ -98,8 +103,8 @@ app/schemas/    Pydantic models (RawInvoice from LLM, Invoice with Field[T])
 app/llm/        LLMClient protocol, OpenAI-compatible provider, disk cache, fallback, Langfuse tracing, factory
 app/db/         SQLAlchemy 2.0 models + Alembic migrations
 prompts/        versioned prompts: prompts/<doc_type>/v<N>.md (never edit an old version)
-evals/          metrics.py, dataset.py, report.py, run.py (CLI), reports/, CHANGELOG.md
-synth/          generator, layouts (+ label synonyms), Jinja2 templates, render, augment, manifest, generate (CLI), catalogue.csv
+evals/          metrics.py, dataset.py, report.py, run.py (CLI), guardrails.py (CLI), reports/, CHANGELOG.md
+synth/          generator, layouts (+ label synonyms), Jinja2 templates, render, augment, manifest, generate (CLI), inject (CLI), catalogue.csv
 tariff/         PCT schedule ingestion -> pgvector
 web/            Next.js + Tailwind review UI
 tests/          pytest; LLM always mocked (tests/fakes.py)

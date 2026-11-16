@@ -2,6 +2,43 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-16: guardrails re-measured: rounding-only total tolerance, exact code synonyms (0 API calls)
+
+- Salik's decisions: (1) the total check allows rounding only, half a cent per line amount plus half a cent for the total (1 cent on a one-line invoice), instead of 0.5% of the total; charges and discounts come with prompt v4 (CLAUDE.md, Known issues). (2) Exact synonyms map before validation and the printed value is recorded in `rules_applied`: C&F and CNF -> CFR, RMB -> CNY, US$ -> USD. DDU (not DAP) and Rs (several rupees) stay flagged.
+- The injected set was regenerated (seed 2026, 60 invoices): C&F, CNF, RMB and US$ are no longer planted as errors.
+- Catch rate: **60/60 = 100%**; every kind 10/10 (wrong totals 5/10 -> 10/10). Every wrong line amount now also flags the total (10/10), as it should: the lines no longer add up.
+- False alarms: 0/60 and 0/53 on clean ground truth; cached v3 extractions unchanged from the entry below (0 fully correct documents flagged in any set; scores unchanged; no cached answer used a synonym).
+- Caveat: synthetic totals are exactly the line sum. On a real invoice with freight, insurance or a discount, this check flags the total until v4 extracts those charges.
+
+## 2026-11-16: Phase 4 guardrails, first measurement (branch `feat/phase4-guardrails`, 0 API calls)
+
+- `app/pipeline/validate.py` runs after the rules: line math (±0.01), invoice total (±0.5% of the total, DESIGN.md §5.4), net ≤ gross, Incoterm list, ISO 4217 currency, ISO 3166 country per party, date sanity (not after `as_of`, not more than 2 years before). Evals judge dates as of the generator's anchor, 2026-10-01. The HS existence check waits for Phase 5.
+- Injected set: 60 invoices (seed 2026, `data/synthetic_injected`, split `injected`), one planted error each, 10 per kind, JSON only. Guardrail report: `python -m evals.guardrails` (written to a scratch folder, not `evals/reports`).
+
+| Error | Caught | How |
+| --- | --- | --- |
+| wrong line amount | 10/10 | line math (6 also flagged the total) |
+| wrong total | **5/10** | invoice total; the 5 misses are typos of 0.36 to 20 on totals of 200k to 1.6M, all under the 0.5% tolerance |
+| net > gross | 10/10 | weights |
+| invalid Incoterm (C&F, DDU, ...) | 10/10 | rejected by the extraction schema (closed list), so in the pipeline: retry, then `needs_review` |
+| future date | 10/10 | date sanity |
+| non-ISO currency (RMB, US$, ...) | 10/10 | ISO 4217 |
+| **All** | **55/60 = 91.7%** | target ≥ 95% |
+
+- False alarms on clean ground truth: 0/60 (injected set before planting) and 0/53 (synthetic_clean dev).
+- False alarms on cached v3 extractions (re-scored `--offline`; scores unchanged):
+
+| Set | Alarms on wrong / correct values | Fully correct documents flagged |
+| --- | --- | --- |
+| Clean, seen (dev, 27) | 2 / 0 (inv_00025's two garbled units) | 0/26 |
+| Clean, unseen (24) | 0 / 1 | 0/22 |
+| Messy, seen (dev, 2) | 0 / 0 | 0/1 |
+| Messy, unseen (6 of 7) | 0 / 0 | 0/4 |
+
+  - The one alarm on a correct value is on a document that isn't fully correct. The test split shows totals only, but the likely cause is the one missed line: the line amounts then sum short, so the correct total is flagged.
+- Harness fixes on the way: `evals.run` read every JSON in the reports folder as an eval report (a guardrail report there crashed it); check notes broke the markdown failure table.
+- Open: the total tolerance (0.5% hides small typos on large totals; see CLAUDE.md), confidence scoring and the calibration table (rest of the Phase 4 gate).
+
 ## 2026-11-16: buyer and consignee names become critical fields (metric change, re-scored from cache)
 
 - Critical fields are now invoice number, total, currency, Incoterm, **buyer name, consignee name** and line amounts (Salik: a wrong consignee is a serious customs error). `evals/metrics.py`, DESIGN.md §6. Same model, prompt `v3` and cached answers; `--offline`, 0 API calls.
