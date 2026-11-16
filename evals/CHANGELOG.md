@@ -2,6 +2,25 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-16: confidence scoring and calibration, first measurement (branch `feat/phase4-confidence`, 0 API calls)
+
+- `app/pipeline/confidence.py`: per-field confidence from documented points, no model self-report. Base 0.75 with a text layer, 0.60 without; +0.20 if the value is found in the text layer, −0.45 if not; −0.10 retry, −0.05 repaired keys, −0.10 number format reinterpreted, −0.05 set by a rule; a failed check caps it at 0.10 (`failed_check`). Below 0.50: `needs_review`. Not text-checked: None values and country codes.
+- Re-scored cached v3 extractions `--offline` (scores unchanged). "Sent to review" = `needs_review` or `failed_check`.
+
+| Set (source) | Fields | Wrong | Wrong sent to review (error recall) | Correct sent to review (review load) |
+| --- | --- | --- | --- | --- |
+| Clean, seen, dev 27 (PDF text layer) | 2049 | 2 | 2/2 (both `failed_check`: inv_00025's units) | 4/2047 (0.2%) |
+| Clean, unseen 24 (PDF text layer) | 1530 | 3 | 1/3 (`needs_review`) | 1/1527 (0.1%) |
+| Messy, seen, dev 2 (image) | 200 | 1 | 0/1 | 0/199 |
+| Messy, unseen 6 of 7 (image) | 306 | 2 | 0/2 | 0/304 |
+| **All cached v3** | 4085 | 8 | **3/8 (37.5%)** | 5/4077 (0.12%) |
+
+- Calibration on clean PDFs (seen + unseen): confidence ≥ 0.9: 3001/3003 right; 0.7–0.9: 557/557; 0.5–0.7: 11/11; 0.3–0.5: 4/5; below 0.3: 1/3. Messy images all score 0.60: no text layer, so confidence can't separate right from wrong.
+- The 4 "needless" dev reviews are real garbles that the ≥ 0.9 fuzzy metric forgives (inv_00025: "Stainless surgical scissors" for "Stainless steel surgical scissors", "tery", "stee", "part"). The 1 unseen review load is a correct value with a failed check (likely the total, made short by the one missed line; the test split shows totals only).
+- Missed: the 3 messy errors (no text layer; incoterm CIP read as CIF, a consignee name and a shipper address) and 2 clean unseen party names that scored ≥ 0.9, so they appear on the page as extracted. That fits the ledger hypothesis (a name cut at a comma is still on the page); the diagnostic batch will tell.
+- Injected planted errors (guardrail path; JSON, no page): 60/60 planted fields sent to review. Review load on clean ground truth without a page: 0/3996 and 0/3857 fields. With the 8 extraction errors: 63/68 (92.6%), but the two measure different things: planted errors are printed on the document, so only the guardrails can catch them.
+- Sample size: 8 real extraction errors. One more caught moves recall by 12.5 points; the 95% interval for 3/8 is roughly 14% to 69%.
+
 ## 2026-11-16: guardrails re-measured: rounding-only total tolerance, exact code synonyms (0 API calls)
 
 - Salik's decisions: (1) the total check allows rounding only, half a cent per line amount plus half a cent for the total (1 cent on a one-line invoice), instead of 0.5% of the total; charges and discounts come with prompt v4 (CLAUDE.md, Known issues). (2) Exact synonyms map before validation and the printed value is recorded in `rules_applied`: C&F and CNF -> CFR, RMB -> CNY, US$ -> USD. DDU (not DAP) and Rs (several rupees) stay flagged.
