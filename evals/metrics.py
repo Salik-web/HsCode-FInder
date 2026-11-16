@@ -57,7 +57,16 @@ LINE_FIELDS: dict[str, Comparison] = {
     "hs_code_on_doc": "exact",
 }
 LINE_PREFIX = "line"
-CRITICAL_HEADER_FIELDS = ("invoice_number", "total_amount", "currency", "incoterm")
+# Every critical field that isn't per line, party names included: a wrong buyer or
+# consignee is a serious customs error (Salik, 2026-11-16).
+CRITICAL_HEADER_FIELDS = (
+    "invoice_number",
+    "total_amount",
+    "currency",
+    "incoterm",
+    "buyer.name",
+    "consignee.name",
+)
 CRITICAL_LINE_FIELD = "amount"
 CRITICAL_LINE_NAME = f"{LINE_PREFIX}.{CRITICAL_LINE_FIELD}"
 EMPTY_PARTY = RawParty(name=None, address=None, country=None)

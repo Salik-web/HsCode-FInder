@@ -231,7 +231,7 @@ Synthetic sets have 8 layouts and vary their field labels per document. In synth
 
 - Per-field accuracy: exact match for IDs and codes, ± tolerance for numbers, normalised fuzzy match (≥ 0.9) for names and addresses
 - Line items: match predicted to gold lines (Hungarian matching on description similarity), then precision, recall and F1, plus per-field accuracy on matched lines
-- Document-level: % of documents with **all critical fields** correct (invoice number, total, currency, Incoterm, line amounts)
+- Document-level: % of documents with **all critical fields** correct (invoice number, total, currency, Incoterm, buyer name, consignee name, line amounts). Buyer and consignee names joined on 2026-11-16: a wrong consignee is a serious customs error
 - Guardrail catch rate on `synthetic_injected`, and false-alarm rate on clean docs
 - HS: top-1 and top-3 accuracy at 4-digit heading and 6-digit levels
 - Calibration: accuracy within each confidence bucket. Fields marked "ok" with high confidence should almost always be right

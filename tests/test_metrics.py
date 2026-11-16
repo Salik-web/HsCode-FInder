@@ -181,10 +181,51 @@ def test_a_non_critical_error_keeps_the_document_critical_correct() -> None:
 
 
 def test_critical_fields_are_the_designed_set() -> None:
-    assert CRITICAL_HEADER_FIELDS == ("invoice_number", "total_amount", "currency", "incoterm")
+    assert CRITICAL_HEADER_FIELDS == (
+        "invoice_number",
+        "total_amount",
+        "currency",
+        "incoterm",
+        "buyer.name",
+        "consignee.name",
+    )
     score = score_document(make_invoice(), make_invoice())
     names = [field.field for field in score.critical]
     assert names == [*CRITICAL_HEADER_FIELDS, CRITICAL_LINE_NAME, CRITICAL_LINE_NAME]
+
+
+@pytest.mark.parametrize("party_name", ["buyer", "consignee"])
+def test_wrong_buyer_or_consignee_name_fails_critical(party_name: str) -> None:
+    predicted = make_invoice(**{party_name: party("Unrelated Trading Co")})
+    score = score_document(make_invoice(), predicted)
+    assert outcomes(score)[f"{party_name}.name"] == "wrong"
+    assert not score.all_critical_correct
+
+
+@pytest.mark.parametrize("party_name", ["buyer", "consignee"])
+def test_missing_buyer_or_consignee_name_fails_critical(party_name: str) -> None:
+    truth = make_invoice()
+    blank = getattr(truth, party_name).model_copy(update={"name": None})
+    score = score_document(truth, make_invoice(**{party_name: blank}))
+    assert outcomes(score)[f"{party_name}.name"] == "missed"
+    assert not score.all_critical_correct
+
+
+@pytest.mark.parametrize("field", ["shipper.name", "notify_party.name", "consignee.address"])
+def test_other_party_fields_stay_non_critical(field: str) -> None:
+    party_name, attribute = field.split(".")
+    truth = make_invoice(notify_party=party("Clearing Agent"))
+    changed = getattr(truth, party_name).model_copy(update={attribute: "Somewhere Else Entirely"})
+    score = score_document(truth, truth.model_copy(update={party_name: changed}))
+    assert wrong_fields(score) == [field]
+    assert score.all_critical_correct
+
+
+def test_buyer_copied_from_a_different_consignee_fails_critical() -> None:
+    """The case that matters for customs: the buyer isn't the consignee, but was read as it."""
+    truth = make_invoice(buyer=party("Habib Traders"))
+    score = score_document(truth, make_invoice())
+    assert not score.all_critical_correct
 
 
 def test_missing_header_value_is_a_miss() -> None:
@@ -375,8 +416,8 @@ def test_summary_micro_averages_lines_across_documents() -> None:
     assert summary.line_precision == 1.0
     assert summary.line_recall == pytest.approx(3 / 4)
     assert summary.line_f1 == pytest.approx(2 * 1.0 * 0.75 / 1.75)
-    # 2 docs x 4 header fields + 4 gold lines; one line missed.
-    assert summary.critical_field_accuracy == pytest.approx(11 / 12)
+    # 2 docs x 6 header and party fields + 4 gold lines; one line missed.
+    assert summary.critical_field_accuracy == pytest.approx(15 / 16)
     assert summary.all_critical_correct_rate == 0.5
 
 
