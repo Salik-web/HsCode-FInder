@@ -16,11 +16,15 @@ down as a reason, so a person (or a report) can see why a field was trusted or n
 | A rule set or changed this value                         | -0.05  |
 | A guardrail check failed on this field                   | cap at 0.10, status failed_check |
 
-Below REVIEW_THRESHOLD, a field's status is needs_review. Text agreement says the value
-is on the page, not that it is in the right place: a short value ("2", "PCS") is found
-almost anywhere, and a name cut short is still found. It isn't applied to None (nothing
-to look for) or to country codes (pages print country names; there's no code-to-name
-table yet).
+Below REVIEW_THRESHOLD, a field's status is needs_review. Without a text layer, nothing
+can verify a value, so critical fields always go to needs_review ("no text layer to
+verify", Salik 2026-11-16); their score is left as the evidence gives it, because the
+status is a policy, not a measurement. Non-critical fields keep the threshold.
+
+Text agreement says the value is on the page, not that it is in the right place: a short
+value ("2", "PCS") is found almost anywhere, and a name cut short is still found. It
+isn't applied to None (nothing to look for) or to country codes (pages print country
+names; there's no code-to-name table yet).
 """
 
 import unicodedata
@@ -30,6 +34,7 @@ from typing import Literal
 
 from app.pipeline.numbers import read_number
 from app.pipeline.rules import REFERENCE_RULE, parse_change
+from app.schemas.constants import CRITICAL_HEADER_FIELDS, CRITICAL_LINE_FIELD
 from app.schemas.invoice import FieldStatus
 from app.schemas.raw import RawInvoice
 from app.schemas.result import FieldAssessment, FieldCheck, LLMCall
@@ -44,6 +49,7 @@ NUMBER_REFORMATTED = -0.10
 SET_BY_RULE = -0.05
 FAILED_CHECK_CAP = 0.10
 REVIEW_THRESHOLD = 0.50
+NO_TEXT_LAYER_TO_VERIFY = "no text layer to verify"
 
 HEADER_FIELDS = (
     "invoice_number",
@@ -132,12 +138,21 @@ def assess_fields(
             score, status = min(score, FAILED_CHECK_CAP), "failed_check"
             reasons.append("guardrail check failed: capped at 0.10")
         score = round(min(1.0, max(0.0, score)), 2)
+        if status == "ok" and page is None and is_critical(path):
+            status = "needs_review"
+            reasons.append(NO_TEXT_LAYER_TO_VERIFY)
         if status == "ok" and score < REVIEW_THRESHOLD:
             status = "needs_review"
         assessments.append(
             FieldAssessment(path=path, confidence=score, status=status, reasons=reasons)
         )
     return assessments
+
+
+def is_critical(path: str) -> bool:
+    if path in CRITICAL_HEADER_FIELDS:
+        return True
+    return path.startswith("line_items[") and path.endswith(f"].{CRITICAL_LINE_FIELD}")
 
 
 def normalise(text: str) -> str:

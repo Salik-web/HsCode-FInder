@@ -38,6 +38,7 @@ from synth.inject import (
 )
 
 CaughtBy = Literal["check", "schema"]
+LINE_BREAK = "\n"
 # Net above gross is one error with two suspects: a flag on either catches it.
 PLANTED_ALSO = {"net_over_gross": {"gross_weight_kg"}}
 CLEAN_DEV_NAME = "synthetic_clean dev ground truth"
@@ -99,6 +100,20 @@ class GuardrailReport(BaseModel):
     clean: list[CleanSummary]
 
 
+def printed_text(data: object) -> str:
+    """Every value as text, one per line: the text layer of a PDF printing exactly these.
+
+    Ground truth and the injected set have no pages. Treating them as photos would send
+    every critical field to review (no text layer to verify) and hide what the checks
+    do; as digital PDFs, confidence agrees with every printed value, as it would.
+    """
+    if isinstance(data, dict):
+        return LINE_BREAK.join(printed_text(value) for value in data.values())
+    if isinstance(data, list):
+        return LINE_BREAK.join(printed_text(value) for value in data)
+    return "" if data is None else str(data)
+
+
 def location_path(location: tuple[int | str, ...]) -> str:
     """Pydantic's ("line_items", 2, "amount") as the pipeline's "line_items[2].amount"."""
     path = ""
@@ -113,9 +128,9 @@ def location_path(location: tuple[int | str, ...]) -> str:
 def evaluate_injected(document: InjectedDocument, as_of: date) -> InjectedOutcome:
     """Run the planted invoice through what follows extraction, as the pipeline would.
 
-    There is no page (the set is JSON), so confidence has no text layer to agree with.
-    That is also the honest case: the error is printed on the document, so the text
-    layer would agree with it anyway. Only the guardrails can catch it.
+    The set is JSON, so it stands for a digital PDF that prints exactly these values:
+    the planted error included, so text agreement finds it and only the guardrails can
+    catch it (see printed_text).
     """
     targets = {document.error.path} | PLANTED_ALSO.get(document.error.kind, set())
     # As in the pipeline: exact code synonyms are mapped first, so they are never errors.
@@ -136,7 +151,9 @@ def evaluate_injected(document: InjectedDocument, as_of: date) -> InjectedOutcom
     applied = [*synonyms, *outcome.applied]
     statuses = {
         assessment.path: assessment.status
-        for assessment in assess_fields(outcome.invoice, None, [], applied, outcome.checks)
+        for assessment in assess_fields(
+            outcome.invoice, printed_text(document.invoice), [], applied, outcome.checks
+        )
     }
     flagged = {check.path for check in outcome.checks}
     return InjectedOutcome(
@@ -180,7 +197,13 @@ def clean_summary(name: str, invoices: list[RawInvoice], as_of: date) -> CleanSu
     statuses = [
         assessment.status
         for outcome in outcomes
-        for assessment in assess_fields(outcome.invoice, None, [], outcome.applied, outcome.checks)
+        for assessment in assess_fields(
+            outcome.invoice,
+            printed_text(outcome.invoice.model_dump(mode="json")),
+            [],
+            outcome.applied,
+            outcome.checks,
+        )
     ]
     return CleanSummary(
         name=name,

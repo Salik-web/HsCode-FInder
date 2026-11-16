@@ -7,11 +7,13 @@ from decimal import Decimal
 import pytest
 
 from app.pipeline.confidence import (
+    NO_TEXT_LAYER_TO_VERIFY,
     REVIEW_THRESHOLD,
     PageText,
     assess_fields,
     date_renderings,
     field_values,
+    is_critical,
     normalise,
     numbers_in,
 )
@@ -159,7 +161,45 @@ def test_a_value_missing_from_the_text_layer_goes_to_review() -> None:
 def test_without_a_text_layer_every_field_starts_at_the_image_base() -> None:
     scores = assess(make_invoice(), None)
     assert {a.confidence for a in scores.values()} == {0.60}
-    assert {a.status for a in scores.values()} == {"ok"}
+
+
+def test_without_a_text_layer_critical_fields_always_go_to_review() -> None:
+    """Photos: nothing can verify a value, so every critical field goes to a person."""
+    scores = assess(make_invoice(), None)
+    critical = [path for path in scores if is_critical(path)]
+    assert sorted(critical) == sorted(
+        [
+            "invoice_number",
+            "total_amount",
+            "currency",
+            "incoterm",
+            "buyer.name",
+            "consignee.name",
+            "line_items[0].amount",
+            "line_items[1].amount",
+        ]
+    )
+    for path, assessment in scores.items():
+        if path in critical:
+            assert assessment.status == "needs_review", path
+            assert assessment.reasons[-1] == NO_TEXT_LAYER_TO_VERIFY
+            assert assessment.confidence == 0.60  # the evidence is unchanged
+        else:
+            assert assessment.status == "ok", path
+
+
+def test_with_a_text_layer_critical_fields_are_scored_as_usual() -> None:
+    invoice = make_invoice()
+    scores = assess(invoice, page_for(invoice))
+    assert scores["total_amount"].status == "ok"
+    assert NO_TEXT_LAYER_TO_VERIFY not in scores["total_amount"].reasons
+
+
+def test_a_failed_check_on_a_photo_stays_failed_check() -> None:
+    check = FieldCheck(path="currency", status="failed_check", rule="iso_currency", detail="x")
+    currency = assess(make_invoice(), None, checks=[check])["currency"]
+    assert currency.status == "failed_check"
+    assert NO_TEXT_LAYER_TO_VERIFY not in currency.reasons
 
 
 def test_a_retry_and_repaired_keys_lower_every_field() -> None:
@@ -205,11 +245,12 @@ def test_a_failed_check_caps_confidence_and_sets_failed_check() -> None:
 def test_the_threshold_is_exclusive() -> None:
     """0.60 - 0.10 = 0.50 stays ok; 0.45 goes to review."""
     assert REVIEW_THRESHOLD == 0.50
+    # Non-critical fields, so the photo rule doesn't decide the status.
     retried = [call(1, validation_errors=["x"]), call(2)]
-    assert assess(make_invoice(), None, retried)["currency"].status == "ok"
+    assert assess(make_invoice(), None, retried)["gross_weight_kg"].status == "ok"
     repaired = [call(1, validation_errors=["x"]), call(2, keys_ignored=["notes"])]
-    currency = assess(make_invoice(), None, repaired)["currency"]
-    assert (currency.confidence, currency.status) == (0.45, "needs_review")
+    weight = assess(make_invoice(), None, repaired)["gross_weight_kg"]
+    assert (weight.confidence, weight.status) == (0.45, "needs_review")
 
 
 def test_confidence_stays_between_zero_and_one() -> None:
