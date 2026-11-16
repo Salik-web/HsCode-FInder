@@ -494,3 +494,21 @@ def test_report_shows_model_call_time_with_its_count(data_dir: Path, tmp_path: P
     # The oracle predates the split, like answers cached before 2026-11-16.
     assert "| Model call time p95 (target < 30 s) | not recorded | — |" in text
     assert "| Call + backoff p95 (all documents) | 1.0 s | — |" in text
+
+
+def test_oracle_answers_raise_no_guardrail_alarms(data_dir: Path, tmp_path: Path) -> None:
+    docs = documents(data_dir)
+    report, path = evaluate(docs, OracleClient(truths(docs)), tmp_path)
+    ops = report.layout_groups["seen"].operations
+    assert (ops.alarms_on_wrong_values, ops.alarms_on_correct_values) == (0, 0)
+    assert ops.correct_documents == ops.documents == len(docs)
+    assert ops.correct_documents_flagged == 0
+    assert report.meta.as_of == ANCHOR_DATE
+    text = path.read_text(encoding="utf-8")
+    assert f"| Fully correct documents flagged (false alarms) | 0.0% (0/{len(docs)}) | — |" in text
+
+
+def test_reports_from_before_the_guardrails_still_load() -> None:
+    for path in sorted(Path("evals/reports").glob("*.json")):
+        report = EvalReport.model_validate_json(path.read_bytes())
+        assert report.layout_groups["seen"].operations.alarms_on_wrong_values is None

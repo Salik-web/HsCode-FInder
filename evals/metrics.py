@@ -20,6 +20,7 @@ from rapidfuzz import fuzz
 from scipy.optimize import linear_sum_assignment
 
 from app.schemas.raw import RawInvoice, RawLineItem, RawParty
+from app.schemas.result import FieldCheck
 
 Outcome = Literal["correct", "wrong", "missed", "hallucinated", "no_output"]
 OUTCOMES: tuple[Outcome, ...] = get_args(Outcome)
@@ -185,7 +186,7 @@ def _no_output_field(name: str, expected: Scalar | None) -> FieldScore:
     return FieldScore(field=name, outcome="no_output", expected=_as_text(expected), predicted=None)
 
 
-def _header_and_party_values(invoice: RawInvoice) -> dict[str, Scalar | None]:
+def header_and_party_values(invoice: RawInvoice) -> dict[str, Scalar | None]:
     """Flatten every non-line field to its scored name; a missing party has all-None fields."""
     values: dict[str, Scalar | None] = {name: getattr(invoice, name) for name in HEADER_FIELDS}
     for party_name in PARTIES:
@@ -195,7 +196,7 @@ def _header_and_party_values(invoice: RawInvoice) -> dict[str, Scalar | None]:
     return values
 
 
-def _comparison_for(name: str) -> Comparison:
+def comparison_for(name: str) -> Comparison:
     if name in HEADER_FIELDS:
         return HEADER_FIELDS[name]
     return PARTY_FIELDS[name.split(".", 1)[1]]
@@ -291,13 +292,13 @@ def _score_no_output(truth: RawInvoice, expected_values: dict[str, Scalar | None
 
 def score_document(truth: RawInvoice, predicted: RawInvoice | None) -> DocumentScore:
     """Score one document. `predicted` is None when extraction produced no validated output."""
-    expected_values = _header_and_party_values(truth)
+    expected_values = header_and_party_values(truth)
     if predicted is None:
         return _score_no_output(truth, expected_values)
 
-    predicted_values = _header_and_party_values(predicted)
+    predicted_values = header_and_party_values(predicted)
     fields = [
-        _score_field(name, _comparison_for(name), expected, predicted_values[name])
+        _score_field(name, comparison_for(name), expected, predicted_values[name])
         for name, expected in expected_values.items()
     ]
     pairs = match_lines(truth.line_items, predicted.line_items)
@@ -358,3 +359,56 @@ def summarise(scores: list[DocumentScore]) -> Summary:
             sum(score.all_critical_correct for score in scores), len(scores)
         ),
     )
+
+
+# --- guardrail alarms ----------------------------------------------------------------------
+
+LINE_PATH = re.compile(r"^line_items\[(\d+)\]\.(\w+)$")
+
+
+class Alarm(BaseModel):
+    """A failed check on an extracted invoice, judged against the ground truth."""
+
+    path: str
+    rule: str
+    # The flagged value equals the truth: the check doubted a right value, a false alarm.
+    value_correct: bool
+
+
+def classify_alarms(
+    truth: RawInvoice, predicted: RawInvoice, checks: list[FieldCheck]
+) -> list[Alarm]:
+    """Judge each failed check by whether the value it flagged is actually right.
+
+    A flagged line is found in the truth through the same description matching used for
+    scoring; a predicted line with no true counterpart is wrong, so its flag is true.
+    """
+    true_line_for = {p: g for g, p in match_lines(truth.line_items, predicted.line_items)}
+    expected = header_and_party_values(truth)
+    found = header_and_party_values(predicted)
+    alarms = []
+    for check in checks:
+        line = LINE_PATH.match(check.path)
+        if line:
+            index, field = int(line.group(1)), line.group(2)
+            gold = true_line_for.get(index)
+            correct = gold is not None and (
+                compare(
+                    LINE_FIELDS[field],
+                    getattr(truth.line_items[gold], field),
+                    getattr(predicted.line_items[index], field),
+                )
+                == "correct"
+            )
+        else:
+            outcome = compare(comparison_for(check.path), expected[check.path], found[check.path])
+            correct = outcome == "correct"
+        alarms.append(Alarm(path=check.path, rule=check.rule, value_correct=correct))
+    return alarms
+
+
+def is_fully_correct(score: DocumentScore) -> bool:
+    """Every field right and every line found, with none invented."""
+    lines = score.lines
+    every_line_found = lines.gold == lines.predicted == lines.matched
+    return every_line_found and all(field.outcome == "correct" for field in score.fields)
