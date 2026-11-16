@@ -146,3 +146,37 @@ def test_report_counts_each_kind_and_renders(tmp_path: Path) -> None:
     assert "| sources | 12 | 0 | 0.0% | none |" in markdown
     path = write_guardrail_report(report, tmp_path / "reports")
     assert path.exists() and path.with_suffix(".json").exists()
+
+
+def test_a_guardrail_report_beside_eval_reports_breaks_nothing(tmp_path: Path) -> None:
+    """Regression: evals.run parsed every JSON in the reports folder as an eval report."""
+    from evals.report import find_previous
+
+    folder = tmp_path / "injected"
+    build_injected(len(ERROR_KINDS), 2026, folder)
+    from synth.inject import load_injected
+
+    manifest, documents = load_injected(folder)
+    report = build_guardrail_report(documents, manifest.seed, manifest.as_of, {})
+    reports = tmp_path / "reports"
+    write_guardrail_report(report, reports)
+    from datetime import UTC, datetime
+
+    from evals.report import RunMetadata
+
+    meta = RunMetadata(
+        run_id="now_synthetic_clean_dev_m_v3",
+        created_at=datetime.now(UTC),
+        git_sha=None,
+        git_dirty=None,
+        dataset="synthetic_clean",
+        split="dev",
+        model="m",
+        prompt_version="v3",
+        schema_version="1.0",
+        documents_total=0,
+        documents_scored=0,
+        llm_calls_made=0,
+        llm_calls_cached=0,
+    )
+    assert find_previous(reports, meta) is None
