@@ -2,6 +2,21 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-16: buyer and consignee names become critical fields (metric change, re-scored from cache)
+
+- Critical fields are now invoice number, total, currency, Incoterm, **buyer name, consignee name** and line amounts (Salik: a wrong consignee is a serious customs error). `evals/metrics.py`, DESIGN.md §6. Same model, prompt `v3` and cached answers; `--offline`, 0 API calls.
+- Report (final): `reports/20261116T074314_synthetic_clean_test_unseen_layout_qwen_qwen3.8-27b_reasoning-none_v3.md`. The other sets are still partial; their re-scores went to a scratch folder.
+
+| Set | n | Critical-field accuracy, old -> new | All critical right, old -> new | Critical fields that failed |
+| --- | --- | --- | --- | --- |
+| Clean, seen (dev) | 27 of 53 | 100% -> 100% | 27/27 -> 27/27 | none |
+| Clean, unseen | 24 of 24 | 99.6% -> 99.1% | 23/24 -> 22/24 | `buyer.name` 23/24, `consignee.name` 23/24 (`ledger`), and one missed line |
+| Messy, seen (dev) | 2 of 16 | 97.1% -> 97.4% | 1/2 -> 1/2 | `incoterm` (CIP read as CIF) |
+| Messy, unseen | 6 of 7 (offline) | 100% -> 98.5% | 6/6 -> 5/6 | `consignee.name` 5/6 (`ledger`) |
+
+- The unseen name errors are all on `ledger`. In clean, the name errors and the missed line are on different documents. Messy unseen is 6 of 7 because one first attempt (a Groq rejection) isn't cached; it needs one call.
+- Next: a diagnostic batch of 10 `ledger` invoices outside every split (`data/diagnostic_ledger`, seed 1116) to find out why party names fail on that layout. Ledger is the only layout that prints a party as one line, `name, address, country`; the 7 others put the name on its own line. About a quarter of generated company names contain commas ("Zarar, Zaafir and Nabeel").
+
 ## 2026-11-16: model call time reported apart from waits (harness only, no score change)
 
 - Reports now split each document's time into **model call time** (the final HTTP attempt, request to response), **retry backoff wait** (the SDK's failed attempts and their backoff) and **throttle wait** (client-side, under per-minute limits). The p95 target (< 30 s, DESIGN.md §1) applies to model call time only (Salik, 2026-11-16).
