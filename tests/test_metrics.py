@@ -4,6 +4,7 @@ from decimal import Decimal
 import pytest
 
 from app.schemas.raw import RawInvoice, RawLineItem, RawParty
+from app.schemas.result import FieldCheck
 from evals.metrics import (
     CRITICAL_HEADER_FIELDS,
     CRITICAL_LINE_NAME,
@@ -13,7 +14,9 @@ from evals.metrics import (
     PARTY_FIELDS,
     DocumentScore,
     FieldScore,
+    classify_alarms,
     compare,
+    is_fully_correct,
     match_lines,
     normalise_text,
     ratio,
@@ -452,3 +455,60 @@ def test_field_score_keeps_text_for_reports() -> None:
     assert total == FieldScore(
         field="total_amount", outcome="wrong", expected="250.50", predicted="1.00"
     )
+
+
+# --- guardrail alarms ----------------------------------------------------------------------
+
+
+def check(path: str, rule: str = "line_math") -> FieldCheck:
+    return FieldCheck(path=path, status="failed_check", rule=rule, detail="test")
+
+
+def test_alarm_on_a_wrong_value_is_true_and_on_a_right_value_is_false() -> None:
+    truth = make_invoice()
+    predicted = make_invoice(total_amount=Decimal("999.00"), currency="USD")
+    alarms = classify_alarms(
+        truth, predicted, [check("total_amount", "invoice_total"), check("currency", "iso")]
+    )
+    assert [(a.path, a.value_correct) for a in alarms] == [
+        ("total_amount", False),
+        ("currency", True),
+    ]
+
+
+def test_line_alarm_is_judged_on_the_matching_true_line_whatever_the_order() -> None:
+    truth = make_invoice()
+    wrong_second = [
+        truth.line_items[1].model_copy(update={"amount": Decimal("5.00")}),
+        truth.line_items[0],
+    ]
+    predicted = make_invoice(line_items=wrong_second)
+    alarms = classify_alarms(
+        truth, predicted, [check("line_items[0].amount"), check("line_items[1].amount")]
+    )
+    assert [a.value_correct for a in alarms] == [False, True]
+
+
+def test_alarm_on_an_invented_line_is_true() -> None:
+    truth = make_invoice()
+    predicted = make_invoice(line_items=[*truth.line_items, line("Freight charges", "30.00")])
+    (alarm,) = classify_alarms(truth, predicted, [check("line_items[2].amount")])
+    assert alarm.value_correct is False
+
+
+def test_alarm_on_a_party_country_uses_the_code_comparison() -> None:
+    truth = make_invoice()
+    predicted = make_invoice(buyer=party("Tawkeel, Abaan and Gulshan", "pk"))
+    (alarm,) = classify_alarms(truth, predicted, [check("buyer.country", "iso_country")])
+    assert alarm.value_correct is True
+
+
+def test_fully_correct_needs_every_field_and_every_line() -> None:
+    truth = make_invoice()
+    assert is_fully_correct(score_document(truth, truth))
+    assert not is_fully_correct(score_document(truth, make_invoice(net_weight_kg=Decimal("1"))))
+    assert not is_fully_correct(
+        score_document(truth, make_invoice(line_items=truth.line_items[:1]))
+    )
+    extra = make_invoice(line_items=[*truth.line_items, line("Freight charges", "30.00")])
+    assert not is_fully_correct(score_document(truth, extra))

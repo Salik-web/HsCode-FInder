@@ -20,10 +20,12 @@ from app.pipeline.rules import REFERENCE_RULE, UNIT_RULE
 from app.schemas.result import FieldCheck, LLMCall, StageStatus
 from evals.dataset import BuyerForm
 from evals.metrics import (
+    Alarm,
     DocumentScore,
     FieldAccuracy,
     Summary,
     accuracy_by_field,
+    is_fully_correct,
     ratio,
     summarise,
 )
@@ -57,6 +59,9 @@ class DocumentRecord(BaseModel):
     # Rule changes and failed checks after validation; reports from before rules had none.
     rules_applied: list[str] = []
     field_checks: list[FieldCheck] = []
+    # Each failed check judged against the truth; None without an extracted invoice, and
+    # in reports from before the guardrails were judged.
+    alarms: list[Alarm] | None = None
 
 
 class OperationalStats(BaseModel):
@@ -90,6 +95,13 @@ class OperationalStats(BaseModel):
     backoff_p95_ms: int | None = None
     throttled_documents: int | None = None
     throttle_p95_ms: int | None = None
+    # Guardrails on extracted invoices (app/pipeline/validate.py); None in older reports.
+    # A false alarm doubts a value that is right. The false-alarm rate is the share of
+    # fully correct documents (every field right, every line found) with any alarm.
+    alarms_on_wrong_values: int | None = None
+    alarms_on_correct_values: int | None = None
+    correct_documents: int | None = None
+    correct_documents_flagged: int | None = None
 
 
 class SliceReport(BaseModel):
@@ -170,6 +182,9 @@ def operational_stats(records: list[DocumentRecord]) -> OperationalStats:
     cost_per_document = None
     if records and len(known_costs) == len(costs):
         cost_per_document = sum(known_costs, Decimal(0)) / len(records)
+    judged = [(r.alarms, r.score) for r in records if r.alarms is not None and r.score]
+    alarms = [alarm for record_alarms, _ in judged for alarm in record_alarms]
+    correct = [record_alarms for record_alarms, score in judged if is_fully_correct(score)]
     return OperationalStats(
         documents=len(records),
         needs_review_rate=_rate(records, sum(r.extract_status == "needs_review" for r in records)),
@@ -197,6 +212,10 @@ def operational_stats(records: list[DocumentRecord]) -> OperationalStats:
         backoff_p95_ms=percentile(_per_document(records, _backoff_ms), P95),
         throttled_documents=len(throttle_waits),
         throttle_p95_ms=percentile(throttle_waits, P95),
+        alarms_on_wrong_values=sum(not alarm.value_correct for alarm in alarms),
+        alarms_on_correct_values=sum(alarm.value_correct for alarm in alarms),
+        correct_documents=len(correct),
+        correct_documents_flagged=sum(bool(record_alarms) for record_alarms in correct),
     )
 
 
@@ -389,8 +408,29 @@ def _headline_table(report: EvalReport) -> list[str]:
         row("Throttle wait p95", _throttle_cell),
         row("Call + backoff p50 (all documents)", lambda s: _ms(s.operations.latency_p50_ms)),
         row("Call + backoff p95 (all documents)", lambda s: _ms(s.operations.latency_p95_ms)),
+        row("Guardrail alarms on wrong / correct values", _alarms_cell),
+        row("Fully correct documents flagged (false alarms)", _false_alarm_cell),
         "",
     ]
+
+
+def _alarms_cell(sliced: SliceReport) -> str:
+    ops = sliced.operations
+    if ops.documents == 0:
+        return "—"
+    if ops.alarms_on_wrong_values is None or ops.alarms_on_correct_values is None:
+        return "not recorded"
+    return f"{ops.alarms_on_wrong_values} / {ops.alarms_on_correct_values}"
+
+
+def _false_alarm_cell(sliced: SliceReport) -> str:
+    ops = sliced.operations
+    if ops.documents == 0:
+        return "—"
+    if ops.correct_documents is None or ops.correct_documents_flagged is None:
+        return "not recorded"
+    rate = ratio(ops.correct_documents_flagged, ops.correct_documents)
+    return f"{_percent(rate)} ({ops.correct_documents_flagged}/{ops.correct_documents})"
 
 
 def _timing_cell(documents: int, timed: int | None, value: int | None) -> str:

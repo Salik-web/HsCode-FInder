@@ -24,7 +24,7 @@ from app.pipeline.run import PipelineConfig, Preprocessed, complete_pipeline, pr
 from app.schemas.constants import SCHEMA_VERSION
 from app.schemas.result import PipelineResult
 from evals.dataset import EvalDocument, load_documents
-from evals.metrics import score_document
+from evals.metrics import classify_alarms, score_document
 from evals.report import (
     DocumentRecord,
     EvalReport,
@@ -118,6 +118,9 @@ def _record(document: EvalDocument, result: PipelineResult | None) -> DocumentRe
     # A bad file or output that never validated is the pipeline's failure: it scores as
     # no_output. Only a temporary LLM outage leaves a document unscored.
     score = None if retryable else score_document(document.truth.invoice, result.invoice)
+    alarms = None
+    if result.invoice is not None:
+        alarms = classify_alarms(document.truth.invoice, result.invoice, result.field_checks)
     return DocumentRecord(
         **base,
         status="not_scored" if retryable else "scored",
@@ -128,10 +131,11 @@ def _record(document: EvalDocument, result: PipelineResult | None) -> DocumentRe
         llm_calls=result.llm_calls,
         rules_applied=result.rules_applied,
         field_checks=result.field_checks,
+        alarms=alarms,
     )
 
 
-def _git_state() -> tuple[str | None, bool | None]:
+def git_state() -> tuple[str | None, bool | None]:
     try:
         sha = subprocess.run(
             ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True, timeout=10
@@ -145,7 +149,7 @@ def _git_state() -> tuple[str | None, bool | None]:
 
 
 def _metadata(config: RunConfig, records: list[DocumentRecord], started: datetime) -> RunMetadata:
-    sha, dirty = _git_state()
+    sha, dirty = git_state()
     calls = [call for record in records for call in record.llm_calls]
     model_slug = UNSAFE_FILENAME_CHARACTERS.sub("_", config.model).strip("_")
     parts = [f"{started:%Y%m%dT%H%M%S}", config.dataset, config.split, model_slug]
