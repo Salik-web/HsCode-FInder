@@ -189,7 +189,8 @@ Buyer and consignee are often the same company, but not always. When they're the
 **5.4 Validate (guardrails, all deterministic)**
 
 - Each line's `quantity × unit_price ≈ amount` (± 0.01)
-- Sum of line amounts ≈ total (± 0.5%)
+- Sum of line amounts ≈ total, within rounding only: half a cent per line amount plus half a cent for the total (changed from ± 0.5% on 2026-11-16, which hid small typos on large totals). With prompt v4: lines + charges − discount = total, and a mismatch with no charges found goes to `needs_review`
+- Exact synonyms of a code map to it before validation, recording the printed value (C&F/CNF → CFR, RMB → CNY, US$ → USD); anything else outside the list is flagged
 - `net_weight ≤ gross_weight`
 - Incoterm is in the allowed list; currency is a valid ISO-4217 code; country is a valid ISO code
 - Date parses and isn't in the future or more than two years old

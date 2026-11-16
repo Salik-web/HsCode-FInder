@@ -9,7 +9,7 @@ Rules the code enforces, not just documents:
 
 import math
 from collections.abc import Callable
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import Literal
@@ -109,6 +109,8 @@ class RunMetadata(BaseModel):
     reasoning_effort: str | None = None
     prompt_version: str
     schema_version: str
+    # The day the date check judged against; None in reports from before the guardrails.
+    as_of: date | None = None
     documents_total: int
     documents_scored: int
     llm_calls_made: int  # calls that reached a provider during this run

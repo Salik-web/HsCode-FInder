@@ -64,7 +64,7 @@ class PipelineResult(BaseModel):
     extract: StageResult
     invoice: RawInvoice | None  # set only when extract is ok: validated output or nothing
     llm_calls: list[LLMCall]
-    # Changes deterministic rules made after validation, and values they rejected
-    # (app/pipeline/rules.py).
+    # Changes deterministic rules made after validation, and values the rules and the
+    # guardrails rejected (app/pipeline/rules.py, app/pipeline/validate.py).
     rules_applied: list[str]
     field_checks: list[FieldCheck]

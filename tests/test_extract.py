@@ -436,3 +436,25 @@ def test_ambiguous_number_with_other_errors_is_retried(truth: RawInvoice) -> Non
     outcome = extract_invoice(document(), load_prompt("invoice", "v3"), client)
     assert outcome.calls[0].validation_errors == ["currency: Field required"]
     assert outcome.stage.status == "ok"
+
+
+def test_an_exact_incoterm_synonym_validates_and_is_recorded(truth: RawInvoice) -> None:
+    """C&F is outside the schema's closed list; mapped first, the answer is valid at once."""
+    data = json.loads(compact_json(truth))
+    data["incoterm"], data["currency"] = "C&F", "US$"
+    client = FakeClient("model-a", [answer(json.dumps(data))])
+    outcome = extract_invoice(document(), load_prompt("invoice", "v2"), client)
+    assert outcome.stage.status == "ok"
+    assert outcome.invoice is not None
+    assert (outcome.invoice.incoterm, outcome.invoice.currency) == ("CFR", "USD")
+    assert outcome.changes == ["incoterm: 'C&F' -> 'CFR'", "currency: 'US$' -> 'USD'"]
+    assert len(client.requests) == 1
+
+
+def test_a_retired_incoterm_still_fails_validation(truth: RawInvoice) -> None:
+    data = json.loads(compact_json(truth))
+    data["incoterm"] = "DDU"
+    client = FakeClient("model-a", [answer(json.dumps(data)), answer(compact_json(truth))])
+    outcome = extract_invoice(document(), load_prompt("invoice", "v2"), client)
+    assert outcome.calls[0].validation_errors[0].startswith("incoterm")
+    assert outcome.changes == []

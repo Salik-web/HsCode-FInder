@@ -25,6 +25,7 @@ from evals.dataset import DatasetFileMismatchError, EvalDocument, load_documents
 from evals.report import DocumentRecord, EvalReport, operational_stats
 from evals.run import RunConfig, run_eval
 from synth.generate import SYNTHETIC_DIR, build_dataset, build_diagnostic, diagnostic_dir
+from synth.generator import ANCHOR_DATE
 from synth.manifest import Dataset, Split
 
 SEED = 42
@@ -89,6 +90,7 @@ def evaluate(
         split=split,
         model="oracle",
         reasoning_effort=None,
+        as_of=ANCHOR_DATE,
     )
     return run_eval(docs, client, config, reports_dir, concurrency=2)  # type: ignore[arg-type]
 
@@ -212,6 +214,7 @@ def test_quota_stops_the_run_and_a_rerun_finishes_from_cache(
         split="dev",
         model="oracle",
         reasoning_effort=None,
+        as_of=ANCHOR_DATE,
     )
     first, first_path = run_eval(
         docs, CachingClient(limited, cache_dir, {}), config, reports_dir, 1
@@ -369,6 +372,7 @@ def test_offline_run_scores_cached_documents_and_never_stops(
             split="dev",
             model="oracle",
             reasoning_effort=None,
+            as_of=ANCHOR_DATE,
         )
         run_eval([doc], warm, config, tmp_path / "warm_reports", 1)
     offline_config = RunConfig(
@@ -377,6 +381,7 @@ def test_offline_run_scores_cached_documents_and_never_stops(
         split="dev",
         model="oracle",
         reasoning_effort=None,
+        as_of=ANCHOR_DATE,
         offline=True,
     )
     client = CachingClient(OfflineClient("oracle"), cache_dir, {})
