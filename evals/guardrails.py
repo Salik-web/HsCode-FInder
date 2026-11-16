@@ -12,6 +12,7 @@ Layouts don't enter here: no page is read, so there is no seen/unseen split to r
 """
 
 from collections import Counter
+from collections.abc import Iterable
 from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Literal
@@ -19,8 +20,10 @@ from typing import Literal
 from pydantic import BaseModel, ValidationError, computed_field
 
 from app.config import Settings
+from app.pipeline.confidence import assess_fields
 from app.pipeline.rules import map_code_synonyms
 from app.pipeline.validate import verify_invoice
+from app.schemas.invoice import FieldStatus
 from app.schemas.raw import RawInvoice
 from evals.dataset import load_documents
 from evals.metrics import ratio
@@ -41,11 +44,17 @@ CLEAN_DEV_NAME = "synthetic_clean dev ground truth"
 INJECTED_SOURCES_NAME = "injected set, before planting"
 
 
+# Where the planted field ends up: its own field status, or the whole document in review
+# (the schema rejected the answer, so extraction would retry, then mark needs_review).
+ReviewOutcome = Literal["ok", "needs_review", "failed_check", "document_needs_review"]
+
+
 class InjectedOutcome(BaseModel):
     id: str
     error: PlantedError
     caught_by: CaughtBy | None  # None: the planted field passed every check
     other_flags: list[str]  # fields flagged besides the planted one
+    review: ReviewOutcome  # how the planted field reaches a person, if it does
 
 
 class KindSummary(BaseModel):
@@ -54,6 +63,7 @@ class KindSummary(BaseModel):
     caught_by_check: int
     caught_by_schema: int
     with_other_flags: int
+    sent_to_review: int  # the planted field (or its document) goes to a person
 
     @computed_field
     @property
@@ -66,6 +76,8 @@ class CleanSummary(BaseModel):
     documents: int
     flagged: int  # documents with any failed check: every one is a false alarm
     alarms_by_rule: dict[str, int]
+    fields: int
+    fields_sent_to_review: int  # every one needless: ground truth is right
 
     @computed_field
     @property
@@ -99,9 +111,15 @@ def location_path(location: tuple[int | str, ...]) -> str:
 
 
 def evaluate_injected(document: InjectedDocument, as_of: date) -> InjectedOutcome:
+    """Run the planted invoice through what follows extraction, as the pipeline would.
+
+    There is no page (the set is JSON), so confidence has no text layer to agree with.
+    That is also the honest case: the error is printed on the document, so the text
+    layer would agree with it anyway. Only the guardrails can catch it.
+    """
     targets = {document.error.path} | PLANTED_ALSO.get(document.error.kind, set())
     # As in the pipeline: exact code synonyms are mapped first, so they are never errors.
-    data, _ = map_code_synonyms(document.invoice)
+    data, synonyms = map_code_synonyms(document.invoice)
     try:
         invoice = RawInvoice.model_validate(data)
     except ValidationError as error:
@@ -112,14 +130,30 @@ def evaluate_injected(document: InjectedDocument, as_of: date) -> InjectedOutcom
             error=document.error,
             caught_by=caught,
             other_flags=sorted(rejected - targets),
+            review="document_needs_review",
         )
-    flagged = {check.path for check in verify_invoice(invoice, as_of).checks}
+    outcome = verify_invoice(invoice, as_of)
+    applied = [*synonyms, *outcome.applied]
+    statuses = {
+        assessment.path: assessment.status
+        for assessment in assess_fields(outcome.invoice, None, [], applied, outcome.checks)
+    }
+    flagged = {check.path for check in outcome.checks}
     return InjectedOutcome(
         id=document.id,
         error=document.error,
         caught_by="check" if flagged & targets else None,
         other_flags=sorted(flagged - targets),
+        review=_worst_status(statuses[path] for path in targets),
     )
+
+
+def _worst_status(statuses: Iterable[FieldStatus]) -> ReviewOutcome:
+    found = set(statuses)
+    for status in ("failed_check", "needs_review"):
+        if status in found:
+            return status  # type: ignore[return-value]
+    return "ok"
 
 
 def summarise_kinds(outcomes: list[InjectedOutcome]) -> list[KindSummary]:
@@ -133,6 +167,7 @@ def summarise_kinds(outcomes: list[InjectedOutcome]) -> list[KindSummary]:
                 caught_by_check=sum(outcome.caught_by == "check" for outcome in of_kind),
                 caught_by_schema=sum(outcome.caught_by == "schema" for outcome in of_kind),
                 with_other_flags=sum(bool(outcome.other_flags) for outcome in of_kind),
+                sent_to_review=sum(outcome.review != "ok" for outcome in of_kind),
             )
         )
     return summaries
@@ -140,12 +175,20 @@ def summarise_kinds(outcomes: list[InjectedOutcome]) -> list[KindSummary]:
 
 def clean_summary(name: str, invoices: list[RawInvoice], as_of: date) -> CleanSummary:
     """Ground truth is right by definition, so any failed check on it is a false alarm."""
-    checks = [verify_invoice(invoice, as_of).checks for invoice in invoices]
+    outcomes = [verify_invoice(invoice, as_of) for invoice in invoices]
+    checks = [outcome.checks for outcome in outcomes]
+    statuses = [
+        assessment.status
+        for outcome in outcomes
+        for assessment in assess_fields(outcome.invoice, None, [], outcome.applied, outcome.checks)
+    ]
     return CleanSummary(
         name=name,
         documents=len(invoices),
         flagged=sum(bool(document_checks) for document_checks in checks),
         alarms_by_rule=dict(Counter(check.rule for document in checks for check in document)),
+        fields=len(statuses),
+        fields_sent_to_review=sum(status != "ok" for status in statuses),
     )
 
 
@@ -186,20 +229,27 @@ def _kind_table(report: GuardrailReport) -> list[str]:
         "schema. A flag on another field only doesn't count.",
         "",
         "| Error | Documents | Caught by a check | Caught by the schema | Missed | Catch rate "
-        "| Other fields flagged too |",
-        "| --- | --- | --- | --- | --- | --- | --- |",
+        "| Other fields flagged too | Planted field sent to review |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for kind in report.kinds:
         caught = kind.caught_by_check + kind.caught_by_schema
         lines.append(
             f"| `{kind.kind}` | {kind.documents} | {kind.caught_by_check} | "
             f"{kind.caught_by_schema} | {kind.documents - caught} | {_percent(kind.catch_rate)} "
-            f"| {kind.with_other_flags} |"
+            f"| {kind.with_other_flags} | {kind.sent_to_review}/{kind.documents} |"
         )
     total = sum(kind.documents for kind in report.kinds)
     caught = sum(kind.caught_by_check + kind.caught_by_schema for kind in report.kinds)
+    sent = sum(kind.sent_to_review for kind in report.kinds)
     lines += [
-        f"| **All** | {total} | | | {total - caught} | **{_percent(ratio(caught, total))}** | |",
+        f"| **All** | {total} | | | {total - caught} | **{_percent(ratio(caught, total))}** | "
+        f"| **{sent}/{total} ({_percent(ratio(sent, total))})** |",
+        "",
+        "Sent to review: the planted field ends up failed_check or needs_review, or its whole "
+        "document does (an Incoterm the schema rejects). These errors are printed on the "
+        "document, so text-layer agreement can't see them: this measures the guardrail path "
+        "to review, not confidence on misreads.",
         "",
     ]
     return lines
@@ -231,14 +281,15 @@ def _clean_table(report: GuardrailReport) -> list[str]:
         "",
         "A correct invoice should pass every check, so every flagged document is a false alarm.",
         "",
-        "| Set | Documents | Flagged | False-alarm rate | Alarms by rule |",
-        "| --- | --- | --- | --- | --- |",
+        "| Set | Documents | Flagged | False-alarm rate | Alarms by rule | Fields sent to review |",
+        "| --- | --- | --- | --- | --- | --- |",
     ]
     for clean in report.clean:
         rules = ", ".join(f"{rule} {count}" for rule, count in sorted(clean.alarms_by_rule.items()))
         lines.append(
             f"| {clean.name} | {clean.documents} | {clean.flagged} | "
-            f"{_percent(clean.false_alarm_rate)} | {rules or 'none'} |"
+            f"{_percent(clean.false_alarm_rate)} | {rules or 'none'} | "
+            f"{clean.fields_sent_to_review}/{clean.fields} |"
         )
     return [*lines, ""]
 

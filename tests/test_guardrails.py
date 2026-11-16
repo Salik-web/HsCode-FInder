@@ -180,3 +180,29 @@ def test_a_guardrail_report_beside_eval_reports_breaks_nothing(tmp_path: Path) -
         llm_calls_cached=0,
     )
     assert find_previous(reports, meta) is None
+
+
+@pytest.mark.parametrize(
+    ("field", "planted", "kind", "review"),
+    [
+        ("total_amount", "1.00", "wrong_total", "failed_check"),
+        ("incoterm", "DDU", "invalid_incoterm", "document_needs_review"),
+        ("currency", "EURO", "bad_currency", "failed_check"),
+    ],
+)
+def test_a_planted_error_reaches_review(field: str, planted: str, kind: str, review: str) -> None:
+    assert evaluate_injected(injected(field, planted, kind), AS_OF).review == review
+
+
+def test_a_planted_error_that_passes_every_check_stays_ok() -> None:
+    total = source().total_amount
+    assert total is not None
+    planted = str(total + Decimal("0.01"))  # inside rounding: no check, no text layer
+    assert evaluate_injected(injected("total_amount", planted, "wrong_total"), AS_OF).review == "ok"
+
+
+def test_clean_ground_truth_sends_no_field_to_review() -> None:
+    invoices = [generate_ground_truth(42, index, load_catalogue()).invoice for index in range(20)]
+    summary = clean_summary("x", invoices, AS_OF)
+    assert summary.fields > 0
+    assert summary.fields_sent_to_review == 0

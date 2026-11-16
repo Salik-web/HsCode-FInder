@@ -24,10 +24,11 @@ from app.pipeline.run import PipelineConfig, Preprocessed, complete_pipeline, pr
 from app.schemas.constants import SCHEMA_VERSION
 from app.schemas.result import PipelineResult
 from evals.dataset import EvalDocument, load_documents
-from evals.metrics import classify_alarms, score_document
+from evals.metrics import classify_alarms, field_correctness, score_document
 from evals.report import (
     DocumentRecord,
     EvalReport,
+    FieldReview,
     RunMetadata,
     build_report,
     find_previous,
@@ -118,9 +119,20 @@ def _record(document: EvalDocument, result: PipelineResult | None) -> DocumentRe
     # A bad file or output that never validated is the pipeline's failure: it scores as
     # no_output. Only a temporary LLM outage leaves a document unscored.
     score = None if retryable else score_document(document.truth.invoice, result.invoice)
-    alarms = None
+    alarms, reviews = None, None
     if result.invoice is not None:
-        alarms = classify_alarms(document.truth.invoice, result.invoice, result.field_checks)
+        truth = document.truth.invoice
+        alarms = classify_alarms(truth, result.invoice, result.field_checks)
+        correct = field_correctness(truth, result.invoice)
+        reviews = [
+            FieldReview(
+                path=assessment.path,
+                confidence=assessment.confidence,
+                status=assessment.status,
+                correct=correct[assessment.path],
+            )
+            for assessment in result.assessments
+        ]
     return DocumentRecord(
         **base,
         status="not_scored" if retryable else "scored",
@@ -132,6 +144,7 @@ def _record(document: EvalDocument, result: PipelineResult | None) -> DocumentRe
         rules_applied=result.rules_applied,
         field_checks=result.field_checks,
         alarms=alarms,
+        reviews=reviews,
     )
 
 

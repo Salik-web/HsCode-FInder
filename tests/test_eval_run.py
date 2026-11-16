@@ -22,7 +22,7 @@ from app.llm.client import (
 from app.schemas.raw import RawInvoice
 from app.schemas.result import LLMCall
 from evals.dataset import DatasetFileMismatchError, EvalDocument, load_documents
-from evals.report import DocumentRecord, EvalReport, operational_stats
+from evals.report import DocumentRecord, EvalReport, FieldReview, calibration, operational_stats
 from evals.run import RunConfig, run_eval
 from synth.generate import SYNTHETIC_DIR, build_dataset, build_diagnostic, diagnostic_dir
 from synth.generator import ANCHOR_DATE
@@ -534,3 +534,51 @@ def test_reports_from_before_the_guardrails_still_load() -> None:
     for path in sorted(Path("evals/reports").glob("*.json")):
         report = EvalReport.model_validate_json(path.read_bytes())
         assert report.layout_groups["seen"].operations.alarms_on_wrong_values is None
+
+
+def review(confidence: float, status: str, correct: bool) -> FieldReview:
+    return FieldReview(path="x", confidence=confidence, status=status, correct=correct)  # type: ignore[arg-type]
+
+
+def test_calibration_buckets_recall_and_load() -> None:
+    record = timed_record((1, 1, 0)).model_copy(
+        update={
+            "reviews": [
+                review(0.95, "ok", True),
+                review(0.95, "ok", False),  # a confident error: missed by review
+                review(1.0, "ok", True),  # the top edge belongs to the last bucket
+                review(0.30, "needs_review", False),
+                review(0.30, "needs_review", True),  # needless review
+                review(0.10, "failed_check", False),
+                review(0.50, "ok", True),  # the threshold itself stays ok
+            ]
+        }
+    )
+    cal = calibration([record])
+    assert [(b.fields, b.correct) for b in cal.buckets] == [(1, 0), (2, 1), (1, 1), (0, 0), (3, 2)]
+    assert (cal.wrong, cal.wrong_needs_review, cal.wrong_failed_check) == (3, 1, 1)
+    assert cal.error_recall == pytest.approx(2 / 3)
+    assert cal.correct_sent_to_review == 1
+    assert cal.review_load == pytest.approx(1 / 4)
+
+
+def test_oracle_run_has_calibration_and_no_review(data_dir: Path, tmp_path: Path) -> None:
+    docs = documents(data_dir)
+    report, path = evaluate(docs, OracleClient(truths(docs)), tmp_path)
+    cal = report.layout_groups["seen"].calibration
+    assert cal is not None
+    assert cal.wrong == 0 and cal.error_recall is None
+    assert cal.fields > 0 and cal.correct_sent_to_review == 0
+    assert "## Confidence calibration" in path.read_text(encoding="utf-8")
+
+
+def test_a_wrong_value_from_the_oracle_reaches_review(data_dir: Path, tmp_path: Path) -> None:
+    """The oracle's answers aren't on any page here (image PDFs), so only checks can catch."""
+    docs = documents(data_dir)
+    target = docs[0]
+    wrong = target.truth.invoice.model_copy(update={"currency": "XXX"})
+    client = OracleClient(truths(docs), {target.entry.sha256: [wrong.model_dump_json()]})
+    report, _ = evaluate(docs, client, tmp_path)
+    cal = report.layout_groups["seen"].calibration
+    assert cal is not None
+    assert (cal.wrong, cal.wrong_failed_check) == (1, 1)

@@ -16,6 +16,7 @@ from evals.metrics import (
     FieldScore,
     classify_alarms,
     compare,
+    field_correctness,
     is_fully_correct,
     match_lines,
     normalise_text,
@@ -512,3 +513,22 @@ def test_fully_correct_needs_every_field_and_every_line() -> None:
     )
     extra = make_invoice(line_items=[*truth.line_items, line("Freight charges", "30.00")])
     assert not is_fully_correct(score_document(truth, extra))
+
+
+def test_field_correctness_judges_every_extracted_field_by_path() -> None:
+    truth = make_invoice()
+    predicted = make_invoice(
+        line_items=list(reversed(truth.line_items)), currency="EUR"
+    )  # reordered lines are still right
+    judged = field_correctness(truth, predicted)
+    assert judged["currency"] is False
+    assert judged["line_items[0].amount"] is True
+    assert judged["notify_party.name"] is True  # absent on both sides
+    assert sum(not correct for correct in judged.values()) == 1
+
+
+def test_every_field_of_an_invented_line_is_wrong() -> None:
+    truth = make_invoice()
+    predicted = make_invoice(line_items=[*truth.line_items, line("Freight charges", "30.00")])
+    judged = field_correctness(truth, predicted)
+    assert [judged[f"line_items[2].{f}"] for f in LINE_FIELDS] == [False] * len(LINE_FIELDS)

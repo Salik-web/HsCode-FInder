@@ -19,6 +19,7 @@ from pydantic import BaseModel, computed_field
 from rapidfuzz import fuzz
 from scipy.optimize import linear_sum_assignment
 
+from app.pipeline.confidence import field_values
 from app.schemas.raw import RawInvoice, RawLineItem, RawParty
 from app.schemas.result import FieldCheck
 
@@ -375,36 +376,37 @@ class Alarm(BaseModel):
     value_correct: bool
 
 
-def classify_alarms(
-    truth: RawInvoice, predicted: RawInvoice, checks: list[FieldCheck]
-) -> list[Alarm]:
-    """Judge each failed check by whether the value it flagged is actually right.
+def field_correctness(truth: RawInvoice, predicted: RawInvoice) -> dict[str, bool]:
+    """Whether each extracted field is right, by its pipeline path ("line_items[2].amount").
 
-    A flagged line is found in the truth through the same description matching used for
-    scoring; a predicted line with no true counterpart is wrong, so its flag is true.
+    A predicted line is judged against the true line it was matched to by description,
+    as in scoring; a predicted line with no true counterpart is wrong in every field.
     """
     true_line_for = {p: g for g, p in match_lines(truth.line_items, predicted.line_items)}
     expected = header_and_party_values(truth)
-    found = header_and_party_values(predicted)
-    alarms = []
-    for check in checks:
-        line = LINE_PATH.match(check.path)
-        if line:
-            index, field = int(line.group(1)), line.group(2)
-            gold = true_line_for.get(index)
-            correct = gold is not None and (
-                compare(
-                    LINE_FIELDS[field],
-                    getattr(truth.line_items[gold], field),
-                    getattr(predicted.line_items[index], field),
-                )
-                == "correct"
-            )
-        else:
-            outcome = compare(comparison_for(check.path), expected[check.path], found[check.path])
-            correct = outcome == "correct"
-        alarms.append(Alarm(path=check.path, rule=check.rule, value_correct=correct))
-    return alarms
+    judged = {}
+    for path, value in field_values(predicted).items():
+        line = LINE_PATH.match(path)
+        if line is None:
+            judged[path] = compare(comparison_for(path), expected[path], value) == "correct"
+            continue
+        index, field = int(line.group(1)), line.group(2)
+        gold = true_line_for.get(index)
+        judged[path] = gold is not None and (
+            compare(LINE_FIELDS[field], getattr(truth.line_items[gold], field), value) == "correct"
+        )
+    return judged
+
+
+def classify_alarms(
+    truth: RawInvoice, predicted: RawInvoice, checks: list[FieldCheck]
+) -> list[Alarm]:
+    """Judge each failed check by whether the value it flagged is actually right."""
+    correct = field_correctness(truth, predicted)
+    return [
+        Alarm(path=check.path, rule=check.rule, value_correct=correct[check.path])
+        for check in checks
+    ]
 
 
 def is_fully_correct(score: DocumentScore) -> bool:

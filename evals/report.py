@@ -14,9 +14,10 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, computed_field
 
 from app.pipeline.rules import REFERENCE_RULE, UNIT_RULE
+from app.schemas.invoice import FieldStatus
 from app.schemas.result import FieldCheck, LLMCall, StageStatus
 from evals.dataset import BuyerForm
 from evals.metrics import (
@@ -39,8 +40,24 @@ WORST_FAILURE_COUNT = 10
 MAX_VALUE_CHARS = 60
 P50 = 50
 P95 = 95
+# Edges chosen around the review threshold (0.5): below it a field goes to a person.
+CONFIDENCE_BUCKETS = ((0.0, 0.3), (0.3, 0.5), (0.5, 0.7), (0.7, 0.9), (0.9, 1.0))
 
 DocumentStatus = Literal["scored", "not_scored"]
+
+
+class FieldReview(BaseModel):
+    """One extracted field's confidence and status, judged against the truth."""
+
+    path: str
+    confidence: float
+    status: FieldStatus
+    correct: bool
+
+    @property
+    def sent_to_review(self) -> bool:
+        """needs_review and failed_check both put the field in front of a person."""
+        return self.status != "ok"
 
 
 class DocumentRecord(BaseModel):
@@ -62,6 +79,9 @@ class DocumentRecord(BaseModel):
     # Each failed check judged against the truth; None without an extracted invoice, and
     # in reports from before the guardrails were judged.
     alarms: list[Alarm] | None = None
+    # Every extracted field's confidence and status, judged against the truth; None
+    # without an extracted invoice, and in reports from before confidence scoring.
+    reviews: list[FieldReview] | None = None
 
 
 class OperationalStats(BaseModel):
@@ -104,9 +124,49 @@ class OperationalStats(BaseModel):
     correct_documents_flagged: int | None = None
 
 
+class BucketStats(BaseModel):
+    low: float
+    high: float  # exclusive, except the last bucket, which includes 1.0
+    fields: int
+    correct: int
+
+    @computed_field
+    @property
+    def accuracy(self) -> float | None:
+        return ratio(self.correct, self.fields)
+
+
+class Calibration(BaseModel):
+    """Is confidence honest, and does review catch the errors without drowning a person?"""
+
+    buckets: list[BucketStats]
+    fields: int
+    wrong: int
+    wrong_needs_review: int
+    wrong_failed_check: int
+    correct_sent_to_review: int
+    # Errors that have no field to put in review: a true line the extraction never found.
+    missed_lines: int
+    # Documents with no extracted invoice: the whole document already goes to a person.
+    documents_without_invoice: int
+
+    @computed_field
+    @property
+    def error_recall(self) -> float | None:
+        """Share of wrong fields sent to review (needs_review or failed_check)."""
+        return ratio(self.wrong_needs_review + self.wrong_failed_check, self.wrong)
+
+    @computed_field
+    @property
+    def review_load(self) -> float | None:
+        """Share of correct fields sent to review needlessly."""
+        return ratio(self.correct_sent_to_review, self.fields - self.wrong)
+
+
 class SliceReport(BaseModel):
     summary: Summary
     operations: OperationalStats
+    calibration: Calibration | None = None  # None in reports from before confidence
 
 
 class RunMetadata(BaseModel):
@@ -224,6 +284,34 @@ def slice_report(records: list[DocumentRecord]) -> SliceReport:
     return SliceReport(
         summary=summarise([record.score for record in scored]),
         operations=operational_stats(scored),
+        calibration=calibration(scored),
+    )
+
+
+def calibration(records: list[DocumentRecord]) -> Calibration:
+    reviews = [review for r in records if r.reviews is not None for review in r.reviews]
+    wrong = [review for review in reviews if not review.correct]
+    return Calibration(
+        buckets=[_bucket(reviews, low, high) for low, high in CONFIDENCE_BUCKETS],
+        fields=len(reviews),
+        wrong=len(wrong),
+        wrong_needs_review=sum(review.status == "needs_review" for review in wrong),
+        wrong_failed_check=sum(review.status == "failed_check" for review in wrong),
+        correct_sent_to_review=sum(r.correct and r.sent_to_review for r in reviews),
+        missed_lines=sum(
+            r.score.lines.gold - r.score.lines.matched
+            for r in records
+            if r.reviews is not None and r.score is not None
+        ),
+        documents_without_invoice=sum(r.reviews is None for r in records),
+    )
+
+
+def _bucket(reviews: list[FieldReview], low: float, high: float) -> BucketStats:
+    last = high == CONFIDENCE_BUCKETS[-1][1]
+    inside = [r for r in reviews if low <= r.confidence < high or (last and r.confidence == high)]
+    return BucketStats(
+        low=low, high=high, fields=len(inside), correct=sum(r.correct for r in inside)
     )
 
 
@@ -627,10 +715,51 @@ def _check_note(record: DocumentRecord, index: int) -> str:
     return f"{note} (value is wrong)"
 
 
+def _calibration_section(report: EvalReport) -> list[str]:
+    lines = [
+        "## Confidence calibration",
+        "",
+        "Confidence comes from deterministic signals (app/pipeline/confidence.py). Below 0.5 "
+        "a field is needs_review; a failed check is failed_check. Both go to a person.",
+        "",
+    ]
+    for group in LAYOUT_GROUPS:
+        cal = report.layout_groups[group].calibration
+        if cal is None or cal.fields == 0:
+            continue
+        lines += [
+            f"### {group.capitalize()} layouts",
+            "",
+            "| Confidence | Fields | Correct | Accuracy |",
+        ]
+        lines.append("| --- | --- | --- | --- |")
+        for bucket in cal.buckets:
+            closing = "]" if bucket.high == CONFIDENCE_BUCKETS[-1][1] else ")"
+            lines.append(
+                f"| [{bucket.low:.1f}, {bucket.high:.1f}{closing} | {bucket.fields} | "
+                f"{bucket.correct} | {_percent(bucket.accuracy)} |"
+            )
+        sent = cal.wrong_needs_review + cal.wrong_failed_check
+        correct_fields = cal.fields - cal.wrong
+        lines += [
+            "",
+            f"- Error recall: {_percent(cal.error_recall)} ({sent} of {cal.wrong} wrong fields "
+            f"sent to review: {cal.wrong_needs_review} needs_review, "
+            f"{cal.wrong_failed_check} failed_check)",
+            f"- Review load: {_percent(cal.review_load)} ({cal.correct_sent_to_review} of "
+            f"{correct_fields} correct fields sent to review)",
+            f"- Not in these counts: {cal.missed_lines} missed lines (no field to review), "
+            f"{cal.documents_without_invoice} documents with no extracted invoice",
+            "",
+        ]
+    return lines
+
+
 def render_markdown(report: EvalReport, previous: EvalReport | None) -> str:
     sections = [
         _header(report.meta),
         _headline_table(report),
+        _calibration_section(report),
         _field_table(report),
         _template_table(report),
         _buyer_table(report),
