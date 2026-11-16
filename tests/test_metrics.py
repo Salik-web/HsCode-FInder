@@ -532,3 +532,45 @@ def test_every_field_of_an_invented_line_is_wrong() -> None:
     predicted = make_invoice(line_items=[*truth.line_items, line("Freight charges", "30.00")])
     judged = field_correctness(truth, predicted)
     assert [judged[f"line_items[2].{f}"] for f in LINE_FIELDS] == [False] * len(LINE_FIELDS)
+
+
+# --- descriptions --------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "predicted",
+    [
+        "Stainless steel surgical scissors",
+        "STAINLESS STEEL SURGICAL SCISSORS",
+        "  Stainless   steel\nsurgical scissors ",
+        "Stainless-steel surgical scissors.",
+    ],
+)
+def test_description_matches_after_case_space_and_punctuation(predicted: str) -> None:
+    assert compare("normalised", "Stainless steel surgical scissors", predicted) == "correct"
+
+
+@pytest.mark.parametrize(
+    "predicted",
+    [
+        "Stainless surgical scissors",  # a missing word changes the goods
+        "Stainless steel surgical scissors set",  # so does an extra one
+        "Stainless steel surgical scissor",  # plural lost
+        "Stainless stee surgical scissors",  # a misspelling
+    ],
+)
+def test_any_missing_extra_or_misspelt_word_is_wrong(predicted: str) -> None:
+    assert compare("normalised", "Stainless steel surgical scissors", predicted) == "wrong"
+
+
+def test_line_descriptions_are_strict_but_addresses_stay_fuzzy() -> None:
+    assert LINE_FIELDS["description"] == "normalised"
+    assert PARTY_FIELDS["address"] == "fuzzy"
+    truth = make_invoice()
+    garbled = [
+        truth.line_items[0].model_copy(update={"description": "Radial car tyre"}),
+        truth.line_items[1],
+    ]
+    score = score_document(truth, make_invoice(line_items=garbled))
+    assert wrong_fields(score) == ["line.description"]
+    assert score.lines.matched == 2  # pairing still tolerates the typo

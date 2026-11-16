@@ -26,7 +26,7 @@ from app.schemas.result import FieldCheck
 
 Outcome = Literal["correct", "wrong", "missed", "hallucinated", "no_output"]
 OUTCOMES: tuple[Outcome, ...] = get_args(Outcome)
-Comparison = Literal["exact", "code", "number", "date", "fuzzy"]
+Comparison = Literal["exact", "code", "number", "date", "normalised", "fuzzy"]
 Scalar = str | Decimal | date
 
 FUZZY_THRESHOLD = 0.9
@@ -52,7 +52,9 @@ HEADER_FIELDS: dict[str, Comparison] = {
 PARTIES = ("shipper", "buyer", "consignee", "notify_party")
 PARTY_FIELDS: dict[str, Comparison] = {"name": "fuzzy", "address": "fuzzy", "country": "code"}
 LINE_FIELDS: dict[str, Comparison] = {
-    "description": "fuzzy",
+    # Exact after normalisation (Salik, 2026-11-16): a missing or extra word changes what
+    # the goods are, and so their HS code. Line pairing still uses similarity.
+    "description": "normalised",
     "quantity": "number",
     "unit": "code",
     "unit_price": "number",
@@ -147,6 +149,8 @@ def values_equal(kind: Comparison, expected: Scalar, predicted: Scalar) -> bool:
             return _to_cents(Decimal(expected)) == _to_cents(Decimal(predicted))
         case "date":
             return expected == predicted
+        case "normalised":
+            return normalise_text(str(expected)) == normalise_text(str(predicted))
         case "fuzzy":
             return similarity(str(expected), str(predicted)) >= FUZZY_THRESHOLD
 
