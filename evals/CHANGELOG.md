@@ -2,6 +2,17 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-16: v3 on test_unseen_layout (reporting only)
+
+- Model `qwen/qwen3.8-27b` on Groq, thinking off, JSON object mode, prompt `v3` with the deterministic fixes, schema `1.0`, git `0412371`. Reporting split: no prompt or code was tuned on it, and the report holds no per-document details.
+- Report (clean): `reports/20261116T065309_synthetic_clean_test_unseen_layout_qwen_qwen3.8-27b_reasoning-none_v3.md`, re-scored from cache; identical to the live run. 13 documents were answered on 2026-11-12, 11 today.
+- Clean, unseen (n=24, `ledger` 12, `sidebar` 12): critical-field accuracy 99.6%, all critical right 95.8% (23/24), line precision 100%, recall 99.4%, F1 99.7%, first-try valid JSON 24/24, retries 0, `needs_review` 0. Latency p50 1.7 s, p95 2.4 s. Cost $0.
+  - Only `ledger` lost points (critical 99.2%, all critical right 11/12). One gold line of 180 was missed, which counts against line amounts. `buyer.name`, `consignee.name` and `notify_party.name` are 23/24 each; reference buyers 5/5.
+  - Seen clean dev (n=16) was 100% critical; the unseen gap is under 1 point on this sample.
+- Messy, unseen (n=7, `ledger` 3, `sidebar` 4), live run: critical-field accuracy 100%, all critical right 7/7, line F1 100%, first-try valid 6/7 (one first answer rejected by Groq with `json_validate_failed`; the retry was valid), `needs_review` 0, 7 numbers normalised, 0 ambiguous. Latency p50 1.7 s, p95 9.5 s. Cost per document "unknown": a rejected call reports no usage.
+  - **No final messy report yet.** Re-scoring offline gave 6/7, because the cache didn't store Groq's rejection, so the rejected document's first attempt couldn't be replayed. Fixed the same day: the cache now stores schema rejections (regression tests in `tests/test_llm.py` and `tests/test_extract.py`). The first attempt of that one document must be called once more before the final report can be written from cache.
+- Harness: interim runs went to a scratch folder (`REPORTS_DIR`), not `evals/reports`.
+
 ## 2026-11-12: v3 + deterministic fixes, re-scored from cache (0 API calls)
 
 - Same model, prompt `v3` and 18 documents as the previous entry; git `7599309`; `evals.run --offline`, so every answer came from the cache.
