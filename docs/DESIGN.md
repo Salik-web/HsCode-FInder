@@ -205,6 +205,7 @@ Buyer and consignee are often the same company, but not always. When they're the
 
 **5.6 Review and export**
 
+- Confidence comes from deterministic signals (text-layer agreement, guardrails, retries and repairs, rules, source type), never the model's own score; below 0.5 a field is `needs_review`. A document without a text layer (a photo) sends every critical field to `needs_review`, because nothing can verify it.
 - The UI shows the document image next to the fields, with `needs_review` and `failed_check` highlighted.
 - Every edit is written to `corrections`. That becomes new eval data and tells you which fields are weakest.
 - Export only after approval.
@@ -230,7 +231,7 @@ Synthetic sets have 8 layouts and vary their field labels per document. In synth
 
 **Metrics**
 
-- Per-field accuracy: exact match for IDs and codes, ± tolerance for numbers, normalised fuzzy match (≥ 0.9) for names and addresses
+- Per-field accuracy: exact match for IDs and codes, ± tolerance for numbers, exact match after normalising case, spacing and punctuation for line descriptions (a missing or extra word changes the goods), normalised fuzzy match (≥ 0.9) for names and addresses
 - Line items: match predicted to gold lines (Hungarian matching on description similarity), then precision, recall and F1, plus per-field accuracy on matched lines
 - Document-level: % of documents with **all critical fields** correct (invoice number, total, currency, Incoterm, buyer name, consignee name, line amounts). Buyer and consignee names joined on 2026-11-16: a wrong consignee is a serious customs error
 - Guardrail catch rate on `synthetic_injected`, and false-alarm rate on clean docs

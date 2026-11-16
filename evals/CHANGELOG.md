@@ -2,6 +2,25 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-16: photos send critical fields to review; descriptions must match exactly (re-scored from cache, 0 API calls)
+
+- Salik's decisions: (1) without a text layer nothing can verify a value, so every critical field of such a document goes to `needs_review` ("no text layer to verify"); its confidence score is unchanged, and non-critical fields keep the threshold. No OCR for now (CLAUDE.md, Known issues). (2) Line descriptions are right only if they match after normalising case, spacing and punctuation: any missing, extra or misspelt word is wrong. Addresses (and names) stay fuzzy; line pairing still uses similarity.
+- The critical-field list now lives once, in `app/schemas/constants.py`, for both the metrics and the photo rule.
+- Report: `reports/20261116T100758_synthetic_clean_test_unseen_layout_qwen_qwen3.8-27b_reasoning-none_v3.md` (the only complete split; same scores, now with calibration and guardrail rows). The partial sets were re-scored into a scratch folder.
+
+| Set | Descriptions right | All fields right | Critical-field accuracy | Error recall | Review load |
+| --- | --- | --- | --- | --- | --- |
+| Clean, seen (dev 27) | 256/256 -> **252/256** | 99.90% -> 99.71% (2043/2049) | 100% -> 100% | 2/2 -> **6/6** | 4/2047 -> **0/2043** |
+| Clean, unseen (24) | 179/179 -> 179/179 | 99.80% -> 99.80% | 99.1% -> 99.1% | 1/3 -> 1/3 | 1/1527 -> 1/1527 |
+| Messy, seen (dev 2) | 27/27 -> 27/27 | 99.50% -> 99.50% | 97.4% -> 97.4% | 0/1 -> **1/1** | 0/199 -> **38/199 (19.1%)** |
+| Messy, unseen (6 of 7) | 32/32 -> 32/32 | 99.35% -> 99.35% | 98.5% -> 98.5% | 0/2 -> **1/2** | 0/304 -> **67/304 (22.0%)** |
+| **All cached v3** | | | | 3/8 -> **9/12 (75%)** | 5/4077 -> 106/4073 (2.6%) |
+
+- Descriptions: the only change is inv_00025's four garbles ("Stainless surgical scissors" for "Stainless steel surgical scissors", "tery", "stee", "part"), now wrong and all already in review, so the old "needless" reviews become caught errors.
+- Photos: the incoterm misread (CIP as CIF) and the messy unseen consignee name are now caught. Still missed: a messy shipper address (not critical) and the two clean unseen party names that are on the page as extracted. Review load on photos is about a fifth of correct fields (105/503): every critical field, every time. On clean PDFs it stays 1/3570.
+- Injected set unchanged: 60/60 planted errors to review; 0 of 7,853 clean ground-truth fields sent to review (scored as digital PDFs that print exactly their values).
+- Sample size: still 12 real errors in all, 3 of them on photos.
+
 ## 2026-11-16: confidence scoring and calibration, first measurement (branch `feat/phase4-confidence`, 0 API calls)
 
 - `app/pipeline/confidence.py`: per-field confidence from documented points, no model self-report. Base 0.75 with a text layer, 0.60 without; +0.20 if the value is found in the text layer, −0.45 if not; −0.10 retry, −0.05 repaired keys, −0.10 number format reinterpreted, −0.05 set by a rule; a failed check caps it at 0.10 (`failed_check`). Below 0.50: `needs_review`. Not text-checked: None values and country codes.
