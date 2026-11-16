@@ -12,23 +12,31 @@ Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H &
 ## Status
 - Current phase: **Phase 3 started early (schema reliability)**, approved by Salik on 2026-11-11. Phase 2 is built and tested, and its baseline was cut short by decision (see below); the Phase 2 gate wasn't formally passed.
 - Completed phases: Phase 1 — Foundation + synthetic data (approved by Salik, 2026-11-07)
-- Branch: everything is merged into `main`; no open feature branches.
+- Branch: everything is merged into `main`; no open feature branches. Salik pushes.
 - Latest eval baseline: **v2 on Groq** `qwen/qwen3.8-27b`, thinking off, 2026-11-11: 18 documents (the first 16 clean dev and the first 2 messy dev by id, all seen layouts). Clean: critical-field accuracy 85.1%, all critical right 14/16, first-try valid JSON 8/16, `needs_review` 2/16; messy: 2/2 valid first try, all critical right 1/2. See evals/CHANGELOG.md.
 - Latest result on those 18 documents: **prompt v3 + deterministic fixes** (key repair, reference-buyer rule, unit list, number normalisation), re-scored from cache on 2026-11-12. Clean: first-try valid 16/16, critical-field accuracy 100%, all fields 1088/1090 (the 2 misses are garbled units, both flagged `failed_check`). Messy: first-try valid 2/2, all critical right 1/2 (incoterm misread on a blurred photo). See evals/CHANGELOG.md.
 - **Where we stopped (2026-11-16, 07:05 UTC): the full v3 run, approved by Salik, is part-way through.** test_unseen_layout is done and the interim report was sent to Salik. Groq's daily token limit then stopped dev.
-  - test_unseen_layout clean: **24/24, final report in `evals/reports`** and logged in evals/CHANGELOG.md: critical 99.6%, all critical right 23/24.
-  - test_unseen_layout messy: **7/7 live** (critical 100%), but no final report yet. One document's first attempt was a Groq `json_validate_failed` rejection, which the old cache didn't store, so `--offline` scores 6/7. The cache now stores rejections. Re-run the live command once (one call), then write the final report with `--offline`.
-  - dev clean: **27/53 cached**; the 11 new documents are all right; 26 to go. Today's dev calls had no Groq rejections, so `--offline` will replay them fully. dev messy: 2/16; 14 to go.
+  - Critical fields now include `buyer.name` and `consignee.name` (Salik, 2026-11-16); every number below uses that definition.
+  - test_unseen_layout clean: **24/24, final report in `evals/reports`** (`20261116T074314_…`): critical 99.1%, all critical right 22/24. The errors are `buyer.name` and `consignee.name` on `ledger` (one document) and one missed line (another).
+  - test_unseen_layout messy: **7/7 live**, but no final report yet. One document's first attempt was a Groq `json_validate_failed` rejection, which the old cache didn't store, so `--offline` scores 6/7 (critical 98.5%, 5/6 right; `consignee.name` on `ledger`). The cache now stores rejections. Re-run the live command once (one call), then write the final report with `--offline`.
+  - dev clean: **27/53 cached**, all critical right; 26 to go. dev messy: 2/16 (1/2 right, incoterm); 14 to go.
+  - **Ledger diagnostic batch** (Salik, 2026-11-16): 10 clean `ledger` invoices, seed 1116, in `data/diagnostic_ledger` (split `diagnostic`, ids `diag_*`, outside every split), generated and not run yet. Run it live, then show Salik exactly what goes wrong with party names and why. **Don't fix anything until Salik has seen the diagnosis.**
+    - What we know before running: `ledger` is the only layout that prints a party as one line, `name, address, country`. About 25% of generated company names contain commas. In this batch, `diag_00000` (shipper and consignee), `diag_00001` (shipper) and `diag_00009` (consignee) have comma names; the other 7 are the control group. On the test split, ledger addresses were 100% right while names failed, so the likely error is a name cut at a comma, not a shifted name/address boundary. Check that against the batch; it's a hypothesis.
+    - **Holdout decision (Salik, 2026-11-16), applies only if the diagnosis leads to a fix, and only after Salik has seen the diagnosis:**
+      1. Freeze the current v3 test_unseen_layout results as recorded in evals/CHANGELOG.md.
+      2. Move `ledger` into the seen group from then on.
+      3. Add a new held-out layout that also prints a party as one line (name and address joined) but looks different from `ledger`.
+      4. The fix must be general (how to find where a party name ends), never specific to `ledger`.
   - No processes were left after the run (checked with `Get-CimInstance Win32_Process`).
-  - Next session: unseen messy (1 call), then dev clean, then dev messy, with the same commands below. About 41 calls remain, about 1.3 days of quota.
+  - **Next session, in this order (Salik, 2026-11-16):** 1) unseen messy (1 call); 2) the ledger diagnostic batch (about 10 calls), then the diagnosis to Salik; 3) dev messy (14); 4) dev clean last (26). About 51 calls, about 1.7 days of quota, so dev clean will probably finish the day after.
 - **Resume the full run.** Each command stops at the first quota error and resumes from the cache next time, so repeat it until it prints the full count. Keep interim reports out of the repo with `REPORTS_DIR`:
   ```bash
   export REPORTS_DIR=/tmp/interim_reports   # any folder outside evals/reports
-  uv run python -m evals.run --dataset synthetic_clean --split test_unseen_layout --prompt v3   # until Scored 24/24
   uv run python -m evals.run --dataset synthetic_messy --split test_unseen_layout --prompt v3   # until Scored 7/7
-  # -> interim report to Salik
-  uv run python -m evals.run --dataset synthetic_clean --split dev --prompt v3                  # until Scored 53/53
+  uv run python -m evals.run --dataset synthetic_clean --split diagnostic --folder diagnostic_ledger --prompt v3   # until Scored 10/10
+  # -> ledger diagnosis to Salik (the report lists each document's wrong fields)
   uv run python -m evals.run --dataset synthetic_messy --split dev --prompt v3                  # until Scored 16/16
+  uv run python -m evals.run --dataset synthetic_clean --split dev --prompt v3                  # until Scored 53/53
   ```
   When a split is fully scored, write its final report into `evals/reports` from the cache at no cost (`unset REPORTS_DIR`, then the same command with `--offline`), and log it in `evals/CHANGELOG.md`. Groq allows about 200,000 tokens a day, but counts about 6,300 a call, so about 30 v3 calls on a full budget (see Known issues). If you run the commands in a background loop, check afterwards that no `bash`, `sleep` or `evals.run` process is left (see the lesson below).
   - Lesson: on Windows, stopping a background shell loop ended only its wrapper. Two loops kept running overnight on 2026-11-11 (5 extra v2 calls; one v3 retry made twice). After stopping a background loop, check with `Get-CimInstance Win32_Process` and kill leftovers by PID.
@@ -71,6 +79,8 @@ uv run pytest                                       # all tests
 uv run pytest tests/test_metrics.py -q              # metrics tests (run after ANY metrics change)
 uv run ruff check . --fix && uv run ruff format .   # lint + format
 uv run python -m synth.generate --n 100 --messy 30 --seed 42
+uv run python -m synth.generate --diagnostic ledger --n 10 --seed 1116   # one layout, own folder, outside every split
+uv run python -m evals.run --dataset synthetic_clean --split diagnostic --folder diagnostic_ledger --prompt v3
 uv run python -m evals.run --dataset synthetic_clean --split dev --limit 20
 uv run python -m evals.run --dataset synthetic_messy --split dev --model gemini-3.5-flash --prompt v1
 uv run python -m evals.run --dataset synthetic_clean --split test_unseen_layout   # reporting only
