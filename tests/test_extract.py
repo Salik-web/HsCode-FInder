@@ -348,6 +348,23 @@ def test_provider_schema_rejection_is_retried_with_the_error(truth: RawInvoice) 
     assert "missing properties" in client.requests[1].text
 
 
+def test_cached_rejection_replays_the_same_outcome(truth: RawInvoice, tmp_path: Path) -> None:
+    """Regression: re-scoring offline must reproduce a live run that had a rejection."""
+    from app.llm.cache import CachingClient
+    from app.llm.offline import OfflineClient
+
+    rejected = SchemaViolationError("missing properties: 'currency'", "model-a", 900)
+    live_client = FakeClient("model-a", [rejected, answer(compact_json(truth))])
+    prompt = load_prompt("invoice", "v2")
+    live = extract_invoice(document(), prompt, CachingClient(live_client, tmp_path, {}))
+    offline = CachingClient(OfflineClient("model-a"), tmp_path, {})
+    replayed = extract_invoice(document(), prompt, offline)
+    assert replayed.stage == live.stage
+    assert replayed.invoice == live.invoice == truth
+    assert [call.cached for call in live.calls] == [False, False]
+    assert [call.cached for call in replayed.calls] == [True, True]
+
+
 def test_provider_schema_rejection_twice_goes_to_needs_review() -> None:
     rejected = SchemaViolationError("bad", "model-a", 10)
     client = FakeClient("model-a", [rejected, rejected])

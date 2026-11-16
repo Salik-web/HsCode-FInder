@@ -6,9 +6,17 @@ import os
 import tempfile
 from pathlib import Path
 
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 
-from app.llm.client import LLMClient, LLMRequest, LLMResponse
+from app.llm.client import LLMClient, LLMRequest, LLMResponse, SchemaViolationError
+
+
+class CachedRejection(BaseModel):
+    """The provider's schema rejection: an answer from the model, so it is replayed too."""
+
+    message: str
+    model: str
+    latency_ms: int
 
 
 class CacheEntry(BaseModel):
@@ -18,7 +26,14 @@ class CacheEntry(BaseModel):
     attempt: int
     # Entries written before call options existed (the Gemini baseline) have none.
     call_options: dict[str, str] = {}
-    response: LLMResponse
+    response: LLMResponse | None = None
+    rejection: CachedRejection | None = None
+
+    @model_validator(mode="after")
+    def _exactly_one_outcome(self) -> "CacheEntry":
+        if (self.response is None) == (self.rejection is None):
+            raise ValueError("a cache entry holds either a response or a rejection")
+        return self
 
 
 def cache_key(request: LLMRequest, model: str, call_options: dict[str, str]) -> str:
@@ -37,7 +52,12 @@ def cache_key(request: LLMRequest, model: str, call_options: dict[str, str]) -> 
 
 
 class CachingClient:
-    """Wraps a client; only successful responses are stored, so failures are retried later."""
+    """Wraps a client; stores answers, so re-scoring replays exactly what the model said.
+
+    An answer is a response or the provider's schema rejection of one (both come from the
+    model at temperature 0). Transient failures (rate limits, timeouts) aren't stored, so
+    they are retried later.
+    """
 
     def __init__(self, inner: LLMClient, cache_dir: Path, call_options: dict[str, str]) -> None:
         self._inner = inner
@@ -51,9 +71,25 @@ class CachingClient:
     def complete(self, request: LLMRequest) -> LLMResponse:
         path = self._path(cache_key(request, self.model, self._call_options))
         if path.exists():
-            entry = CacheEntry.model_validate_json(path.read_bytes())
-            return entry.response.model_copy(update={"cached": True})
-        response = self._inner.complete(request)
+            return _replay(CacheEntry.model_validate_json(path.read_bytes()))
+        try:
+            response = self._inner.complete(request)
+        except SchemaViolationError as error:
+            rejection = CachedRejection(
+                message=str(error), model=error.model, latency_ms=error.latency_ms
+            )
+            self._store(path, request, rejection=rejection)
+            raise
+        self._store(path, request, response=response)
+        return response
+
+    def _store(
+        self,
+        path: Path,
+        request: LLMRequest,
+        response: LLMResponse | None = None,
+        rejection: CachedRejection | None = None,
+    ) -> None:
         entry = CacheEntry(
             document_sha256=request.document_sha256,
             model=self.model,
@@ -61,12 +97,23 @@ class CachingClient:
             attempt=request.attempt,
             call_options=self._call_options,
             response=response,
+            rejection=rejection,
         )
         _write_atomically(path, entry.model_dump_json(indent=2).encode())
-        return response
 
     def _path(self, key: str) -> Path:
         return self._cache_dir / key[:2] / f"{key}.json"
+
+
+def _replay(entry: CacheEntry) -> LLMResponse:
+    if entry.rejection is not None:
+        rejection = entry.rejection
+        raise SchemaViolationError(
+            rejection.message, rejection.model, rejection.latency_ms, cached=True
+        )
+    # The validator guarantees a response when there is no rejection.
+    assert entry.response is not None
+    return entry.response.model_copy(update={"cached": True})
 
 
 def _write_atomically(path: Path, data: bytes) -> None:

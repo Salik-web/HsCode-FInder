@@ -388,6 +388,52 @@ def test_failures_are_not_cached(tmp_path: Path) -> None:
     assert len(inner.requests) == 2
 
 
+def test_schema_rejection_is_cached_and_replayed(tmp_path: Path) -> None:
+    inner = FakeClient("model-a", [SchemaViolationError("missing 'currency'", "model-a", 900)])
+    client = CachingClient(inner, tmp_path, {})
+    with pytest.raises(SchemaViolationError) as live:
+        client.complete(make_request())
+    with pytest.raises(SchemaViolationError) as replayed:
+        client.complete(make_request())
+    assert len(inner.requests) == 1
+    assert live.value.cached is False
+    assert replayed.value.cached is True
+    assert str(replayed.value) == str(live.value)
+    assert (replayed.value.model, replayed.value.latency_ms) == ("model-a", 900)
+
+
+def test_offline_replays_a_schema_rejection(tmp_path: Path) -> None:
+    """Regression: an uncached rejection made offline re-scoring drop the document."""
+    from app.llm.offline import OfflineClient
+
+    rejected = SchemaViolationError("bad", "model-a", 10)
+    with pytest.raises(SchemaViolationError):
+        CachingClient(FakeClient("model-a", [rejected]), tmp_path, {}).complete(make_request())
+    offline = CachingClient(OfflineClient("model-a"), tmp_path, {})
+    with pytest.raises(SchemaViolationError) as replayed:
+        offline.complete(make_request())
+    assert replayed.value.cached is True
+
+
+@pytest.mark.parametrize("outcomes", [{}, {"both": True}])
+def test_cache_entry_holds_exactly_one_outcome(outcomes: dict) -> None:
+    from pydantic import ValidationError
+
+    from app.llm.cache import CachedRejection, CacheEntry
+
+    fields: dict[str, Any] = {
+        "document_sha256": "a" * 64,
+        "model": "m",
+        "prompt_version": "v3",
+        "attempt": 1,
+    }
+    if outcomes:
+        fields["response"] = make_response()
+        fields["rejection"] = CachedRejection(message="bad", model="m", latency_ms=1)
+    with pytest.raises(ValidationError):
+        CacheEntry(**fields)
+
+
 def test_cache_leaves_no_temporary_files(tmp_path: Path) -> None:
     CachingClient(FakeClient("model-a", [make_response()]), tmp_path, {}).complete(make_request())
     files = [path for path in tmp_path.rglob("*") if path.is_file()]

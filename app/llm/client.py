@@ -33,10 +33,11 @@ class SchemaViolationError(LLMError):
     with the error, exactly as when our own validation rejects an answer.
     """
 
-    def __init__(self, message: str, model: str, latency_ms: int) -> None:
+    def __init__(self, message: str, model: str, latency_ms: int, cached: bool = False) -> None:
         super().__init__(message)
         self.model = model
         self.latency_ms = latency_ms
+        self.cached = cached
 
 
 class ImageInput(BaseModel):

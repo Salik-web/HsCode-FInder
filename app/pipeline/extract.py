@@ -213,7 +213,7 @@ def _rejected_call_record(attempt: int, error: SchemaViolationError, errors: lis
         output_tokens=None,
         latency_ms=error.latency_ms,
         cost_usd=None,
-        cached=False,
+        cached=error.cached,
         validation_errors=errors,
     )
 
