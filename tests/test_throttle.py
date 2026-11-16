@@ -5,7 +5,7 @@ from decimal import Decimal
 
 import pytest
 
-from app.llm.client import LLMResponse, RateLimitedError, Usage
+from app.llm.client import LLMResponse, RateLimitedError, SchemaViolationError, Usage
 from app.llm.throttle import (
     INITIAL_OUTPUT_ESTIMATE,
     INITIAL_TOKEN_ESTIMATE,
@@ -177,3 +177,23 @@ def test_output_budget_is_independent_of_the_total_budget() -> None:
     client.complete(make_request())
     client.complete(make_request())  # total is tiny, but 450 + 800 output > 1,000
     assert clock.sleeps == [pytest.approx(WINDOW_SECONDS)]
+
+
+def test_throttle_wait_is_recorded_on_the_response() -> None:
+    clock = FakeClock()
+    client = throttled([response(3_000), response(3_000)], 6_000, None, clock)
+    assert client.complete(make_request()).throttle_ms == 0
+    clock.now += 10
+    waited = client.complete(make_request()).throttle_ms
+    assert waited == round((WINDOW_SECONDS - 10) * 1000)
+
+
+def test_throttle_wait_is_recorded_on_a_schema_rejection() -> None:
+    clock = FakeClock()
+    rejected = SchemaViolationError("bad", "m", 10)
+    client = throttled([response(3_000), rejected], 6_000, None, clock)
+    client.complete(make_request())
+    clock.now += 10
+    with pytest.raises(SchemaViolationError) as caught:
+        client.complete(make_request())
+    assert caught.value.throttle_ms == round((WINDOW_SECONDS - 10) * 1000)

@@ -20,8 +20,9 @@ from app.llm.client import (
     Usage,
 )
 from app.schemas.raw import RawInvoice
+from app.schemas.result import LLMCall
 from evals.dataset import DatasetFileMismatchError, EvalDocument, load_documents
-from evals.report import EvalReport
+from evals.report import DocumentRecord, EvalReport, operational_stats
 from evals.run import RunConfig, run_eval
 from synth.generate import SYNTHETIC_DIR, build_dataset
 from synth.manifest import Dataset, Split
@@ -403,3 +404,72 @@ def test_rule_counts_appear_in_the_report(data_dir: Path, tmp_path: Path) -> Non
     assert "| Buyer references resolved by rule | 1 | 0 |" in markdown
     assert "| Unit checks failed | 1 | 0 |" in markdown
     assert "Check failed: line_items[0].unit" in markdown
+
+
+def timed_record(*calls: tuple[int, int | None, int | None]) -> DocumentRecord:
+    """A scored-looking record whose calls are (latency_ms, call_ms, throttle_ms)."""
+    return DocumentRecord(
+        id="inv",
+        template="classic",
+        layout_group="seen",
+        buyer_form="distinct",
+        status="scored",
+        preprocess_status="ok",
+        extract_status="ok",
+        error=None,
+        score=None,
+        llm_calls=[
+            LLMCall(
+                attempt=attempt,
+                model="m",
+                input_tokens=None,
+                output_tokens=None,
+                latency_ms=latency,
+                call_ms=call,
+                throttle_ms=throttle,
+                cost_usd=None,
+                cached=True,
+                validation_errors=[],
+            )
+            for attempt, (latency, call, throttle) in enumerate(calls, start=1)
+        ],
+    )
+
+
+def test_model_call_time_is_split_from_backoff_and_throttle_wait() -> None:
+    records = [
+        # One retry: 1.5 s + 2 s of model time, 30 s of SDK backoff, 60 s throttled.
+        timed_record((31_500, 1_500, 60_000), (2_000, 2_000, 0)),
+        timed_record((1_000, 1_000, 0)),
+    ]
+    stats = operational_stats(records)
+    assert stats.timed_documents == stats.throttled_documents == 2
+    assert stats.model_call_p95_ms == 3_500
+    assert stats.model_call_p50_ms == 1_000
+    assert stats.backoff_p95_ms == 30_000
+    assert stats.throttle_p95_ms == 60_000
+    assert stats.latency_p95_ms == 33_500  # call + backoff, as before
+
+
+def test_calls_cached_before_the_split_are_left_out_of_model_call_time() -> None:
+    """A document counts only when every call recorded the split; the rest show n."""
+    old = timed_record((40_000, None, None))
+    mixed = timed_record((9_000, None, None), (2_000, 2_000, 0))
+    new = timed_record((1_200, 1_000, 500))
+    stats = operational_stats([old, mixed, new])
+    assert stats.timed_documents == 1
+    assert stats.model_call_p95_ms == 1_000
+    assert stats.backoff_p95_ms == 200
+    assert stats.latency_p95_ms == 40_000
+    none_timed = operational_stats([old])
+    assert none_timed.timed_documents == 0
+    assert none_timed.model_call_p95_ms is None
+
+
+def test_report_shows_model_call_time_with_its_count(data_dir: Path, tmp_path: Path) -> None:
+    docs = documents(data_dir)
+    _, path = evaluate(docs, OracleClient(truths(docs)), tmp_path)
+    text = path.read_text(encoding="utf-8")
+    # The oracle predates the split, like answers cached before 2026-11-16.
+    assert "| Model call time p95 (target < 30 s) | not recorded | — |" in text
+    assert "| Call + backoff p95 (all documents) | 1.0 s | — |" in text

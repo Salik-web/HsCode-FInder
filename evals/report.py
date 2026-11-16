@@ -78,8 +78,17 @@ class OperationalStats(BaseModel):
     unit_checks_failed: int | None = None
     retry_rate: float | None
     cost_per_document_usd: Decimal | None  # None when any call's cost is unknown
+    # Model call time plus SDK retry backoff, per document; every document has it.
     latency_p50_ms: int | None
     latency_p95_ms: int | None
+    # The split, per document, over documents whose every call recorded it (calls from
+    # 2026-11-16 on). The p95 latency target applies to model call time only.
+    timed_documents: int | None = None
+    model_call_p50_ms: int | None = None
+    model_call_p95_ms: int | None = None
+    backoff_p95_ms: int | None = None
+    throttled_documents: int | None = None
+    throttle_p95_ms: int | None = None
 
 
 class SliceReport(BaseModel):
@@ -130,9 +139,27 @@ def _rate(records: list[DocumentRecord], matches: int) -> float | None:
     return None if not records else matches / len(records)
 
 
+def _per_document(
+    records: list[DocumentRecord], measure: Callable[[LLMCall], int | None]
+) -> list[int]:
+    """One total per document, skipping documents with any call that didn't record it."""
+    totals = []
+    for record in records:
+        values = [measure(call) for call in record.llm_calls]
+        if values and all(value is not None for value in values):
+            totals.append(sum(value for value in values if value is not None))
+    return totals
+
+
+def _backoff_ms(call: LLMCall) -> int | None:
+    return None if call.call_ms is None else call.latency_ms - call.call_ms
+
+
 def operational_stats(records: list[DocumentRecord]) -> OperationalStats:
     """Over scored documents; latency and cost are the original calls', even when cached."""
-    latencies = [sum(call.latency_ms for call in r.llm_calls) for r in records if r.llm_calls]
+    latencies = _per_document(records, lambda call: call.latency_ms)
+    model_calls = _per_document(records, lambda call: call.call_ms)
+    throttle_waits = _per_document(records, lambda call: call.throttle_ms)
     costs = [call.cost_usd for record in records for call in record.llm_calls]
     known_costs = [cost for cost in costs if cost is not None]
     first_calls = [call for r in records for call in r.llm_calls if call.attempt == 1]
@@ -161,6 +188,12 @@ def operational_stats(records: list[DocumentRecord]) -> OperationalStats:
         cost_per_document_usd=cost_per_document,
         latency_p50_ms=percentile(latencies, P50),
         latency_p95_ms=percentile(latencies, P95),
+        timed_documents=len(model_calls),
+        model_call_p50_ms=percentile(model_calls, P50),
+        model_call_p95_ms=percentile(model_calls, P95),
+        backoff_p95_ms=percentile(_per_document(records, _backoff_ms), P95),
+        throttled_documents=len(throttle_waits),
+        throttle_p95_ms=percentile(throttle_waits, P95),
     )
 
 
@@ -344,10 +377,36 @@ def _headline_table(report: EvalReport) -> list[str]:
         row("Buyer references resolved by rule", _references_cell),
         row("Unit checks failed", lambda s: _count_cell(s.operations.unit_checks_failed)),
         row("Cost per document", _cost_cell),
-        row("Latency p50", lambda s: _ms(s.operations.latency_p50_ms)),
-        row("Latency p95", lambda s: _ms(s.operations.latency_p95_ms)),
+        row("Model call time p50", lambda s: _timed_cell(s, s.operations.model_call_p50_ms)),
+        row(
+            "Model call time p95 (target < 30 s)",
+            lambda s: _timed_cell(s, s.operations.model_call_p95_ms),
+        ),
+        row("Retry backoff wait p95", lambda s: _timed_cell(s, s.operations.backoff_p95_ms)),
+        row("Throttle wait p95", _throttle_cell),
+        row("Call + backoff p50 (all documents)", lambda s: _ms(s.operations.latency_p50_ms)),
+        row("Call + backoff p95 (all documents)", lambda s: _ms(s.operations.latency_p95_ms)),
         "",
     ]
+
+
+def _timing_cell(documents: int, timed: int | None, value: int | None) -> str:
+    """Timings exist only for calls from 2026-11-16 on, so each cell says how many."""
+    if documents == 0:
+        return "—"
+    if not timed:
+        return "not recorded"
+    return f"{_ms(value)} (n={timed})"
+
+
+def _timed_cell(sliced: SliceReport, value: int | None) -> str:
+    ops = sliced.operations
+    return _timing_cell(ops.documents, ops.timed_documents, value)
+
+
+def _throttle_cell(sliced: SliceReport) -> str:
+    ops = sliced.operations
+    return _timing_cell(ops.documents, ops.throttled_documents, ops.throttle_p95_ms)
 
 
 def _field_table(report: EvalReport) -> list[str]:

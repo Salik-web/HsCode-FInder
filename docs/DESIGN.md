@@ -38,7 +38,7 @@ Nov 7, 2026 · Syed Salik Alvi
 | HS code top-3 accuracy (6-digit) | ≥ 80% |
 | Injected-error catch rate (guardrails) | ≥ 95% |
 | Cost per document | < $0.01 |
-| p95 latency per document | < 30 s |
+| p95 model call time per document (excludes throttle and retry backoff waits) | < 30 s |
 
 ## 2. Tech stack
 

@@ -5,6 +5,8 @@ from typing import Any, Protocol
 
 from pydantic import BaseModel, ConfigDict
 
+MS_PER_SECOND = 1000
+
 
 class LLMError(RuntimeError):
     """An LLM call failed after the provider's own retries."""
@@ -33,10 +35,20 @@ class SchemaViolationError(LLMError):
     with the error, exactly as when our own validation rejects an answer.
     """
 
-    def __init__(self, message: str, model: str, latency_ms: int, cached: bool = False) -> None:
+    def __init__(
+        self,
+        message: str,
+        model: str,
+        latency_ms: int,
+        call_ms: int | None = None,
+        cached: bool = False,
+    ) -> None:
         super().__init__(message)
         self.model = model
         self.latency_ms = latency_ms
+        self.call_ms = call_ms
+        # Set by the throttle on the way out, like LLMResponse.throttle_ms.
+        self.throttle_ms: int | None = None
         self.cached = cached
 
 
@@ -69,7 +81,13 @@ class LLMResponse(BaseModel):
     content: str
     model: str
     usage: Usage | None  # None when the provider didn't report it
+    # From sending the request to the answer, including the SDK's retries and backoff.
     latency_ms: int
+    # Model call time: the final HTTP attempt only, request sent to response read. The rest
+    # of latency_ms is backoff. None for answers cached before it was recorded.
+    call_ms: int | None = None
+    # Client-side wait before the call (app/llm/throttle.py); not part of latency_ms.
+    throttle_ms: int | None = None
     cost_usd: Decimal | None
     # True when served from the disk cache; latency and cost are the original call's.
     cached: bool = False

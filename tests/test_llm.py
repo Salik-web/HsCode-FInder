@@ -108,9 +108,16 @@ def provider_with(
         api_key="test-key",
         base_url=BASE_URL,
         max_retries=max_retries,
-        http_client=httpx2.Client(transport=httpx2.MockTransport(handler)),
+        http_client=httpx2.Client(transport=httpx2.MockTransport(lambda r: streamed(handler(r)))),
     )
     return client
+
+
+def streamed(response: httpx2.Response) -> httpx2.Response:
+    """Serve the body as a stream, as the network does: httpx times only streamed bodies."""
+    return httpx2.Response(
+        response.status_code, headers=response.headers, content=iter([response.content])
+    )
 
 
 def test_provider_parses_content_usage_and_cost() -> None:
@@ -179,6 +186,41 @@ def test_reasoning_effort_is_sent_when_configured() -> None:
     client.complete(make_request())
     assert sent[0]["reasoning_effort"] == "none"
     assert client.call_options == {"reasoning_effort": "none"}
+
+
+def test_model_call_time_excludes_retry_backoff() -> None:
+    """Model call time is the final attempt; the failed attempt and backoff are latency."""
+    import time
+
+    def slow(status: int, body: dict, seconds: float) -> httpx2.Response:
+        time.sleep(seconds)
+        return httpx2.Response(status, json=body, headers=NO_WAIT)
+
+    responses = [
+        lambda: slow(429, {"error": {"message": "slow down"}}, 0.2),
+        lambda: slow(200, completion_body("{}"), 0.05),
+    ]
+    client = provider_with(lambda _: responses.pop(0)(), max_retries=1)
+    response = client.complete(make_request())
+    assert response.call_ms is not None
+    assert 50 <= response.call_ms < 200
+    assert response.latency_ms - response.call_ms >= 200
+
+
+def test_untimed_response_records_no_model_call_time() -> None:
+    """A body built in memory is never timed by httpx: "not recorded", never a crash."""
+    from app.llm.openai_compatible import _attempt_ms
+
+    assert _attempt_ms(httpx2.Response(200, json={})) is None
+
+
+def test_schema_rejection_records_model_call_time() -> None:
+    body = {"error": {"message": "no match", "code": "json_validate_failed"}}
+    client = provider_with(lambda _: httpx2.Response(400, json=body))
+    with pytest.raises(SchemaViolationError) as caught:
+        client.complete(make_request())
+    assert caught.value.call_ms is not None
+    assert 0 <= caught.value.call_ms <= caught.value.latency_ms
 
 
 def test_missing_usage_is_unknown_not_zero() -> None:
@@ -389,7 +431,9 @@ def test_failures_are_not_cached(tmp_path: Path) -> None:
 
 
 def test_schema_rejection_is_cached_and_replayed(tmp_path: Path) -> None:
-    inner = FakeClient("model-a", [SchemaViolationError("missing 'currency'", "model-a", 900)])
+    rejected = SchemaViolationError("missing 'currency'", "model-a", 900, call_ms=700)
+    rejected.throttle_ms = 5000
+    inner = FakeClient("model-a", [rejected])
     client = CachingClient(inner, tmp_path, {})
     with pytest.raises(SchemaViolationError) as live:
         client.complete(make_request())
@@ -400,6 +444,7 @@ def test_schema_rejection_is_cached_and_replayed(tmp_path: Path) -> None:
     assert replayed.value.cached is True
     assert str(replayed.value) == str(live.value)
     assert (replayed.value.model, replayed.value.latency_ms) == ("model-a", 900)
+    assert (replayed.value.call_ms, replayed.value.throttle_ms) == (700, 5000)
 
 
 def test_offline_replays_a_schema_rejection(tmp_path: Path) -> None:

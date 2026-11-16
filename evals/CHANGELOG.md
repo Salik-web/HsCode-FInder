@@ -2,6 +2,13 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-16: model call time reported apart from waits (harness only, no score change)
+
+- Reports now split each document's time into **model call time** (the final HTTP attempt, request to response), **retry backoff wait** (the SDK's failed attempts and their backoff) and **throttle wait** (client-side, under per-minute limits). The p95 target (< 30 s, DESIGN.md §1) applies to model call time only (Salik, 2026-11-16).
+- Not re-derivable from the cache: calls before this change recorded only `latency_ms`, which is model call time plus backoff (throttle wait wasn't recorded at all). Those calls show "not recorded"; model call figures count only documents whose every call has the split and show their n. The old figure stays as "Call + backoff (all documents)".
+- Why: dev clean's p95 of 32.6 s came from 2026-11-12 calls that waited on Groq 429 backoff (up to 30 s per retry), not from the model.
+- Scores are unchanged: an offline re-score of the 27 cached dev clean documents gives the same numbers.
+
 ## 2026-11-16: v3 on test_unseen_layout (reporting only)
 
 - Model `qwen/qwen3.8-27b` on Groq, thinking off, JSON object mode, prompt `v3` with the deterministic fixes, schema `1.0`, git `0412371`. Reporting split: no prompt or code was tuned on it, and the report holds no per-document details.

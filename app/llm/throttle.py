@@ -11,7 +11,13 @@ from collections import deque
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from app.llm.client import LLMClient, LLMRequest, LLMResponse
+from app.llm.client import (
+    MS_PER_SECOND,
+    LLMClient,
+    LLMRequest,
+    LLMResponse,
+    SchemaViolationError,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -63,9 +69,16 @@ class ThrottledClient:
         return self._inner.model
 
     def complete(self, request: LLMRequest) -> LLMResponse:
+        asked = self._clock()
         spend = self._reserve()
+        waited_ms = round((spend.started - asked) * MS_PER_SECOND)
         # On failure the estimate stays booked: the provider may have counted the call.
-        response = self._inner.complete(request)
+        try:
+            response = self._inner.complete(request)
+        except SchemaViolationError as error:
+            error.throttle_ms = waited_ms
+            raise
+        response = response.model_copy(update={"throttle_ms": waited_ms})
         if response.usage is not None:
             output = response.usage.output_tokens
             total = response.usage.input_tokens + output
