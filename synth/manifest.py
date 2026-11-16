@@ -9,12 +9,17 @@ from synth.augment import Transform
 from synth.generator import derive_rng
 from synth.layouts import UNSEEN_TEMPLATES
 
-Split = Literal["dev", "test", "test_unseen_layout"]
+Split = Literal["dev", "test", "test_unseen_layout", "diagnostic"]
 LayoutGroup = Literal["seen", "unseen"]
 Dataset = Literal["synthetic_clean", "synthetic_messy"]
 
 UNSEEN_SPLIT: Split = "test_unseen_layout"
+# A batch made to study one failure, in its own folder with its own seed
+# (synth.generate --diagnostic). It is never part of dev, test or test_unseen_layout.
+DIAGNOSTIC_SPLIT: Split = "diagnostic"
 DEV_PERCENT = 70
+MANIFEST_NAME = "manifest.json"
+SYNTHETIC_DIR = "synthetic"  # the main dataset's folder under DATA_DIR
 
 
 class NotEnoughSourcesError(ValueError):
@@ -42,8 +47,9 @@ class Manifest(BaseModel):
     documents: list[ManifestEntry]
 
 
-def layout_group_for(split: Split) -> LayoutGroup:
-    return "unseen" if split == UNSEEN_SPLIT else "seen"
+def layout_group_for(template: str) -> LayoutGroup:
+    """Unseen means a held-out layout, in test_unseen_layout or in a diagnostic batch."""
+    return "unseen" if template in UNSEEN_TEMPLATES else "seen"
 
 
 def _dev_count(total: int) -> int:

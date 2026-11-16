@@ -3,7 +3,8 @@
 Rules the code enforces, not just documents:
 - Seen and unseen layouts are always reported separately, never blended.
 - Every number carries its document count.
-- Per-document details exist for the dev split only, so test splits can't be tuned on.
+- Per-document details exist for dev and diagnostic batches only, so test splits can't be
+  tuned on.
 """
 
 import math
@@ -26,9 +27,9 @@ from evals.metrics import (
     ratio,
     summarise,
 )
-from synth.manifest import LayoutGroup, Split
+from synth.manifest import DIAGNOSTIC_SPLIT, LayoutGroup, Split
 
-DETAIL_SPLITS: tuple[Split, ...] = ("dev",)
+DETAIL_SPLITS: tuple[Split, ...] = ("dev", DIAGNOSTIC_SPLIT)
 LAYOUT_GROUPS: tuple[LayoutGroup, ...] = ("seen", "unseen")
 BUYER_FORMS: tuple[BuyerForm, ...] = ("reference", "repeated", "distinct")
 BUYER_FIELD_PREFIX = "buyer."
@@ -124,7 +125,7 @@ class EvalReport(BaseModel):
     templates: dict[str, SliceReport]
     # Buyer fields only, per buyer form and layout group.
     buyer_forms: dict[BuyerForm, dict[LayoutGroup, list[FieldAccuracy]]]
-    documents: list[DocumentRecord] | None  # dev only
+    documents: list[DocumentRecord] | None  # DETAIL_SPLITS only
 
 
 def percentile(values: list[int], percent: int) -> int | None:

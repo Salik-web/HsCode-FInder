@@ -1,6 +1,7 @@
-"""CLI: generate the synthetic dataset.
+"""CLI: generate the synthetic dataset, or a diagnostic batch in one layout.
 
 uv run python -m synth.generate --n 100 --messy 30 --seed 42
+uv run python -m synth.generate --diagnostic ledger --n 10 --seed 4207
 """
 
 import argparse
@@ -19,8 +20,11 @@ from synth.generator import (
     generate_ground_truth,
     load_catalogue,
 )
-from synth.layouts import pick_labels, template_for
+from synth.layouts import TEMPLATES, pick_labels, template_for
 from synth.manifest import (
+    DIAGNOSTIC_SPLIT,
+    MANIFEST_NAME,
+    SYNTHETIC_DIR,
     Manifest,
     ManifestEntry,
     Split,
@@ -37,24 +41,43 @@ from synth.render import (
     render_pdf,
 )
 
-SYNTHETIC_DIR = "synthetic"
 CLEAN_DIR = "clean"
 MESSY_DIR = "messy"
-MANIFEST_NAME = "manifest.json"
+DATASET_PREFIX = "inv"
+# Distinct ids, so a diagnostic document is never mistaken for a dev or test one.
+DIAGNOSTIC_PREFIX = "diag"
+DIAGNOSTIC_DIR_PREFIX = "diagnostic_"
 
 
-def document_id(index: int) -> str:
-    return f"inv_{index:05d}"
+class SharedSeedError(ValueError):
+    """A diagnostic batch would repeat the main dataset's documents."""
+
+
+def document_id(index: int, prefix: str = DATASET_PREFIX) -> str:
+    return f"{prefix}_{index:05d}"
+
+
+def diagnostic_dir(data_dir: Path, template: str) -> Path:
+    return data_dir / f"{DIAGNOSTIC_DIR_PREFIX}{template}"
 
 
 def build_dataset(n: int, messy: int, seed: int, out_dir: Path) -> Manifest:
     """Write `n` clean and `messy` degraded documents plus the manifest to `out_dir`."""
-    _prepare_folders(out_dir)
+    _prepare_folders(out_dir, DATASET_PREFIX)
     catalogue = load_catalogue()
     splits = assign_splits({document_id(index): template_for(index) for index in range(n)}, seed)
     with open_browser_page() as page:
         clean = [
-            _write_clean_document(page, index, seed, catalogue, splits, out_dir)
+            _write_clean_document(
+                page,
+                document_id(index),
+                index,
+                template_for(index),
+                splits[document_id(index)],
+                seed,
+                catalogue,
+                out_dir,
+            )
             for index in range(n)
         ]
     # Page one of a longer invoice would be missing lines that its ground truth still lists.
@@ -63,29 +86,57 @@ def build_dataset(n: int, messy: int, seed: int, out_dir: Path) -> Manifest:
     degraded = [
         _write_messy_document(entry, seed, out_dir) for entry in clean if entry.id in sources
     ]
-    manifest = Manifest(seed=seed, documents=[*clean, *degraded])
+    return _write_manifest(Manifest(seed=seed, documents=[*clean, *degraded]), out_dir)
+
+
+def build_diagnostic(template: str, n: int, seed: int, out_dir: Path) -> Manifest:
+    """Write `n` clean documents in one layout, outside every split, to study a failure.
+
+    Content depends only on (seed, index), so with a seed other than the main dataset's
+    no document repeats one in dev or test; the layout is forced, not rotated.
+    """
+    _prepare_folders(out_dir, DIAGNOSTIC_PREFIX)
+    catalogue = load_catalogue()
+    with open_browser_page() as page:
+        documents = [
+            _write_clean_document(
+                page,
+                document_id(index, DIAGNOSTIC_PREFIX),
+                index,
+                template,
+                DIAGNOSTIC_SPLIT,
+                seed,
+                catalogue,
+                out_dir,
+            )
+            for index in range(n)
+        ]
+    return _write_manifest(Manifest(seed=seed, documents=documents), out_dir)
+
+
+def _write_manifest(manifest: Manifest, out_dir: Path) -> Manifest:
     (out_dir / MANIFEST_NAME).write_bytes(manifest.model_dump_json(indent=2).encode())
     return manifest
 
 
-def _prepare_folders(out_dir: Path) -> None:
+def _prepare_folders(out_dir: Path, prefix: str) -> None:
     """Remove documents from earlier runs, so a smaller run leaves no stale files behind."""
     for folder in (out_dir / CLEAN_DIR, out_dir / MESSY_DIR):
         folder.mkdir(parents=True, exist_ok=True)
-        for stale_file in folder.glob("inv_*"):
+        for stale_file in folder.glob(f"{prefix}_*"):
             stale_file.unlink()
 
 
 def _write_clean_document(
     page: Page,
+    doc_id: str,
     index: int,
+    template: str,
+    split: Split,
     seed: int,
     catalogue: list[CatalogueItem],
-    splits: dict[str, Split],
     out_dir: Path,
 ) -> ManifestEntry:
-    doc_id = document_id(index)
-    template = template_for(index)
     truth = generate_ground_truth(seed, index, catalogue)
     labels = pick_labels(derive_rng(seed, "labels", index))
     html = render_html(truth.invoice, template, labels, truth.buyer_reference)
@@ -100,8 +151,8 @@ def _write_clean_document(
     return ManifestEntry(
         id=doc_id,
         dataset="synthetic_clean",
-        split=splits[doc_id],
-        layout_group=layout_group_for(splits[doc_id]),
+        split=split,
+        layout_group=layout_group_for(template),
         path=pdf_path,
         ground_truth=truth_path,
         sha256=hashlib.sha256(pdf).hexdigest(),
@@ -131,29 +182,56 @@ def _write_messy_document(source: ManifestEntry, seed: int, out_dir: Path) -> Ma
     )
 
 
+def refuse_main_dataset_seed(seed: int, data_dir: Path) -> None:
+    """Same seed, same index -> the same invoice as a dev or test document."""
+    manifest_path = data_dir / SYNTHETIC_DIR / MANIFEST_NAME
+    if not manifest_path.exists():
+        return
+    main_seed = Manifest.model_validate_json(manifest_path.read_bytes()).seed
+    if seed == main_seed:
+        raise SharedSeedError(
+            f"seed {seed} is the main dataset's: diagnostic documents would repeat its content"
+        )
+
+
 def _parse_args(argv: list[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate the synthetic invoice dataset.")
     parser.add_argument("--n", type=int, required=True, help="number of clean documents")
-    parser.add_argument("--messy", type=int, required=True, help="number of messy documents")
+    parser.add_argument("--messy", type=int, help="number of messy documents (dataset only)")
     parser.add_argument("--seed", type=int, required=True, help="random seed")
+    parser.add_argument(
+        "--diagnostic",
+        choices=TEMPLATES,
+        help="write a clean batch in this layout to its own folder, outside every split",
+    )
     args = parser.parse_args(argv)
     if args.n < 1:
         parser.error("--n must be at least 1")
-    if not 0 <= args.messy <= args.n:
+    if args.diagnostic and args.messy is not None:
+        parser.error("--messy doesn't apply to a diagnostic batch")
+    if not args.diagnostic and args.messy is None:
+        parser.error("--messy is required")
+    if args.messy is not None and not 0 <= args.messy <= args.n:
         parser.error("--messy must be between 0 and --n")
     return args
 
 
 def main(argv: list[str] | None = None) -> None:
     args = _parse_args(argv)
-    out_dir = Settings().data_dir / SYNTHETIC_DIR
+    data_dir = Settings().data_dir
     started = time.perf_counter()
-    manifest = build_dataset(args.n, args.messy, args.seed, out_dir)
+    if args.diagnostic:
+        refuse_main_dataset_seed(args.seed, data_dir)
+        out_dir = diagnostic_dir(data_dir, args.diagnostic)
+        manifest = build_diagnostic(args.diagnostic, args.n, args.seed, out_dir)
+    else:
+        out_dir = data_dir / SYNTHETIC_DIR
+        manifest = build_dataset(args.n, args.messy, args.seed, out_dir)
     elapsed = time.perf_counter() - started
     counts = Counter((entry.dataset, entry.split) for entry in manifest.documents)
     print(f"Generated {len(manifest.documents)} documents in {elapsed:.1f}s -> {out_dir}")
     for (dataset, split), count in sorted(counts.items()):
-        print(f"  {dataset:16} {split:5} {count}")
+        print(f"  {dataset:16} {split:10} {count}")
 
 
 if __name__ == "__main__":

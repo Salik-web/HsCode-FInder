@@ -78,10 +78,19 @@ def test_every_seen_layout_reaches_test() -> None:
     assert in_test == set(TEMPLATES) - set(UNSEEN_TEMPLATES)
 
 
-def test_layout_group_follows_the_split() -> None:
-    assert layout_group_for("dev") == "seen"
-    assert layout_group_for("test") == "seen"
-    assert layout_group_for(UNSEEN_SPLIT) == "unseen"
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_layout_group_follows_the_template(template: str) -> None:
+    expected = "unseen" if template in UNSEEN_TEMPLATES else "seen"
+    assert layout_group_for(template) == expected
+
+
+@pytest.mark.parametrize("seed", range(5))
+def test_layout_group_matches_the_split_in_the_main_dataset(seed: int) -> None:
+    """Regression: the group used to come from the split; the two must still agree."""
+    templates = make_templates(100)
+    for doc_id, split in assign_splits(templates, seed).items():
+        unseen = layout_group_for(templates[doc_id]) == "unseen"
+        assert unseen == (split == UNSEEN_SPLIT)
 
 
 def test_split_is_deterministic() -> None:
