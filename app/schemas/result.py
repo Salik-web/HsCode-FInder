@@ -6,6 +6,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 from app.schemas.constants import SCHEMA_VERSION, SchemaVersion
+from app.schemas.invoice import FieldStatus
 from app.schemas.raw import RawInvoice
 
 # ok: done. needs_review: ran, but output can't be trusted without a person.
@@ -27,6 +28,15 @@ class FieldCheck(BaseModel):
     status: Literal["failed_check"]
     rule: str  # e.g. "unit_list"
     detail: str
+
+
+class FieldAssessment(BaseModel):
+    """How far one extracted value can be trusted, and why (app/pipeline/confidence.py)."""
+
+    path: str  # e.g. "total_amount", "buyer.name", "line_items[2].amount"
+    confidence: float  # 0-1, from documented deterministic signals, never the model's own
+    status: FieldStatus
+    reasons: list[str]  # every adjustment, in order, so the score can be explained
 
 
 class LLMCall(BaseModel):
@@ -68,3 +78,6 @@ class PipelineResult(BaseModel):
     # guardrails rejected (app/pipeline/rules.py, app/pipeline/validate.py).
     rules_applied: list[str]
     field_checks: list[FieldCheck]
+    # Confidence and review status of every field (app/pipeline/confidence.py); empty when
+    # there is no validated invoice.
+    assessments: list[FieldAssessment] = []

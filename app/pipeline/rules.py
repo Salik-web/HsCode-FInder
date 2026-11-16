@@ -10,6 +10,7 @@
   near-miss like "MET" could be MT or MTR, and guessing would hide the error.
 """
 
+import ast
 import re
 import unicodedata
 
@@ -27,6 +28,7 @@ REFERENCE_PHRASE = re.compile(
     r"(?:\s+(?:details|address|party))?$"
 )
 NON_WORD = re.compile(r"[^\w\s]+")
+CHANGE_PATTERN = re.compile(r"^(?P<path>[\w.\[\]]+): (?P<printed>'.*'|\".*\") -> ")
 
 # Spellings with one accepted meaning in trade documents. Each must map to exactly one
 # unit; anything not listed is a failed check, never a guess.
@@ -72,6 +74,25 @@ CODE_SYNONYMS: dict[str, dict[str, str]] = {
 }
 
 
+class RuleChange(BaseModel):
+    path: str
+    printed: str  # the value as the document (or the model) gave it, before the rule
+
+
+def describe_change(path: str, printed: str, value: str) -> str:
+    """The one format for a value a rule changed; parse_change reads it back."""
+    return f"{path}: {printed!r} -> {value!r}"
+
+
+def parse_change(change: str) -> RuleChange | None:
+    """The path and printed value of a describe_change string; None for any other rule."""
+    match = CHANGE_PATTERN.match(change)
+    if match is None:
+        return None
+    printed = ast.literal_eval(match.group("printed"))
+    return RuleChange(path=match.group("path"), printed=printed)
+
+
 class RuleOutcome(BaseModel):
     invoice: RawInvoice
     applied: list[str]  # changes rules made, e.g. REFERENCE_RULE, "line_items[0].unit -> PCS"
@@ -110,7 +131,7 @@ def map_code_synonyms(data: object) -> tuple[object, list[str]]:
         code = synonyms.get(printed.strip().upper())
         if code is not None:
             mapped[field] = code
-            changes.append(f"{field}: {printed!r} -> {code!r}")
+            changes.append(describe_change(field, printed, code))
     return mapped, changes
 
 
@@ -134,11 +155,11 @@ def check_unit(unit: str | None, path: str) -> tuple[str | None, str | None, Fie
         return None, None, None
     key = " ".join(unit.strip().upper().rstrip(".").split())
     if key in UNITS:
-        change = None if key == unit else f"{path}: {unit!r} -> {key!r}"
+        change = None if key == unit else describe_change(path, unit, key)
         return key, change, None
     if key in UNIT_SYNONYMS:
         canonical = UNIT_SYNONYMS[key]
-        return canonical, f"{path}: {unit!r} -> {canonical!r}", None
+        return canonical, describe_change(path, unit, canonical), None
     check = FieldCheck(
         path=path,
         status="failed_check",

@@ -11,6 +11,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 from app.llm.client import LLMClient
+from app.pipeline.confidence import assess_fields
 from app.pipeline.extract import extract_invoice
 from app.pipeline.preprocess import InvalidDocumentError, PreparedDocument, prepare_document
 from app.pipeline.prompts import load_prompt
@@ -76,11 +77,16 @@ def complete_pipeline(
     if outcome.invoice is None:
         return result
     rules = verify_invoice(outcome.invoice, config.as_of)
+    applied = [*outcome.changes, *rules.applied]
+    assessments = assess_fields(
+        rules.invoice, preprocessed.document.text_layer, outcome.calls, applied, rules.checks
+    )
     return result.model_copy(
         update={
             "invoice": rules.invoice,
-            "rules_applied": [*outcome.changes, *rules.applied],
+            "rules_applied": applied,
             "field_checks": rules.checks,
+            "assessments": assessments,
         }
     )
 
