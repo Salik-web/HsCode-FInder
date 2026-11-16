@@ -36,7 +36,11 @@ class LLMCall(BaseModel):
     model: str
     input_tokens: int | None
     output_tokens: int | None
-    latency_ms: int
+    latency_ms: int  # model call time plus SDK retry backoff
+    # Model call time (final HTTP attempt) and client-side throttle wait. None for calls
+    # recorded before 2026-11-16, when only latency_ms existed.
+    call_ms: int | None = None
+    throttle_ms: int | None = None
     cost_usd: Decimal | None
     cached: bool
     validation_errors: list[str]

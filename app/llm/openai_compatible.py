@@ -2,13 +2,15 @@
 
 import base64
 import time
+from datetime import timedelta
 from decimal import Decimal
-from typing import Any
+from typing import Any, Protocol
 
 import openai
 
 from app.config import ProviderConfig
 from app.llm.client import (
+    MS_PER_SECOND,
     LLMError,
     LLMRequest,
     LLMResponse,
@@ -20,7 +22,6 @@ from app.llm.client import (
 )
 
 TOKENS_PER_MILLION = Decimal(1_000_000)
-MS_PER_SECOND = 1000
 # Groq's 429 for a request that exceeds a per-minute limit on its own: no wait fixes it.
 TOO_LARGE_MARKER = "request too large"
 # Groq's 400 when strict mode rejects the generated JSON.
@@ -77,7 +78,8 @@ class OpenAICompatibleClient:
     def complete(self, request: LLMRequest) -> LLMResponse:
         started = time.perf_counter()
         try:
-            completion = self._client.chat.completions.create(
+            # The raw response times the final HTTP attempt alone, apart from SDK retries.
+            raw = self._client.chat.completions.with_raw_response.create(
                 model=self.model,
                 messages=_messages(request),
                 response_format=self._response_format(request),
@@ -85,6 +87,7 @@ class OpenAICompatibleClient:
                 max_tokens=self._max_tokens,
                 **self._reasoning_option(),
             )
+            completion = raw.parse()
         except openai.RateLimitError as error:
             if TOO_LARGE_MARKER in error.message.lower():
                 raise RequestTooLargeError(f"{self._name}: {error.message}") from error
@@ -97,13 +100,14 @@ class OpenAICompatibleClient:
                     f"{self._name} rejected the output: {error.message}",
                     model=self.model,
                     latency_ms=_elapsed_ms(started),
+                    call_ms=_attempt_ms(error.response),
                 ) from error
             raise LLMError(f"{self._name} HTTP 400: {error.message}") from error
         except openai.APIStatusError as error:
             raise LLMError(f"{self._name} HTTP {error.status_code}: {error.message}") from error
-        return self._to_response(completion, _elapsed_ms(started))
+        return self._to_response(completion, _elapsed_ms(started), _attempt_ms(raw.http_response))
 
-    def _to_response(self, completion: Any, latency_ms: int) -> LLMResponse:
+    def _to_response(self, completion: Any, latency_ms: int, call_ms: int | None) -> LLMResponse:
         if not completion.choices or completion.choices[0].message.content is None:
             raise LLMError(f"{self._name} returned no content")
         choice = completion.choices[0]
@@ -121,6 +125,7 @@ class OpenAICompatibleClient:
             model=completion.model or self.model,
             usage=usage,
             latency_ms=latency_ms,
+            call_ms=call_ms,
             cost_usd=None if usage is None else self._cost(usage),
         )
 
@@ -133,6 +138,24 @@ class OpenAICompatibleClient:
 
 def _elapsed_ms(started: float) -> int:
     return round((time.perf_counter() - started) * MS_PER_SECOND)
+
+
+class _HTTPResponse(Protocol):
+    @property
+    def elapsed(self) -> timedelta: ...
+
+
+def _attempt_ms(response: _HTTPResponse) -> int | None:
+    """One HTTP attempt, request sent to body read; None when the client didn't time it.
+
+    httpx stops the timer when a streamed body has been read to the end. A body built
+    in memory (mock transports) never runs the timer, and asking for it raises.
+    """
+    try:
+        elapsed = response.elapsed
+    except RuntimeError:
+        return None
+    return round(elapsed.total_seconds() * MS_PER_SECOND)
 
 
 def _messages(request: LLMRequest) -> list[dict[str, Any]]:

@@ -17,6 +17,9 @@ class CachedRejection(BaseModel):
     message: str
     model: str
     latency_ms: int
+    # Recorded from 2026-11-16 on, like the same fields on LLMResponse.
+    call_ms: int | None = None
+    throttle_ms: int | None = None
 
 
 class CacheEntry(BaseModel):
@@ -76,7 +79,11 @@ class CachingClient:
             response = self._inner.complete(request)
         except SchemaViolationError as error:
             rejection = CachedRejection(
-                message=str(error), model=error.model, latency_ms=error.latency_ms
+                message=str(error),
+                model=error.model,
+                latency_ms=error.latency_ms,
+                call_ms=error.call_ms,
+                throttle_ms=error.throttle_ms,
             )
             self._store(path, request, rejection=rejection)
             raise
@@ -108,9 +115,15 @@ class CachingClient:
 def _replay(entry: CacheEntry) -> LLMResponse:
     if entry.rejection is not None:
         rejection = entry.rejection
-        raise SchemaViolationError(
-            rejection.message, rejection.model, rejection.latency_ms, cached=True
+        error = SchemaViolationError(
+            rejection.message,
+            rejection.model,
+            rejection.latency_ms,
+            call_ms=rejection.call_ms,
+            cached=True,
         )
+        error.throttle_ms = rejection.throttle_ms
+        raise error
     # The validator guarantees a response when there is no rejection.
     assert entry.response is not None
     return entry.response.model_copy(update={"cached": True})
