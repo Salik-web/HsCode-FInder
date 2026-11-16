@@ -530,10 +530,21 @@ def test_a_check_on_a_wrong_value_is_a_true_alarm(data_dir: Path, tmp_path: Path
     assert table and all(row.startswith("| ") for row in table)
 
 
-def test_reports_from_before_the_guardrails_still_load() -> None:
-    for path in sorted(Path("evals/reports").glob("*.json")):
-        report = EvalReport.model_validate_json(path.read_bytes())
-        assert report.layout_groups["seen"].operations.alarms_on_wrong_values is None
+def test_every_committed_report_loads_and_older_ones_say_not_recorded() -> None:
+    """Regression: this once assumed every committed report predated the guardrails."""
+    reports = [
+        EvalReport.model_validate_json(path.read_bytes())
+        for path in sorted(Path("evals/reports").glob("*_synthetic_*.json"))
+    ]
+    older = [report for report in reports if report.meta.as_of is None]
+    newer = [report for report in reports if report.meta.as_of is not None]
+    assert older and newer
+    for report in older:
+        for group in report.layout_groups.values():
+            assert group.operations.alarms_on_wrong_values is None
+            assert group.calibration is None
+    for report in newer:
+        assert any(group.calibration is not None for group in report.layout_groups.values())
 
 
 def review(confidence: float, status: str, correct: bool) -> FieldReview:
