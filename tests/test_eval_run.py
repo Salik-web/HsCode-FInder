@@ -24,7 +24,14 @@ from app.schemas.result import LLMCall
 from evals.dataset import DatasetFileMismatchError, EvalDocument, load_documents
 from evals.report import DocumentRecord, EvalReport, FieldReview, calibration, operational_stats
 from evals.run import RunConfig, run_eval
-from synth.generate import SYNTHETIC_DIR, build_dataset, build_diagnostic, diagnostic_dir
+from synth.generate import (
+    SYNTHETIC_DIR,
+    build_dataset,
+    build_diagnostic,
+    build_held_out,
+    diagnostic_dir,
+    held_out_dir,
+)
 from synth.generator import ANCHOR_DATE
 from synth.manifest import Dataset, Split
 
@@ -259,13 +266,23 @@ def test_test_split_reports_totals_only(data_dir: Path, tmp_path: Path) -> None:
     assert "can't be used for tuning" in markdown
 
 
-def test_unseen_split_reports_the_unseen_group_only(data_dir: Path, tmp_path: Path) -> None:
+def test_unseen_split_scores_each_layout_in_its_current_group(
+    data_dir: Path, tmp_path: Path
+) -> None:
+    """The main dataset keeps ledger in test_unseen_layout, but ledger is seen since 2026-11-17."""
     docs = documents(data_dir, split="test_unseen_layout")
     report, _ = evaluate(docs, OracleClient(truths(docs)), tmp_path, split="test_unseen_layout")
-    assert report.layout_groups["seen"].summary.documents == 0
-    assert report.layout_groups["unseen"].summary.documents == len(docs)
+    ledger = sum(doc.entry.template == "ledger" for doc in docs)
+    assert ledger > 0
+    assert report.layout_groups["seen"].summary.documents == ledger
+    assert report.layout_groups["unseen"].summary.documents == len(docs) - ledger
     assert report.documents is None
     assert set(report.templates) <= {"sidebar", "ledger"}
+
+
+def test_the_layout_group_comes_from_today_not_the_manifest(data_dir: Path) -> None:
+    for doc in documents(data_dir, split="test_unseen_layout"):
+        assert doc.entry.layout_group == ("seen" if doc.entry.template == "ledger" else "unseen")
 
 
 def test_report_never_blends_seen_and_unseen(data_dir: Path, tmp_path: Path) -> None:
@@ -422,9 +439,23 @@ def test_diagnostic_batch_loads_from_its_folder_with_details(
     report, _ = evaluate(docs, OracleClient(truths(docs)), tmp_path / "reports", "diagnostic")
     assert report.documents is not None
     assert len(report.documents) == 2
-    assert report.layout_groups["unseen"].summary.documents == 2
+    assert report.layout_groups["seen"].summary.documents == 2  # ledger is seen now
     # The main dataset never holds a diagnostic document.
     assert load_documents(data_dir, "synthetic_clean", "diagnostic") == []
+
+
+def test_held_out_batch_scores_as_unseen_test_documents(tmp_path: Path) -> None:
+    root = tmp_path / "data"
+    folder = held_out_dir(root, "manifest")
+    build_held_out("manifest", 2, 1, SEED + 2, folder)
+    for dataset, count in (("synthetic_clean", 2), ("synthetic_messy", 1)):
+        docs = load_documents(root, dataset, "test_unseen_layout", folder=folder.name)
+        assert len(docs) == count
+        report, _ = evaluate(
+            docs, OracleClient(truths(docs)), tmp_path / dataset, split="test_unseen_layout"
+        )
+        assert report.layout_groups["unseen"].summary.documents == count
+        assert report.documents is None  # a test split: no per-document details
 
 
 def timed_record(*calls: tuple[int, int | None, int | None]) -> DocumentRecord:

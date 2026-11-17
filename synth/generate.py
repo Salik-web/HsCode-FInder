@@ -2,6 +2,7 @@
 
 uv run python -m synth.generate --n 100 --messy 30 --seed 42
 uv run python -m synth.generate --diagnostic ledger --n 10 --seed 4207
+uv run python -m synth.generate --held-out manifest --n 12 --messy 4 --seed 1117
 """
 
 import argparse
@@ -20,13 +21,15 @@ from synth.generator import (
     generate_ground_truth,
     load_catalogue,
 )
-from synth.layouts import TEMPLATES, pick_labels, template_for
+from synth.layouts import TEMPLATES, UNSEEN_TEMPLATES, pick_labels, template_for
 from synth.manifest import (
     DIAGNOSTIC_SPLIT,
     MANIFEST_NAME,
     SYNTHETIC_DIR,
+    UNSEEN_SPLIT,
     Manifest,
     ManifestEntry,
+    NotEnoughSourcesError,
     Split,
     assign_splits,
     layout_group_for,
@@ -47,10 +50,17 @@ DATASET_PREFIX = "inv"
 # Distinct ids, so a diagnostic document is never mistaken for a dev or test one.
 DIAGNOSTIC_PREFIX = "diag"
 DIAGNOSTIC_DIR_PREFIX = "diagnostic_"
+# A held-out layout's own test documents, outside the main dataset (synth.layouts).
+HELD_OUT_PREFIX = "held"
+HELD_OUT_DIR_PREFIX = "heldout_"
 
 
 class SharedSeedError(ValueError):
-    """A diagnostic batch would repeat the main dataset's documents."""
+    """A diagnostic or held-out batch would repeat the main dataset's documents."""
+
+
+class NotHeldOutError(ValueError):
+    """A held-out batch in a seen layout would score as seen, so it would test nothing new."""
 
 
 def document_id(index: int, prefix: str = DATASET_PREFIX) -> str:
@@ -59,6 +69,10 @@ def document_id(index: int, prefix: str = DATASET_PREFIX) -> str:
 
 def diagnostic_dir(data_dir: Path, template: str) -> Path:
     return data_dir / f"{DIAGNOSTIC_DIR_PREFIX}{template}"
+
+
+def held_out_dir(data_dir: Path, template: str) -> Path:
+    return data_dir / f"{HELD_OUT_DIR_PREFIX}{template}"
 
 
 def build_dataset(n: int, messy: int, seed: int, out_dir: Path) -> Manifest:
@@ -95,23 +109,43 @@ def build_diagnostic(template: str, n: int, seed: int, out_dir: Path) -> Manifes
     Content depends only on (seed, index), so with a seed other than the main dataset's
     no document repeats one in dev or test; the layout is forced, not rotated.
     """
-    _prepare_folders(out_dir, DIAGNOSTIC_PREFIX)
+    clean = _write_clean_batch(template, n, seed, out_dir, DIAGNOSTIC_PREFIX, DIAGNOSTIC_SPLIT)
+    return _write_manifest(Manifest(seed=seed, documents=clean), out_dir)
+
+
+def build_held_out(template: str, n: int, messy: int, seed: int, out_dir: Path) -> Manifest:
+    """Write `n` clean and `messy` degraded test_unseen_layout documents in one held-out layout.
+
+    For a layout added after the main dataset: its documents can't join that dataset
+    without reshuffling it, so they get their own folder, ids and seed.
+    """
+    if template not in UNSEEN_TEMPLATES:
+        raise NotHeldOutError(f"{template} isn't a held-out layout: {UNSEEN_TEMPLATES}")
+    clean = _write_clean_batch(template, n, seed, out_dir, HELD_OUT_PREFIX, UNSEEN_SPLIT)
+    # Page one of a longer invoice would be missing lines that its ground truth still lists.
+    single_page = sorted(entry.id for entry in clean if entry.pages == 1)
+    if len(single_page) < messy:
+        raise NotEnoughSourcesError(f"need {messy} single-page sources, have {len(single_page)}")
+    sources = set(derive_rng(seed, "messy_sources").sample(single_page, messy))
+    degraded = [
+        _write_messy_document(entry, seed, out_dir) for entry in clean if entry.id in sources
+    ]
+    return _write_manifest(Manifest(seed=seed, documents=[*clean, *degraded]), out_dir)
+
+
+def _write_clean_batch(
+    template: str, n: int, seed: int, out_dir: Path, prefix: str, split: Split
+) -> list[ManifestEntry]:
+    """`n` clean documents in one forced layout, written to `out_dir` with `prefix` ids."""
+    _prepare_folders(out_dir, prefix)
     catalogue = load_catalogue()
     with open_browser_page() as page:
-        documents = [
+        return [
             _write_clean_document(
-                page,
-                document_id(index, DIAGNOSTIC_PREFIX),
-                index,
-                template,
-                DIAGNOSTIC_SPLIT,
-                seed,
-                catalogue,
-                out_dir,
+                page, document_id(index, prefix), index, template, split, seed, catalogue, out_dir
             )
             for index in range(n)
         ]
-    return _write_manifest(Manifest(seed=seed, documents=documents), out_dir)
 
 
 def _write_manifest(manifest: Manifest, out_dir: Path) -> Manifest:
@@ -190,7 +224,7 @@ def refuse_main_dataset_seed(seed: int, data_dir: Path) -> None:
     main_seed = Manifest.model_validate_json(manifest_path.read_bytes()).seed
     if seed == main_seed:
         raise SharedSeedError(
-            f"seed {seed} is the main dataset's: diagnostic documents would repeat its content"
+            f"seed {seed} is the main dataset's: the batch would repeat its content"
         )
 
 
@@ -204,9 +238,16 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
         choices=TEMPLATES,
         help="write a clean batch in this layout to its own folder, outside every split",
     )
+    parser.add_argument(
+        "--held-out",
+        choices=UNSEEN_TEMPLATES,
+        help="write clean and messy test_unseen_layout documents in this layout to its own folder",
+    )
     args = parser.parse_args(argv)
     if args.n < 1:
         parser.error("--n must be at least 1")
+    if args.diagnostic and args.held_out:
+        parser.error("choose --diagnostic or --held-out, not both")
     if args.diagnostic and args.messy is not None:
         parser.error("--messy doesn't apply to a diagnostic batch")
     if not args.diagnostic and args.messy is None:
@@ -224,6 +265,10 @@ def main(argv: list[str] | None = None) -> None:
         refuse_main_dataset_seed(args.seed, data_dir)
         out_dir = diagnostic_dir(data_dir, args.diagnostic)
         manifest = build_diagnostic(args.diagnostic, args.n, args.seed, out_dir)
+    elif args.held_out:
+        refuse_main_dataset_seed(args.seed, data_dir)
+        out_dir = held_out_dir(data_dir, args.held_out)
+        manifest = build_held_out(args.held_out, args.n, args.messy, args.seed, out_dir)
     else:
         out_dir = data_dir / SYNTHETIC_DIR
         manifest = build_dataset(args.n, args.messy, args.seed, out_dir)

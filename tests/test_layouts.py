@@ -10,6 +10,8 @@ from synth.layouts import (
     DATE_FORMATS,
     LABEL_SYNONYMS,
     LAYOUTS,
+    MAIN_HELD_OUT_TEMPLATES,
+    MAIN_TEMPLATES,
     MULTI_PAGE_TEMPLATES,
     TEMPLATES,
     UNSEEN_TEMPLATES,
@@ -44,8 +46,9 @@ def column_order(template: str) -> tuple[str, ...]:
     return tuple(sorted(TABLE_COLUMNS, key=lambda field: html.index(f"@{field}@")))
 
 
-def test_there_are_six_to_eight_layouts() -> None:
-    assert 6 <= len(TEMPLATES) <= 8
+def test_the_main_dataset_rotates_eight_layouts_and_manifest_came_later() -> None:
+    assert len(MAIN_TEMPLATES) == 8
+    assert set(TEMPLATES) - set(MAIN_TEMPLATES) == {"manifest"}
     assert len(set(TEMPLATES)) == len(TEMPLATES)
 
 
@@ -58,13 +61,17 @@ def test_every_layout_has_a_template_file_and_no_file_is_orphaned() -> None:
     assert files == set(TEMPLATES)
 
 
-def test_two_page_invoices_exist_in_both_seen_and_unseen_layouts() -> None:
+def test_two_page_invoices_exist_in_seen_layouts_and_the_main_held_out_split() -> None:
+    """Known gap since 2026-11-17: ledger was the only held-out two-page layout and is seen
+    now, so the unseen group has none (manifest always fits one landscape page)."""
     assert set(MULTI_PAGE_TEMPLATES) - set(UNSEEN_TEMPLATES)
-    assert set(MULTI_PAGE_TEMPLATES) & set(UNSEEN_TEMPLATES)
+    assert set(MULTI_PAGE_TEMPLATES) & set(MAIN_HELD_OUT_TEMPLATES)
+    assert not set(MULTI_PAGE_TEMPLATES) & set(UNSEEN_TEMPLATES)
 
 
 def test_layouts_are_balanced_in_rotation() -> None:
-    counts = Counter(template_for(index) for index in range(len(TEMPLATES) * 5))
+    counts = Counter(template_for(index) for index in range(len(MAIN_TEMPLATES) * 5))
+    assert set(counts) == set(MAIN_TEMPLATES)
     assert set(counts.values()) == {5}
 
 

@@ -3,7 +3,13 @@ from collections import Counter
 import pytest
 
 from synth.generate import document_id
-from synth.layouts import TEMPLATES, UNSEEN_TEMPLATES, template_for
+from synth.layouts import (
+    MAIN_HELD_OUT_TEMPLATES,
+    MAIN_TEMPLATES,
+    TEMPLATES,
+    UNSEEN_TEMPLATES,
+    template_for,
+)
 from synth.manifest import (
     UNSEEN_SPLIT,
     NotEnoughSourcesError,
@@ -59,23 +65,24 @@ def test_every_document_gets_exactly_one_split() -> None:
 
 @pytest.mark.parametrize("seed", range(20))
 def test_held_out_layouts_never_reach_dev_or_test(seed: int) -> None:
+    """The main dataset's own held-out list decides its splits (frozen: sidebar, ledger)."""
     templates = make_templates(100)
     for doc_id, split in assign_splits(templates, seed).items():
-        assert (split == UNSEEN_SPLIT) == (templates[doc_id] in UNSEEN_TEMPLATES)
+        assert (split == UNSEEN_SPLIT) == (templates[doc_id] in MAIN_HELD_OUT_TEMPLATES)
 
 
 def test_every_seen_layout_reaches_dev() -> None:
     templates = make_templates(100)
     splits = assign_splits(templates, SEED)
     in_dev = {templates[doc_id] for doc_id, split in splits.items() if split == "dev"}
-    assert in_dev == set(TEMPLATES) - set(UNSEEN_TEMPLATES)
+    assert in_dev == set(MAIN_TEMPLATES) - set(MAIN_HELD_OUT_TEMPLATES)
 
 
 def test_every_seen_layout_reaches_test() -> None:
     templates = make_templates(100)
     splits = assign_splits(templates, SEED)
     in_test = {templates[doc_id] for doc_id, split in splits.items() if split == "test"}
-    assert in_test == set(TEMPLATES) - set(UNSEEN_TEMPLATES)
+    assert in_test == set(MAIN_TEMPLATES) - set(MAIN_HELD_OUT_TEMPLATES)
 
 
 @pytest.mark.parametrize("template", TEMPLATES)
@@ -85,12 +92,18 @@ def test_layout_group_follows_the_template(template: str) -> None:
 
 
 @pytest.mark.parametrize("seed", range(5))
-def test_layout_group_matches_the_split_in_the_main_dataset(seed: int) -> None:
-    """Regression: the group used to come from the split; the two must still agree."""
+def test_an_unseen_document_of_the_main_dataset_is_always_in_test_unseen_layout(
+    seed: int,
+) -> None:
+    """Unseen implies held out of dev and test. Not the reverse since 2026-11-17: ledger
+    documents stay in test_unseen_layout but score as seen."""
     templates = make_templates(100)
     for doc_id, split in assign_splits(templates, seed).items():
-        unseen = layout_group_for(templates[doc_id]) == "unseen"
-        assert unseen == (split == UNSEEN_SPLIT)
+        group = layout_group_for(templates[doc_id])
+        if group == "unseen":
+            assert split == UNSEEN_SPLIT
+        if templates[doc_id] == "ledger":
+            assert (split, group) == (UNSEEN_SPLIT, "seen")
 
 
 def test_split_is_deterministic() -> None:

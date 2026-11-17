@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from app.schemas.constants import SCHEMA_VERSION, SchemaVersion
 from synth.augment import Transform
 from synth.generator import derive_rng
-from synth.layouts import UNSEEN_TEMPLATES
+from synth.layouts import MAIN_HELD_OUT_TEMPLATES, UNSEEN_TEMPLATES
 
 Split = Literal["dev", "test", "test_unseen_layout", "diagnostic"]
 LayoutGroup = Literal["seen", "unseen"]
@@ -48,7 +48,8 @@ class Manifest(BaseModel):
 
 
 def layout_group_for(template: str) -> LayoutGroup:
-    """Unseen means a held-out layout, in test_unseen_layout or in a diagnostic batch."""
+    """Unseen means a layout held out today. A layout leaves the unseen group once its
+    test documents have been read, wherever those documents sit."""
     return "unseen" if template in UNSEEN_TEMPLATES else "seen"
 
 
@@ -57,12 +58,16 @@ def _dev_count(total: int) -> int:
 
 
 def assign_splits(templates: dict[str, str], seed: int) -> dict[str, Split]:
-    """Map document id to split, given each document's template.
+    """Map a main-dataset document id to its split, given each document's template.
 
-    Held-out layouts go straight to test_unseen_layout, so they can never reach dev. The
-    rest split exactly 70/30; sorting first makes that independent of input order.
+    The main dataset's held-out layouts go straight to test_unseen_layout, so they can
+    never reach dev. The rest split exactly 70/30; sorting first makes that independent of
+    input order. The held-out list is the main dataset's own, frozen, so moving a layout
+    between groups later never reshuffles dev and test.
     """
-    held_out = [doc_id for doc_id, template in templates.items() if template in UNSEEN_TEMPLATES]
+    held_out = [
+        doc_id for doc_id, template in templates.items() if template in MAIN_HELD_OUT_TEMPLATES
+    ]
     seen = sorted(doc_id for doc_id, template in templates.items() if doc_id not in held_out)
     derive_rng(seed, "split").shuffle(seen)
     dev_count = _dev_count(len(seen))

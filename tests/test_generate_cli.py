@@ -15,21 +15,34 @@ from synth import generate
 from synth.augment import STRENGTH_RANGES, TRANSFORM_ORDER, augment_pdf
 from synth.generate import (
     MANIFEST_NAME,
+    NotHeldOutError,
     SharedSeedError,
     build_dataset,
     build_diagnostic,
+    build_held_out,
     diagnostic_dir,
+    held_out_dir,
 )
 from synth.generator import GroundTruth, generate_ground_truth, load_catalogue
 from synth.layouts import (
     LABEL_SYNONYMS,
+    MAIN_HELD_OUT_TEMPLATES,
+    MAIN_TEMPLATES,
     MULTI_PAGE_TEMPLATES,
     TEMPLATES,
     UNSEEN_TEMPLATES,
     Labels,
     pick_labels,
+    template_for,
 )
-from synth.manifest import DIAGNOSTIC_SPLIT, UNSEEN_SPLIT, Manifest, ManifestEntry
+from synth.manifest import (
+    DIAGNOSTIC_SPLIT,
+    UNSEEN_SPLIT,
+    Manifest,
+    ManifestEntry,
+    assign_splits,
+    layout_group_for,
+)
 from synth.render import (
     FIXED_PDF_TIMESTAMP,
     PDFIUM_WRAPPED_HYPHEN,
@@ -43,12 +56,13 @@ from synth.render import (
 )
 
 SEED = 42
-N_CLEAN = len(TEMPLATES)  # one document per layout
+N_CLEAN = len(MAIN_TEMPLATES)  # one document per main-dataset layout
 N_MESSY = 3
 TIMESTAMP_RESOLUTION_SECONDS = 1.1
-# Long enough to wrap inside the digit run even in the widest layout (`ledger`, full width).
+# Long enough to wrap inside the digit run even in the widest layout (`manifest`, a
+# landscape party cell).
 DIGIT_HYPHEN_ADDRESS = (
-    f"Gewerbepark {'-'.join(['12', '34', '56', '78', '90'] * 8)} 58635 Lobenstein"
+    f"Gewerbepark {'-'.join(['12', '34', '56', '78', '90'] * 12)} 58635 Lobenstein"
 )
 LABELS = pick_labels(random.Random(SEED))
 # The widest wording, which is the hardest for a narrow column or a single-page layout.
@@ -126,16 +140,46 @@ def test_messy_sources_are_single_page(manifest: Manifest) -> None:
         assert clean_by_id[entry.source_id].pages == 1
 
 
-def test_every_layout_appears_in_the_dataset(manifest: Manifest) -> None:
-    assert {entry.template for entry in clean_entries(manifest)} == set(TEMPLATES)
+def test_every_main_layout_appears_in_the_dataset(manifest: Manifest) -> None:
+    assert {entry.template for entry in clean_entries(manifest)} == set(MAIN_TEMPLATES)
+    assert "manifest" not in MAIN_TEMPLATES
 
 
-def test_manifest_marks_held_out_layouts_as_unseen(manifest: Manifest) -> None:
+# The main dataset as built on 2026-11-07 (seed 42): regenerating it must give the same
+# layout per index and the same splits, or dev and test documents would trade places.
+ORIGINAL_ROTATION = (
+    "classic",
+    "modern",
+    "compact",
+    "airy",
+    "sidebar",
+    "boxed",
+    "ledger",
+    "summary",
+)
+
+
+def test_the_main_dataset_rotation_and_held_out_list_are_frozen() -> None:
+    assert MAIN_TEMPLATES == ORIGINAL_ROTATION
+    assert [template_for(index) for index in range(16)] == list(ORIGINAL_ROTATION) * 2
+    assert MAIN_HELD_OUT_TEMPLATES == ("sidebar", "ledger")
+    templates = {f"inv_{index:05d}": template_for(index) for index in range(100)}
+    splits = assign_splits(templates, SEED)
+    for doc_id, template in templates.items():
+        assert (splits[doc_id] == UNSEEN_SPLIT) == (template in MAIN_HELD_OUT_TEMPLATES)
+
+
+def test_ledger_is_seen_and_manifest_held_out_from_2026_11_17() -> None:
+    assert UNSEEN_TEMPLATES == ("sidebar", "manifest")
+    assert layout_group_for("ledger") == "seen"
+    assert layout_group_for("manifest") == "unseen"
+
+
+def test_main_dataset_splits_by_its_own_list_and_groups_by_today(manifest: Manifest) -> None:
     assert manifest.unseen_templates == list(UNSEEN_TEMPLATES)
     for entry in manifest.documents:
-        is_unseen = entry.template in UNSEEN_TEMPLATES
-        assert (entry.split == UNSEEN_SPLIT) == is_unseen
-        assert (entry.layout_group == "unseen") == is_unseen
+        assert (entry.split == UNSEEN_SPLIT) == (entry.template in MAIN_HELD_OUT_TEMPLATES)
+        assert (entry.layout_group == "unseen") == (entry.template in UNSEEN_TEMPLATES)
 
 
 def test_messy_documents_record_their_transforms(manifest: Manifest) -> None:
@@ -363,7 +407,7 @@ def test_diagnostic_batch_is_one_layout_outside_every_split(
     for entry in batch.documents:
         assert entry.template == "ledger"
         assert entry.split == DIAGNOSTIC_SPLIT
-        assert entry.layout_group == "unseen"
+        assert entry.layout_group == "seen"  # ledger is seen since 2026-11-17
         assert entry.dataset == "synthetic_clean"
         assert entry.id.startswith("diag_")
 
@@ -398,12 +442,64 @@ def test_diagnostic_cli_refuses_the_main_dataset_seed(
     assert [entry.id for entry in main.documents] == ["inv_00000"]
 
 
+HELD_OUT_SEED = 11
+
+
+@pytest.fixture(scope="module")
+def held_out(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, Manifest]:
+    path = tmp_path_factory.mktemp("held_out")
+    return path, build_held_out("manifest", 3, 1, HELD_OUT_SEED, path)
+
+
+def test_held_out_batch_is_unseen_test_documents_in_one_layout(
+    held_out: tuple[Path, Manifest],
+) -> None:
+    folder, batch = held_out
+    clean = clean_entries(batch)
+    messy = messy_entries(batch)
+    assert [entry.id for entry in clean] == ["held_00000", "held_00001", "held_00002"]
+    assert len(messy) == 1
+    assert messy[0].source_id in {entry.id for entry in clean}
+    for entry in batch.documents:
+        assert entry.template == "manifest"
+        assert entry.split == UNSEEN_SPLIT
+        assert entry.layout_group == "unseen"
+        assert (folder / entry.path).exists()
+
+
+def test_held_out_batch_shares_no_content_with_the_main_dataset(
+    held_out: tuple[Path, Manifest], manifest: Manifest
+) -> None:
+    _, batch = held_out
+    assert not {e.sha256 for e in batch.documents} & {e.sha256 for e in manifest.documents}
+
+
+def test_a_held_out_batch_in_a_seen_layout_is_refused(tmp_path: Path) -> None:
+    with pytest.raises(NotHeldOutError):
+        build_held_out("ledger", 1, 0, HELD_OUT_SEED, tmp_path)
+
+
+def test_held_out_cli_refuses_the_main_dataset_seed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("DATA_DIR", str(tmp_path))
+    generate.main(["--n", "1", "--messy", "0", "--seed", str(HELD_OUT_SEED)])
+    argv = ["--held-out", "manifest", "--n", "1", "--messy", "0", "--seed"]
+    with pytest.raises(SharedSeedError):
+        generate.main([*argv, str(HELD_OUT_SEED)])
+    generate.main([*argv, str(HELD_OUT_SEED + 1)])
+    assert (held_out_dir(tmp_path, "manifest") / MANIFEST_NAME).exists()
+
+
 @pytest.mark.parametrize(
     "argv",
     [
         ["--n", "3", "--seed", "1"],
         ["--diagnostic", "ledger", "--n", "2", "--messy", "0", "--seed", "1"],
         ["--diagnostic", "no_such_layout", "--n", "2", "--seed", "1"],
+        ["--held-out", "manifest", "--n", "2", "--seed", "1"],
+        ["--held-out", "ledger", "--n", "2", "--messy", "0", "--seed", "1"],
+        ["--diagnostic", "ledger", "--held-out", "manifest", "--n", "2", "--seed", "1"],
     ],
 )
 def test_cli_rejects_a_messy_count_in_the_wrong_mode(argv: list[str]) -> None:

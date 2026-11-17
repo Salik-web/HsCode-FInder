@@ -7,7 +7,15 @@ from typing import Literal
 from pydantic import BaseModel
 
 from synth.generator import GroundTruth
-from synth.manifest import MANIFEST_NAME, SYNTHETIC_DIR, Dataset, Manifest, ManifestEntry, Split
+from synth.manifest import (
+    MANIFEST_NAME,
+    SYNTHETIC_DIR,
+    Dataset,
+    Manifest,
+    ManifestEntry,
+    Split,
+    layout_group_for,
+)
 
 # How the buyer appears on the page: a reference to the consignee ("Same as consignee"),
 # the consignee's details printed again, or a different company.
@@ -47,7 +55,9 @@ def load_documents(
 ) -> list[EvalDocument]:
     """Documents of one dataset and split, in id order, optionally only the first `limit`.
 
-    `folder` under DATA_DIR holds the manifest: the main dataset, or a diagnostic batch.
+    `folder` under DATA_DIR holds the manifest: the main dataset, a diagnostic batch or a
+    held-out layout's batch. The layout group is today's, not the one written when the
+    manifest was made: ledger documents generated as unseen now score as seen.
     """
     manifest_path = data_dir / folder / MANIFEST_NAME
     manifest = Manifest.model_validate_json(manifest_path.read_bytes())
@@ -64,7 +74,7 @@ def load_documents(
         entries = entries[:limit]
     return [
         EvalDocument(
-            entry=entry,
+            entry=entry.model_copy(update={"layout_group": layout_group_for(entry.template)}),
             truth=GroundTruth.model_validate_json((root / entry.ground_truth).read_bytes()),
             path=root / entry.path,
         )
