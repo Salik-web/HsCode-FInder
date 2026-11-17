@@ -2,6 +2,22 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-17: ledger diagnostic batch, v3 (10 live calls, nothing changed)
+
+- Model `qwen/qwen3.8-27b` (Groq, thinking off), prompt v3. 10 clean `ledger` invoices, seed 1116, split `diagnostic` (outside every split). Report: `reports/20261117T105402_synthetic_clean_diagnostic_qwen_qwen3.8-27b_reasoning-none_v3.md`.
+- Critical-field accuracy **100%**, all critical right **10/10**, first-try valid JSON 10/10, retries 0.
+- **The comma hypothesis didn't reproduce.** All 30 party names are exact string matches, including the 4 comma names (`diag_00000` shipper and consignee, `diag_00001` shipper, `diag_00009` consignee), each printed as one `name, address, country` line. Addresses: 22/26 exact; in the other 4 the model added a comma where the page has none (`Kapadia Road Jalandhar` -> `Kapadia Road, Jalandhar`), all ≥ 0.9 fuzzy, so scored right.
+- Power: the test ledger rate was about 1 document in 12 with a wrong name (clean) and 1 in 3 (messy), so 0/10 here doesn't rule out a rarer cause. It does rule out "a comma in the name reliably breaks it".
+- The only errors were on one line of `diag_00007`: description `Hot-rolled钢 coils` (a Chinese token for "steel"; the page prints `Hot-rolled steel coils`) and unit `CTN` for printed `MT`. The description went to `needs_review` (not in the text layer). The unit was missed at confidence ≥ 0.9: `CTN` is printed on another row, and the text-layer check searches the whole page, not the row.
+- No fix made (Salik: diagnosis first).
+
+## 2026-11-17: test_unseen_layout messy, v3, final (1 live call)
+
+- Same model and prompt. Report: `reports/20261117T104316_synthetic_messy_test_unseen_layout_qwen_qwen3.8-27b_reasoning-none_v3.md`. The one live call was the first attempt that Groq rejected (400 `json_validate_failed`) again; it's now cached, and the retry came from cache.
+- 7/7 scored: critical-field accuracy **98.8%**, all critical right **6/7**, first-try valid 6/7, retry 1/7, line F1 100%. Errors: `consignee.name` (ledger) and `shipper.address` (not critical). By template: ledger 2/3 all right, sidebar 4/4.
+- Calibration: error recall 1/2 (the consignee name, by the photo rule); review load 85/395 (21.5%), all from the photo rule.
+- v3 test_unseen_layout is now complete in both forms: clean 24/24 (99.1%, 22/24) and messy 7/7 (98.8%, 6/7). These are the results to freeze if the holdout decision applies.
+
 ## 2026-11-16: photos send critical fields to review; descriptions must match exactly (re-scored from cache, 0 API calls)
 
 - Salik's decisions: (1) without a text layer nothing can verify a value, so every critical field of such a document goes to `needs_review` ("no text layer to verify"); its confidence score is unchanged, and non-critical fields keep the threshold. No OCR for now (CLAUDE.md, Known issues). (2) Line descriptions are right only if they match after normalising case, spacing and punctuation: any missing, extra or misspelt word is wrong. Addresses (and names) stay fuzzy; line pairing still uses similarity.
