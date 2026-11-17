@@ -4,7 +4,7 @@ One entry per eval run: date, prompt version, model, key metrics, what changed a
 
 ## 2026-11-17: dev messy, v3, complete (15 live calls)
 
-- Model `qwen/qwen3.8-27b` (Groq, thinking off), prompt v3, with the row-scoped line check (uncommitted when run; photos have no text layer, so it changes nothing here). 14 new documents plus the 2 cached; 15 calls (one retry), no quota error. Report in a scratch folder; the final report goes into `reports/` from cache once the row-scoped change is committed.
+- Model `qwen/qwen3.8-27b` (Groq, thinking off), prompt v3, with the row-scoped line check (photos have no text layer, so it changes nothing here). 14 new documents plus the 2 cached; 15 calls (one retry), no quota error. Report: `reports/20261117T113325_synthetic_messy_dev_qwen_qwen3.8-27b_reasoning-none_v3.md` (from cache at `c74444a`).
 - 16/16 seen: critical-field accuracy **94.5%** (target ≥ 85%), all critical right **10/16**, line F1 100%, first-try valid 15/16, model call p95 3.0 s.
 - Calibration: 41 wrong fields, error recall 13/41 (11 `needs_review`, 2 `failed_check`); review load 226/1109 (20.4%, the photo rule). The missed 28 are non-critical: quantities, units, unit prices and HS codes, plus two non-critical names.
 - By template, all critical right: boxed 3/3, summary 1/1, classic 3/4, modern 1/2, airy 1/3, compact 1/3.
