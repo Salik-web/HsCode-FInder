@@ -76,11 +76,10 @@ def complete_pipeline(
     )
     if outcome.invoice is None:
         return result
-    rules = verify_invoice(outcome.invoice, config.as_of)
+    text_layer = preprocessed.document.text_layer
+    rules = verify_invoice(outcome.invoice, config.as_of, text_layer=text_layer)
     applied = [*outcome.changes, *rules.applied]
-    assessments = assess_fields(
-        rules.invoice, preprocessed.document.text_layer, outcome.calls, applied, rules.checks
-    )
+    assessments = assess_fields(rules.invoice, text_layer, outcome.calls, applied, rules.checks)
     return result.model_copy(
         update={
             "invoice": rules.invoice,

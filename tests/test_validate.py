@@ -1,10 +1,12 @@
 """Guardrails (app/pipeline/validate.py): every check, its tolerance edges and its skips."""
 
+import random
 from datetime import date, timedelta
 from decimal import Decimal
 
 import pytest
 
+from app.pipeline.preprocess import prepare_document
 from app.pipeline.rules import UNIT_RULE
 from app.pipeline.validate import (
     COUNTRY_RULE,
@@ -12,12 +14,14 @@ from app.pipeline.validate import (
     DATE_RULE,
     INCOTERM_RULE,
     LINE_MATH_RULE,
+    PARTY_BOUNDARY_RULE,
     TOTAL_RULE,
     WEIGHT_RULE,
     check_currency,
     check_date,
     check_incoterm,
     check_line_math,
+    check_party_boundaries,
     check_total,
     check_weights,
     total_tolerance,
@@ -34,6 +38,8 @@ from synth.generator import (
     load_catalogue,
 )
 from synth.generator import CURRENCIES as GENERATED_CURRENCIES
+from synth.layouts import TEMPLATES, pick_labels
+from synth.render import open_browser_page, render_html, render_pdf
 from tests.test_metrics import make_invoice, party
 
 AS_OF = date(2026, 10, 1)
@@ -328,3 +334,128 @@ def test_currency_list_is_iso_trade_currencies() -> None:
 def test_everything_the_generator_uses_is_accepted() -> None:
     assert set(GENERATED_CURRENCIES) <= CURRENCIES
     assert {country.code for country in ALL_COUNTRIES} <= COUNTRIES
+
+
+# --- party boundary (Salik, 2026-11-17) ------------------------------------------------------
+
+GRAF_ADDRESS = "Nina-Albers-Straße 345 14153 Kehl"
+GRAF_PAGE = f"Customer\nGraf, {GRAF_ADDRESS}, Germany\nNotify\nRogner, Mansstr. 71 43477 Oschatz"
+NAZARETH_PAGE = (
+    "Shipped By\nNazareth, Mistry and Parsa, H.No. 77, Vohra Ganj, Bhubaneswar-770913, India"
+)
+
+
+def with_buyer(name: str | None, address: str | None) -> RawInvoice:
+    return make_invoice(buyer=party("x").model_copy(update={"name": name, "address": address}))
+
+
+def boundary_checks(invoice: RawInvoice, text: str) -> dict[str, str]:
+    return {c.path: c.detail for c in check_party_boundaries(invoice, text)}
+
+
+def test_a_name_ending_inside_a_hyphenated_address_word_is_flagged() -> None:
+    """inv_00014: the model read "Graf, Nina-Albers-Straße" as name "Graf, Nina"."""
+    checks = check_party_boundaries(
+        with_buyer("Graf, Nina", "Albers-Straße 345 14153 Kehl"), GRAF_PAGE
+    )
+    assert [(c.path, c.rule, c.status) for c in checks] == [
+        ("buyer.name", PARTY_BOUNDARY_RULE, "failed_check"),
+        ("buyer.address", PARTY_BOUNDARY_RULE, "failed_check"),
+    ]
+    assert "splits a word" in checks[0].detail
+
+
+def test_a_word_in_both_the_name_and_the_address_is_flagged() -> None:
+    """inv_00014's notify party: name "Rogner, Mans", address "Mansstr. 71 …"."""
+    invoice = make_invoice(
+        notify_party=party("x").model_copy(
+            update={"name": "Rogner, Mans", "address": "Mansstr. 71 43477 Oschatz"}
+        )
+    )
+    detail = boundary_checks(invoice, GRAF_PAGE)["notify_party.name"]
+    assert "in both" in detail
+
+
+def test_words_between_name_and_address_on_one_line_are_flagged() -> None:
+    """A name cut at a comma leaves its last words to neither field."""
+    invoice = make_invoice(
+        shipper=party("x").model_copy(
+            update={"name": "Nazareth", "address": "H.No. 77, Vohra Ganj, Bhubaneswar-770913"}
+        )
+    )
+    detail = boundary_checks(invoice, NAZARETH_PAGE)["shipper.name"]
+    assert "'Mistry and Parsa' is printed between them" in detail
+
+
+@pytest.mark.parametrize(
+    ("name", "address", "page"),
+    [
+        ("Graf", GRAF_ADDRESS, GRAF_PAGE),
+        ("Nazareth, Mistry and Parsa", "H.No. 77, Vohra Ganj, Bhubaneswar-770913", NAZARETH_PAGE),
+        # an answer that adds a comma the page doesn't print (diag_00001) still matches
+        (
+            "Vohra, Mallick and Tank",
+            "H.No. 39, Kapadia Road, Jalandhar-305441",
+            "Vohra, Mallick and Tank, H.No. 39, Kapadia Road Jalandhar-305441, India",
+        ),
+        # the manifest layout's separator
+        ("Graf", GRAF_ADDRESS, f"Customer Graf | {GRAF_ADDRESS} | Germany"),
+        # a short name that also starts the address: one right printing is enough
+        ("Graf", "Grafenweg 5 12345 Kehl", "Graf, Grafenweg 5 12345 Kehl, Germany"),
+        # name and address on their own lines, another column's text beside the name
+        ("Graf", GRAF_ADDRESS, f"Graf Invoice No 757-39435\n{GRAF_ADDRESS}\nGermany"),
+    ],
+)
+def test_a_right_boundary_is_not_flagged(name: str, address: str, page: str) -> None:
+    assert check_party_boundaries(with_buyer(name, address), page) == []
+
+
+@pytest.mark.parametrize(
+    ("name", "address"),
+    [
+        ("Graf", None),  # nothing to compare
+        ("Somebody Else", GRAF_ADDRESS),  # the page never prints this name
+        ("Graf", "Elsewhere 1 99999 Nowhere"),  # nor this address after it
+    ],
+)
+def test_a_party_the_page_doesnt_print_as_extracted_is_not_checked(
+    name: str, address: str | None
+) -> None:
+    assert check_party_boundaries(with_buyer(name, address), GRAF_PAGE) == []
+
+
+def test_boundary_check_runs_only_with_a_text_layer_and_never_changes_values() -> None:
+    wrong = with_buyer("Graf, Nina", "Albers-Straße 345 14153 Kehl")
+    assert [c.rule for c in validate_invoice(wrong, AS_OF)] == []
+    outcome = verify_invoice(wrong, AS_OF, text_layer=GRAF_PAGE)
+    assert {c.path for c in outcome.checks} == {"buyer.name", "buyer.address"}
+    assert outcome.invoice.buyer == wrong.buyer
+
+
+ONE_LINE_PARTY_LAYOUTS = ("ledger", "manifest")
+
+
+@pytest.mark.parametrize("template", ONE_LINE_PARTY_LAYOUTS)
+def test_inv_00014s_answer_is_flagged_on_a_rendered_page(template: str) -> None:
+    truth = with_buyer("Graf", GRAF_ADDRESS)
+    with open_browser_page() as page:
+        html = render_html(truth, template, pick_labels(random.Random(1)))
+        text = prepare_document(render_pdf(page, html)).text_layer
+    assert text is not None
+    assert check_party_boundaries(truth, text) == []
+    answer = with_buyer("Graf, Nina", "Albers-Straße 345 14153 Kehl")
+    assert {c.path for c in check_party_boundaries(answer, text)} == {"buyer.name", "buyer.address"}
+
+
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_ground_truth_never_raises_a_boundary_alarm_on_a_rendered_page(template: str) -> None:
+    catalogue = load_catalogue()
+    with open_browser_page() as page:
+        for index in range(4):
+            truth = generate_ground_truth(42, index, catalogue)
+            html = render_html(
+                truth.invoice, template, pick_labels(random.Random(index)), truth.buyer_reference
+            )
+            text = prepare_document(render_pdf(page, html)).text_layer
+            assert text is not None
+            assert check_party_boundaries(truth.invoice, text) == [], (template, index)
