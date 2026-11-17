@@ -2,6 +2,59 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-17: dev messy, v3, complete (15 live calls)
+
+- Model `qwen/qwen3.8-27b` (Groq, thinking off), prompt v3, with the row-scoped line check (uncommitted when run; photos have no text layer, so it changes nothing here). 14 new documents plus the 2 cached; 15 calls (one retry), no quota error. Report in a scratch folder; the final report goes into `reports/` from cache once the row-scoped change is committed.
+- 16/16 seen: critical-field accuracy **94.5%** (target ≥ 85%), all critical right **10/16**, line F1 100%, first-try valid 15/16, model call p95 3.0 s.
+- Calibration: 41 wrong fields, error recall 13/41 (11 `needs_review`, 2 `failed_check`); review load 226/1109 (20.4%, the photo rule). The missed 28 are non-critical: quantities, units, unit prices and HS codes, plus two non-critical names.
+- By template, all critical right: boxed 3/3, summary 1/1, classic 3/4, modern 1/2, airy 1/3, compact 1/3.
+- Failure kinds (read before changing anything):
+  - **Row shift on `compact` photos** (2 documents, 30 of the 41 wrong fields). `inv_00034_messy`: from row 9 on, each description carries the next row's quantity, unit, price and amount, the last row gets none, and one row's values are lost. `inv_00026_messy`: one row takes the next row's values. Each shifted line still multiplies out, so the line check can't see it. On `inv_00034` the total check didn't run either, because a line amount is `None` (`check_total` skips then, by design).
+  - **Character misreads in names** (4 documents): `Sabir-Ghanee` -> `Sahir-Ghaneer`, `Umair` -> `Umais`, `Saal` -> `Saud`, `Dumanlı` -> `Dumanki`. Critical ones go to review by the photo rule.
+  - **Digit misreads** (2): `13888.88` -> `13880.88` (caught by line math), `214.89` -> `214.80` (flagged as a line-math failure on the amount, which is right; the misread price is not flagged).
+  - **Incoterm** CIP -> CIF on `inv_00003_messy` (known; already in the 2 cached).
+
+## 2026-11-17: line values checked in their own row (re-scored from cache, 0 API calls)
+
+- Salik's decision: a line's quantity, unit, unit price and amount must be found in the text of their own row, located by the line's description, not anywhere on the page (`app/pipeline/confidence.py`). The row is the fewest text lines (up to 3) printing the description word for word; a wrapped description cell adds the next text line for the row's remaining cells, unless another item's description starts there. A garbled description falls back to the lines sharing at least 80% of it (runs of 3+ characters); with no row, the four values are not found.
+- Ground truth on all 110 clean PDFs (8 layouts, plus the diagnostic batch): 3,692/3,692 row-scoped values found in their own row, every description on exactly one row. Two `sidebar` descriptions wrap onto 2 text lines; before the wrap rule they cost 7 false alarms.
+- The guardrail eval's stand-in text layer now prints each line item as one row, as layouts do.
+
+| Set (cached v3) | Wrong | Error recall before -> after | Review load before -> after |
+| --- | --- | --- | --- |
+| Clean, seen (dev 27) | 6 | 6/6 -> 6/6 | 0/2043 -> 0/2043 |
+| Clean, diagnostic ledger (10) | 2 | 1/2 -> **2/2** | 0/596 -> 0/596 |
+| Clean, test_unseen_layout (24, frozen) | 3 | 1/3 -> 1/3 | 1/1527 -> 1/1527 |
+| Messy, seen (dev 2) | 1 | 1/1 -> 1/1 | 38/199 -> 38/199 |
+| Messy, test_unseen_layout (7, frozen) | 2 | 1/2 -> 1/2 | 85/395 -> 85/395 |
+| **All** | 14 | **10/14 -> 11/14** | 124/4760 -> 124/4760 |
+
+- Exactly one field changed bucket: `diag_00007`'s unit `CTN` (printed `MT`), from ≥ 0.9 to 0.3–0.5. Every other field kept its bucket, so no new false alarm. Photos have no text layer, so nothing changes there.
+- Injected set unchanged: 60/60 planted errors to review; 0/3996 and 0/3857 clean ground-truth fields to review.
+- Still missed: the 2 party names on `inv_00014` and the messy shipper address (see the diagnosis entry). The frozen test numbers above are calibration only; accuracy is unchanged.
+
+## 2026-11-17: test ledger name failures diagnosed (read from cache after the freeze, 0 API calls)
+
+- Read after the freeze below, at Salik's request. Per-document details for test_unseen_layout were produced in a scratch folder only; committed reports still hide them.
+- **The failure is a name/address boundary moved into the address, not a name cut at a comma.** One clean document, `inv_00014`, printed `Graf, Nina-Albers-Straße 345 14153 Kehl, Germany` (buyer = consignee) and `Rogner, Mansstr. 71 43477 Oschatz, Germany` (notify). The model returned names `Graf, Nina` (twice) and `Rogner, Mans`: a one-word company name followed by a street named after a first name reads as "Surname, Firstname". For Graf the address lost `Nina-` (`Albers-Straße 345 …`); for Rogner the address stayed whole, so `Mans` is in both.
+- Why it looked like a comma problem: the shortened address scores 0.921 on the fuzzy metric (≥ 0.9, "right"), so ledger addresses looked 100% right and only names failed. Confidence missed it too: `Graf, Nina` is on the page.
+- How rare: in all generated ground truth, a one-word name before an address that starts with a first-name street occurs only on `inv_00014` among one-line-party documents. The diagnostic batch had none (`Kitzmann, Schusterstraße …` is a surname street and was read right). One document, three fields: one pattern, small sample.
+- The messy ledger miss is different: `inv_00046_messy` consignee `Talal Ltd` read as `Talat Ltd.` (0.889), a character misread on a photo, already sent to review by the photo rule. `inv_00094_messy` shipper address (not critical): a misread (`Juliettedpad`) plus `, Netherlands` appended, so the country leaked into the address.
+- The other clean ledger document, `inv_00078`, missed one middle row (`Black tea in bulk packs`, row 7 of 12): not a party problem, and the reason its correct total was flagged.
+- No fix made; options are in the report to Salik.
+
+## 2026-11-17: test_unseen_layout v3 FROZEN, pre-inspection
+
+- **Frozen, pre-inspection.** These are the final v3 held-out-layout results, recorded before anyone looked at a test_unseen_layout document's predictions. From here on, the test ledger failures are read for diagnosis (Salik, holdout decision of 2026-11-16), so `ledger` no longer counts as unseen, and no later number on these 31 documents is a held-out result.
+- Model `qwen/qwen3.8-27b` (Groq, thinking off), prompt v3, schema 1.0, metrics as of 2026-11-16 (buyer and consignee names critical, strict descriptions, photo review rule).
+
+| Form | Report | Documents | Critical-field accuracy | All critical right | Line F1 | First-try valid | Error recall | Review load |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Clean | `20261116T100758_…` | 24 | 99.1% | 22/24 | 99.7% | 24/24 | 1/3 | 1/1527 |
+| Messy | `20261117T104316_…` | 7 | 98.8% | 6/7 | 100% | 6/7 | 1/2 | 85/395 |
+
+- By template, all critical right: clean `ledger` 10/12, `sidebar` 12/12; messy `ledger` 2/3, `sidebar` 4/4.
+
 ## 2026-11-17: ledger diagnostic batch, v3 (10 live calls, nothing changed)
 
 - Model `qwen/qwen3.8-27b` (Groq, thinking off), prompt v3. 10 clean `ledger` invoices, seed 1116, split `diagnostic` (outside every split). Report: `reports/20261117T105402_synthetic_clean_diagnostic_qwen_qwen3.8-27b_reasoning-none_v3.md`.
