@@ -8,8 +8,10 @@ import pytest
 
 from app.pipeline.confidence import (
     CRITICAL_FIELD_EMPTY,
+    LINE_FIELDS,
     NO_TEXT_LAYER_TO_VERIFY,
     REVIEW_THRESHOLD,
+    ROW_UNDER_REVIEW,
     PageText,
     assess_fields,
     date_renderings,
@@ -18,6 +20,7 @@ from app.pipeline.confidence import (
     normalise,
     numbers_in,
     row_coverage,
+    row_of,
 )
 from app.pipeline.preprocess import prepare_document
 from app.pipeline.rules import REFERENCE_RULE, describe_change, parse_change
@@ -206,7 +209,12 @@ def test_a_line_whose_description_has_no_row_goes_to_review() -> None:
 
 def test_a_line_without_a_description_has_no_row() -> None:
     scores = assess_lines(TWO_ROWS, PAPER, COILS.model_copy(update={"description": None}))
-    assert scores["line_items[1].description"].reasons == ["text layer: base 0.75"]
+    # None isn't looked up; the line goes to review because its amount has no row
+    assert scores["line_items[1].description"].reasons == [
+        "text layer: base 0.75",
+        ROW_UNDER_REVIEW,
+    ]
+    assert scores["line_items[1].amount"].status == "needs_review"
     assert scores["line_items[1].unit"].status == "needs_review"
 
 
@@ -301,8 +309,71 @@ def test_without_a_text_layer_critical_fields_always_go_to_review() -> None:
             assert assessment.status == "needs_review", path
             assert assessment.reasons[-1] == NO_TEXT_LAYER_TO_VERIFY
             assert assessment.confidence == 0.60  # the evidence is unchanged
+        elif path.startswith("line_items["):
+            # every amount is in review on a photo, so every row is (Salik, 2026-11-17)
+            assert assessment.status == "needs_review", path
+            assert assessment.reasons[-1] == ROW_UNDER_REVIEW
         else:
             assert assessment.status == "ok", path
+
+
+# --- whole rows (Salik, 2026-11-17) ----------------------------------------------------------
+
+LINE_ONE = [f"line_items[1].{field}" for field in LINE_FIELDS]
+
+
+def statuses(scores: dict[str, FieldAssessment], paths: list[str]) -> list[str]:
+    return [scores[path].status for path in paths]
+
+
+def test_a_failed_line_check_sends_the_whole_row_to_review() -> None:
+    """inv_00034_messy: the line check flagged the amount, but the misread was the price."""
+    invoice = make_invoice()
+    check = FieldCheck(path="line_items[1].amount", status="failed_check", rule="r", detail="d")
+    scores = assess(invoice, page_for(invoice), checks=[check])
+    for path in LINE_ONE:
+        if path == "line_items[1].amount":
+            assert scores[path].status == "failed_check"
+            continue
+        assert scores[path].status == "needs_review", path
+        assert scores[path].reasons[-1] == ROW_UNDER_REVIEW
+        assert scores[path].confidence >= REVIEW_THRESHOLD  # the score is left as it was
+    assert set(statuses(scores, [f"line_items[0].{f}" for f in LINE_FIELDS])) == {"ok"}
+    assert scores["invoice_number"].status == "ok"
+
+
+def test_an_amount_not_on_the_page_sends_the_whole_row_to_review() -> None:
+    invoice = make_invoice()
+    shifted = invoice.line_items[1].model_copy(update={"amount": Decimal("98762.84")})
+    answer = invoice.model_copy(update={"line_items": [invoice.line_items[0], shifted]})
+    scores = assess(answer, page_for(invoice))
+    assert set(statuses(scores, LINE_ONE)) == {"needs_review"}
+    assert scores["line_items[1].quantity"].reasons[-1] == ROW_UNDER_REVIEW
+
+
+def test_an_empty_amount_sends_the_whole_row_to_review() -> None:
+    invoice = make_invoice()
+    scores = assess(emptied(invoice), page_for(invoice))
+    assert set(statuses(scores, [f"line_items[0].{f}" for f in LINE_FIELDS])) == {"needs_review"}
+    assert set(statuses(scores, LINE_ONE)) == {"ok"}  # its amount is there
+
+
+def test_a_non_critical_field_in_review_leaves_the_rest_of_its_row_alone() -> None:
+    invoice = make_invoice()
+    misread = invoice.line_items[1].model_copy(update={"unit": "CTN"})
+    scores = assess(
+        invoice.model_copy(update={"line_items": [invoice.line_items[0], misread]}),
+        page_for(invoice),
+    )
+    assert scores["line_items[1].unit"].status == "needs_review"
+    assert scores["line_items[1].amount"].status == "ok"
+    assert scores["line_items[1].quantity"].status == "ok"
+
+
+def test_row_of() -> None:
+    assert row_of("line_items[12].unit_price") == "line_items[12]"
+    assert row_of("buyer.name") is None
+    assert row_of("total_amount") is None
 
 
 EMPTY_CRITICAL = (

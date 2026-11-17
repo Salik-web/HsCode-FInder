@@ -25,6 +25,13 @@ An empty critical field (None) always goes to needs_review ("critical field is e
 Salik 2026-11-17): None means not found, and nothing on the page can confirm a value
 is really absent. With a text layer it would otherwise stay at the base score, "ok".
 
+A line goes to review as a whole row (Salik, 2026-11-17): when its critical field (the
+amount) is needs_review or failed_check, every other field of that line that is still
+"ok" becomes needs_review ("row under review"). A row read off by one, or a misread price
+behind a failed line check, shows in the amount but sits in the other fields. A
+failed_check stays failed_check. Scores are left as they are: the status is a policy.
+On a photo every amount is in review, so every line field is too.
+
 A line's quantity, unit, unit price and amount must be found in that line's own row
 (Salik, 2026-11-17): a short value ("2", "CTN") is on almost any page, so a page-wide
 search would trust a unit copied from another row. The row is found by the description:
@@ -68,6 +75,7 @@ FAILED_CHECK_CAP = 0.10
 REVIEW_THRESHOLD = 0.50
 NO_TEXT_LAYER_TO_VERIFY = "no text layer to verify"
 CRITICAL_FIELD_EMPTY = "critical field is empty"
+ROW_UNDER_REVIEW = "row under review"
 
 HEADER_FIELDS = (
     "invoice_number",
@@ -188,7 +196,27 @@ def assess_fields(
         assessments.append(
             FieldAssessment(path=path, confidence=score, status=status, reasons=reasons)
         )
-    return assessments
+    return review_whole_rows(assessments)
+
+
+def review_whole_rows(assessments: list[FieldAssessment]) -> list[FieldAssessment]:
+    """A line whose critical field goes to a person goes as a whole row (module docstring)."""
+    rows = {row_of(a.path) for a in assessments if is_critical(a.path) and a.status != "ok"} - {
+        None
+    }
+    return [
+        a.model_copy(update={"status": "needs_review", "reasons": [*a.reasons, ROW_UNDER_REVIEW]})
+        if a.status == "ok" and row_of(a.path) in rows
+        else a
+        for a in assessments
+    ]
+
+
+def row_of(path: str) -> str | None:
+    """The row of a line field, e.g. "line_items[3]"; None for header and party fields."""
+    if not path.startswith("line_items["):
+        return None
+    return path[: path.index("]") + 1]
 
 
 def is_critical(path: str) -> bool:
