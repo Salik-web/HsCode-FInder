@@ -21,6 +21,10 @@ can verify a value, so critical fields always go to needs_review ("no text layer
 verify", Salik 2026-11-16); their score is left as the evidence gives it, because the
 status is a policy, not a measurement. Non-critical fields keep the threshold.
 
+An empty critical field (None) always goes to needs_review ("critical field is empty",
+Salik 2026-11-17): None means not found, and nothing on the page can confirm a value
+is really absent. With a text layer it would otherwise stay at the base score, "ok".
+
 A line's quantity, unit, unit price and amount must be found in that line's own row
 (Salik, 2026-11-17): a short value ("2", "CTN") is on almost any page, so a page-wide
 search would trust a unit copied from another row. The row is found by the description:
@@ -63,6 +67,7 @@ SET_BY_RULE = -0.05
 FAILED_CHECK_CAP = 0.10
 REVIEW_THRESHOLD = 0.50
 NO_TEXT_LAYER_TO_VERIFY = "no text layer to verify"
+CRITICAL_FIELD_EMPTY = "critical field is empty"
 
 HEADER_FIELDS = (
     "invoice_number",
@@ -172,6 +177,9 @@ def assess_fields(
             score, status = min(score, FAILED_CHECK_CAP), "failed_check"
             reasons.append("guardrail check failed: capped at 0.10")
         score = round(min(1.0, max(0.0, score)), 2)
+        if status == "ok" and value is None and is_critical(path):
+            status = "needs_review"
+            reasons.append(CRITICAL_FIELD_EMPTY)
         if status == "ok" and page is None and is_critical(path):
             status = "needs_review"
             reasons.append(NO_TEXT_LAYER_TO_VERIFY)

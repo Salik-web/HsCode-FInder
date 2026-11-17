@@ -7,6 +7,7 @@ from decimal import Decimal
 import pytest
 
 from app.pipeline.confidence import (
+    CRITICAL_FIELD_EMPTY,
     NO_TEXT_LAYER_TO_VERIFY,
     REVIEW_THRESHOLD,
     PageText,
@@ -302,6 +303,80 @@ def test_without_a_text_layer_critical_fields_always_go_to_review() -> None:
             assert assessment.confidence == 0.60  # the evidence is unchanged
         else:
             assert assessment.status == "ok", path
+
+
+EMPTY_CRITICAL = (
+    "invoice_number",
+    "total_amount",
+    "currency",
+    "incoterm",
+    "buyer.name",
+    "consignee.name",
+    "line_items[0].amount",
+)
+
+
+def emptied(invoice: RawInvoice) -> RawInvoice:
+    """Every critical field set to None, as an answer that found none of them."""
+    first, *rest = invoice.line_items
+    return invoice.model_copy(
+        update={
+            "invoice_number": None,
+            "total_amount": None,
+            "currency": None,
+            "incoterm": None,
+            "buyer": invoice.buyer.model_copy(update={"name": None}),
+            "consignee": invoice.consignee.model_copy(update={"name": None}),
+            "line_items": [first.model_copy(update={"amount": None}), *rest],
+        }
+    )
+
+
+@pytest.mark.parametrize("path", EMPTY_CRITICAL)
+def test_an_empty_critical_field_goes_to_review_with_a_text_layer(path: str) -> None:
+    """With a text layer, None scored the base 0.75 and stayed ok (a dropped line amount)."""
+    invoice = make_invoice()
+    scores = assess(emptied(invoice), page_for(invoice))
+    assert scores[path].status == "needs_review"
+    assert scores[path].reasons == ["text layer: base 0.75", CRITICAL_FIELD_EMPTY]
+    assert scores[path].confidence == 0.75  # the status is a policy; the score is unchanged
+
+
+@pytest.mark.parametrize("path", EMPTY_CRITICAL)
+def test_an_empty_critical_field_on_a_photo_says_it_is_empty(path: str) -> None:
+    scores = assess(emptied(make_invoice()), None)
+    assert scores[path].status == "needs_review"
+    assert scores[path].reasons[-1] == CRITICAL_FIELD_EMPTY
+
+
+def test_empty_non_critical_fields_stay_ok() -> None:
+    invoice = make_invoice()
+    blank = invoice.model_copy(
+        update={
+            "gross_weight_kg": None,
+            "invoice_date": None,
+            "notify_party": None,
+            "shipper": invoice.shipper.model_copy(update={"name": None}),
+            "buyer": invoice.buyer.model_copy(update={"address": None}),
+        }
+    )
+    scores = assess(blank, page_for(invoice))
+    for path in (
+        "gross_weight_kg",
+        "invoice_date",
+        "notify_party.name",
+        "shipper.name",
+        "buyer.address",
+        "line_items[0].hs_code_on_doc",
+    ):
+        assert scores[path].status == "ok", path
+
+
+def test_an_empty_critical_field_never_hides_a_failed_check() -> None:
+    invoice = make_invoice()
+    check = FieldCheck(path="line_items[0].amount", status="failed_check", rule="r", detail="d")
+    scores = assess(emptied(invoice), page_for(invoice), checks=[check])
+    assert scores["line_items[0].amount"].status == "failed_check"
 
 
 def test_with_a_text_layer_critical_fields_are_scored_as_usual() -> None:
