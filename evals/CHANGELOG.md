@@ -2,6 +2,25 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-17: whole-row review for line items (re-scored from cache, 0 API calls)
+
+- Salik's decision: when a line's critical field (the amount) goes to a person, every other field of that line goes too: `ok` becomes `needs_review` with the reason "row under review" (`app/pipeline/confidence.py`). The trigger is `needs_review` or `failed_check` on the amount: a failed line check is the clearest case where the price or quantity may be the misread value. A `failed_check` stays `failed_check`; scores are unchanged.
+- Re-scored, `main` (79a7fd2) -> this branch. In brackets, a scratch-only variant (not committed) where the photo rule alone doesn't send a row:
+
+| Set (cached v3) | Error recall | Review load |
+| --- | --- | --- |
+| Clean, dev (27) | 6/6 -> 6/6 (6/6) | 0/2043 -> 0/2043 (0) |
+| Clean, diagnostic ledger (10) | 2/2 -> 2/2 (2/2) | 0/596 -> 0/596 (0) |
+| Clean, test_unseen_layout (24) | 5/5 -> 5/5 (5/5) | 2/1525 -> 2/1525 (2) |
+| Messy, dev (16) | 13/42 -> **39/42** (19/42) | 226/1108 (20.4%) -> **905/1108 (81.7%)** (240, 21.7%) |
+| Messy, test_unseen_layout (7) | 1/4 -> 1/4 (1/4) | 85/393 (21.6%) -> **305/393 (77.6%)** (85) |
+| **All** | 27/59 (45.8%) -> **53/59 (89.8%)** (33/59) | 313/5665 (5.5%) -> **1212/5665 (21.4%)** (327, 5.8%) |
+
+- Clean PDFs: no line amount was in review, so nothing changes.
+- Photos: the photo rule already puts every amount in review, so every line field goes to a person. That catches the row shift on `compact` photos (the quantity, unit, price and HS code of the shifted rows), and photo review load goes from about a fifth to about four fifths of correct fields. On messy test_unseen it catches nothing new: its 4 wrong fields are names and addresses.
+- The variant (a row goes only when its amount is in review for a reason other than "no text layer to verify": a failed check, empty, or not found) keeps photo load near today's and catches 6 of the 26 (the rows with a failed line check or the empty amount).
+- Guardrail eval unchanged: 0/3996 and 0/3857 clean ground-truth fields to review.
+
 ## 2026-11-17: party boundary check, strict addresses, empty critical fields, ledger seen (re-scored from cache, 0 API calls)
 
 Salik's decisions after the ledger diagnosis:
