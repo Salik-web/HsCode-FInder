@@ -8,6 +8,7 @@ from app.schemas.result import FieldCheck
 from evals.metrics import (
     CRITICAL_HEADER_FIELDS,
     CRITICAL_LINE_NAME,
+    FUZZY_THRESHOLD,
     HEADER_FIELDS,
     LINE_FIELDS,
     PARTIES,
@@ -563,9 +564,8 @@ def test_any_missing_extra_or_misspelt_word_is_wrong(predicted: str) -> None:
     assert compare("normalised", "Stainless steel surgical scissors", predicted) == "wrong"
 
 
-def test_line_descriptions_are_strict_but_addresses_stay_fuzzy() -> None:
+def test_line_descriptions_are_strict_and_pairing_still_tolerates_typos() -> None:
     assert LINE_FIELDS["description"] == "normalised"
-    assert PARTY_FIELDS["address"] == "fuzzy"
     truth = make_invoice()
     garbled = [
         truth.line_items[0].model_copy(update={"description": "Radial car tyre"}),
@@ -574,3 +574,52 @@ def test_line_descriptions_are_strict_but_addresses_stay_fuzzy() -> None:
     score = score_document(truth, make_invoice(line_items=garbled))
     assert wrong_fields(score) == ["line.description"]
     assert score.lines.matched == 2  # pairing still tolerates the typo
+
+
+# --- addresses: same words after normalisation (Salik, 2026-11-17) ----------------------------
+
+
+def test_addresses_are_strict_and_names_stay_fuzzy() -> None:
+    assert PARTY_FIELDS["address"] == "normalised"
+    assert PARTY_FIELDS["name"] == "fuzzy"
+
+
+@pytest.mark.parametrize(
+    "predicted",
+    [
+        "H.No. 39, Kapadia Road, Jalandhar-305441",  # a comma the page doesn't print (diag_00001)
+        "h.no. 39 kapadia road jalandhar 305441",  # case, punctuation and spacing
+        "H.No. 39,  Kapadia Road\nJalandhar-305441",  # a line break for a space
+    ],
+)
+def test_an_address_with_the_same_words_is_right(predicted: str) -> None:
+    truth = make_invoice(
+        shipper=party("Vohra, Mallick and Tank").model_copy(
+            update={"address": "H.No. 39, Kapadia Road Jalandhar-305441"}
+        )
+    )
+    changed = truth.shipper.model_copy(update={"address": predicted})
+    score = score_document(truth, truth.model_copy(update={"shipper": changed}))
+    assert outcomes(score)["shipper.address"] == "correct"
+
+
+@pytest.mark.parametrize(
+    "predicted",
+    [
+        "Albers-Straße 345 14153 Kehl",  # lost its first word to the name (inv_00014): 0.921 fuzzy
+        "Nina-Albers-Straße 345 14153 Kehl, Netherlands",  # the country leaked in
+        "Nina-Albers-Strase 345 14153 Kehl",  # a misread letter
+    ],
+)
+def test_an_address_missing_adding_or_misreading_a_word_is_wrong(predicted: str) -> None:
+    expected = "Nina-Albers-Straße 345 14153 Kehl"
+    truth = make_invoice(buyer=party("Graf").model_copy(update={"address": expected}))
+    changed = truth.buyer.model_copy(update={"address": predicted})
+    score = score_document(truth, truth.model_copy(update={"buyer": changed}))
+    assert outcomes(score)["buyer.address"] == "wrong"
+
+
+def test_the_address_inv_00014_lost_passed_the_old_fuzzy_match() -> None:
+    """Why addresses became strict: the fuzzy match scored this boundary error as right."""
+    lost = similarity("Nina-Albers-Straße 345 14153 Kehl", "Albers-Straße 345 14153 Kehl")
+    assert lost >= FUZZY_THRESHOLD

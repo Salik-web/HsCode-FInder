@@ -50,7 +50,13 @@ HEADER_FIELDS: dict[str, Comparison] = {
     "net_weight_kg": "number",
 }
 PARTIES = ("shipper", "buyer", "consignee", "notify_party")
-PARTY_FIELDS: dict[str, Comparison] = {"name": "fuzzy", "address": "fuzzy", "country": "code"}
+# Addresses are exact after normalisation, like descriptions (Salik, 2026-11-17): a fuzzy
+# match forgave an address that lost its first word to the name. Names stay fuzzy.
+PARTY_FIELDS: dict[str, Comparison] = {
+    "name": "fuzzy",
+    "address": "normalised",
+    "country": "code",
+}
 LINE_FIELDS: dict[str, Comparison] = {
     # Exact after normalisation (Salik, 2026-11-16): a missing or extra word changes what
     # the goods are, and so their HS code. Line pairing still uses similarity.
