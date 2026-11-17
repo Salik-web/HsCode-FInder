@@ -8,7 +8,7 @@ down as a reason, so a person (or a report) can see why a field was trusted or n
 | -------------------------------------------------------- | ------ |
 | Base: the document has a text layer (a digital PDF)      | 0.75   |
 | Base: no text layer (a photo, or a scanned PDF)          | 0.60   |
-| The value is found in the text layer                     | +0.20  |
+| The value is found in the text layer (see below)         | +0.20  |
 | The value is not found in the text layer                 | -0.45  |
 | The answer needed a retry                                | -0.10  |
 | Key names in the answer were repaired                    | -0.05  |
@@ -21,15 +21,28 @@ can verify a value, so critical fields always go to needs_review ("no text layer
 verify", Salik 2026-11-16); their score is left as the evidence gives it, because the
 status is a policy, not a measurement. Non-critical fields keep the threshold.
 
-Text agreement says the value is on the page, not that it is in the right place: a short
-value ("2", "PCS") is found almost anywhere, and a name cut short is still found. It
-isn't applied to None (nothing to look for) or to country codes (pages print country
-names; there's no code-to-name table yet).
+A line's quantity, unit, unit price and amount must be found in that line's own row
+(Salik, 2026-11-17): a short value ("2", "CTN") is on almost any page, so a page-wide
+search would trust a unit copied from another row. The row is found by the description:
+- the fewest consecutive text lines (up to ROW_MAX_LINES) that print it word for word.
+  A table row is one text line unless its description cell wraps; then the row's
+  remaining cells come on the next text line, which joins the row unless another line
+  item's description starts there;
+- failing that (a garbled answer), the fewest lines that print at least ROW_MIN_COVERAGE
+  of it, and of those the ones that print the most;
+- failing that, there is no row and nothing is found.
+Two rows that print the same goods both count.
+
+Other fields are searched on the whole page, so text agreement there says the value is
+on the page, not that it is in the right place: a name with a word of its address added
+is still found. It isn't applied to None (nothing to look for) or to country codes
+(pages print country names; there's no code-to-name table yet).
 """
 
 import unicodedata
 from datetime import date
 from decimal import Decimal, InvalidOperation
+from difflib import SequenceMatcher
 from typing import Literal
 
 from app.pipeline.numbers import read_number
@@ -63,6 +76,12 @@ HEADER_FIELDS = (
 PARTIES = ("shipper", "buyer", "consignee", "notify_party")
 PARTY_FIELDS = ("name", "address", "country")
 LINE_FIELDS = ("description", "quantity", "unit", "unit_price", "amount", "hs_code_on_doc")
+ROW_SCOPED_FIELDS = ("quantity", "unit", "unit_price", "amount")
+ROW_MAX_LINES = 3  # text lines a wrapped description cell may take
+# Share of a garbled description its row must print, counting only runs of ROW_MIN_RUN
+# characters or more, so scattered single letters don't add up.
+ROW_MIN_COVERAGE = 0.8
+ROW_MIN_RUN = 3
 # English month names, written out: the calendar module's names follow the locale.
 MONTHS = (
     "january",
@@ -96,6 +115,15 @@ def field_values(invoice: RawInvoice) -> dict[str, Value]:
     return values
 
 
+def row_scoped_paths(invoice: RawInvoice) -> dict[str, int]:
+    """Every field checked in its own row, with its line item's index."""
+    return {
+        f"line_items[{index}].{field}": index
+        for index in range(len(invoice.line_items))
+        for field in ROW_SCOPED_FIELDS
+    }
+
+
 def assess_fields(
     invoice: RawInvoice,
     text_layer: str | None,
@@ -112,13 +140,19 @@ def assess_fields(
         set_by_rule |= {f"buyer.{field}" for field in PARTY_FIELDS}
     reformatted = set(answer.numbers_normalised) if answer else set()
     failed = {check.path for check in checks}
+    row_scoped = row_scoped_paths(invoice)
+    rows = page.item_rows([line.description for line in invoice.line_items]) if page else []
     assessments = []
     for path, value in field_values(invoice).items():
         if page is None:
             score, reasons = BASE_WITHOUT_TEXT_LAYER, ["no text layer: base 0.60"]
         else:
             score, reasons = BASE_WITH_TEXT_LAYER, ["text layer: base 0.75"]
-            agreement = page.agreement(path, printed.get(path, value))
+            shown = printed.get(path, value)
+            if path in row_scoped:
+                agreement = row_agreement(rows[row_scoped[path]], shown)
+            else:
+                agreement = page.agreement(path, shown)
             if agreement == "found":
                 score, reasons = score + FOUND_IN_TEXT, [*reasons, "found in text layer +0.20"]
             elif agreement == "not_found":
@@ -162,28 +196,104 @@ def normalise(text: str) -> str:
     return " ".join(cleaned.split())
 
 
-class PageText:
-    """The text layer, prepared once for every lookup: normalised words and numbers."""
+class TextScope:
+    """Some of the text layer, prepared for lookups: normalised words and numbers."""
 
-    def __init__(self, text_layer: str) -> None:
-        self.words = f" {normalise(text_layer)} "
-        self.numbers = numbers_in(text_layer)
+    def __init__(self, text: str) -> None:
+        self.words = f" {normalise(text)} "
+        self.numbers = numbers_in(text)
 
-    def agreement(self, path: str, value: Value) -> TextAgreement:
-        if value is None or path.endswith(".country"):
-            return "not_checked"
+    def shows(self, value: str | Decimal | date) -> bool:
         if isinstance(value, Decimal):
             # Tokens carry no sign, so a credit line's -20.00 is looked up as 20.00.
-            found = abs(value) in self.numbers
-        elif isinstance(value, date):
-            found = any(self.contains(rendering) for rendering in date_renderings(value))
-        else:
-            found = self.contains(value)
-        return "found" if found else "not_found"
+            return abs(value) in self.numbers
+        if isinstance(value, date):
+            return any(self.contains(rendering) for rendering in date_renderings(value))
+        return self.contains(value)
 
     def contains(self, text: str) -> bool:
         needle = normalise(text)
         return bool(needle) and f" {needle} " in self.words
+
+
+Span = tuple[int, int]  # text lines [start, end) of the page
+
+
+class PageText:
+    """The text layer, prepared once for every lookup: the whole page and its text lines."""
+
+    def __init__(self, text_layer: str) -> None:
+        self.page = TextScope(text_layer)
+        self.lines = [line for line in text_layer.splitlines() if line.strip()]
+        normalised = [normalise(line) for line in self.lines]
+        self.windows: dict[Span, str] = {
+            (start, start + size): f" {' '.join(normalised[start : start + size])} "
+            for size in range(1, ROW_MAX_LINES + 1)
+            for start in range(len(normalised) - size + 1)
+        }
+
+    def agreement(self, path: str, value: Value) -> TextAgreement:
+        if value is None or path.endswith(".country"):
+            return "not_checked"
+        return "found" if self.page.shows(value) else "not_found"
+
+    def item_rows(self, descriptions: list[str | None]) -> list[list[TextScope]]:
+        """Each line item's row(s), located by its description (see the module docstring)."""
+        spans = [self.description_spans(text) if text else [] for text in descriptions]
+        starts = {start for item in spans for start, _ in item}
+        return [
+            [
+                TextScope("\n".join(self.lines[start : self._row_end(start, end, starts)]))
+                for start, end in item
+            ]
+            for item in spans
+        ]
+
+    def description_spans(self, description: str) -> list[Span]:
+        """The fewest text lines that print the description, else most of it, else none."""
+        needle = normalise(description)
+        if not needle:
+            return []
+        for size in range(1, ROW_MAX_LINES + 1):
+            exact = [
+                span
+                for span, words in self.windows.items()
+                if span[1] - span[0] == size and f" {needle} " in words
+            ]
+            if exact:
+                return exact
+        for size in range(1, ROW_MAX_LINES + 1):
+            shares = {
+                span: row_coverage(needle, words)
+                for span, words in self.windows.items()
+                if span[1] - span[0] == size
+            }
+            best = max(shares.values(), default=0.0)
+            if best >= ROW_MIN_COVERAGE:
+                return [span for span, share in shares.items() if share == best]
+        return []
+
+    def _row_end(self, start: int, end: int, starts: set[int]) -> int:
+        """A wrapped description pushes the row's remaining cells onto the next text line."""
+        wrapped = end - start > 1
+        if wrapped and end < len(self.lines) and end not in starts:
+            return end + 1
+        return end
+
+
+def row_agreement(rows: list[TextScope], value: Value) -> TextAgreement:
+    """Whether a line item's value is printed in its own row; no row means not found."""
+    if value is None:
+        return "not_checked"
+    return "found" if any(row.shows(value) for row in rows) else "not_found"
+
+
+def row_coverage(needle: str, words: str) -> float:
+    """Share of `needle` printed in `words`, in runs of at least ROW_MIN_RUN characters."""
+    if not needle:
+        return 0.0
+    blocks = SequenceMatcher(None, needle, words, autojunk=False).get_matching_blocks()
+    return sum(block.size for block in blocks if block.size >= ROW_MIN_RUN) / len(needle)
 
 
 def numbers_in(text: str) -> set[Decimal]:

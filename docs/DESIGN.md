@@ -205,7 +205,7 @@ Buyer and consignee are often the same company, but not always. When they're the
 
 **5.6 Review and export**
 
-- Confidence comes from deterministic signals (text-layer agreement, guardrails, retries and repairs, rules, source type), never the model's own score; below 0.5 a field is `needs_review`. A document without a text layer (a photo) sends every critical field to `needs_review`, because nothing can verify it.
+- Confidence comes from deterministic signals (text-layer agreement, guardrails, retries and repairs, rules, source type), never the model's own score. A line's quantity, unit, unit price and amount must agree with the text of their own row, located by the description, not anywhere on the page; below 0.5 a field is `needs_review`. A document without a text layer (a photo) sends every critical field to `needs_review`, because nothing can verify it.
 - The UI shows the document image next to the fields, with `needs_review` and `failed_check` highlighted.
 - Every edit is written to `corrections`. That becomes new eval data and tells you which fields are weakest.
 - Export only after approval.

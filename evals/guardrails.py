@@ -101,17 +101,26 @@ class GuardrailReport(BaseModel):
 
 
 def printed_text(data: object) -> str:
-    """Every value as text, one per line: the text layer of a PDF printing exactly these.
+    """Every value as text, one per line, and each line item as one table row: the text
+    layer of a PDF printing exactly these.
 
     Ground truth and the injected set have no pages. Treating them as photos would send
     every critical field to review (no text layer to verify) and hide what the checks
-    do; as digital PDFs, confidence agrees with every printed value, as it would.
+    do; as digital PDFs, confidence agrees with every printed value, as it would. A line
+    item's values are checked in their own row, so they share one text line, as in every
+    layout.
     """
     if isinstance(data, dict):
         return LINE_BREAK.join(printed_text(value) for value in data.values())
     if isinstance(data, list):
-        return LINE_BREAK.join(printed_text(value) for value in data)
+        return LINE_BREAK.join(_printed_row(value) for value in data)
     return "" if data is None else str(data)
+
+
+def _printed_row(item: object) -> str:
+    if isinstance(item, dict):
+        return " ".join(str(value) for value in item.values() if value is not None)
+    return printed_text(item)
 
 
 def location_path(location: tuple[int | str, ...]) -> str:
