@@ -195,6 +195,7 @@ Buyer and consignee are often the same company, but not always. When they're the
 - Incoterm is in the allowed list; currency is a valid ISO-4217 code; country is a valid ISO code
 - Date parses and isn't in the future or more than two years old
 - HS code on the document (if any) exists in the tariff
+- Party boundary (needs the text layer): where the page prints a party's name followed by its address, the extracted name and address must cover that text between them, with no word in both, no word split between them, and on one line no word left to neither. It flags both fields and never moves a word (added 2026-11-17 after `Graf, Nina-Albers-Straße` was read as name `Graf, Nina`)
 - A failed check sets that field's status to `failed_check` and lowers its confidence
 
 **5.5 HS code suggestion (RAG + rerank)**
@@ -205,7 +206,7 @@ Buyer and consignee are often the same company, but not always. When they're the
 
 **5.6 Review and export**
 
-- Confidence comes from deterministic signals (text-layer agreement, guardrails, retries and repairs, rules, source type), never the model's own score. A line's quantity, unit, unit price and amount must agree with the text of their own row, located by the description, not anywhere on the page; below 0.5 a field is `needs_review`. A document without a text layer (a photo) sends every critical field to `needs_review`, because nothing can verify it.
+- Confidence comes from deterministic signals (text-layer agreement, guardrails, retries and repairs, rules, source type), never the model's own score. A line's quantity, unit, unit price and amount must agree with the text of their own row, located by the description, not anywhere on the page; below 0.5 a field is `needs_review`. A document without a text layer (a photo) sends every critical field to `needs_review`, because nothing can verify it. An empty critical field always goes to `needs_review`.
 - The UI shows the document image next to the fields, with `needs_review` and `failed_check` highlighted.
 - Every edit is written to `corrections`. That becomes new eval data and tells you which fields are weakest.
 - Export only after approval.
@@ -227,11 +228,11 @@ This is the heart of the project. Build it before you optimise anything.
 
 Split each set into **dev (70%)** for prompt iteration and **test (30%)** that you only run for reporting, so you don't overfit prompts to the test set.
 
-Synthetic sets have 8 layouts and vary their field labels per document. In synthetic data the buyer is the consignee about 60% of the time, and about 40% of invoices name a notify party. Two layouts (`sidebar`, `ledger`) are held out entirely in a third split, **test_unseen_layout**. They never appear in dev or test, and only the remaining 6 layouts split 70/30. Like test, test_unseen_layout is for reporting only.
+Synthetic sets have 9 layouts and vary their field labels per document. In synthetic data the buyer is the consignee about 60% of the time, and about 40% of invoices name a notify party. Held-out layouts never appear in dev or test and are scored as the unseen group, in a third split, **test_unseen_layout**. Like test, it is for reporting only. The main dataset (seed 42) rotates 8 layouts and put two of them (`sidebar`, `ledger`) in test_unseen_layout; its rotation and split rule are frozen so it always regenerates the same splits. On 2026-11-17 `ledger` became a seen layout, because its test failures were read to design the party boundary check; its documents stay where they are but score as seen. Its replacement, `manifest` (a party on one line, `name | address | country`, landscape), is held out in its own folder and seed (`synth.generate --held-out`).
 
 **Metrics**
 
-- Per-field accuracy: exact match for IDs and codes, ± tolerance for numbers, exact match after normalising case, spacing and punctuation for line descriptions (a missing or extra word changes the goods), normalised fuzzy match (≥ 0.9) for names and addresses
+- Per-field accuracy: exact match for IDs and codes, ± tolerance for numbers, exact match after normalising case, spacing and punctuation for line descriptions (a missing or extra word changes the goods), exact match after normalisation for addresses too (since 2026-11-17: a fuzzy match forgave an address that lost its first word to the name), normalised fuzzy match (≥ 0.9) for names
 - Line items: match predicted to gold lines (Hungarian matching on description similarity), then precision, recall and F1, plus per-field accuracy on matched lines
 - Document-level: % of documents with **all critical fields** correct (invoice number, total, currency, Incoterm, buyer name, consignee name, line amounts). Buyer and consignee names joined on 2026-11-16: a wrong consignee is a serious customs error
 - Guardrail catch rate on `synthetic_injected`, and false-alarm rate on clean docs

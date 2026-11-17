@@ -2,6 +2,33 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-17: party boundary check, strict addresses, empty critical fields, ledger seen (re-scored from cache, 0 API calls)
+
+Salik's decisions after the ledger diagnosis:
+- **Party boundary guardrail** (`app/pipeline/validate.py`, needs the text layer): where the page prints a party's name followed by its address, the extracted pair must cover that text, with no word in both, no word split between them, and on one line no word left to neither. It flags both fields `failed_check` and never moves a word. Ground truth on all 122 clean PDFs (9 layouts, diagnostic and held-out batches): 0 alarms on 415 parties. Rendered-page tests: `inv_00014`'s answer is flagged on both `ledger` and `manifest`.
+- **Addresses are exact after normalisation**, like descriptions (`evals/metrics.py`); names stay fuzzy.
+- **An empty critical field always goes to `needs_review`** ("critical field is empty"). With a text layer, a dropped line amount used to score 0.75 and stay `ok`, and `check_total` skips when an amount is missing.
+- **Holdout steps:** `ledger` is seen from now on. The main dataset's rotation and split rule are frozen (`MAIN_TEMPLATES`, `MAIN_HELD_OUT_TEMPLATES`), so seed 42 regenerates the same 100 documents in the same splits (checked: 0 differences); its ledger documents stay in test_unseen_layout but score as seen, because evals take the group from today's list. New held-out layout `manifest` (landscape, Tahoma, a party per line as `name | address | country`, HS code first): 12 clean + 4 messy documents, seed 1117, `data/heldout_manifest`, ids `held_*`. Generated, not run.
+
+Re-scored every cached v3 set from cache, `main` (1749017) -> this branch:
+
+| Set (cached v3) | Wrong fields | Error recall | Review load | Addresses right |
+| --- | --- | --- | --- | --- |
+| Clean, dev (27) | 6 -> 6 | 6/6 -> 6/6 | 0/2043 -> 0/2043 | 108/108 -> 108/108 |
+| Clean, diagnostic ledger (10) | 2 -> 2 | 2/2 -> 2/2 | 0/596 -> 0/596 | 40/40 -> 40/40 |
+| Clean, test_unseen_layout (24: ledger 12 now seen, sidebar 12) | 3 -> 5 | 1/3 -> **5/5** | 1/1527 -> 2/1525 | 96/96 -> 94/96 |
+| Messy, dev (16) | 41 -> 42 | 13/41 -> 13/42 | 226/1109 -> 226/1108 | 64/64 -> 63/64 |
+| Messy, test_unseen_layout (7: ledger 3 seen, sidebar 4) | 2 -> 4 | 1/2 -> 1/4 | 85/395 -> 85/393 | 27/28 -> 25/28 |
+| **All** | 54 -> 59 | **23/54 -> 27/59** | 312/5670 -> 313/5665 | |
+
+- Clean test_unseen: the boundary check flags `inv_00014`'s buyer, consignee and notify party (names `Graf, Nina` and `Rogner, Mans`); the two addresses that lost `Nina-` are now wrong and flagged too. The one new review of a correct value is Rogner's address, flagged together with the wrong name. 0 fully correct documents flagged in any set.
+- Messy: three addresses the fuzzy match forgave are now wrong: `De Glind` read `De Gland` (dev), and `, India` / `, Netherlands` appended to three addresses on `inv_00094_messy` (ledger; the country leaked in). Photos have no text layer, so the boundary check can't see them; the critical ones were already in review by the photo rule, these aren't critical.
+- The only empty critical field in cache is `inv_00034_messy`'s dropped line amount, on a photo and already in review; its reason now reads "critical field is empty". So that rule changes no number yet; its tests cover the digital-PDF case it exists for.
+- Critical-field accuracy is unchanged per document; only the grouping moved. Clean test_unseen: seen (ledger) 98.0%, 10/12 all right; unseen (sidebar) 100%, 12/12. Messy test_unseen: seen (ledger) 96.4%, 2/3; unseen (sidebar) 100%, 4/4. The frozen v3 numbers (pre-inspection) stand as recorded below.
+- Guardrail eval unchanged: 60/60 planted errors to review; 0/3996 and 0/3857 clean ground-truth fields to review.
+- Row shift (Salik asked why the photo rule missed it): it didn't. All 6 shifted line amounts went to review (5 on `inv_00034_messy`, including the empty one, 1 on `inv_00026_messy`). The 28 missed fields are the quantity, unit, unit price and HS code of the same rows: not critical, 0.60 on a photo, above the 0.50 threshold. Not a bug, so nothing changed.
+- Photo resolution: not downscaled. Photos ≤ 2000 px go as-is (dev messy are 1240–1374 × 1754–1846 px, rendered at 150 DPI), and no image `detail` setting is sent. A higher resolution means new messy images, so new hashes and live calls: no cache-free test exists. Whether Groq resizes on its side is unknown.
+
 ## 2026-11-17: dev messy, v3, complete (15 live calls)
 
 - Model `qwen/qwen3.8-27b` (Groq, thinking off), prompt v3, with the row-scoped line check (photos have no text layer, so it changes nothing here). 14 new documents plus the 2 cached; 15 calls (one retry), no quota error. Report: `reports/20261117T113325_synthetic_messy_dev_qwen_qwen3.8-27b_reasoning-none_v3.md` (from cache at `c74444a`).
