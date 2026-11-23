@@ -5,7 +5,8 @@ import pytest
 from pydantic import ValidationError
 
 from app.schemas.constants import INCOTERMS
-from app.schemas.invoice import Field, HSSuggestion
+from app.schemas.hs import HSSuggestion
+from app.schemas.invoice import Field
 from app.schemas.raw import RawInvoice, RawLineItem, RawParty
 
 
@@ -59,9 +60,9 @@ def test_field_value_is_validated_against_its_type() -> None:
         Field[Decimal](value="not a number", confidence=1, source_page=1)
 
 
-def test_hs_suggestion_rejects_bad_confidence() -> None:
+def test_hs_suggestion_rejects_a_code_that_is_not_pct_shaped() -> None:
     with pytest.raises(ValidationError):
-        HSSuggestion(code="8471.3010", reason="match", confidence=2)
+        HSSuggestion(code="847130", reason="match", retrieval_rank=1, similarity=0.8)
 
 
 def test_all_eleven_incoterms_are_allowed() -> None:
@@ -114,3 +115,10 @@ def test_decimal_survives_json_round_trip_exactly() -> None:
     assert restored == invoice
     assert isinstance(restored.line_items[0].quantity, Decimal)
     assert str(restored.line_items[0].quantity) == "2.50"
+
+
+def test_embedding_text_caps_each_path_level_at_100_characters() -> None:
+    from app.schemas.tariff import embedding_text
+
+    path = f"{'h' * 250} > Other > {'n' * 120}"
+    assert embedding_text(path) == f"{'h' * 100} > Other > {'n' * 100}"

@@ -11,7 +11,7 @@ import openai
 import pytest
 from pydantic import SecretStr
 
-from app.config import MissingApiKeyError, ProviderConfig, Settings
+from app.config import MissingApiKeyError, MissingDatabaseConfigError, ProviderConfig, Settings
 from app.llm.cache import CachingClient, cache_key
 from app.llm.client import (
     ImageInput,
@@ -75,6 +75,7 @@ def provider_config(**changes: Any) -> ProviderConfig:
         "tokens_per_minute": None,
         "output_tokens_per_minute": None,
         "requests_per_minute": None,
+        "max_output_tokens": 100,
     }
     return ProviderConfig(**(values | changes))
 
@@ -347,6 +348,39 @@ def test_switching_provider_is_configuration_only() -> None:
     config = settings.primary_provider()
     assert config.base_url == "https://openrouter.ai/api/v1"
     assert config.model == "some/model:free"
+
+
+def test_each_role_has_its_own_output_cap() -> None:
+    settings = Settings(_env_file=None, groq_api_key=SecretStr("k"), llm_max_output_tokens=16_000)
+    assert settings.primary_provider().max_output_tokens == 16_000
+    fallback = settings.fallback_provider_config()
+    assert fallback is not None
+    assert fallback.max_output_tokens == 1_000
+
+
+def test_hs_reranker_defaults_to_gpt_oss_on_groq() -> None:
+    hs = Settings(_env_file=None, groq_api_key=SecretStr("k")).hs_provider_config()
+    assert hs.base_url == "https://api.groq.com/openai/v1"
+    assert hs.model == "openai/gpt-oss-120b"
+    assert hs.response_format == "json_object"
+
+
+def test_database_url_overrides_the_compose_database() -> None:
+    url = "postgresql+psycopg://u:p@db.example:5432/x"
+    settings = Settings(_env_file=None, database_url=SecretStr(url))
+    assert settings.sqlalchemy_url() == url
+
+
+def test_compose_database_url_quotes_the_password() -> None:
+    settings = Settings(_env_file=None, postgres_password=SecretStr("p@ss/word"))
+    assert settings.sqlalchemy_url() == (
+        "postgresql+psycopg://tradedoc:p%40ss%2Fword@127.0.0.1:5432/tradedoc"
+    )
+
+
+def test_no_database_settings_is_an_explicit_error() -> None:
+    with pytest.raises(MissingDatabaseConfigError, match="DATABASE_URL"):
+        Settings(_env_file=None).sqlalchemy_url()
 
 
 def test_no_fallback_configured_gives_none() -> None:

@@ -12,13 +12,16 @@ from app.pipeline.validate import (
     COUNTRY_RULE,
     CURRENCY_RULE,
     DATE_RULE,
+    HS_CODE_RULE,
     INCOTERM_RULE,
     LINE_MATH_RULE,
     PARTY_BOUNDARY_RULE,
     TOTAL_RULE,
     WEIGHT_RULE,
+    HSCodeTable,
     check_currency,
     check_date,
+    check_hs_code,
     check_incoterm,
     check_line_math,
     check_party_boundaries,
@@ -459,3 +462,54 @@ def test_ground_truth_never_raises_a_boundary_alarm_on_a_rendered_page(template:
             text = prepare_document(render_pdf(page, html)).text_layer
             assert text is not None
             assert check_party_boundaries(truth.invoice, text) == [], (template, index)
+
+
+# --- HS code exists in the tariff ------------------------------------------------------------
+
+HS_TABLE = HSCodeTable.from_codes(["6109.1000", "6109.9010", "0409.0000"])
+
+
+@pytest.mark.parametrize(
+    "printed",
+    [
+        "6109.1000",  # PCT national code
+        "6109.10.00",  # dotted differently
+        "61091000",  # digits only
+        "6109.10",  # 6-digit subheading
+        "6109.10.0010",  # an exporter's 10-digit national code: checked to 6 digits
+        "6109",  # heading only
+        "0409.00",
+    ],
+)
+def test_printed_hs_code_in_the_tariff_passes(printed: str) -> None:
+    assert check_hs_code(printed, 0, HS_TABLE) == []
+
+
+@pytest.mark.parametrize(
+    ("printed", "detail"),
+    [
+        ("6109.30.00", "subheading 610930 is not in the tariff"),
+        ("6110", "heading 6110 is not in the tariff"),
+        ("6110.1", "heading 6110 is not in the tariff"),  # 5 digits: checked to 4
+        ("610", "fewer than 4 digits"),
+        ("N/A", "fewer than 4 digits"),
+    ],
+)
+def test_printed_hs_code_not_in_the_tariff_is_flagged(printed: str, detail: str) -> None:
+    [check] = check_hs_code(printed, 2, HS_TABLE)
+    assert check.path == "line_items[2].hs_code_on_doc"
+    assert check.rule == HS_CODE_RULE
+    assert detail in check.detail
+
+
+def test_no_printed_hs_code_is_not_checked() -> None:
+    assert check_hs_code(None, 0, HS_TABLE) == []
+
+
+def test_hs_check_runs_only_when_a_tariff_is_given() -> None:
+    base = make_invoice()
+    line = base.line_items[0].model_copy(update={"hs_code_on_doc": "9999.9999"})
+    invoice = base.model_copy(update={"line_items": [line, *base.line_items[1:]]})
+    assert [c.rule for c in validate_invoice(invoice, AS_OF)] == []
+    flagged = validate_invoice(invoice, AS_OF, hs_codes=HS_TABLE)
+    assert [(c.path, c.rule) for c in flagged] == [("line_items[0].hs_code_on_doc", HS_CODE_RULE)]
