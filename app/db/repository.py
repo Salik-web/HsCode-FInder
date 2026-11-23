@@ -3,7 +3,7 @@
 from datetime import UTC, datetime
 from typing import Any
 
-from sqlalchemy import func, select, text, update
+from sqlalchemy import delete, func, select, text, update
 from sqlalchemy.orm import Session
 
 from app.db.models import (
@@ -12,6 +12,7 @@ from app.db.models import (
     ExtractionRun,
     HSSuggestionRecord,
     TariffCode,
+    UploadLog,
 )
 from app.pipeline.hs_suggest import HSLineResult
 from app.pipeline.review import DocumentStatus
@@ -40,7 +41,13 @@ def now() -> datetime:
 
 
 def get_or_create_document(
-    session: Session, sha256: str, filename: str, media_type: str, size_bytes: int
+    session: Session,
+    sha256: str,
+    filename: str,
+    media_type: str,
+    size_bytes: int,
+    uploader: str | None = None,
+    is_sample: bool = False,
 ) -> tuple[Document, bool]:
     """Idempotent upload: the same bytes return the existing document (design rule 7)."""
     existing = session.get(Document, sha256)
@@ -56,6 +63,8 @@ def get_or_create_document(
         retryable=False,
         created_at=stamp,
         updated_at=stamp,
+        uploader=uploader,
+        is_sample=is_sample,
     )
     session.add(document)
     return document, True
@@ -65,7 +74,7 @@ def list_documents(session: Session, limit: int, offset: int) -> tuple[list[Docu
     total = session.scalar(select(func.count()).select_from(Document)) or 0
     documents = session.scalars(
         select(Document)
-        .order_by(Document.created_at.desc(), Document.id)
+        .order_by(Document.is_sample.desc(), Document.created_at.desc(), Document.id)
         .limit(limit)
         .offset(offset)
     ).all()
@@ -201,3 +210,58 @@ def approve(document: Document) -> None:
     document.status = "approved"
     document.approved_at = stamp
     document.updated_at = stamp
+
+
+def lock_upload_counts(session: Session) -> None:
+    """Serialise demo uploads for this transaction, so two can't both take the last slot."""
+    session.execute(text("SELECT pg_advisory_xact_lock(hashtext('upload_log'))"))
+
+
+def uploads_since(session: Session, since: datetime, uploader: str | None = None) -> int:
+    statement = select(func.count()).select_from(UploadLog).where(UploadLog.created_at >= since)
+    if uploader is not None:
+        statement = statement.where(UploadLog.uploader == uploader)
+    return session.scalar(statement) or 0
+
+
+def log_upload(session: Session, uploader: str | None) -> None:
+    session.add(UploadLog(uploader=uploader, created_at=now()))
+
+
+def uploads_to_purge(session: Session, before: datetime) -> list[str]:
+    """Uploaded documents (never samples) created before `before`."""
+    statement = select(Document.id).where(
+        Document.is_sample.is_(False), Document.created_at < before
+    )
+    return list(session.scalars(statement))
+
+
+def uploads(session: Session) -> list[str]:
+    return list(session.scalars(select(Document.id).where(Document.is_sample.is_(False))))
+
+
+def samples(session: Session) -> list[Document]:
+    return list(session.scalars(select(Document).where(Document.is_sample.is_(True))))
+
+
+def delete_document(session: Session, document_id: str) -> None:
+    """The document and everything derived from it: runs, HS lines, corrections."""
+    run_ids = select(ExtractionRun.id).where(ExtractionRun.document_id == document_id)
+    session.execute(delete(Correction).where(Correction.run_id.in_(run_ids)))
+    session.execute(delete(HSSuggestionRecord).where(HSSuggestionRecord.run_id.in_(run_ids)))
+    session.execute(delete(ExtractionRun).where(ExtractionRun.document_id == document_id))
+    session.execute(delete(Document).where(Document.id == document_id))
+
+
+def clear_review(session: Session, run_id: int) -> None:
+    """Undo a reviewer's work on a run: its corrections and chosen HS codes."""
+    session.execute(delete(Correction).where(Correction.run_id == run_id))
+    session.execute(
+        update(HSSuggestionRecord)
+        .where(HSSuggestionRecord.run_id == run_id)
+        .values(chosen_code=None)
+    )
+
+
+def prune_upload_log(session: Session, before: datetime) -> None:
+    session.execute(delete(UploadLog).where(UploadLog.created_at < before))

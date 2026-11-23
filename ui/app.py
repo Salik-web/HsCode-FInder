@@ -15,6 +15,7 @@ import streamlit as st
 from app.config import Settings
 
 TIMEOUT_SECONDS = 30
+UNKNOWN_VISITOR = "unknown"  # the API's marker for "the proxy didn't say"
 STATUS_ICONS = {"ok": "✅", "needs_review": "🟡", "failed_check": "🔴"}
 DOCUMENT_ICONS = {
     "queued": "⏳",
@@ -28,8 +29,34 @@ DOCUMENT_ICONS = {
 
 
 @st.cache_resource
+def settings() -> Settings:
+    return Settings()
+
+
+@st.cache_resource
 def api() -> httpx.Client:
-    return httpx.Client(base_url=Settings().api_url, timeout=TIMEOUT_SECONDS)
+    return httpx.Client(base_url=settings().api_url, timeout=TIMEOUT_SECONDS)
+
+
+def visitor_ip() -> str:
+    """The visitor's IP as the Space's proxy reports it; "unknown" when it doesn't.
+
+    The first X-Forwarded-For entry is the client the proxy saw. The API stores only a
+    salted hash, and without one only the demo's global daily cap applies.
+    """
+    headers = st.context.headers
+    forwarded = (headers.get("X-Forwarded-For") or "").split(",")[0].strip()
+    return forwarded or (headers.get("X-Real-Ip") or "").strip() or UNKNOWN_VISITOR
+
+
+def demo_banner() -> None:
+    limit = settings().demo_session_uploads
+    st.info(
+        "**Public demo.** Upload **synthetic documents only**, never a real invoice. "
+        f"Uploads are deleted within {settings().demo_retention_minutes} minutes. "
+        f"Up to {limit} uploads per session; the sample invoices are free to explore. "
+        "The first load after a quiet spell may take a minute while the Space wakes up."
+    )
 
 
 def show_error(response: httpx.Response) -> None:
@@ -42,13 +69,20 @@ def show_error(response: httpx.Response) -> None:
 
 def sidebar() -> str | None:
     st.sidebar.header("Upload")
-    uploaded = st.sidebar.file_uploader("Invoice (PDF, JPG or PNG, up to 10 MB)")
-    if uploaded is not None and st.sidebar.button("Upload"):
+    used = st.session_state.get("uploads", 0)
+    capped = settings().demo_mode and used >= settings().demo_session_uploads
+    uploaded = st.sidebar.file_uploader("Invoice (PDF, JPG or PNG, up to 10 MB)", disabled=capped)
+    if capped:
+        st.sidebar.caption("You've used this session's demo uploads.")
+    if uploaded is not None and not capped and st.sidebar.button("Upload"):
         response = api().post(
-            "/documents", files={"file": (uploaded.name, uploaded.getvalue(), uploaded.type)}
+            "/documents",
+            files={"file": (uploaded.name, uploaded.getvalue(), uploaded.type)},
+            headers={"X-Visitor": visitor_ip()},
         )
         if response.status_code == 202:
             st.session_state["selected"] = response.json()["id"]
+            st.session_state["uploads"] = used + 1
         else:
             show_error(response)
     st.sidebar.header("Documents")
@@ -80,7 +114,7 @@ def document_view(document_id: str) -> None:
         return
     if document["status"] == "failed":
         st.error(f"Processing failed: {document['error']}")
-        if document["retryable"] and st.button("Retry"):
+        if document["retryable"] and not settings().demo_mode and st.button("Retry"):
             api().post(f"/documents/{document_id}/retry")
             st.rerun()
         return
@@ -149,12 +183,16 @@ def hs_section(document_id: str, status: str, review: dict[str, Any]) -> None:
     st.caption("Suggestions only: a licensed person makes the final classification.")
     reviewable = status in ("needs_review", "ready")
     unfinished = [h for h in review["hs_lines"] if h["result"]["hs"]["stage"]["status"] != "ok"]
-    if unfinished and reviewable and st.button(f"Re-run HS for {len(unfinished)} line(s)"):
+    can_rerun = unfinished and reviewable and not settings().demo_mode
+    if can_rerun and st.button(f"Re-run HS for {len(unfinished)} line(s)"):
         response = api().post(f"/documents/{document_id}/hs/rerun")
         if response.status_code == 202:
             st.rerun()
         show_error(response)
     lines = (review["invoice"] or {}).get("line_items", [])
+    skipped = len([line for line in lines if line["description"]]) - len(review["hs_lines"])
+    if skipped > 0:
+        st.caption(f"HS skipped on {skipped} more line(s) (demo limit).")
     for hs_line in review["hs_lines"]:
         index = hs_line["line_index"]
         description = lines[index]["description"] if index < len(lines) else ""
@@ -218,6 +256,8 @@ def finish_section(document_id: str, status: str) -> None:
 def main() -> None:
     st.set_page_config(page_title="TradeDoc AI review", layout="wide")
     st.title("TradeDoc AI: invoice review")
+    if settings().demo_mode:
+        demo_banner()
     selected = sidebar()
     if selected is not None:
         document_view(selected)

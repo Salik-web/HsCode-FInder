@@ -1,0 +1,24 @@
+{
+  "document_sha256": "86631b82909fdbdafc96b041b42bb21c21dbb92c933067a09c8725aad0d8e076",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"INV-2026-17447\",\"invoice_date\":\"2026-04-03\",\"shipper\":{\"name\":\"Schroeff & Schokman\",\"address\":\"Kayleesingel 59, 5510 TQ Kootstertille\",\"country\":\"NL\"},\"buyer\":{\"name\":\"Yadid PLC\",\"address\":\"Plot 201, Block G, Multan 88936\",\"country\":\"PK\"},\"consignee\":{\"name\":\"Yadid PLC\",\"address\":\"Plot 201, Block G, Multan 88936\",\"country\":\"PK\"},\"notify_party\":null,\"incoterm\":\"EXW\",\"currency\":\"SAR\",\"line_items\":[[\"Woven denim fabric 12 oz\",\"783.02\",\"MTR\",\"9.48\",\"7423.03\",null]],\"total_amount\":\"7423.03\",\"gross_weight_kg\":\"496.75\",\"net_weight_kg\":\"477.64\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 3093,
+      "output_tokens": 232
+    },
+    "latency_ms": 1071,
+    "call_ms": 999,
+    "throttle_ms": 0,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

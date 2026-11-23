@@ -1,0 +1,24 @@
+{
+  "document_sha256": "3f8ec332e06cbf7b91d89855e1c908a0b215797fe2643d680882b680201a67bb",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"CI/26/08521\",\"invoice_date\":\"2026-05-09\",\"shipper\":{\"name\":\"van Laarhoven Groep\",\"address\":\"Kickweg 36 8509VB Papendrecht\",\"country\":\"NL\"},\"buyer\":{\"name\":\"Jad-Rohaan\",\"address\":\"Plot 346, Block G, Faisalabad 54139\",\"country\":\"PK\"},\"consignee\":{\"name\":\"Jad-Rohaan\",\"address\":\"Plot 346, Block G, Faisalabad 54139\",\"country\":\"PK\"},\"notify_party\":null,\"incoterm\":\"CPT\",\"currency\":\"SGD\",\"line_items\":[[\"Laptop computers 14 inch\",\"561\",\"PCS\",\"94.70\",\"53126.70\",null],[\"Paracetamol API in bulk\",\"547.28\",\"KG\",\"411.82\",\"225380.85\",null],[\"Portland cement\",\"35\",\"BAG\",\"95.95\",\"3358.25\",null]],\"total_amount\":\"281865.80\",\"gross_weight_kg\":\"3386.57\",\"net_weight_kg\":\"3194.88\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 3198,
+      "output_tokens": 289
+    },
+    "latency_ms": 1136,
+    "call_ms": 1125,
+    "throttle_ms": 58484,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

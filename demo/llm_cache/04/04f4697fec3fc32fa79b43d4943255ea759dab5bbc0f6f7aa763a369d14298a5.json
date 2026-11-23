@@ -1,0 +1,24 @@
+{
+  "document_sha256": "d580beb9ef660d30edd5382cbe6209dcbffc869aee392ae435881265c7736981",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "low",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"suggestions\":[{\"code\":\"5209.4200\",\"reason\":\"Denim is a woven cotton fabric >200 g/m² of different coloured yarns, matching the denim line\"}]}",
+    "model": "openai/gpt-oss-120b",
+    "usage": {
+      "input_tokens": 839,
+      "output_tokens": 129
+    },
+    "latency_ms": 750,
+    "call_ms": 748,
+    "throttle_ms": 0,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

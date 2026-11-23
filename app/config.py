@@ -70,7 +70,25 @@ class Settings(BaseSettings):
     worker_poll_seconds: float = 2.0
     # Where the review UI finds the API.
     api_url: str = "http://127.0.0.1:8000"
+
+    # Public demo (Hugging Face Space). Groq limits are per organization, so these caps
+    # are what keep visitors from spending the project's daily quota.
+    demo_mode: bool = False
+    demo_session_uploads: int = 2
+    demo_visitor_daily_uploads: int = 3
+    demo_daily_uploads: int = 10
+    demo_hs_lines: int = 5  # lines per document that get HS suggestions
+    demo_retention_minutes: int = 60
+    # Committed LLM answers for the sample invoices: they are served with no API call.
+    demo_cache_dir: Path = Path("demo/llm_cache")
+    demo_samples_dir: Path = Path("demo/samples")
+    # Salt for hashing visitor IPs; the raw IP is never stored.
+    demo_uploader_salt: SecretStr = SecretStr("local-demo-salt")
     cache_dir: Path = Path(".cache/llm")
+    # Store live LLM answers. Off in the public demo: an answer holds a visitor's extracted
+    # invoice data, which must go when the upload does. Offline (cache-only) clients, such
+    # as the demo's sample seeding, always read their cache.
+    llm_cache_enabled: bool = True
     reports_dir: Path = Path("evals/reports")
 
     gemini_api_key: SecretStr | None = None

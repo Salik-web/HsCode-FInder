@@ -1,0 +1,24 @@
+{
+  "document_sha256": "8b533d0e408f8716fa3fe3caa262f952de74b6c6e0dc9d9bf4072bc19a182615",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "low",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"tariff_description\":\"Hot-rolled steel coils, flat-rolled steel products of iron or steel, not further worked than hot rolling, in coil form\",\"headings\":[\"7208\"]}",
+    "model": "openai/gpt-oss-120b",
+    "usage": {
+      "input_tokens": 385,
+      "output_tokens": 134
+    },
+    "latency_ms": 923,
+    "call_ms": 919,
+    "throttle_ms": 0,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

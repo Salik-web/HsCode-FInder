@@ -1,0 +1,24 @@
+{
+  "document_sha256": "0ca0ed30589fc63e2fb2ea38a6b97b04d366eece862a3bb56d9cc9a5280e1cff",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "low",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"suggestions\":[{\"code\":\"2523.2900\",\"reason\":\"Matches generic Portland cement as listed under Portland cement > Other\"}]}",
+    "model": "openai/gpt-oss-120b",
+    "usage": {
+      "input_tokens": 923,
+      "output_tokens": 156
+    },
+    "latency_ms": 1123,
+    "call_ms": 1119,
+    "throttle_ms": 55328,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

@@ -9,9 +9,20 @@ database driver never blocks the event loop.
 
 import hashlib
 from collections.abc import Iterator
+from datetime import UTC, datetime, timedelta
 from typing import Annotated, Any, Literal
 
-from fastapi import Depends, FastAPI, HTTPException, Path, Query, Request, UploadFile, status
+from fastapi import (
+    Depends,
+    FastAPI,
+    Header,
+    HTTPException,
+    Path,
+    Query,
+    Request,
+    UploadFile,
+    status,
+)
 from fastapi.responses import FileResponse, JSONResponse, PlainTextResponse
 from pydantic import BaseModel, Field
 from sqlalchemy import Engine, text
@@ -109,6 +120,7 @@ class HSChoice(BaseModel):
 def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or Settings()
     app = FastAPI(title="TradeDoc AI", version="0.1.0")
+    app.state.settings = settings
     app.state.engine = make_engine(settings)
     app.state.storage = DocumentStorage(settings.storage_dir)
     _routes(app)
@@ -125,7 +137,16 @@ def get_storage(request: Request) -> DocumentStorage:
     return request.app.state.storage
 
 
+def get_settings(request: Request) -> Settings:
+    return request.app.state.settings
+
+
 SessionDep = Annotated[Session, Depends(get_session)]
+SettingsDep = Annotated[Settings, Depends(get_settings)]
+# The review UI passes the visitor's IP (from the Space's proxy headers) over localhost;
+# only a salted hash of it is stored.
+VisitorHeader = Annotated[str | None, Header(alias="X-Visitor")]
+UNKNOWN_VISITOR = "unknown"
 StorageDep = Annotated[DocumentStorage, Depends(get_storage)]
 
 
@@ -136,7 +157,13 @@ def _routes(app: FastAPI) -> None:
         return {"status": "ok"}
 
     @app.post("/documents", status_code=status.HTTP_202_ACCEPTED)
-    def upload(file: UploadFile, session: SessionDep, storage: StorageDep) -> DocumentOut:
+    def upload(
+        file: UploadFile,
+        session: SessionDep,
+        storage: StorageDep,
+        settings: SettingsDep,
+        visitor: VisitorHeader = None,
+    ) -> DocumentOut:
         data = file.file.read(MAX_FILE_BYTES + 1)
         if len(data) > MAX_FILE_BYTES:
             raise HTTPException(status.HTTP_413_CONTENT_TOO_LARGE, "file is over 10 MB")
@@ -145,9 +172,17 @@ def _routes(app: FastAPI) -> None:
         except InvalidDocumentError as error:
             raise HTTPException(status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, str(error)) from error
         sha256 = hashlib.sha256(data).hexdigest()
+        existing = session.get(Document, sha256)
+        if existing is not None:  # the same bytes again: no new work, nothing counted
+            return DocumentOut.of(existing)
+        uploader = _uploader(visitor, settings) if settings.demo_mode else None
+        if settings.demo_mode:
+            _check_demo_caps(session, settings, uploader)
         document, created = repository.get_or_create_document(
-            session, sha256, safe_filename(file.filename or ""), media_type, len(data)
+            session, sha256, safe_filename(file.filename or ""), media_type, len(data), uploader
         )
+        if settings.demo_mode:
+            repository.log_upload(session, uploader)
         if created:
             storage.save_original(sha256, data)
         return DocumentOut.of(document)
@@ -246,8 +281,11 @@ def _routes(app: FastAPI) -> None:
         )
 
     @app.post("/documents/{document_id}/hs/rerun", status_code=status.HTTP_202_ACCEPTED)
-    def rerun_hs(document_id: DocumentId, session: SessionDep) -> DocumentOut:
+    def rerun_hs(
+        document_id: DocumentId, session: SessionDep, settings: SettingsDep
+    ) -> DocumentOut:
         """Queue an HS re-run for the lines whose HS step failed or was rate-limited."""
+        _not_in_demo(settings, "HS re-run")
         document = _document(session, document_id)
         _editable(document)
         run = _run(session, document_id)
@@ -271,7 +309,9 @@ def _routes(app: FastAPI) -> None:
         return DocumentOut.of(document)
 
     @app.post("/documents/{document_id}/retry", status_code=status.HTTP_202_ACCEPTED)
-    def retry(document_id: DocumentId, session: SessionDep) -> DocumentOut:
+    def retry(document_id: DocumentId, session: SessionDep, settings: SettingsDep) -> DocumentOut:
+        # The demo deletes an upload's file once processed, so there is nothing to retry.
+        _not_in_demo(settings, "Retry")
         document = _document(session, document_id)
         if document.status != "failed":
             raise HTTPException(status.HTTP_409_CONFLICT, "only a failed document can be retried")
@@ -311,6 +351,36 @@ def _routes(app: FastAPI) -> None:
             else document.approved_at.isoformat(),
         }
         return JSONResponse(export_json(invoice, chosen, provenance))
+
+
+def _uploader(visitor: str | None, settings: Settings) -> str | None:
+    """A salted hash of the visitor's IP; None when the proxy didn't say who it was."""
+    if not visitor or visitor == UNKNOWN_VISITOR:
+        return None
+    salt = settings.demo_uploader_salt.get_secret_value()
+    return hashlib.sha256(f"{salt}:{visitor}".encode()).hexdigest()
+
+
+def _check_demo_caps(session: Session, settings: Settings, uploader: str | None) -> None:
+    repository.lock_upload_counts(session)
+    since = datetime.now(UTC) - timedelta(days=1)  # a rolling day
+    if repository.uploads_since(session, since) >= settings.demo_daily_uploads:
+        raise HTTPException(
+            status.HTTP_429_TOO_MANY_REQUESTS,
+            "The demo has reached today's upload limit. Try a sample invoice, or come back "
+            "tomorrow.",
+        )
+    visitor_count = 0 if uploader is None else repository.uploads_since(session, since, uploader)
+    if visitor_count >= settings.demo_visitor_daily_uploads:
+        raise HTTPException(
+            status.HTTP_429_TOO_MANY_REQUESTS,
+            f"You've used your {settings.demo_visitor_daily_uploads} demo uploads for today.",
+        )
+
+
+def _not_in_demo(settings: Settings, action: str) -> None:
+    if settings.demo_mode:
+        raise HTTPException(status.HTTP_409_CONFLICT, f"{action} is off in the public demo")
 
 
 def _document(session: Session, document_id: str) -> Document:

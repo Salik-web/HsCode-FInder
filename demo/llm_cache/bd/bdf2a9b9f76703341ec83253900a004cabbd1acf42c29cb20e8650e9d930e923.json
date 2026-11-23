@@ -1,0 +1,24 @@
+{
+  "document_sha256": "9c80e9edf7ccbaf3da4bf88cf625ba4e22d30bcdd19ad05a361e4086994a00be",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "low",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"tariff_description\":\"Ceramic tiles used as floor covering, made of fired clay (glazed or unglazed) and intended for installation on floors\",\"headings\":[\"6907\"]}",
+    "model": "openai/gpt-oss-120b",
+    "usage": {
+      "input_tokens": 384,
+      "output_tokens": 151
+    },
+    "latency_ms": 1055,
+    "call_ms": 789,
+    "throttle_ms": 0,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

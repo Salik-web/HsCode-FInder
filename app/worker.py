@@ -10,7 +10,7 @@ import argparse
 import logging
 import time
 from dataclasses import dataclass
-from datetime import date
+from datetime import UTC, date, datetime
 
 from sqlalchemy import Engine, select
 from sqlalchemy.orm import Session
@@ -33,6 +33,7 @@ from app.pipeline.review import (
 )
 from app.pipeline.run import PipelineConfig, complete_pipeline, preprocess_stage
 from app.pipeline.validate import HSCodeTable
+from app.retention import CLEANUP_INTERVAL_SECONDS, cleanup
 from app.schemas.result import PipelineResult
 from app.storage import DocumentStorage
 
@@ -55,6 +56,10 @@ class WorkerDeps:
     invoice_prompt_version: str
     query_prompt: TaskPrompt
     rerank_prompt: TaskPrompt
+    # Public demo: HS for the first N described lines only, and the upload deleted once
+    # processed. None and False outside the demo.
+    hs_line_limit: int | None = None
+    delete_original_after: bool = False
 
 
 def build_deps(settings: Settings) -> WorkerDeps:
@@ -72,6 +77,8 @@ def build_deps(settings: Settings) -> WorkerDeps:
         invoice_prompt_version=settings.invoice_prompt_version,
         query_prompt=load_task_prompt(QUERY_TASK, settings.hs_query_prompt_version),
         rerank_prompt=load_task_prompt(RERANK_TASK, settings.hs_rerank_prompt_version),
+        hs_line_limit=settings.demo_hs_lines if settings.demo_mode else None,
+        delete_original_after=settings.demo_mode,
     )
 
 
@@ -84,14 +91,23 @@ def process_next(deps: WorkerDeps, today: date) -> str | None:
     document_id, requested = claimed
     if requested == "hs_queued":
         _rerun_hs(deps, document_id)
-        return document_id
+    else:
+        process_document(deps, document_id, today)
+    return document_id
+
+
+def process_document(deps: WorkerDeps, document_id: str, today: date) -> None:
+    """Run the pipeline and HS on a claimed document and store the outcome as its status."""
     try:
         result, hs = _run(deps, document_id, today)
     except Exception as error:  # stage boundary: any failure becomes the document's status
         logger.exception("processing failed", extra={"document_id": document_id})
         with Session(deps.engine) as session, session.begin():
             repository.set_status(session, document_id, "failed", error=type(error).__name__)
-        return document_id
+        return
+    finally:
+        if deps.delete_original_after:
+            deps.storage.delete_original(document_id)
     with Session(deps.engine) as session, session.begin():
         run = repository.save_run(session, result)
         for line_index, line in hs.items():
@@ -112,7 +128,6 @@ def process_next(deps: WorkerDeps, today: date) -> str | None:
             error=failed_stage.error,
             retryable=failed_stage.retryable,
         )
-    return document_id
 
 
 def _rerun_hs(deps: WorkerDeps, document_id: str) -> None:
@@ -190,10 +205,12 @@ def _run(
     result = complete_pipeline(preprocessed, config, deps.extract_client)
     hs: dict[int, HSLineResult] = {}
     lines = [] if result.invoice is None else result.invoice.line_items
-    for index, line in enumerate(lines):
-        if line.description:  # no description, nothing to classify
+    described = [index for index, line in enumerate(lines) if line.description]
+    for index in described[: deps.hs_line_limit]:
+        description = lines[index].description
+        if description:  # narrows the type; `described` holds only these
             hs[index] = classify_line(
-                line.description,
+                description,
                 deps.embedder,
                 deps.index,
                 deps.query_prompt,
@@ -210,7 +227,11 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     settings = Settings()
     deps = build_deps(settings)
+    last_cleanup = 0.0
     while True:
+        if settings.demo_mode and time.monotonic() - last_cleanup > CLEANUP_INTERVAL_SECONDS:
+            cleanup(deps.engine, deps.storage, settings.demo_retention_minutes, datetime.now(UTC))
+            last_cleanup = time.monotonic()
         processed = process_next(deps, date.today())
         if processed is not None:
             logger.info("processed", extra={"document_id": processed})

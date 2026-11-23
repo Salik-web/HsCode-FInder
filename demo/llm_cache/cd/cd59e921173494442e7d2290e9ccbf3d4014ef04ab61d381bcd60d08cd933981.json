@@ -1,0 +1,24 @@
+{
+  "document_sha256": "9c80e9edf7ccbaf3da4bf88cf625ba4e22d30bcdd19ad05a361e4086994a00be",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "low",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"suggestions\":[{\"code\":\"6907.4000\",\"reason\":\"General heading for ceramic floor tiles and other finishing ceramics\"},{\"code\":\"6907.2119\",\"reason\":\"Specific subheading for ceramic tiles (non‑polished) with low water absorption\"},{\"code\":\"6907.2211\",\"reason\":\"Specific subheading for ceramic tiles (polished) with moderate water absorption\"}]}",
+    "model": "openai/gpt-oss-120b",
+    "usage": {
+      "input_tokens": 1048,
+      "output_tokens": 160
+    },
+    "latency_ms": 891,
+    "call_ms": 884,
+    "throttle_ms": 0,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

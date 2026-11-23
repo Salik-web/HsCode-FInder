@@ -76,6 +76,9 @@ class Document(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     approved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Demo: a committed sample (never purged), and a salted hash of the uploader's IP.
+    is_sample: Mapped[bool] = mapped_column(Boolean, default=False)
+    uploader: Mapped[str | None] = mapped_column(String(64), index=True)
 
 
 class ExtractionRun(Base):
@@ -121,3 +124,13 @@ class Correction(Base):
     old_value: Mapped[Any] = mapped_column(JSONB)
     new_value: Mapped[Any] = mapped_column(JSONB)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class UploadLog(Base):
+    """One accepted upload, kept after the document is purged, for the demo's daily caps."""
+
+    __tablename__ = "upload_log"
+
+    id: Mapped[int] = mapped_column(Integer, Identity(), primary_key=True)
+    uploader: Mapped[str | None] = mapped_column(String(64), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)

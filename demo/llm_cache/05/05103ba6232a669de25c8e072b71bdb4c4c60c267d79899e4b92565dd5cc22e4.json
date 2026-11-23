@@ -1,0 +1,24 @@
+{
+  "document_sha256": "9b07ff2b92f448c871b3353eea9696574f0b24ed6615b03686435bae1ef5d2b5",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "low",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"tariff_description\":\"Dried black tea leaves, unblended, intended for infusion as a beverage, presented in bulk packaging\",\"headings\":[\"0901\"]}",
+    "model": "openai/gpt-oss-120b",
+    "usage": {
+      "input_tokens": 385,
+      "output_tokens": 138
+    },
+    "latency_ms": 20798,
+    "call_ms": 691,
+    "throttle_ms": 58797,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

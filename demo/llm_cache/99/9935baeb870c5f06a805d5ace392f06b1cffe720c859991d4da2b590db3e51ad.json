@@ -1,0 +1,24 @@
+{
+  "document_sha256": "9b07ff2b92f448c871b3353eea9696574f0b24ed6615b03686435bae1ef5d2b5",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "low",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"suggestions\":[{\"code\":\"0902.4020\",\"reason\":\"Fits black tea in bulk packs exceeding 3 kg as described in the tariff heading\"}]}",
+    "model": "openai/gpt-oss-120b",
+    "usage": {
+      "input_tokens": 794,
+      "output_tokens": 130
+    },
+    "latency_ms": 1374,
+    "call_ms": 1055,
+    "throttle_ms": 0,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

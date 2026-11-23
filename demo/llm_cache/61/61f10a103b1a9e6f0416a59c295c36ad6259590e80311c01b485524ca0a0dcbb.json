@@ -1,0 +1,24 @@
+{
+  "document_sha256": "fc61e71bf186292dceea47a2386c5151403cb783ea8923d9136955ad79fcacdb",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"804-36772\",\"invoice_date\":\"2026-06-18\",\"shipper\":{\"name\":\"Garcia-Cox\",\"address\":\"1022 Cox Springs Suite 869 New Justin, NJ 36157\",\"country\":\"US\"},\"buyer\":{\"name\":\"Ihab Ltd\",\"address\":\"Plot 246, Block E, Lahore 21273\",\"country\":\"PK\"},\"consignee\":{\"name\":\"Ihab Ltd\",\"address\":\"Plot 246, Block E, Lahore 21273\",\"country\":\"PK\"},\"notify_party\":null,\"incoterm\":\"CIF\",\"currency\":\"EUR\",\"line_items\":[[\"Stainless steel surgical scissors\",\"473\",\"PCS\",\"66.52\",\"31463.96\",null],[\"Lithium-ion batteries 48V\",\"25\",\"PCS\",\"279.76\",\"6994.00\",null],[\"Radial car tyres 205/55 R16\",\"151\",\"PCS\",\"495.13\",\"74764.63\",null],[\"Ceramic floor tiles\",\"65\",\"CTN\",\"426.12\",\"27697.80\",null],[\"Laptop computers 14 inch\",\"792\",\"PCS\",\"215.69\",\"170826.48\",null],[\"Portland cement\",\"23\",\"BAG\",\"479.76\",\"11034.48\",null],[\"Smartphones 5G\",\"294\",\"PCS\",\"79.54\",\"23384.76\",null],[\"Printed cotton bed linen\",\"662\",\"SET\",\"262.54\",\"173801.48\",null],[\"Motorcycle spare parts\",\"449\",\"SET\",\"264.03\",\"118549.47\",null],[\"Single-phase electric motors\",\"22\",\"PCS\",\"251.88\",\"5541.36\",null],[\"Basmati rice long grain\",\"7.87\",\"KG\",\"54.75\",\"430.88\",null],[\"Ball bearings\",\"260\",\"PCS\",\"6.38\",\"1658.80\",null],[\"Centrifugal water pumps\",\"85\",\"PCS\",\"8.64\",\"734.40\",null]],\"total_amount\":\"646882.50\",\"gross_weight_kg\":\"11789.26\",\"net_weight_kg\":\"10717.51\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 5213,
+      "output_tokens": 588
+    },
+    "latency_ms": 3024,
+    "call_ms": 3014,
+    "throttle_ms": 57132,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

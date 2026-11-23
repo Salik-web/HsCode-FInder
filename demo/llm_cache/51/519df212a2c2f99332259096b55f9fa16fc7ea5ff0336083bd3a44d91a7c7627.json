@@ -1,0 +1,24 @@
+{
+  "document_sha256": "3a03fc5a07af59805f85e8104cb0639552e3e50f42f4f1544e735985a700a51f",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "low",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"suggestions\":[{\"code\":\"9018.9030\",\"reason\":\"Fits medical/surgical scissors as defined in the heading for instruments used in medical sciences\"},{\"code\":\"8213.0000\",\"reason\":\"General category for scissors and shears, applicable if the medical specificity is not required\"}]}",
+    "model": "openai/gpt-oss-120b",
+    "usage": {
+      "input_tokens": 773,
+      "output_tokens": 137
+    },
+    "latency_ms": 830,
+    "call_ms": 823,
+    "throttle_ms": 0,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

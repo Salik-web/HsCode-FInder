@@ -1,0 +1,24 @@
+{
+  "document_sha256": "e7200fed4ec37a21e41fa71911c78e248835215ff8de6174702e80f92a9733be",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "low",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"suggestions\":[{\"code\":\"2924.2910\",\"reason\":\"Paracetamol as a bulk chemical ingredient fits the amide‑function compound line\"},{\"code\":\"3004.9092\",\"reason\":\"If treated as a medicinal product, the specific Paracetamol line applies\"}]}",
+    "model": "openai/gpt-oss-120b",
+    "usage": {
+      "input_tokens": 1096,
+      "output_tokens": 175
+    },
+    "latency_ms": 902,
+    "call_ms": 899,
+    "throttle_ms": 0,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

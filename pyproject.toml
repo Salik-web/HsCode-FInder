@@ -17,6 +17,7 @@ dependencies = [
     "python-multipart>=0.0.34",
     "sentence-transformers>=6.3.0",
     "sqlalchemy>=2.0",
+    "torch>=2.15.0",
     "uvicorn[standard]>=0.54.0",
 ]
 
@@ -64,3 +65,15 @@ select = ["E", "W", "F", "I", "UP", "B", "ARG", "ERA", "T20", "RUF", "SIM"]
 "evals/hs_run.py" = ["T20"]
 "tariff/parse.py" = ["T20"]
 "tariff/ingest.py" = ["T20"]
+"app/demo.py" = ["T20"]
+"evals/gate.py" = ["T20"]
+
+# Linux (the Docker image, CI): CPU-only torch. PyPI's Linux wheel pulls CUDA (gigabytes);
+# Windows and macOS wheels on PyPI are CPU-only already.
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]

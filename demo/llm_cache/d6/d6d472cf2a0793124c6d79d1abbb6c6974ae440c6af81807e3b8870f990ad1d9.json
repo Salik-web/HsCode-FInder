@@ -1,0 +1,24 @@
+{
+  "document_sha256": "f871d9cbf7694e8e6bf3c862553dfed51fc1118868db1b528602971187afb6e5",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "low",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"tariff_description\":\"Radial pneumatic tyres for passenger cars, size 205/55 R16, new and intended for use on motor vehicles\",\"headings\":[\"4010\",\"4011\"]}",
+    "model": "openai/gpt-oss-120b",
+    "usage": {
+      "input_tokens": 390,
+      "output_tokens": 133
+    },
+    "latency_ms": 685,
+    "call_ms": 679,
+    "throttle_ms": 0,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

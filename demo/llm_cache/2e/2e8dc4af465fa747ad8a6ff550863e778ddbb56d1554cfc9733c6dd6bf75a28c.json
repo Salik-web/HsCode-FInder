@@ -1,0 +1,24 @@
+{
+  "document_sha256": "d580beb9ef660d30edd5382cbe6209dcbffc869aee392ae435881265c7736981",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "low",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"tariff_description\":\"Woven denim fabric made of cotton, weighing approximately 12 oz per square yard, intended as a textile material for apparel or other uses\",\"headings\":[\"5208\"]}",
+    "model": "openai/gpt-oss-120b",
+    "usage": {
+      "input_tokens": 387,
+      "output_tokens": 181
+    },
+    "latency_ms": 738,
+    "call_ms": 735,
+    "throttle_ms": 0,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

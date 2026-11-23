@@ -5,6 +5,7 @@ rule 12). A filename from the upload never becomes a path: only the sha256 does.
 """
 
 import re
+import shutil
 from pathlib import Path
 
 from app.files import write_atomically
@@ -38,6 +39,19 @@ class DocumentStorage:
         for number, page in enumerate(pages, start=1):
             extension = PAGE_EXTENSIONS[page.media_type]
             write_atomically(self._folder(sha256) / f"page-{number}.{extension}", page.data)
+
+    def delete_original(self, sha256: str) -> None:
+        (self._folder(sha256) / ORIGINAL_NAME).unlink(missing_ok=True)
+
+    def delete_all(self, sha256: str) -> None:
+        """The original and its page images."""
+        shutil.rmtree(self._folder(sha256), ignore_errors=True)
+
+    def has_original(self, sha256: str) -> bool:
+        return (self._folder(sha256) / ORIGINAL_NAME).is_file()
+
+    def has_pages(self, sha256: str) -> bool:
+        return any(self._folder(sha256).glob("page-1.*"))
 
     def page_path(self, sha256: str, number: int) -> Path:
         """The rendered page image (1-based), whichever format preprocessing produced."""

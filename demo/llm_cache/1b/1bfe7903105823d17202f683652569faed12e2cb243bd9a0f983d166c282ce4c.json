@@ -1,0 +1,24 @@
+{
+  "document_sha256": "0ca0ed30589fc63e2fb2ea38a6b97b04d366eece862a3bb56d9cc9a5280e1cff",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "low",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"tariff_description\":\"Portland cement, a hydraulic cement composed mainly of clinker and gypsum, used for construction and building purposes\",\"headings\":[\"2523\"]}",
+    "model": "openai/gpt-oss-120b",
+    "usage": {
+      "input_tokens": 383,
+      "output_tokens": 73
+    },
+    "latency_ms": 628,
+    "call_ms": 624,
+    "throttle_ms": 0,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

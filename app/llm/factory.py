@@ -61,6 +61,8 @@ def _provider_stack(
         requests_per_minute=config.requests_per_minute,
         output_tokens_per_minute=config.output_tokens_per_minute,
     )
+    if not settings.llm_cache_enabled:
+        return client
     return CachingClient(client, settings.cache_dir, provider.call_options)
 
 

@@ -371,16 +371,31 @@ def test_database_url_overrides_the_compose_database() -> None:
     assert settings.sqlalchemy_url() == url
 
 
-def test_compose_database_url_quotes_the_password() -> None:
+def test_compose_database_url_quotes_the_password(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("DATABASE_URL", raising=False)  # CI sets one
     settings = Settings(_env_file=None, postgres_password=SecretStr("p@ss/word"))
     assert settings.sqlalchemy_url() == (
         "postgresql+psycopg://tradedoc:p%40ss%2Fword@127.0.0.1:5432/tradedoc"
     )
 
 
-def test_no_database_settings_is_an_explicit_error() -> None:
+def test_no_database_settings_is_an_explicit_error(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("DATABASE_URL", raising=False)  # CI sets one
     with pytest.raises(MissingDatabaseConfigError, match="DATABASE_URL"):
         Settings(_env_file=None).sqlalchemy_url()
+
+
+def test_live_answers_can_be_left_uncached_but_offline_still_reads_the_cache(
+    tmp_path: Path,
+) -> None:
+    from app.llm.cache import CachingClient
+    from app.llm.factory import build_client
+
+    settings = Settings(
+        _env_file=None, groq_api_key=SecretStr("k"), cache_dir=tmp_path, llm_cache_enabled=False
+    )
+    assert not isinstance(build_client(settings, use_fallback=False), CachingClient)
+    assert isinstance(build_client(settings, use_fallback=False, offline=True), CachingClient)
 
 
 def test_no_fallback_configured_gives_none() -> None:

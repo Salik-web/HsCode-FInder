@@ -1,0 +1,24 @@
+{
+  "document_sha256": "7f9fec7c670967d833dfe1f3f2354b0588e8f4176ec40d67838df64e206ab92f",
+  "model": "openai/gpt-oss-120b",
+  "prompt_version": "v1",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "low",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"suggestions\":[{\"code\":\"8471.3010\",\"reason\":\"Matches laptops/notebooks weighing ≤10 kg with CPU, keyboard and display\"},{\"code\":\"8471.3020\",\"reason\":\"Personal computers also fit but less specific than laptop line\"},{\"code\":\"8471.4110\",\"reason\":\"Micro computers could apply, but 3010 is more precise for laptops\"}]}",
+    "model": "openai/gpt-oss-120b",
+    "usage": {
+      "input_tokens": 1153,
+      "output_tokens": 144
+    },
+    "latency_ms": 968,
+    "call_ms": 965,
+    "throttle_ms": 0,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}
