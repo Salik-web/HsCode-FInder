@@ -3,12 +3,14 @@
 from decimal import Decimal
 from pathlib import Path
 from typing import Literal
+from urllib.parse import quote_plus
 
 from pydantic import BaseModel, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ProviderName = Literal["gemini", "openrouter", "groq"]
-Role = Literal["llm", "fallback"]  # the settings prefix for each model's options
+# The settings prefix for each model's options: extraction, its fallback, HS reranking.
+Role = Literal["llm", "fallback", "hs"]
 # json_schema sends our schema to the provider; json_object only asks for a JSON object,
 # and the prompt names the keys. Our own validation applies either way.
 ResponseFormat = Literal["json_schema", "json_object"]
@@ -23,6 +25,10 @@ PROVIDER_BASE_URLS: dict[ProviderName, str] = {
 
 class MissingApiKeyError(RuntimeError):
     """The configured provider has no API key in the environment."""
+
+
+class MissingDatabaseConfigError(RuntimeError):
+    """Neither DATABASE_URL nor the docker-compose password is set."""
 
 
 class ProviderConfig(BaseModel):
@@ -45,6 +51,8 @@ class ProviderConfig(BaseModel):
     tokens_per_minute: int | None
     output_tokens_per_minute: int | None
     requests_per_minute: int | None
+    # Per-call output cap. Thinking models spend output tokens on reasoning too.
+    max_output_tokens: int
 
 
 class Settings(BaseSettings):
@@ -52,6 +60,16 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     data_dir: Path = Path("data")
+    # Uploaded documents and their page images (gitignored: real client documents).
+    storage_dir: Path = Path("storage")
+    # Versions the API and worker run; evals choose their own on the command line.
+    invoice_prompt_version: str = "v3"
+    hs_query_prompt_version: str = "v1"
+    hs_rerank_prompt_version: str = "v1"
+    # Seconds the worker waits before looking for queued documents again.
+    worker_poll_seconds: float = 2.0
+    # Where the review UI finds the API.
+    api_url: str = "http://127.0.0.1:8000"
     cache_dir: Path = Path(".cache/llm")
     reports_dir: Path = Path("evals/reports")
 
@@ -86,12 +104,39 @@ class Settings(BaseSettings):
     fallback_input_usd_per_million_tokens: Decimal = Decimal(0)
     fallback_output_usd_per_million_tokens: Decimal = Decimal(0)
 
+    # HS reranking: text only, its own Groq per-model daily quota, never a vision call.
+    hs_provider: ProviderName = "groq"
+    hs_model: str = "openai/gpt-oss-120b"
+    hs_reasoning_effort: str | None = "low"
+    hs_strict_schema: bool = False
+    hs_response_format: ResponseFormat = "json_object"
+    # Groq free tier for gpt-oss-120b: 8,000 tokens and 30 requests a minute.
+    hs_tokens_per_minute: int | None = 8_000
+    hs_output_tokens_per_minute: int | None = None
+    hs_requests_per_minute: int | None = 30
+    hs_input_usd_per_million_tokens: Decimal = Decimal(0)
+    hs_output_usd_per_million_tokens: Decimal = Decimal(0)
+    # Reasoning counts against the cap; low effort uses a few hundred tokens.
+    hs_max_output_tokens: int = 2_000
+
+    # Local sentence-transformers model; 384 dimensions, as tariff_codes.embedding.
+    embedding_model: str = "BAAI/bge-small-en-v1.5"
+
+    # Postgres + pgvector. DATABASE_URL (Neon, Supabase) overrides the docker-compose values.
+    database_url: SecretStr | None = None
+    postgres_user: str = "tradedoc"
+    postgres_password: SecretStr | None = None
+    postgres_db: str = "tradedoc"
+    postgres_host: str = "127.0.0.1"
+    postgres_port: int = 5432
+
     llm_timeout_seconds: float = 120.0
     # The OpenAI client retries 5xx, timeouts and (as a last resort) 429 with backoff.
     llm_max_retries: int = 3
     # Groq's output limit per minute is also its per-call ceiling. Thinking models (Gemini)
     # spend output tokens on reasoning: raise this to 16000 for them.
     llm_max_output_tokens: int = 1_000
+    fallback_max_output_tokens: int = 1_000
     # Free tiers allow a few requests a minute, so only a little concurrency pays off.
     llm_concurrency: int = 2
 
@@ -108,6 +153,11 @@ class Settings(BaseSettings):
         "fallback_tokens_per_minute",
         "fallback_output_tokens_per_minute",
         "fallback_requests_per_minute",
+        "hs_reasoning_effort",
+        "hs_tokens_per_minute",
+        "hs_output_tokens_per_minute",
+        "hs_requests_per_minute",
+        "database_url",
         mode="before",
     )
     @classmethod
@@ -123,6 +173,21 @@ class Settings(BaseSettings):
         if self.fallback_provider is None:
             return None
         return self._provider_config("fallback", self.fallback_provider)
+
+    def hs_provider_config(self) -> ProviderConfig:
+        return self._provider_config("hs", self.hs_provider)
+
+    def sqlalchemy_url(self) -> str:
+        """DATABASE_URL when set, else the docker-compose database on this machine."""
+        if self.database_url is not None:
+            return self.database_url.get_secret_value()
+        if self.postgres_password is None:
+            raise MissingDatabaseConfigError("set DATABASE_URL, or POSTGRES_PASSWORD, in .env")
+        password = quote_plus(self.postgres_password.get_secret_value())
+        return (
+            f"postgresql+psycopg://{self.postgres_user}:{password}"
+            f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
+        )
 
     def _provider_config(self, role: Role, name: ProviderName) -> ProviderConfig:
         api_key = getattr(self, f"{name}_api_key")
@@ -141,4 +206,5 @@ class Settings(BaseSettings):
             tokens_per_minute=getattr(self, f"{role}_tokens_per_minute"),
             output_tokens_per_minute=getattr(self, f"{role}_output_tokens_per_minute"),
             requests_per_minute=getattr(self, f"{role}_requests_per_minute"),
+            max_output_tokens=getattr(self, f"{role}_max_output_tokens"),
         )

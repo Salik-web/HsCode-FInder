@@ -15,7 +15,7 @@ from app.pipeline.confidence import assess_fields
 from app.pipeline.extract import extract_invoice
 from app.pipeline.preprocess import InvalidDocumentError, PreparedDocument, prepare_document
 from app.pipeline.prompts import load_prompt
-from app.pipeline.validate import verify_invoice
+from app.pipeline.validate import HSCodeTable, verify_invoice
 from app.schemas.result import PipelineResult, StageResult
 
 NOT_RUN = StageResult(status="not_run", error=None, retryable=False)
@@ -27,6 +27,8 @@ class PipelineConfig(BaseModel):
     # so a report doesn't change with the day it is run.
     as_of: date
     doc_type: Literal["invoice"] = "invoice"
+    # The tariff's codes for the HS-code check; None skips it (no tariff loaded).
+    hs_codes: HSCodeTable | None = None
 
 
 class Preprocessed(BaseModel):
@@ -77,7 +79,9 @@ def complete_pipeline(
     if outcome.invoice is None:
         return result
     text_layer = preprocessed.document.text_layer
-    rules = verify_invoice(outcome.invoice, config.as_of, text_layer=text_layer)
+    rules = verify_invoice(
+        outcome.invoice, config.as_of, text_layer=text_layer, hs_codes=config.hs_codes
+    )
     applied = [*outcome.changes, *rules.applied]
     assessments = assess_fields(rules.invoice, text_layer, outcome.calls, applied, rules.checks)
     return result.model_copy(

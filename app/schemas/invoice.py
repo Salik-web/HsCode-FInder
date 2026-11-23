@@ -8,6 +8,7 @@ import pydantic
 from pydantic import BaseModel
 
 from app.schemas.constants import SCHEMA_VERSION, Incoterm, SchemaVersion
+from app.schemas.hs import HSSuggestion
 
 Confidence = Annotated[float, pydantic.Field(ge=0, le=1)]
 FieldStatus = Literal["ok", "needs_review", "failed_check"]
@@ -24,12 +25,6 @@ class Party(BaseModel):
     name: Field[str]
     address: Field[str]
     country: Field[str]  # ISO-3166 alpha-2
-
-
-class HSSuggestion(BaseModel):
-    code: str
-    reason: str
-    confidence: Confidence
 
 
 class LineItem(BaseModel):

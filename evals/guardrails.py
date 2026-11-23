@@ -22,7 +22,7 @@ from pydantic import BaseModel, ValidationError, computed_field
 from app.config import Settings
 from app.pipeline.confidence import assess_fields
 from app.pipeline.rules import map_code_synonyms
-from app.pipeline.validate import verify_invoice
+from app.pipeline.validate import HSCodeTable, verify_invoice
 from app.schemas.invoice import FieldStatus
 from app.schemas.raw import RawInvoice
 from evals.dataset import load_documents
@@ -36,6 +36,7 @@ from synth.inject import (
     PlantedError,
     load_injected,
 )
+from tariff.parse import load_hs_code_table
 
 CaughtBy = Literal["check", "schema"]
 LINE_BREAK = "\n"
@@ -134,7 +135,9 @@ def location_path(location: tuple[int | str, ...]) -> str:
     return path
 
 
-def evaluate_injected(document: InjectedDocument, as_of: date) -> InjectedOutcome:
+def evaluate_injected(
+    document: InjectedDocument, as_of: date, hs_codes: HSCodeTable | None = None
+) -> InjectedOutcome:
     """Run the planted invoice through what follows extraction, as the pipeline would.
 
     The set is JSON, so it stands for a digital PDF that prints exactly these values:
@@ -156,7 +159,7 @@ def evaluate_injected(document: InjectedDocument, as_of: date) -> InjectedOutcom
             other_flags=sorted(rejected - targets),
             review="document_needs_review",
         )
-    outcome = verify_invoice(invoice, as_of)
+    outcome = verify_invoice(invoice, as_of, hs_codes=hs_codes)
     applied = [*synonyms, *outcome.applied]
     statuses = {
         assessment.path: assessment.status
@@ -199,9 +202,11 @@ def summarise_kinds(outcomes: list[InjectedOutcome]) -> list[KindSummary]:
     return summaries
 
 
-def clean_summary(name: str, invoices: list[RawInvoice], as_of: date) -> CleanSummary:
+def clean_summary(
+    name: str, invoices: list[RawInvoice], as_of: date, hs_codes: HSCodeTable | None = None
+) -> CleanSummary:
     """Ground truth is right by definition, so any failed check on it is a false alarm."""
-    outcomes = [verify_invoice(invoice, as_of) for invoice in invoices]
+    outcomes = [verify_invoice(invoice, as_of, hs_codes=hs_codes) for invoice in invoices]
     checks = [outcome.checks for outcome in outcomes]
     statuses = [
         assessment.status
@@ -229,10 +234,11 @@ def build_guardrail_report(
     seed: int,
     as_of: date,
     clean_sets: dict[str, list[RawInvoice]],
+    hs_codes: HSCodeTable | None = None,
 ) -> GuardrailReport:
     started = datetime.now(UTC)
     sha, dirty = git_state()
-    outcomes = [evaluate_injected(document, as_of) for document in documents]
+    outcomes = [evaluate_injected(document, as_of, hs_codes) for document in documents]
     return GuardrailReport(
         run_id=f"{started:%Y%m%dT%H%M%S}_guardrails",
         created_at=started,
@@ -242,7 +248,9 @@ def build_guardrail_report(
         injected_seed=seed,
         kinds=summarise_kinds(outcomes),
         outcomes=outcomes,
-        clean=[clean_summary(name, invoices, as_of) for name, invoices in clean_sets.items()],
+        clean=[
+            clean_summary(name, invoices, as_of, hs_codes) for name, invoices in clean_sets.items()
+        ],
     )
 
 
@@ -358,7 +366,9 @@ def main() -> None:
         INJECTED_SOURCES_NAME: [document.source for document in documents],
         CLEAN_DEV_NAME: [document.truth.invoice for document in dev],
     }
-    report = build_guardrail_report(documents, manifest.seed, manifest.as_of, clean_sets)
+    report = build_guardrail_report(
+        documents, manifest.seed, manifest.as_of, clean_sets, load_hs_code_table()
+    )
     path = write_guardrail_report(report, settings.reports_dir)
     print(f"Report: {path}")
     for kind in report.kinds:

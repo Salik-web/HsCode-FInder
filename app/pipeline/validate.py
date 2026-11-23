@@ -6,8 +6,12 @@ failed_check, with the reason, and a person decides. A check whose inputs are mi
 
 The Incoterm is also a closed list in the extraction schema, so an LLM answer outside it
 never validates; checking again here keeps the guarantee for any RawInvoice, including
-ones built with model_copy, which skips validation. The HS-code existence check needs
-the tariff table and arrives in Phase 5.
+ones built with model_copy, which skips validation.
+
+An HS code printed on the document must exist in the Pakistan Customs Tariff, checked to
+the precision printed but no further than 6 digits: HS codes agree internationally only
+to 6, and an exporter often prints its own country's national digits after them (an EU
+8-digit or a Chinese 10-digit code). It runs only when the caller passes the tariff.
 
 The party boundary check needs the text layer (Salik, 2026-11-17): where the page prints
 a party's name followed by its address, the extracted name and address must cover that
@@ -24,8 +28,11 @@ inside an address can't raise a false alarm. Without a text layer it doesn't run
 import re
 import string
 import unicodedata
+from collections.abc import Iterable
 from datetime import date
 from decimal import Decimal
+
+from pydantic import BaseModel, ConfigDict
 
 from app.pipeline.rules import RuleOutcome, apply_rules
 from app.schemas.constants import INCOTERMS
@@ -41,6 +48,7 @@ CURRENCY_RULE = "iso_currency"
 COUNTRY_RULE = "iso_country"
 DATE_RULE = "date_sanity"
 PARTY_BOUNDARY_RULE = "party_boundary"
+HS_CODE_RULE = "hs_code_exists"
 RULES = (
     LINE_MATH_RULE,
     TOTAL_RULE,
@@ -50,6 +58,7 @@ RULES = (
     COUNTRY_RULE,
     DATE_RULE,
     PARTY_BOUNDARY_RULE,
+    HS_CODE_RULE,
 )
 
 # quantity x unit price may differ from the amount by at most a cent (inclusive): the
@@ -71,22 +80,51 @@ VALUE_WORD = re.compile(rf"[^\s{SEPARATORS}]+")
 WORD_GAP = rf"[\s{SEPARATORS}]+"
 WORD_END = re.compile(r"\w-?\Z")  # \Z, not $: $ also matches before a final line break
 WORD_START = re.compile(r"-?\w")
+HS_HEADING_DIGITS = 4
+HS_INTERNATIONAL_DIGITS = 6
+NOT_A_DIGIT = re.compile(r"\D")
+
+
+class HSCodeTable(BaseModel):
+    """The tariff's 4-digit headings and 6-digit subheadings, for the existence check."""
+
+    model_config = ConfigDict(frozen=True)
+
+    headings: frozenset[str]
+    subheadings: frozenset[str]
+
+    @classmethod
+    def from_codes(cls, codes: Iterable[str]) -> "HSCodeTable":
+        digits = [NOT_A_DIGIT.sub("", code) for code in codes]
+        return cls(
+            headings=frozenset(code[:HS_HEADING_DIGITS] for code in digits),
+            subheadings=frozenset(code[:HS_INTERNATIONAL_DIGITS] for code in digits),
+        )
 
 
 def verify_invoice(
-    invoice: RawInvoice, as_of: date, *, text_layer: str | None = None
+    invoice: RawInvoice,
+    as_of: date,
+    *,
+    text_layer: str | None = None,
+    hs_codes: HSCodeTable | None = None,
 ) -> RuleOutcome:
     """Every deterministic step after extraction: the rules, then the checks on their result.
 
     `text_layer` is None without one (a photo), or where there is no page (eval ground truth).
+    `hs_codes` is None where no tariff is loaded; the HS-code check is then skipped.
     """
     outcome = apply_rules(invoice)
-    found = validate_invoice(outcome.invoice, as_of, text_layer=text_layer)
+    found = validate_invoice(outcome.invoice, as_of, text_layer=text_layer, hs_codes=hs_codes)
     return outcome.model_copy(update={"checks": [*outcome.checks, *found]})
 
 
 def validate_invoice(
-    invoice: RawInvoice, as_of: date, *, text_layer: str | None = None
+    invoice: RawInvoice,
+    as_of: date,
+    *,
+    text_layer: str | None = None,
+    hs_codes: HSCodeTable | None = None,
 ) -> list[FieldCheck]:
     """Every failed check. `as_of` is the day dates are judged against (today, in the API)."""
     checks: list[FieldCheck] = []
@@ -94,6 +132,8 @@ def validate_invoice(
         checks += check_party_boundaries(invoice, text_layer)
     for index, line in enumerate(invoice.line_items):
         checks += check_line_math(line, index)
+        if hs_codes is not None:
+            checks += check_hs_code(line.hs_code_on_doc, index, hs_codes)
     checks += check_total(invoice)
     checks += check_weights(invoice.net_weight_kg, invoice.gross_weight_kg)
     checks += check_incoterm(invoice.incoterm)
@@ -246,6 +286,24 @@ def _splits_word(text: str, position: int) -> bool:
     if before.endswith("-") and after.startswith("-"):
         return False
     return bool(WORD_END.search(before) and WORD_START.match(after))
+
+
+def check_hs_code(printed: str | None, index: int, table: HSCodeTable) -> list[FieldCheck]:
+    """The printed code's heading (4 digits) or subheading (6 or more) must be in the tariff."""
+    if printed is None:
+        return []
+    path = f"line_items[{index}].hs_code_on_doc"
+    digits = NOT_A_DIGIT.sub("", printed)
+    if len(digits) < HS_HEADING_DIGITS:
+        return [_failed(path, HS_CODE_RULE, "fewer than 4 digits: not an HS code")]
+    if len(digits) < HS_INTERNATIONAL_DIGITS:
+        if digits[:HS_HEADING_DIGITS] in table.headings:
+            return []
+        return [_failed(path, HS_CODE_RULE, f"heading {digits[:4]} is not in the tariff")]
+    subheading = digits[:HS_INTERNATIONAL_DIGITS]
+    if subheading in table.subheadings:
+        return []
+    return [_failed(path, HS_CODE_RULE, f"subheading {subheading} is not in the tariff")]
 
 
 def years_before(day: date, years: int) -> date:

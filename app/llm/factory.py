@@ -31,6 +31,12 @@ def build_client(settings: Settings, use_fallback: bool, offline: bool = False) 
     return FallbackClient(primary, _provider_stack(fallback_config, settings, tracer, offline))
 
 
+def build_hs_client(settings: Settings, offline: bool = False) -> LLMClient:
+    """The HS reranker's client: same stack, its own model, quota, cache key and budget."""
+    tracer = None if offline else _build_tracer(settings)
+    return _provider_stack(settings.hs_provider_config(), settings, tracer, offline)
+
+
 def _provider_stack(
     config: ProviderConfig, settings: Settings, tracer: Tracer | None, offline: bool
 ) -> LLMClient:
@@ -38,7 +44,7 @@ def _provider_stack(
         config,
         timeout_seconds=settings.llm_timeout_seconds,
         max_retries=settings.llm_max_retries,
-        max_tokens=settings.llm_max_output_tokens,
+        max_tokens=config.max_output_tokens,
     )
     if offline:
         # The provider object still supplies the cache-key options; it's never called.

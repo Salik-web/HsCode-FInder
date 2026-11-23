@@ -36,6 +36,7 @@ from evals.report import (
 )
 from synth.generator import ANCHOR_DATE
 from synth.manifest import SYNTHETIC_DIR, Dataset, Split
+from tariff.parse import load_hs_code_table
 
 logger = logging.getLogger(__name__)
 
@@ -253,6 +254,7 @@ def main(argv: list[str] | None = None) -> None:
         # Synthetic invoices are dated back from the generator's anchor, never from today.
         as_of=ANCHOR_DATE,
         offline=args.offline,
+        hs_codes=load_hs_code_table(),
     )
     report, path = run_eval(
         documents, client, config, settings.reports_dir, settings.llm_concurrency

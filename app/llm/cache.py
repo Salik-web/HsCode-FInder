@@ -2,12 +2,11 @@
 
 import hashlib
 import json
-import os
-import tempfile
 from pathlib import Path
 
 from pydantic import BaseModel, model_validator
 
+from app.files import write_atomically
 from app.llm.client import LLMClient, LLMRequest, LLMResponse, SchemaViolationError
 
 
@@ -106,7 +105,7 @@ class CachingClient:
             response=response,
             rejection=rejection,
         )
-        _write_atomically(path, entry.model_dump_json(indent=2).encode())
+        write_atomically(path, entry.model_dump_json(indent=2).encode())
 
     def _path(self, key: str) -> Path:
         return self._cache_dir / key[:2] / f"{key}.json"
@@ -127,16 +126,3 @@ def _replay(entry: CacheEntry) -> LLMResponse:
     # The validator guarantees a response when there is no rejection.
     assert entry.response is not None
     return entry.response.model_copy(update={"cached": True})
-
-
-def _write_atomically(path: Path, data: bytes) -> None:
-    """Concurrent workers and interrupted runs must never leave a half-written entry."""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    handle, temporary = tempfile.mkstemp(dir=path.parent, suffix=".tmp")
-    try:
-        with os.fdopen(handle, "wb") as file:
-            file.write(data)
-        os.replace(temporary, path)
-    except BaseException:
-        Path(temporary).unlink(missing_ok=True)
-        raise
