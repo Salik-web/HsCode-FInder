@@ -2,6 +2,42 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-23: HS suggestion (Phase 5): hs_gold, retrieval levers, dev report
+
+- Tariff: FBR PCT 2026-27 PDF parsed into 7,605 8-digit codes in 96 chapters (`tariff/pct_2026-27.csv`, committed). Every code-like line is accounted for: 7,393 dashed, 209 heading-level, 2 irregular (`8708.1020` without dashes, `8414.1000` printed as `#NAME?`). Heading titles missing from the text layer: 11.03 and 63.09. 50 random rows checked against the PDF text: all match.
+- Stage: `hs_query/v1` rewrites the invoice description in tariff language; retrieval fuses vector (bge-small, exact cosine in pgvector) and Postgres full-text rankings of the description and the rewrite by reciprocal rank; `hs_rerank/v1` picks 1-3 of the top 10. Any code outside the candidates is rejected, then one retry, then `needs_review`. Model `openai/gpt-oss-120b` on Groq, reasoning low, JSON object mode.
+- **hs_gold** (`evals/datasets/hs_gold.jsonl`): 86 items, 40 chapters, dev 63 / test 23 by a hash of the id. Gold codes were picked from the parsed PCT table before any retrieval ran; all 86 exist in PCT 2026-27 (a test checks it); none of the 12 non-existent catalogue placeholders is used. **No gold code is verified by a person yet** (`verified: false`).
+  - The first version's descriptions leaked tariff wording (7 copied 3-word phrases such as "neither crushed nor ground", "not put up for retail sale"; 48% of content words in the gold path). All 86 were rewritten as terse invoice lines (`HR COIL SS400 2.0MM X 1250MM, PRIME`, `SPLIT AC 1.5 TON INVERTER ... CBU`) with ids, codes and splits unchanged: 0 copied phrases, 35% word share (product names such as "toilet soap" are the same in both). Where an invoice wouldn't state what the 8-digit split turns on (mill-made or hand-loom), the gold is the ordinary commercial case, so 6-digit is the target level. On the leaky set the first baseline scored 76.2% 6-digit top-3; on the rewritten set 66.7%.
+- **Retrieval levers on dev only** (63 items, 6-digit level, in Salik's order; stop at 80% top-3 or after five levers):
+
+| Step | Change | Recall@10 | Recall@30 | Rerank top-1 | **Rerank top-3** |
+| --- | --- | --- | --- | --- | --- |
+| 0 | Baseline: vector over the full path, top 10 | 43 (68.3%) | — | 42 (66.7%) | **42 (66.7%)** |
+| 1 | Embed the path with each level cut to 100 characters (full path 43, reversed 44, short 45) | 45 (71.4%) | 54 (85.7%) | not run | — |
+| 2 | + full-text search, fused by reciprocal rank | 45 (71.4%) | 52 (82.5%) | not run | — |
+| 3 | + query rewrite into tariff language (`gpt-oss-120b`) | 51 (81.0%) | 56 (88.9%) | 49 (77.8%) | **51 (81.0%): target reached, stop** |
+| 4 | Top 30-50 to the reranker (retrieval only) | — | 59 (93.7%) without full text; 60 at 50 | not run | — |
+| 5 | Heading prediction: strict filter / boost (retrieval only) | — | boost 61 (96.8%) | not run | — |
+
+  - Rerank costs quota, so recall was measured for every lever first; levers 4-5 were measured before step 3's rerank result came in, and aren't adopted. The rewrite step names the gold heading among its 1-3 guesses for only 43/63 items, so a strict heading filter would cap recall at 68%; the boost keeps the unfiltered rankings.
+  - Full-text search helps only together with the rewrite at k=10 (51 vs 47 without it) and costs recall deeper down (56 vs 59 at k=30).
+  - Given the gold among its candidates, the reranker put it in its top 3 every time at step 3 (51/51).
+- Dev report (production code, from cache: 120 of 126 calls replayed, 6 new where a candidate list differed slightly from the harness): `reports/20261123T131214_hs_gold_dev_openai_gpt-oss-120b_reasoning-low_query-v1_rerank-v1.md`. 6-digit top-3 **81.0%** (51/63), top-1 76.2%; 4-digit top-3 90.5%; 8-digit top-3 77.8%. Query rewrite ok 63/63, rerank first-try valid 63/63, 0 retries. About 1,300 input and 300 output tokens per line across both calls; model call time p50 1.0 s, p95 2.2 s. Cost $0.
+  - 81.0% is one item above the bar on 63 items, so the margin is thin; the measured headroom (recall 61/63 at k=30 with the heading boost) is the next step if test falls short.
+- **Test split, run once and FROZEN** (23 items, nothing tuned on it; the incomplete first attempt's report was deleted unread and the run resumed from cache when the quota refilled): `reports/20261123T132503_hs_gold_test_openai_gpt-oss-120b_reasoning-low_query-v1_rerank-v1.md`. 6-digit top-3 **78.3%** (18/23), below the 80% target; top-1 78.3%; 4-digit top-3 82.6%; 8-digit top-3 73.9%. Retrieval recall@10 is 82.6% at 4 and 6 digits and 78.3% at 8, so the misses are retrieval misses again. Query rewrite ok 23/23; rerank first-try valid 22/23 (1 retry). One item moves this rate by 4.3 points, so dev (81.0%) and test (78.3%) don't differ meaningfully; neither set is verified by a person yet.
+- Quota: Groq's `gpt-oss-120b` free tier is 200,000 tokens a day (from its 429 today). The day's HS work used it all; the test split stopped at 21/23 and finished as the quota refilled.
+- The HS-code existence check (`hs_code_exists`, design §5.4) is wired in: a printed code's heading (4 digits) or subheading (6 or more) must be in the tariff; digits past 6 aren't checked, since an exporter may print its own national code. Re-scored every cached extraction set offline: error recall 54/64 and review load 1463/6768 before and after, 0 new flags; guardrail eval 60/60 caught, 0/53 clean ground truth flagged.
+
+## 2026-11-23: v3 on the held-out layout `manifest` (the last extraction run), dev clean closed as a sample
+
+- Model `qwen/qwen3.8-27b` on Groq, thinking off, JSON object mode, prompt `v3` with the deterministic fixes and every guardrail through whole-row review, schema `1.0`, git `e5495ae`. 16 live calls today; final reports written from the cache in a clean worktree of `e5495ae`.
+- Reporting split, held out: `manifest` was generated on 2026-11-17 (seed 1117) and never used for tuning. Its per-document predictions were not read.
+- Reports: `reports/20261123T111641_synthetic_clean_test_unseen_layout_qwen_qwen3.8-27b_reasoning-none_v3.md`, `reports/20261123T111649_synthetic_messy_test_unseen_layout_qwen_qwen3.8-27b_reasoning-none_v3.md`.
+- Clean, unseen (n=12): critical-field accuracy 100%, all critical right 12/12, line F1 100%, first-try valid JSON 12/12, retries 0, `needs_review` 0. Error recall — (no wrong fields), review load 0/804. Model call time p50 1.9 s, p95 2.7 s. Cost $0.
+- Messy, unseen (n=4): critical-field accuracy 98.4%, all critical right 3/4, line F1 100%, first-try valid JSON 4/4, retries 0. Error recall 1/5 wrong fields, review load 251/299 (83.9%: the photo rule plus whole-row review). Model call time p50 1.8 s, p95 2.1 s.
+- **Dev clean is closed as a sample (Salik, 2026-11-23):** 27 of 53 documents were run (2026-11-12 to 2026-11-17), critical-field accuracy 100%, all critical right 27/27. The other 26 won't be run; quote it as "a 27-document sample of dev clean", never as the full split.
+- Next: Phase 5 (tariff, retrieval, rerank, hs_gold). No more extraction runs are planned before the v1.1 bake-off.
+
 ## 2026-11-17: whole-row review for line items (re-scored from cache, 0 API calls)
 
 - Salik's decision: when a line's critical field (the amount) goes to a person, every other field of that line goes too: `ok` becomes `needs_review` with the reason "row under review" (`app/pipeline/confidence.py`). The trigger is `needs_review` or `failed_check` on the amount: a failed line check is the clearest case where the price or quantity may be the misread value. A `failed_check` stays `failed_check`; scores are unchanged.

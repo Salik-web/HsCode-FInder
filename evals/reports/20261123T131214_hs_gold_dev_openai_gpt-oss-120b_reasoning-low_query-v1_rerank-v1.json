@@ -1,0 +1,3832 @@
+{
+  "meta": {
+    "run_id": "20261123T131214_hs_gold_dev_openai_gpt-oss-120b_reasoning-low_query-v1_rerank-v1",
+    "created_at": "2026-11-23T13:12:14.005049Z",
+    "git_sha": "e5495aeab032d81d9131daf5bf91478664969b06",
+    "git_dirty": true,
+    "split": "dev",
+    "model": "openai/gpt-oss-120b",
+    "reasoning_effort": "low",
+    "prompt_version": "v1",
+    "query_prompt_version": "v1",
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "tariff_version": "2026-27",
+    "items_total": 63,
+    "items_scored": 63,
+    "gold_verified": 0,
+    "llm_calls_made": 0,
+    "llm_calls_cached": 126
+  },
+  "summary": {
+    "items": 63,
+    "statuses": {
+      "ok": 63
+    },
+    "retrieval_recall": {
+      "heading": {
+        "hits": 58,
+        "total": 63
+      },
+      "subheading": {
+        "hits": 51,
+        "total": 63
+      },
+      "national": {
+        "hits": 49,
+        "total": 63
+      }
+    },
+    "retrieval_top1": {
+      "heading": {
+        "hits": 42,
+        "total": 63
+      },
+      "subheading": {
+        "hits": 30,
+        "total": 63
+      },
+      "national": {
+        "hits": 27,
+        "total": 63
+      }
+    },
+    "retrieval_top3": {
+      "heading": {
+        "hits": 48,
+        "total": 63
+      },
+      "subheading": {
+        "hits": 39,
+        "total": 63
+      },
+      "national": {
+        "hits": 36,
+        "total": 63
+      }
+    },
+    "rerank_top1": {
+      "heading": {
+        "hits": 56,
+        "total": 63
+      },
+      "subheading": {
+        "hits": 48,
+        "total": 63
+      },
+      "national": {
+        "hits": 47,
+        "total": 63
+      }
+    },
+    "rerank_top3": {
+      "heading": {
+        "hits": 57,
+        "total": 63
+      },
+      "subheading": {
+        "hits": 51,
+        "total": 63
+      },
+      "national": {
+        "hits": 49,
+        "total": 63
+      }
+    },
+    "first_try_valid": {
+      "hits": 63,
+      "total": 63
+    },
+    "retries": 0,
+    "query_ok": {
+      "hits": 63,
+      "total": 63
+    },
+    "calibration": [
+      {
+        "low": 0.0,
+        "high": 0.6,
+        "national_top1": {
+          "hits": 0,
+          "total": 0
+        }
+      },
+      {
+        "low": 0.6,
+        "high": 0.7,
+        "national_top1": {
+          "hits": 19,
+          "total": 28
+        }
+      },
+      {
+        "low": 0.7,
+        "high": 0.8,
+        "national_top1": {
+          "hits": 25,
+          "total": 31
+        }
+      },
+      {
+        "low": 0.8,
+        "high": 1.01,
+        "national_top1": {
+          "hits": 3,
+          "total": 4
+        }
+      }
+    ],
+    "input_tokens": 81811,
+    "output_tokens": 19179,
+    "call_ms_p50": 954,
+    "call_ms_p95": 2177
+  },
+  "outcomes": [
+    {
+      "id": "hs_001",
+      "gold_code": "5205.1200",
+      "status": "ok",
+      "candidates": [
+        "5203.0000",
+        "5108.1000",
+        "5205.4100",
+        "5201.0090",
+        "5206.4100",
+        "5205.4800",
+        "5205.3100",
+        "5206.3100",
+        "5205.3500",
+        "5205.4300"
+      ],
+      "suggestions": [
+        "5205.3500"
+      ],
+      "top_similarity": 0.6521194577217102,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 1039,
+          "output_tokens": 573,
+          "latency_ms": 2453,
+          "call_ms": 2177,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 402,
+          "output_tokens": 127,
+          "latency_ms": 965,
+          "call_ms": 668,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_002",
+      "gold_code": "5503.2010",
+      "status": "ok",
+      "candidates": [
+        "5503.2020",
+        "5515.1990",
+        "5503.2010",
+        "5515.1910",
+        "5512.1110",
+        "5512.1120",
+        "5515.1120",
+        "5515.1190",
+        "5512.1900",
+        "5509.5900"
+      ],
+      "suggestions": [
+        "5503.2010"
+      ],
+      "top_similarity": 0.7510274052619934,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 832,
+          "output_tokens": 153,
+          "latency_ms": 728,
+          "call_ms": 723,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 406,
+          "output_tokens": 205,
+          "latency_ms": 1274,
+          "call_ms": 1267,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_003",
+      "gold_code": "6105.1000",
+      "status": "ok",
+      "candidates": [
+        "6105.1000",
+        "6205.2090",
+        "6105.2000",
+        "6106.1000",
+        "6205.2020",
+        "6114.2000",
+        "6105.9000",
+        "6205.2010",
+        "6109.1000",
+        "6205.9090"
+      ],
+      "suggestions": [
+        "6105.1000",
+        "6205.2090"
+      ],
+      "top_similarity": 0.754460349413137,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 671,
+          "output_tokens": 236,
+          "latency_ms": 2405,
+          "call_ms": 2394,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 403,
+          "output_tokens": 190,
+          "latency_ms": 742,
+          "call_ms": 733,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_004",
+      "gold_code": "6203.4200",
+      "status": "ok",
+      "candidates": [
+        "5209.4200",
+        "6205.2090",
+        "5211.4200",
+        "6105.1000",
+        "6203.4200",
+        "6205.2020",
+        "6103.4200",
+        "6205.2010",
+        "6203.2200",
+        "6103.2200"
+      ],
+      "suggestions": [
+        "6203.4200"
+      ],
+      "top_similarity": 0.6394930696789684,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 834,
+          "output_tokens": 132,
+          "latency_ms": 1080,
+          "call_ms": 708,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 401,
+          "output_tokens": 114,
+          "latency_ms": 576,
+          "call_ms": 566,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_005",
+      "gold_code": "6302.6010",
+      "status": "ok",
+      "candidates": [
+        "5802.1000",
+        "5802.2000",
+        "6302.6020",
+        "6302.6010",
+        "6302.6090",
+        "5802.3000",
+        "5209.1100",
+        "6213.2000",
+        "5208.1200",
+        "5208.1100"
+      ],
+      "suggestions": [
+        "6302.6010",
+        "5802.1000"
+      ],
+      "top_similarity": 0.6475094766909207,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 897,
+          "output_tokens": 187,
+          "latency_ms": 1044,
+          "call_ms": 1037,
+          "throttle_ms": 49906,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 401,
+          "output_tokens": 124,
+          "latency_ms": 640,
+          "call_ms": 633,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_006",
+      "gold_code": "6115.9500",
+      "status": "ok",
+      "candidates": [
+        "6105.1000",
+        "6205.2090",
+        "6114.2000",
+        "6205.2020",
+        "6203.1910",
+        "6105.2000",
+        "6105.9000",
+        "6115.3010",
+        "6115.9500",
+        "6115.9900"
+      ],
+      "suggestions": [
+        "6115.9500",
+        "6115.9900"
+      ],
+      "top_similarity": 0.7003893017304776,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 798,
+          "output_tokens": 196,
+          "latency_ms": 946,
+          "call_ms": 940,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 405,
+          "output_tokens": 111,
+          "latency_ms": 957,
+          "call_ms": 948,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_007",
+      "gold_code": "6111.2000",
+      "status": "ok",
+      "candidates": [
+        "6111.2000",
+        "6209.2010",
+        "6209.2020",
+        "6114.2000",
+        "6111.3000",
+        "6209.9010",
+        "6111.9000",
+        "6006.2400",
+        "6109.1000",
+        "6105.1000"
+      ],
+      "suggestions": [
+        "6111.2000"
+      ],
+      "top_similarity": 0.8178714513778687,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 671,
+          "output_tokens": 160,
+          "latency_ms": 1103,
+          "call_ms": 1096,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 399,
+          "output_tokens": 238,
+          "latency_ms": 952,
+          "call_ms": 947,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_009",
+      "gold_code": "6302.3150",
+      "status": "ok",
+      "candidates": [
+        "5208.3100",
+        "5208.3200",
+        "5209.3100",
+        "6006.2200",
+        "5208.3900",
+        "6302.3150",
+        "5209.3900",
+        "6302.3160",
+        "5208.1200",
+        "5212.1300"
+      ],
+      "suggestions": [
+        "6302.3150",
+        "5208.3200"
+      ],
+      "top_similarity": 0.6848954558372498,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 831,
+          "output_tokens": 181,
+          "latency_ms": 1032,
+          "call_ms": 1025,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 400,
+          "output_tokens": 181,
+          "latency_ms": 853,
+          "call_ms": 845,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_010",
+      "gold_code": "5208.1200",
+      "status": "ok",
+      "candidates": [
+        "5208.1900",
+        "5208.2900",
+        "5208.3900",
+        "5209.1900",
+        "5209.2900",
+        "5208.5900",
+        "5209.3900",
+        "5209.5900",
+        "5801.2600",
+        "5801.2300"
+      ],
+      "suggestions": [
+        "5208.1900"
+      ],
+      "top_similarity": 0.7499113827996635,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 844,
+          "output_tokens": 132,
+          "latency_ms": 834,
+          "call_ms": 827,
+          "throttle_ms": 313,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 402,
+          "output_tokens": 186,
+          "latency_ms": 1916,
+          "call_ms": 1908,
+          "throttle_ms": 43484,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_012",
+      "gold_code": "5701.1010",
+      "status": "ok",
+      "candidates": [
+        "5701.1010",
+        "5701.1090",
+        "5701.1020",
+        "5701.9000",
+        "5702.3100",
+        "5702.9100",
+        "5702.4110",
+        "5702.4190",
+        "5702.1000",
+        "5703.1000"
+      ],
+      "suggestions": [
+        "5701.1010",
+        "5701.1020",
+        "5701.1090"
+      ],
+      "top_similarity": 0.8177531957626343,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 958,
+          "output_tokens": 172,
+          "latency_ms": 1408,
+          "call_ms": 1401,
+          "throttle_ms": 49953,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 398,
+          "output_tokens": 151,
+          "latency_ms": 2048,
+          "call_ms": 2042,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_014",
+      "gold_code": "1006.3010",
+      "status": "ok",
+      "candidates": [
+        "1006.3010",
+        "1006.4000",
+        "1006.3090",
+        "1006.1090",
+        "1006.1010",
+        "6305.2000",
+        "4202.1210",
+        "0713.1000",
+        "4202.9900",
+        "0713.9030"
+      ],
+      "suggestions": [
+        "1006.3010"
+      ],
+      "top_similarity": 0.7553026225982546,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 795,
+          "output_tokens": 96,
+          "latency_ms": 827,
+          "call_ms": 821,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 398,
+          "output_tokens": 95,
+          "latency_ms": 382,
+          "call_ms": 376,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_016",
+      "gold_code": "0713.2010",
+      "status": "ok",
+      "candidates": [
+        "8437.1000",
+        "8451.2100",
+        "8451.1000",
+        "8472.3000",
+        "0713.2010",
+        "0713.2020",
+        "8472.1000",
+        "0713.2090",
+        "8470.3000",
+        "0713.9010"
+      ],
+      "suggestions": [
+        "0713.2010"
+      ],
+      "top_similarity": 0.76961350440979,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 918,
+          "output_tokens": 128,
+          "latency_ms": 1934,
+          "call_ms": 1928,
+          "throttle_ms": 1859,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 401,
+          "output_tokens": 103,
+          "latency_ms": 667,
+          "call_ms": 660,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_017",
+      "gold_code": "0713.4020",
+      "status": "ok",
+      "candidates": [
+        "0713.4020",
+        "0713.9030",
+        "0713.4010",
+        "0713.2020",
+        "0713.3920",
+        "0713.9020",
+        "0713.3200",
+        "0713.9090",
+        "0713.1000",
+        "0713.9010"
+      ],
+      "suggestions": [
+        "0713.4020"
+      ],
+      "top_similarity": 0.7892621285163102,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 817,
+          "output_tokens": 94,
+          "latency_ms": 1104,
+          "call_ms": 1097,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 397,
+          "output_tokens": 124,
+          "latency_ms": 622,
+          "call_ms": 618,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_018",
+      "gold_code": "0902.4020",
+      "status": "ok",
+      "candidates": [
+        "0902.4020",
+        "0902.3000",
+        "0902.4010",
+        "0902.4090",
+        "0902.1000",
+        "4806.3000",
+        "0902.2000",
+        "4802.1000",
+        "4816.2000",
+        "4809.2000"
+      ],
+      "suggestions": [
+        "0902.4020",
+        "0902.4090"
+      ],
+      "top_similarity": 0.7269629132217933,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 826,
+          "output_tokens": 185,
+          "latency_ms": 1319,
+          "call_ms": 1313,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 397,
+          "output_tokens": 136,
+          "latency_ms": 1116,
+          "call_ms": 1108,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_019",
+      "gold_code": "0902.1000",
+      "status": "ok",
+      "candidates": [
+        "0902.4020",
+        "0902.2000",
+        "0902.4010",
+        "0902.1000",
+        "0902.3000",
+        "0902.4090",
+        "2101.1120",
+        "1404.9010",
+        "8708.4010",
+        "8708.2931"
+      ],
+      "suggestions": [
+        "0902.1000",
+        "0902.2000"
+      ],
+      "top_similarity": 0.718110399358846,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 921,
+          "output_tokens": 169,
+          "latency_ms": 801,
+          "call_ms": 793,
+          "throttle_ms": 47015,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 391,
+          "output_tokens": 88,
+          "latency_ms": 2493,
+          "call_ms": 2487,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_020",
+      "gold_code": "0804.1020",
+      "status": "ok",
+      "candidates": [
+        "0804.1020",
+        "0813.1000",
+        "0804.1010",
+        "0813.4020",
+        "0813.5000",
+        "0813.2000",
+        "0813.3000",
+        "0813.4090",
+        "0813.4060",
+        "0813.4070"
+      ],
+      "suggestions": [
+        "0804.1020"
+      ],
+      "top_similarity": 0.8107649200698795,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 845,
+          "output_tokens": 87,
+          "latency_ms": 710,
+          "call_ms": 705,
+          "throttle_ms": 4187,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 392,
+          "output_tokens": 83,
+          "latency_ms": 596,
+          "call_ms": 592,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_022",
+      "gold_code": "1511.9030",
+      "status": "ok",
+      "candidates": [
+        "1511.9030",
+        "1511.9020",
+        "1513.2100",
+        "1511.9010",
+        "1511.1000",
+        "1511.9090",
+        "1207.1000",
+        "1513.2900",
+        "2306.6000",
+        "1513.1100"
+      ],
+      "suggestions": [
+        "1511.9030",
+        "1511.9020",
+        "1511.9010"
+      ],
+      "top_similarity": 0.783392071723938,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 799,
+          "output_tokens": 202,
+          "latency_ms": 1354,
+          "call_ms": 1349,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 395,
+          "output_tokens": 262,
+          "latency_ms": 920,
+          "call_ms": 917,
+          "throttle_ms": 42047,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_023",
+      "gold_code": "1507.1000",
+      "status": "ok",
+      "candidates": [
+        "1507.1000",
+        "2710.9100",
+        "2710.1953",
+        "1515.2100",
+        "2710.1915",
+        "2710.1952",
+        "2710.1951",
+        "2710.1996",
+        "2710.9900",
+        "2710.1942"
+      ],
+      "suggestions": [
+        "1507.1000"
+      ],
+      "top_similarity": 0.7768909468119786,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 1270,
+          "output_tokens": 49,
+          "latency_ms": 1583,
+          "call_ms": 1576,
+          "throttle_ms": 969,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 400,
+          "output_tokens": 139,
+          "latency_ms": 832,
+          "call_ms": 827,
+          "throttle_ms": 1281,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_025",
+      "gold_code": "0402.2100",
+      "status": "ok",
+      "candidates": [
+        "0402.2100",
+        "0402.1000",
+        "0402.2900",
+        "0401.1000",
+        "0405.2000",
+        "0401.5000",
+        "0403.9000",
+        "0405.9000",
+        "0401.2000",
+        "0405.1000"
+      ],
+      "suggestions": [
+        "0402.2100",
+        "0402.2900"
+      ],
+      "top_similarity": 0.7719548344612122,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 825,
+          "output_tokens": 209,
+          "latency_ms": 1391,
+          "call_ms": 1384,
+          "throttle_ms": 46640,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 397,
+          "output_tokens": 97,
+          "latency_ms": 590,
+          "call_ms": 582,
+          "throttle_ms": 1219,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_027",
+      "gold_code": "2501.0021",
+      "status": "ok",
+      "candidates": [
+        "2501.0021",
+        "2501.0029",
+        "2501.0030",
+        "2501.0010",
+        "2501.0090",
+        "2903.4600",
+        "3104.2000",
+        "2903.4800",
+        "2903.4500",
+        "7105.9000"
+      ],
+      "suggestions": [
+        "2501.0021",
+        "2501.0029"
+      ],
+      "top_similarity": 0.6967121543459812,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 1006,
+          "output_tokens": 138,
+          "latency_ms": 902,
+          "call_ms": 896,
+          "throttle_ms": 3656,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 396,
+          "output_tokens": 120,
+          "latency_ms": 662,
+          "call_ms": 656,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_029",
+      "gold_code": "1207.4000",
+      "status": "ok",
+      "candidates": [
+        "1207.2100",
+        "1207.5000",
+        "1002.1000",
+        "1207.7000",
+        "1207.4000",
+        "1207.2900",
+        "1207.3000",
+        "0909.3100",
+        "1207.9100",
+        "1207.6000"
+      ],
+      "suggestions": [
+        "1207.4000"
+      ],
+      "top_similarity": 0.6576555567281117,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 706,
+          "output_tokens": 60,
+          "latency_ms": 519,
+          "call_ms": 512,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 394,
+          "output_tokens": 146,
+          "latency_ms": 871,
+          "call_ms": 865,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_030",
+      "gold_code": "1902.3000",
+      "status": "ok",
+      "candidates": [
+        "1101.0010",
+        "1102.9010",
+        "1101.0020",
+        "2106.9030",
+        "0902.1000",
+        "0207.5400",
+        "1108.1100",
+        "0207.6000",
+        "0207.5100",
+        "0207.5500"
+      ],
+      "suggestions": [
+        "2106.9030",
+        "1101.0010"
+      ],
+      "top_similarity": 0.6640750966027333,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 738,
+          "output_tokens": 254,
+          "latency_ms": 1082,
+          "call_ms": 1073,
+          "throttle_ms": 1219,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 401,
+          "output_tokens": 168,
+          "latency_ms": 856,
+          "call_ms": 851,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_031",
+      "gold_code": "3902.1000",
+      "status": "ok",
+      "candidates": [
+        "5501.4000",
+        "5503.4000",
+        "5506.4000",
+        "3915.3000",
+        "4202.1210",
+        "5506.2000",
+        "4202.9900",
+        "5501.2000",
+        "4202.9100",
+        "4202.3900"
+      ],
+      "suggestions": [
+        "5501.4000",
+        "5503.4000",
+        "5506.4000"
+      ],
+      "top_similarity": 0.6896133011810016,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 838,
+          "output_tokens": 243,
+          "latency_ms": 984,
+          "call_ms": 977,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 400,
+          "output_tokens": 142,
+          "latency_ms": 757,
+          "call_ms": 751,
+          "throttle_ms": 78,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_032",
+      "gold_code": "3907.6120",
+      "status": "ok",
+      "candidates": [
+        "3907.6920",
+        "3907.6120",
+        "3907.6110",
+        "3907.5000",
+        "3909.4000",
+        "3907.6190",
+        "3909.5000",
+        "3907.6910",
+        "3907.3000",
+        "3907.1000"
+      ],
+      "suggestions": [
+        "3907.6920",
+        "3907.6120"
+      ],
+      "top_similarity": 0.7872852213808776,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 1008,
+          "output_tokens": 188,
+          "latency_ms": 705,
+          "call_ms": 585,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 403,
+          "output_tokens": 223,
+          "latency_ms": 1022,
+          "call_ms": 1016,
+          "throttle_ms": 1844,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_034",
+      "gold_code": "3904.1090",
+      "status": "ok",
+      "candidates": [
+        "3909.4000",
+        "3909.2000",
+        "3909.5000",
+        "3904.5000",
+        "3909.3900",
+        "3907.6120",
+        "3904.4000",
+        "3907.5000",
+        "3909.3100",
+        "3909.1090"
+      ],
+      "suggestions": [
+        "3904.4000"
+      ],
+      "top_similarity": 0.6836504936218262,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 858,
+          "output_tokens": 169,
+          "latency_ms": 1066,
+          "call_ms": 1060,
+          "throttle_ms": 5156,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 394,
+          "output_tokens": 125,
+          "latency_ms": 879,
+          "call_ms": 874,
+          "throttle_ms": 41531,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_036",
+      "gold_code": "2836.2000",
+      "status": "ok",
+      "candidates": [
+        "2815.1200",
+        "2836.3000",
+        "2836.2000",
+        "2836.6000",
+        "2836.9100",
+        "2815.1100",
+        "2836.5000",
+        "2836.4000",
+        "2815.3000",
+        "8106.1000"
+      ],
+      "suggestions": [
+        "2836.2000"
+      ],
+      "top_similarity": 0.6814317297082121,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 840,
+          "output_tokens": 108,
+          "latency_ms": 641,
+          "call_ms": 633,
+          "throttle_ms": 781,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 397,
+          "output_tokens": 115,
+          "latency_ms": 706,
+          "call_ms": 702,
+          "throttle_ms": 1203,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_037",
+      "gold_code": "2847.0000",
+      "status": "ok",
+      "candidates": [
+        "2816.1010",
+        "2816.1090",
+        "2816.4000",
+        "2847.0000",
+        "2909.6000",
+        "2840.3000",
+        "3103.1100",
+        "2840.2000",
+        "0103.9200",
+        "2817.0000"
+      ],
+      "suggestions": [
+        "2847.0000"
+      ],
+      "top_similarity": 0.7283517122268677,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 836,
+          "output_tokens": 62,
+          "latency_ms": 825,
+          "call_ms": 819,
+          "throttle_ms": 343,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 396,
+          "output_tokens": 121,
+          "latency_ms": 735,
+          "call_ms": 729,
+          "throttle_ms": 1422,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_038",
+      "gold_code": "2924.2910",
+      "status": "ok",
+      "candidates": [
+        "3601.0000",
+        "3004.9092",
+        "7603.1000",
+        "3004.9070",
+        "3004.9091",
+        "7603.2000",
+        "7110.3100",
+        "3004.4200",
+        "7110.2100",
+        "7110.1100"
+      ],
+      "suggestions": [
+        "3004.9092"
+      ],
+      "top_similarity": 0.7057419174025157,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 863,
+          "output_tokens": 85,
+          "latency_ms": 2254,
+          "call_ms": 2248,
+          "throttle_ms": 45234,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 400,
+          "output_tokens": 201,
+          "latency_ms": 860,
+          "call_ms": 854,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_039",
+      "gold_code": "2941.1000",
+      "status": "ok",
+      "candidates": [
+        "2941.9090",
+        "3004.2000",
+        "3004.6000",
+        "3003.2000",
+        "2941.9060",
+        "3004.1010",
+        "2941.9010",
+        "2941.9030",
+        "2923.3000",
+        "2923.2000"
+      ],
+      "suggestions": [
+        "2941.9090"
+      ],
+      "top_similarity": 0.633442445583052,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 885,
+          "output_tokens": 151,
+          "latency_ms": 978,
+          "call_ms": 973,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 398,
+          "output_tokens": 337,
+          "latency_ms": 1361,
+          "call_ms": 1355,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_040",
+      "gold_code": "3102.1000",
+      "status": "ok",
+      "candidates": [
+        "3102.1000",
+        "3102.8000",
+        "3909.1010",
+        "2847.0000",
+        "3102.5010",
+        "3105.5100",
+        "3105.1000",
+        "0103.9200",
+        "3105.2000",
+        "3105.5900"
+      ],
+      "suggestions": [
+        "3102.1000"
+      ],
+      "top_similarity": 0.7555512189865112,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 844,
+          "output_tokens": 98,
+          "latency_ms": 935,
+          "call_ms": 928,
+          "throttle_ms": 2562,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 394,
+          "output_tokens": 128,
+          "latency_ms": 1064,
+          "call_ms": 1056,
+          "throttle_ms": 453,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_041",
+      "gold_code": "3204.1600",
+      "status": "ok",
+      "candidates": [
+        "3809.1000",
+        "3809.9300",
+        "5516.1200",
+        "5516.9200",
+        "3204.1600",
+        "3809.9190",
+        "3809.9200",
+        "5513.2900",
+        "5514.2900",
+        "6006.3200"
+      ],
+      "suggestions": [
+        "3204.1600"
+      ],
+      "top_similarity": 0.6543785734659885,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 902,
+          "output_tokens": 115,
+          "latency_ms": 2170,
+          "call_ms": 2167,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 396,
+          "output_tokens": 189,
+          "latency_ms": 749,
+          "call_ms": 741,
+          "throttle_ms": 1547,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_042",
+      "gold_code": "3923.2100",
+      "status": "ok",
+      "candidates": [
+        "4202.1210",
+        "4819.3000",
+        "4202.1220",
+        "4202.1290",
+        "8443.1200",
+        "8443.1400",
+        "3926.9050",
+        "8443.1500",
+        "8443.1300",
+        "6305.3300"
+      ],
+      "suggestions": [
+        "6305.3300",
+        "4202.1290"
+      ],
+      "top_similarity": 0.6393426275645132,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 1161,
+          "output_tokens": 280,
+          "latency_ms": 2018,
+          "call_ms": 2011,
+          "throttle_ms": 109,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 396,
+          "output_tokens": 91,
+          "latency_ms": 523,
+          "call_ms": 516,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_043",
+      "gold_code": "3923.3010",
+      "status": "ok",
+      "candidates": [
+        "3907.6920",
+        "3923.3010",
+        "7613.0010",
+        "8422.3000",
+        "3923.9010",
+        "8422.2000",
+        "7311.0020",
+        "2205.1000",
+        "2208.3000",
+        "7309.0000"
+      ],
+      "suggestions": [
+        "3907.6920",
+        "3923.3010"
+      ],
+      "top_similarity": 0.6676868796348572,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 882,
+          "output_tokens": 116,
+          "latency_ms": 1018,
+          "call_ms": 1015,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 391,
+          "output_tokens": 116,
+          "latency_ms": 891,
+          "call_ms": 885,
+          "throttle_ms": 40062,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_044",
+      "gold_code": "3919.1090",
+      "status": "ok",
+      "candidates": [
+        "3919.9010",
+        "3919.1010",
+        "3005.1010",
+        "3919.9020",
+        "3919.1030",
+        "3919.1020",
+        "3919.9090",
+        "7607.1910",
+        "6305.3300",
+        "3920.2040"
+      ],
+      "suggestions": [
+        "3919.9010",
+        "3919.1030"
+      ],
+      "top_similarity": 0.8019915459166171,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 942,
+          "output_tokens": 195,
+          "latency_ms": 1914,
+          "call_ms": 1912,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 396,
+          "output_tokens": 128,
+          "latency_ms": 605,
+          "call_ms": 599,
+          "throttle_ms": 1062,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_045",
+      "gold_code": "7208.3990",
+      "status": "ok",
+      "candidates": [
+        "7219.1200",
+        "7219.1300",
+        "7219.2310",
+        "7219.2200",
+        "7219.1400",
+        "7219.1100",
+        "7219.2390",
+        "7219.2100",
+        "7208.3710",
+        "7208.3810"
+      ],
+      "suggestions": [
+        "7219.1400"
+      ],
+      "top_similarity": 0.7662091762236583,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 1054,
+          "output_tokens": 195,
+          "latency_ms": 2824,
+          "call_ms": 2817,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 397,
+          "output_tokens": 258,
+          "latency_ms": 900,
+          "call_ms": 894,
+          "throttle_ms": 1485,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_049",
+      "gold_code": "7607.1100",
+      "status": "ok",
+      "candidates": [
+        "7607.1920",
+        "7606.9210",
+        "7219.2200",
+        "7606.9190",
+        "7606.9290",
+        "7607.2000",
+        "7607.1910",
+        "7208.3790",
+        "7606.1100",
+        "7208.3890"
+      ],
+      "suggestions": [
+        "7607.1920"
+      ],
+      "top_similarity": 0.739804596924239,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 938,
+          "output_tokens": 277,
+          "latency_ms": 1419,
+          "call_ms": 1413,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 402,
+          "output_tokens": 126,
+          "latency_ms": 835,
+          "call_ms": 829,
+          "throttle_ms": 1625,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_050",
+      "gold_code": "8544.1190",
+      "status": "ok",
+      "candidates": [
+        "7408.2900",
+        "7408.1900",
+        "7408.2100",
+        "7408.2200",
+        "7403.1200",
+        "8544.1110",
+        "7408.1100",
+        "7401.0000",
+        "7411.1010",
+        "7403.2200"
+      ],
+      "suggestions": [
+        "8544.1110",
+        "7408.1900",
+        "7408.2900"
+      ],
+      "top_similarity": 0.6889861431415722,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 731,
+          "output_tokens": 213,
+          "latency_ms": 1000,
+          "call_ms": 993,
+          "throttle_ms": 44890,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 401,
+          "output_tokens": 139,
+          "latency_ms": 871,
+          "call_ms": 865,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_052",
+      "gold_code": "8413.7090",
+      "status": "ok",
+      "candidates": [
+        "8413.7019",
+        "8413.7011",
+        "8413.3030",
+        "8413.7090",
+        "8421.9110",
+        "8410.1100",
+        "8413.3040",
+        "8413.6011",
+        "8410.1200",
+        "8413.9120"
+      ],
+      "suggestions": [
+        "8413.7090",
+        "8413.7019"
+      ],
+      "top_similarity": 0.7068924482528909,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 897,
+          "output_tokens": 211,
+          "latency_ms": 1158,
+          "call_ms": 1148,
+          "throttle_ms": 2578,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 394,
+          "output_tokens": 129,
+          "latency_ms": 712,
+          "call_ms": 706,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_053",
+      "gold_code": "8415.1029",
+      "status": "ok",
+      "candidates": [
+        "8415.1021",
+        "8415.1029",
+        "8415.1031",
+        "8415.1039",
+        "7322.9010",
+        "8415.1011",
+        "7322.9090",
+        "8471.5000",
+        "8414.8040",
+        "8415.8310"
+      ],
+      "suggestions": [
+        "8415.1029"
+      ],
+      "top_similarity": 0.6852041074511953,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 1121,
+          "output_tokens": 182,
+          "latency_ms": 1615,
+          "call_ms": 1609,
+          "throttle_ms": 51187,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 404,
+          "output_tokens": 173,
+          "latency_ms": 748,
+          "call_ms": 743,
+          "throttle_ms": 1219,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_055",
+      "gold_code": "8452.1090",
+      "status": "ok",
+      "candidates": [
+        "8452.1090",
+        "8452.2100",
+        "8452.2900",
+        "8452.1010",
+        "8452.3000",
+        "8452.9030",
+        "8452.9090",
+        "8452.9020",
+        "8445.9000",
+        "8445.2000"
+      ],
+      "suggestions": [
+        "8452.1090",
+        "8452.2900",
+        "8452.2100"
+      ],
+      "top_similarity": 0.6959587931632996,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 942,
+          "output_tokens": 186,
+          "latency_ms": 1272,
+          "call_ms": 1266,
+          "throttle_ms": 1968,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 390,
+          "output_tokens": 99,
+          "latency_ms": 638,
+          "call_ms": 633,
+          "throttle_ms": 172,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_056",
+      "gold_code": "8471.3010",
+      "status": "ok",
+      "candidates": [
+        "8471.3010",
+        "8471.3020",
+        "8523.5130",
+        "8471.7020",
+        "8471.7050",
+        "8471.7010",
+        "8471.7030",
+        "8471.7040",
+        "8471.7060",
+        "8708.2931"
+      ],
+      "suggestions": [
+        "8471.3010",
+        "8471.3020",
+        "8471.7020"
+      ],
+      "top_similarity": 0.674748101860511,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 1007,
+          "output_tokens": 138,
+          "latency_ms": 1811,
+          "call_ms": 1806,
+          "throttle_ms": 63,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 398,
+          "output_tokens": 123,
+          "latency_ms": 814,
+          "call_ms": 808,
+          "throttle_ms": 40000,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_058",
+      "gold_code": "8539.5210",
+      "status": "ok",
+      "candidates": [
+        "8539.5210",
+        "8539.5100",
+        "8539.5220",
+        "8539.9020",
+        "8539.9030",
+        "8539.9040",
+        "8539.9010",
+        "8539.3110",
+        "8539.3220",
+        "8539.3210"
+      ],
+      "suggestions": [
+        "8539.5210"
+      ],
+      "top_similarity": 0.6998255431756066,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 1027,
+          "output_tokens": 134,
+          "latency_ms": 833,
+          "call_ms": 824,
+          "throttle_ms": 2187,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 392,
+          "output_tokens": 152,
+          "latency_ms": 845,
+          "call_ms": 840,
+          "throttle_ms": 1140,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_059",
+      "gold_code": "8541.4300",
+      "status": "ok",
+      "candidates": [
+        "8541.4200",
+        "8541.4300",
+        "8541.4100",
+        "8541.4900",
+        "8501.7210",
+        "8501.7110",
+        "8549.3100",
+        "8708.2931",
+        "8708.2941",
+        "8501.7290"
+      ],
+      "suggestions": [
+        "8541.4300",
+        "8501.7210"
+      ],
+      "top_similarity": 0.714200828766724,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 1093,
+          "output_tokens": 193,
+          "latency_ms": 1266,
+          "call_ms": 1257,
+          "throttle_ms": 2547,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 388,
+          "output_tokens": 212,
+          "latency_ms": 938,
+          "call_ms": 933,
+          "throttle_ms": 1297,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_060",
+      "gold_code": "8507.6000",
+      "status": "ok",
+      "candidates": [
+        "8506.5000",
+        "8506.1000",
+        "7907.0010",
+        "8545.9020",
+        "8506.4000",
+        "8504.4020",
+        "8506.3000",
+        "8506.9010",
+        "8506.6000",
+        "8507.6000"
+      ],
+      "suggestions": [
+        "8507.6000"
+      ],
+      "top_similarity": 0.6058245771140365,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 680,
+          "output_tokens": 118,
+          "latency_ms": 1220,
+          "call_ms": 1214,
+          "throttle_ms": 1453,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 398,
+          "output_tokens": 215,
+          "latency_ms": 839,
+          "call_ms": 832,
+          "throttle_ms": 1719,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_062",
+      "gold_code": "8502.1200",
+      "status": "ok",
+      "candidates": [
+        "8502.1130",
+        "8502.1120",
+        "8502.1310",
+        "8502.1200",
+        "8502.1110",
+        "8502.1190",
+        "8502.1390",
+        "8501.6410",
+        "8502.2010",
+        "8502.2020"
+      ],
+      "suggestions": [
+        "8502.1200"
+      ],
+      "top_similarity": 0.757775738371866,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 952,
+          "output_tokens": 82,
+          "latency_ms": 1045,
+          "call_ms": 1040,
+          "throttle_ms": 44984,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 391,
+          "output_tokens": 139,
+          "latency_ms": 672,
+          "call_ms": 667,
+          "throttle_ms": 157,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_064",
+      "gold_code": "8414.5110",
+      "status": "ok",
+      "candidates": [
+        "8414.5110",
+        "8414.5120",
+        "8414.5140",
+        "8414.5130",
+        "8414.5190",
+        "8501.5230",
+        "8501.5210",
+        "8501.5220",
+        "8414.5910",
+        "8415.9099"
+      ],
+      "suggestions": [
+        "8414.5110",
+        "8414.5190"
+      ],
+      "top_similarity": 0.6807482623162006,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 1052,
+          "output_tokens": 132,
+          "latency_ms": 961,
+          "call_ms": 956,
+          "throttle_ms": 2719,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 390,
+          "output_tokens": 124,
+          "latency_ms": 1033,
+          "call_ms": 1027,
+          "throttle_ms": 203,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_065",
+      "gold_code": "8516.1090",
+      "status": "ok",
+      "candidates": [
+        "8601.2000",
+        "8601.1000",
+        "8516.8010",
+        "8516.7100",
+        "8516.4000",
+        "8516.1090",
+        "8516.1010",
+        "8516.2900",
+        "8516.8090",
+        "8516.9000"
+      ],
+      "suggestions": [
+        "8516.1090"
+      ],
+      "top_similarity": 0.6631969015837665,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 867,
+          "output_tokens": 141,
+          "latency_ms": 806,
+          "call_ms": 800,
+          "throttle_ms": 2422,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 393,
+          "output_tokens": 145,
+          "latency_ms": 1129,
+          "call_ms": 1124,
+          "throttle_ms": 1047,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_069",
+      "gold_code": "8711.2010",
+      "status": "ok",
+      "candidates": [
+        "8711.3010",
+        "8711.2010",
+        "8711.5010",
+        "8711.4010",
+        "8711.1010",
+        "8711.9010",
+        "8711.6030",
+        "8711.3020",
+        "8711.6010",
+        "8703.3211"
+      ],
+      "suggestions": [
+        "8711.2010"
+      ],
+      "top_similarity": 0.7028626203536987,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 1107,
+          "output_tokens": 120,
+          "latency_ms": 996,
+          "call_ms": 990,
+          "throttle_ms": 2078,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 390,
+          "output_tokens": 187,
+          "latency_ms": 813,
+          "call_ms": 807,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_070",
+      "gold_code": "9018.9030",
+      "status": "ok",
+      "candidates": [
+        "9018.9030",
+        "9018.9040",
+        "7218.9900",
+        "9018.3200",
+        "7223.0000",
+        "3006.1010",
+        "3006.1090",
+        "8213.0000",
+        "8461.5010",
+        "8211.9500"
+      ],
+      "suggestions": [
+        "9018.9030",
+        "8213.0000"
+      ],
+      "top_similarity": 0.7451954635861253,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 892,
+          "output_tokens": 129,
+          "latency_ms": 1118,
+          "call_ms": 1113,
+          "throttle_ms": 45328,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 399,
+          "output_tokens": 231,
+          "latency_ms": 1277,
+          "call_ms": 1271,
+          "throttle_ms": 39547,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_072",
+      "gold_code": "4203.2920",
+      "status": "ok",
+      "candidates": [
+        "4203.2920",
+        "4203.2910",
+        "4107.1200",
+        "8453.1000",
+        "4107.9200",
+        "4114.2000",
+        "4107.1900",
+        "4112.0000",
+        "4114.1000",
+        "4203.2930"
+      ],
+      "suggestions": [
+        "4203.2920",
+        "4203.2910"
+      ],
+      "top_similarity": 0.6870482154459837,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 870,
+          "output_tokens": 155,
+          "latency_ms": 869,
+          "call_ms": 864,
+          "throttle_ms": 2609,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 392,
+          "output_tokens": 106,
+          "latency_ms": 1945,
+          "call_ms": 1939,
+          "throttle_ms": 4016,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_073",
+      "gold_code": "4203.1010",
+      "status": "ok",
+      "candidates": [
+        "4203.1010",
+        "4203.1030",
+        "4203.1020",
+        "4112.0000",
+        "4203.2910",
+        "4205.0090",
+        "4203.2920",
+        "4203.2930",
+        "6203.3300",
+        "6103.3300"
+      ],
+      "suggestions": [
+        "4203.1010"
+      ],
+      "top_similarity": 0.6653605302953416,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 803,
+          "output_tokens": 85,
+          "latency_ms": 793,
+          "call_ms": 786,
+          "throttle_ms": 2640,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 392,
+          "output_tokens": 90,
+          "latency_ms": 962,
+          "call_ms": 957,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_074",
+      "gold_code": "9506.9920",
+      "status": "ok",
+      "candidates": [
+        "9506.9920",
+        "4405.0000",
+        "4702.0000",
+        "2903.4600",
+        "4701.0000",
+        "2903.4800",
+        "2903.4500",
+        "4412.1000",
+        "2903.4400",
+        "4706.3000"
+      ],
+      "suggestions": [
+        "9506.9920"
+      ],
+      "top_similarity": 0.6765922097453821,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 943,
+          "output_tokens": 58,
+          "latency_ms": 981,
+          "call_ms": 975,
+          "throttle_ms": 1953,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 392,
+          "output_tokens": 176,
+          "latency_ms": 963,
+          "call_ms": 957,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_075",
+      "gold_code": "9506.9960",
+      "status": "ok",
+      "candidates": [
+        "9506.9960",
+        "4807.0000",
+        "6602.0010",
+        "3814.0000",
+        "3916.9000",
+        "9506.6920",
+        "5201.0080",
+        "3916.1000",
+        "5906.1000",
+        "9506.9970"
+      ],
+      "suggestions": [
+        "9506.9960"
+      ],
+      "top_similarity": 0.69919255981534,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 837,
+          "output_tokens": 85,
+          "latency_ms": 1344,
+          "call_ms": 1338,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 394,
+          "output_tokens": 121,
+          "latency_ms": 736,
+          "call_ms": 728,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_076",
+      "gold_code": "6907.2111",
+      "status": "ok",
+      "candidates": [
+        "6907.2111",
+        "6907.2211",
+        "6907.2311",
+        "6907.2119",
+        "6907.2219",
+        "6907.2190",
+        "6907.2290",
+        "6907.2319",
+        "6907.2390",
+        "6910.1080"
+      ],
+      "suggestions": [
+        "6907.2111"
+      ],
+      "top_similarity": 0.7373082198316933,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 1236,
+          "output_tokens": 108,
+          "latency_ms": 1335,
+          "call_ms": 1325,
+          "throttle_ms": 42875,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 405,
+          "output_tokens": 169,
+          "latency_ms": 2328,
+          "call_ms": 2323,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_077",
+      "gold_code": "2523.2900",
+      "status": "ok",
+      "candidates": [
+        "2523.2100",
+        "2523.2900",
+        "2523.9000",
+        "2523.3000",
+        "2523.1000",
+        "6811.4000",
+        "6811.8100",
+        "6811.8900",
+        "6811.8200",
+        "3006.4000"
+      ],
+      "suggestions": [
+        "2523.2900"
+      ],
+      "top_similarity": 0.7390048815006212,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 831,
+          "output_tokens": 125,
+          "latency_ms": 1091,
+          "call_ms": 1084,
+          "throttle_ms": 6750,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 395,
+          "output_tokens": 128,
+          "latency_ms": 959,
+          "call_ms": 954,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_078",
+      "gold_code": "4804.2100",
+      "status": "ok",
+      "candidates": [
+        "4804.2900",
+        "4804.2100",
+        "4804.5900",
+        "4804.3900",
+        "4804.5100",
+        "4804.3100",
+        "4804.4900",
+        "4804.4100",
+        "4707.1090",
+        "4804.5200"
+      ],
+      "suggestions": [
+        "4804.2100",
+        "4804.3100"
+      ],
+      "top_similarity": 0.7133411085591731,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 985,
+          "output_tokens": 280,
+          "latency_ms": 1452,
+          "call_ms": 1445,
+          "throttle_ms": 1921,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 392,
+          "output_tokens": 158,
+          "latency_ms": 893,
+          "call_ms": 888,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_079",
+      "gold_code": "4819.1000",
+      "status": "ok",
+      "candidates": [
+        "4819.1000",
+        "4819.2000",
+        "4808.1000",
+        "4808.9000",
+        "4819.5000",
+        "4819.4000",
+        "4808.4000",
+        "4819.3000",
+        "7210.4190",
+        "7210.4110"
+      ],
+      "suggestions": [
+        "4819.1000"
+      ],
+      "top_similarity": 0.7932823896408081,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 1000,
+          "output_tokens": 154,
+          "latency_ms": 1391,
+          "call_ms": 1385,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 395,
+          "output_tokens": 177,
+          "latency_ms": 1186,
+          "call_ms": 1180,
+          "throttle_ms": 38437,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_080",
+      "gold_code": "9403.6000",
+      "status": "ok",
+      "candidates": [
+        "4419.2000",
+        "9403.5020",
+        "9403.5010",
+        "4405.0000",
+        "9401.4100",
+        "9401.1000",
+        "9401.6900",
+        "4420.9020",
+        "9403.4000",
+        "4420.1100"
+      ],
+      "suggestions": [
+        "9403.4000"
+      ],
+      "top_similarity": 0.6861598082685597,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 789,
+          "output_tokens": 152,
+          "latency_ms": 1123,
+          "call_ms": 1115,
+          "throttle_ms": 42469,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 393,
+          "output_tokens": 104,
+          "latency_ms": 409,
+          "call_ms": 403,
+          "throttle_ms": 4031,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_081",
+      "gold_code": "9401.8000",
+      "status": "ok",
+      "candidates": [
+        "3918.9000",
+        "3918.1000",
+        "9402.1010",
+        "3916.9000",
+        "9403.7000",
+        "3921.1900",
+        "3915.9000",
+        "3926.4020",
+        "3812.2000",
+        "9403.1000"
+      ],
+      "suggestions": [
+        "9403.7000"
+      ],
+      "top_similarity": 0.700568312304919,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 815,
+          "output_tokens": 118,
+          "latency_ms": 1492,
+          "call_ms": 1484,
+          "throttle_ms": 6843,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 390,
+          "output_tokens": 131,
+          "latency_ms": 1574,
+          "call_ms": 1568,
+          "throttle_ms": 1594,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_082",
+      "gold_code": "3004.9092",
+      "status": "ok",
+      "candidates": [
+        "3004.9092",
+        "3004.4100",
+        "3004.9070",
+        "3004.9091",
+        "2941.9040",
+        "3004.9050",
+        "2106.9050",
+        "3004.4300",
+        "3003.2000",
+        "3003.4100"
+      ],
+      "suggestions": [
+        "3004.9092"
+      ],
+      "top_similarity": 0.7654640358133273,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 993,
+          "output_tokens": 89,
+          "latency_ms": 636,
+          "call_ms": 631,
+          "throttle_ms": 1390,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 396,
+          "output_tokens": 92,
+          "latency_ms": 2183,
+          "call_ms": 2177,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_083",
+      "gold_code": "3306.1010",
+      "status": "ok",
+      "candidates": [
+        "3306.1010",
+        "3306.1090",
+        "7411.1010",
+        "7411.1020",
+        "7002.3910",
+        "8540.7900",
+        "8540.7100",
+        "8540.8100",
+        "2529.2200",
+        "3006.4000"
+      ],
+      "suggestions": [
+        "3306.1010",
+        "3306.1090"
+      ],
+      "top_similarity": 0.774443997475864,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 915,
+          "output_tokens": 103,
+          "latency_ms": 596,
+          "call_ms": 590,
+          "throttle_ms": 782,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 389,
+          "output_tokens": 134,
+          "latency_ms": 646,
+          "call_ms": 640,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_084",
+      "gold_code": "3305.1000",
+      "status": "ok",
+      "candidates": [
+        "3305.1000",
+        "3305.9010",
+        "3307.9010",
+        "8422.2000",
+        "3305.3000",
+        "3307.3000",
+        "3305.9090",
+        "3305.9020",
+        "3307.4900",
+        "3402.5000"
+      ],
+      "suggestions": [
+        "3305.1000",
+        "3305.9090"
+      ],
+      "top_similarity": 0.7453895211219788,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 793,
+          "output_tokens": 167,
+          "latency_ms": 969,
+          "call_ms": 963,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 390,
+          "output_tokens": 113,
+          "latency_ms": 318,
+          "call_ms": 312,
+          "throttle_ms": 0,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    },
+    {
+      "id": "hs_085",
+      "gold_code": "3401.1100",
+      "status": "ok",
+      "candidates": [
+        "3401.1100",
+        "3401.1910",
+        "3401.3000",
+        "3401.2000",
+        "3401.1990",
+        "3303.0090",
+        "3303.0020",
+        "6302.9120",
+        "4803.0000",
+        "4818.1000"
+      ],
+      "suggestions": [
+        "3401.1100"
+      ],
+      "top_similarity": 0.6731293797493029,
+      "calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 974,
+          "output_tokens": 95,
+          "latency_ms": 2882,
+          "call_ms": 2876,
+          "throttle_ms": 41453,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ],
+      "query_status": "ok",
+      "query_calls": [
+        {
+          "attempt": 1,
+          "model": "openai/gpt-oss-120b",
+          "input_tokens": 388,
+          "output_tokens": 96,
+          "latency_ms": 1094,
+          "call_ms": 1088,
+          "throttle_ms": 421,
+          "cost_usd": "0",
+          "cached": true,
+          "validation_errors": [],
+          "keys_repaired": [],
+          "keys_ignored": [],
+          "numbers_normalised": [],
+          "numbers_ambiguous": []
+        }
+      ]
+    }
+  ]
+}

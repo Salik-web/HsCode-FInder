@@ -1,0 +1,894 @@
+{
+  "meta": {
+    "run_id": "20261123T111649_synthetic_messy_test_unseen_layout_qwen_qwen3.8-27b_reasoning-none_v3",
+    "created_at": "2026-11-23T11:16:49.225008Z",
+    "git_sha": "e5495aeab032d81d9131daf5bf91478664969b06",
+    "git_dirty": false,
+    "dataset": "synthetic_messy",
+    "split": "test_unseen_layout",
+    "model": "qwen/qwen3.8-27b",
+    "reasoning_effort": "none",
+    "prompt_version": "v3",
+    "schema_version": "1.0",
+    "as_of": "2026-10-01",
+    "documents_total": 4,
+    "documents_scored": 4,
+    "llm_calls_made": 0,
+    "llm_calls_cached": 4
+  },
+  "layout_groups": {
+    "seen": {
+      "summary": {
+        "documents": 0,
+        "fields": [],
+        "line_precision": null,
+        "line_recall": null,
+        "line_f1": null,
+        "critical_field_accuracy": null,
+        "all_critical_correct_rate": null
+      },
+      "operations": {
+        "documents": 0,
+        "needs_review_rate": null,
+        "failed_rate": null,
+        "first_try_answered": 0,
+        "first_try_valid": 0,
+        "retried": 0,
+        "keys_repaired": 0,
+        "keys_ignored": 0,
+        "numbers_normalised": 0,
+        "numbers_ambiguous": 0,
+        "references_resolved": 0,
+        "unit_checks_failed": 0,
+        "retry_rate": null,
+        "cost_per_document_usd": null,
+        "latency_p50_ms": null,
+        "latency_p95_ms": null,
+        "timed_documents": 0,
+        "model_call_p50_ms": null,
+        "model_call_p95_ms": null,
+        "backoff_p95_ms": null,
+        "throttled_documents": 0,
+        "throttle_p95_ms": null,
+        "alarms_on_wrong_values": 0,
+        "alarms_on_correct_values": 0,
+        "correct_documents": 0,
+        "correct_documents_flagged": 0
+      },
+      "calibration": {
+        "buckets": [
+          {
+            "low": 0.0,
+            "high": 0.3,
+            "fields": 0,
+            "correct": 0,
+            "accuracy": null
+          },
+          {
+            "low": 0.3,
+            "high": 0.5,
+            "fields": 0,
+            "correct": 0,
+            "accuracy": null
+          },
+          {
+            "low": 0.5,
+            "high": 0.7,
+            "fields": 0,
+            "correct": 0,
+            "accuracy": null
+          },
+          {
+            "low": 0.7,
+            "high": 0.9,
+            "fields": 0,
+            "correct": 0,
+            "accuracy": null
+          },
+          {
+            "low": 0.9,
+            "high": 1.0,
+            "fields": 0,
+            "correct": 0,
+            "accuracy": null
+          }
+        ],
+        "fields": 0,
+        "wrong": 0,
+        "wrong_needs_review": 0,
+        "wrong_failed_check": 0,
+        "correct_sent_to_review": 0,
+        "missed_lines": 0,
+        "documents_without_invoice": 0,
+        "error_recall": null,
+        "review_load": null
+      }
+    },
+    "unseen": {
+      "summary": {
+        "documents": 4,
+        "fields": [
+          {
+            "field": "invoice_number",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "invoice_date",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "incoterm",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "currency",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "total_amount",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "gross_weight_kg",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "net_weight_kg",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "shipper.name",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "shipper.address",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "shipper.country",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "buyer.name",
+            "total": 4,
+            "correct": 3,
+            "wrong": 1,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 0.75
+          },
+          {
+            "field": "buyer.address",
+            "total": 4,
+            "correct": 2,
+            "wrong": 2,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 0.5
+          },
+          {
+            "field": "buyer.country",
+            "total": 4,
+            "correct": 3,
+            "wrong": 1,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 0.75
+          },
+          {
+            "field": "consignee.name",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "consignee.address",
+            "total": 4,
+            "correct": 3,
+            "wrong": 1,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 0.75
+          },
+          {
+            "field": "consignee.country",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "notify_party.name",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "notify_party.address",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "notify_party.country",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.description",
+            "total": 38,
+            "correct": 38,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.quantity",
+            "total": 38,
+            "correct": 38,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.unit",
+            "total": 38,
+            "correct": 38,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.unit_price",
+            "total": 38,
+            "correct": 38,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.amount",
+            "total": 38,
+            "correct": 38,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "total": 38,
+            "correct": 38,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          }
+        ],
+        "line_precision": 1.0,
+        "line_recall": 1.0,
+        "line_f1": 1.0,
+        "critical_field_accuracy": 0.9838709677419355,
+        "all_critical_correct_rate": 0.75
+      },
+      "operations": {
+        "documents": 4,
+        "needs_review_rate": 0.0,
+        "failed_rate": 0.0,
+        "first_try_answered": 4,
+        "first_try_valid": 4,
+        "retried": 0,
+        "keys_repaired": 0,
+        "keys_ignored": 0,
+        "numbers_normalised": 0,
+        "numbers_ambiguous": 0,
+        "references_resolved": 1,
+        "unit_checks_failed": 0,
+        "retry_rate": 0.0,
+        "cost_per_document_usd": "0",
+        "latency_p50_ms": 1851,
+        "latency_p95_ms": 2142,
+        "timed_documents": 4,
+        "model_call_p50_ms": 1753,
+        "model_call_p95_ms": 2137,
+        "backoff_p95_ms": 377,
+        "throttled_documents": 4,
+        "throttle_p95_ms": 60000,
+        "alarms_on_wrong_values": 0,
+        "alarms_on_correct_values": 0,
+        "correct_documents": 2,
+        "correct_documents_flagged": 0
+      },
+      "calibration": {
+        "buckets": [
+          {
+            "low": 0.0,
+            "high": 0.3,
+            "fields": 0,
+            "correct": 0,
+            "accuracy": null
+          },
+          {
+            "low": 0.3,
+            "high": 0.5,
+            "fields": 0,
+            "correct": 0,
+            "accuracy": null
+          },
+          {
+            "low": 0.5,
+            "high": 0.7,
+            "fields": 304,
+            "correct": 299,
+            "accuracy": 0.9835526315789473
+          },
+          {
+            "low": 0.7,
+            "high": 0.9,
+            "fields": 0,
+            "correct": 0,
+            "accuracy": null
+          },
+          {
+            "low": 0.9,
+            "high": 1.0,
+            "fields": 0,
+            "correct": 0,
+            "accuracy": null
+          }
+        ],
+        "fields": 304,
+        "wrong": 5,
+        "wrong_needs_review": 1,
+        "wrong_failed_check": 0,
+        "correct_sent_to_review": 251,
+        "missed_lines": 0,
+        "documents_without_invoice": 0,
+        "error_recall": 0.2,
+        "review_load": 0.8394648829431438
+      }
+    }
+  },
+  "templates": {
+    "manifest": {
+      "summary": {
+        "documents": 4,
+        "fields": [
+          {
+            "field": "invoice_number",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "invoice_date",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "incoterm",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "currency",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "total_amount",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "gross_weight_kg",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "net_weight_kg",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "shipper.name",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "shipper.address",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "shipper.country",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "buyer.name",
+            "total": 4,
+            "correct": 3,
+            "wrong": 1,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 0.75
+          },
+          {
+            "field": "buyer.address",
+            "total": 4,
+            "correct": 2,
+            "wrong": 2,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 0.5
+          },
+          {
+            "field": "buyer.country",
+            "total": 4,
+            "correct": 3,
+            "wrong": 1,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 0.75
+          },
+          {
+            "field": "consignee.name",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "consignee.address",
+            "total": 4,
+            "correct": 3,
+            "wrong": 1,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 0.75
+          },
+          {
+            "field": "consignee.country",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "notify_party.name",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "notify_party.address",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "notify_party.country",
+            "total": 4,
+            "correct": 4,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.description",
+            "total": 38,
+            "correct": 38,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.quantity",
+            "total": 38,
+            "correct": 38,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.unit",
+            "total": 38,
+            "correct": 38,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.unit_price",
+            "total": 38,
+            "correct": 38,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.amount",
+            "total": 38,
+            "correct": 38,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          },
+          {
+            "field": "line.hs_code_on_doc",
+            "total": 38,
+            "correct": 38,
+            "wrong": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "no_output": 0,
+            "accuracy": 1.0
+          }
+        ],
+        "line_precision": 1.0,
+        "line_recall": 1.0,
+        "line_f1": 1.0,
+        "critical_field_accuracy": 0.9838709677419355,
+        "all_critical_correct_rate": 0.75
+      },
+      "operations": {
+        "documents": 4,
+        "needs_review_rate": 0.0,
+        "failed_rate": 0.0,
+        "first_try_answered": 4,
+        "first_try_valid": 4,
+        "retried": 0,
+        "keys_repaired": 0,
+        "keys_ignored": 0,
+        "numbers_normalised": 0,
+        "numbers_ambiguous": 0,
+        "references_resolved": 1,
+        "unit_checks_failed": 0,
+        "retry_rate": 0.0,
+        "cost_per_document_usd": "0",
+        "latency_p50_ms": 1851,
+        "latency_p95_ms": 2142,
+        "timed_documents": 4,
+        "model_call_p50_ms": 1753,
+        "model_call_p95_ms": 2137,
+        "backoff_p95_ms": 377,
+        "throttled_documents": 4,
+        "throttle_p95_ms": 60000,
+        "alarms_on_wrong_values": 0,
+        "alarms_on_correct_values": 0,
+        "correct_documents": 2,
+        "correct_documents_flagged": 0
+      },
+      "calibration": {
+        "buckets": [
+          {
+            "low": 0.0,
+            "high": 0.3,
+            "fields": 0,
+            "correct": 0,
+            "accuracy": null
+          },
+          {
+            "low": 0.3,
+            "high": 0.5,
+            "fields": 0,
+            "correct": 0,
+            "accuracy": null
+          },
+          {
+            "low": 0.5,
+            "high": 0.7,
+            "fields": 304,
+            "correct": 299,
+            "accuracy": 0.9835526315789473
+          },
+          {
+            "low": 0.7,
+            "high": 0.9,
+            "fields": 0,
+            "correct": 0,
+            "accuracy": null
+          },
+          {
+            "low": 0.9,
+            "high": 1.0,
+            "fields": 0,
+            "correct": 0,
+            "accuracy": null
+          }
+        ],
+        "fields": 304,
+        "wrong": 5,
+        "wrong_needs_review": 1,
+        "wrong_failed_check": 0,
+        "correct_sent_to_review": 251,
+        "missed_lines": 0,
+        "documents_without_invoice": 0,
+        "error_recall": 0.2,
+        "review_load": 0.8394648829431438
+      }
+    }
+  },
+  "buyer_forms": {
+    "reference": {
+      "seen": [],
+      "unseen": [
+        {
+          "field": "buyer.name",
+          "total": 2,
+          "correct": 1,
+          "wrong": 1,
+          "missed": 0,
+          "hallucinated": 0,
+          "no_output": 0,
+          "accuracy": 0.5
+        },
+        {
+          "field": "buyer.address",
+          "total": 2,
+          "correct": 1,
+          "wrong": 1,
+          "missed": 0,
+          "hallucinated": 0,
+          "no_output": 0,
+          "accuracy": 0.5
+        },
+        {
+          "field": "buyer.country",
+          "total": 2,
+          "correct": 1,
+          "wrong": 1,
+          "missed": 0,
+          "hallucinated": 0,
+          "no_output": 0,
+          "accuracy": 0.5
+        }
+      ]
+    },
+    "repeated": {
+      "seen": [],
+      "unseen": [
+        {
+          "field": "buyer.name",
+          "total": 1,
+          "correct": 1,
+          "wrong": 0,
+          "missed": 0,
+          "hallucinated": 0,
+          "no_output": 0,
+          "accuracy": 1.0
+        },
+        {
+          "field": "buyer.address",
+          "total": 1,
+          "correct": 1,
+          "wrong": 0,
+          "missed": 0,
+          "hallucinated": 0,
+          "no_output": 0,
+          "accuracy": 1.0
+        },
+        {
+          "field": "buyer.country",
+          "total": 1,
+          "correct": 1,
+          "wrong": 0,
+          "missed": 0,
+          "hallucinated": 0,
+          "no_output": 0,
+          "accuracy": 1.0
+        }
+      ]
+    },
+    "distinct": {
+      "seen": [],
+      "unseen": [
+        {
+          "field": "buyer.name",
+          "total": 1,
+          "correct": 1,
+          "wrong": 0,
+          "missed": 0,
+          "hallucinated": 0,
+          "no_output": 0,
+          "accuracy": 1.0
+        },
+        {
+          "field": "buyer.address",
+          "total": 1,
+          "correct": 0,
+          "wrong": 1,
+          "missed": 0,
+          "hallucinated": 0,
+          "no_output": 0,
+          "accuracy": 0.0
+        },
+        {
+          "field": "buyer.country",
+          "total": 1,
+          "correct": 1,
+          "wrong": 0,
+          "missed": 0,
+          "hallucinated": 0,
+          "no_output": 0,
+          "accuracy": 1.0
+        }
+      ]
+    }
+  },
+  "documents": null
+}

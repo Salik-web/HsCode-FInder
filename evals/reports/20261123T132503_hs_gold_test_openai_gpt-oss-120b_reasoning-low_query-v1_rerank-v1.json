@@ -1,0 +1,144 @@
+{
+  "meta": {
+    "run_id": "20261123T132503_hs_gold_test_openai_gpt-oss-120b_reasoning-low_query-v1_rerank-v1",
+    "created_at": "2026-11-23T13:25:03.341012Z",
+    "git_sha": "e5495aeab032d81d9131daf5bf91478664969b06",
+    "git_dirty": true,
+    "split": "test",
+    "model": "openai/gpt-oss-120b",
+    "reasoning_effort": "low",
+    "prompt_version": "v1",
+    "query_prompt_version": "v1",
+    "embedding_model": "BAAI/bge-small-en-v1.5",
+    "tariff_version": "2026-27",
+    "items_total": 23,
+    "items_scored": 23,
+    "gold_verified": 0,
+    "llm_calls_made": 0,
+    "llm_calls_cached": 47
+  },
+  "summary": {
+    "items": 23,
+    "statuses": {
+      "ok": 23
+    },
+    "retrieval_recall": {
+      "heading": {
+        "hits": 19,
+        "total": 23
+      },
+      "subheading": {
+        "hits": 19,
+        "total": 23
+      },
+      "national": {
+        "hits": 18,
+        "total": 23
+      }
+    },
+    "retrieval_top1": {
+      "heading": {
+        "hits": 13,
+        "total": 23
+      },
+      "subheading": {
+        "hits": 10,
+        "total": 23
+      },
+      "national": {
+        "hits": 9,
+        "total": 23
+      }
+    },
+    "retrieval_top3": {
+      "heading": {
+        "hits": 18,
+        "total": 23
+      },
+      "subheading": {
+        "hits": 17,
+        "total": 23
+      },
+      "national": {
+        "hits": 14,
+        "total": 23
+      }
+    },
+    "rerank_top1": {
+      "heading": {
+        "hits": 19,
+        "total": 23
+      },
+      "subheading": {
+        "hits": 18,
+        "total": 23
+      },
+      "national": {
+        "hits": 16,
+        "total": 23
+      }
+    },
+    "rerank_top3": {
+      "heading": {
+        "hits": 19,
+        "total": 23
+      },
+      "subheading": {
+        "hits": 18,
+        "total": 23
+      },
+      "national": {
+        "hits": 17,
+        "total": 23
+      }
+    },
+    "first_try_valid": {
+      "hits": 22,
+      "total": 23
+    },
+    "retries": 1,
+    "query_ok": {
+      "hits": 23,
+      "total": 23
+    },
+    "calibration": [
+      {
+        "low": 0.0,
+        "high": 0.6,
+        "national_top1": {
+          "hits": 0,
+          "total": 0
+        }
+      },
+      {
+        "low": 0.6,
+        "high": 0.7,
+        "national_top1": {
+          "hits": 8,
+          "total": 11
+        }
+      },
+      {
+        "low": 0.7,
+        "high": 0.8,
+        "national_top1": {
+          "hits": 6,
+          "total": 9
+        }
+      },
+      {
+        "low": 0.8,
+        "high": 1.01,
+        "national_top1": {
+          "hits": 2,
+          "total": 2
+        }
+      }
+    ],
+    "input_tokens": 31076,
+    "output_tokens": 7910,
+    "call_ms_p50": 931,
+    "call_ms_p95": 1671
+  },
+  "outcomes": null
+}

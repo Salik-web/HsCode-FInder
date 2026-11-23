@@ -370,8 +370,8 @@ tradedoc-ai/
 | 3 | Iterate to quality | Clean critical-field accuracy ≥ 90% |
 | 4 | Guardrails + injected-error dataset + confidence scoring | Catch rate ≥ 95%; calibration table in the report |
 | 5 | Tariff ingestion, pgvector, HS suggestion | HS top-3 measured on hs_gold |
-| 6 | FastAPI + worker + review UI; corrections logging | Upload → review → export works end to end locally |
-| 7 | Model bake-off, CI eval gate, deploy, README | Live demo URL; README results table |
+| 6 | FastAPI + worker + review UI (Streamlit, Salik 2026-11-23); corrections logging | Upload → review → export works end to end locally |
+| 7 | Docker image, Hugging Face Spaces deploy, Neon/Supabase, offline CI eval gate from the cache, README (bake-off moved to v1.1, Salik 2026-11-23) | Live demo URL; README results table |
 | Later | Packing lists, bills of lading, real-document eval set, WhatsApp status bot, quote calculator | — |
 
 ## 12. Risks and mitigations

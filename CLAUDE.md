@@ -10,30 +10,34 @@ TradeDoc AI extracts structured data from trade documents (commercial invoices f
 Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H & J Corporation) and as a public portfolio project.
 
 ## Status
-- Current phase: **Phase 3 started early (schema reliability)**, approved by Salik on 2026-11-11. Phase 2 is built and tested, and its baseline was cut short by decision (see below); the Phase 2 gate wasn't formally passed.
-- Completed phases: Phase 1 — Foundation + synthetic data (approved by Salik, 2026-11-07)
+- Current phase: **Phase 6 gate (FastAPI + worker + Streamlit review UI): built and checked end to end locally on 2026-11-23, waiting for Salik's approval before Phase 7.** Manifest run and Phase 5 are done (below).
+- **Plan: fast free plan (Salik, 2026-11-23).** Order: 1) the `manifest` held-out run (16 calls, the last extraction run) -> 2) Phase 5 (tariff parse, pgvector, retrieval, rerank, hs_gold eval) -> 3) Phase 6 (FastAPI + Streamlit review UI) -> 4) Phase 7 (Docker image, Hugging Face Spaces deploy, Neon or Supabase Postgres, offline CI eval gate from the cache, README with results). Work autonomously inside a phase; stop at each gate with evidence.
+  - **Dev clean is closed as a sample:** 27/53 documents, critical-field accuracy 100%, all critical right 27/27. The other 26 are not run. Recorded as a sample in the README and evals/CHANGELOG.md; never present it as the full split.
+  - **HS rerank** uses Groq `openai/gpt-oss-120b` (text only, its own per-model daily quota). No vision calls for HS.
+  - **Model bake-off moves to v1.1** (after the Phase 7 deploy). The 12 cached Gemini results stay for it.
+  - Phase 3 and Phase 4 meet their targets (clean critical 100% on dev, catch rate 60/60); Salik's 2026-11-23 order moves on to Phase 5 without a separate gate review.
+- Completed phases: Phase 1 — Foundation + synthetic data (approved by Salik, 2026-11-07). Phases 2–4 built and measured (see above and evals/CHANGELOG.md). Phase 5 done 2026-11-23 (HS top-3 measured on hs_gold, test split frozen; Salik's order moved straight on to Phase 6).
+- **Manifest held-out run (2026-11-23, final):** clean 12/12 all critical right (100%), messy 3/4 (critical 98.4%); reports `20261123T111641_…`, `20261123T111649_…`. No more extraction runs before the v1.1 bake-off.
+- **Phase 5 (2026-11-23):** tariff parsed (`tariff/pct_2026-27.csv`, 7,605 codes, committed), pgvector + full-text index (migrations 0001–0002), HS stage = `hs_query/v1` rewrite -> vector and full-text retrieval of description and rewrite, fused (RRF), top 10 -> `hs_rerank/v1`. hs_gold: 86 invoice-style lines (rewritten after a tariff-wording leak), dev 63 / test 23, **gold not verified by a person yet**. Levers tuned on dev in Salik's order; stopped at lever 3 (query rewrite) when 6-digit top-3 reached 81.0% (dev); levers 4-5 measured on retrieval only (recall 59-61/63 at k=30), not adopted. **Test split FROZEN: 6-digit top-3 78.3% (18/23)**, report `20261123T132503_…`. Table in evals/CHANGELOG.md. The HS-code existence check (`hs_code_exists`) is wired in: 0 new flags on all cached sets.
+- **Phase 6 (2026-11-23):** tables `documents`, `extraction_runs`, `hs_suggestions`, `corrections` (migration 0003); `app/api/main.py` (upload, list, review, corrections, HS choice, approve, export JSON/CSV, retry, page images, health); `app/worker.py` (claims with SKIP LOCKED, runs the same `complete_pipeline` plus `classify_line`, saves page images so the API never touches PDFium); `app/pipeline/review.py` (status, corrections replayed and validated as RawInvoice, CSV export with a formula-injection guard); `ui/app.py` (Streamlit, talks to the API only). Gate evidence: `tests/test_api.py` (whole workflow on the `tradedoc_test` database, LLM mocked) and a live local run on `inv_00015` (upload -> worker -> review -> correction -> HS choice -> approve -> JSON and CSV export). The live run found and fixed a 500 on documents without a notify party (regression test in `tests/test_review.py`).
 - Branch: everything is merged into `main`; no open feature branches. Salik pushes.
-- **Phase 4 started 2026-11-16** at Salik's request while Groq quota recovers, before the Phase 3 gate is formally closed (the full v3 run is still finishing). Built: `app/pipeline/validate.py` (deterministic checks), exact code synonyms, the injected-error set and the guardrail eval. Catch rate 60/60 = 100% on the injected set; 0 false alarms on 113 clean ground-truth invoices; 0 fully correct v3 extractions flagged. See evals/CHANGELOG.md. Confidence scoring and the calibration table are built. With the photo rule and strict descriptions (2026-11-16): error recall 9/12 on cached v3 extraction errors, review load 1/3570 on clean PDFs and 105/503 on photos, planted errors 60/60 to review. Still missed: wrong values that are on the page as extracted (two unseen party names; the ledger diagnosis decides the name-boundary check, Salik 2026-11-16) and non-critical photo fields. **Row-scoped line check (2026-11-17, Salik):** quantity, unit, unit price and amount must be in their own row (found by description, wrapped rows handled); error recall 10/14 -> 11/14 on all cached v3, review load unchanged 124/4760. **Party boundary check, strict addresses, empty critical fields (2026-11-17, Salik):** name + address must cover the printed party text (no word in both, none split, none left over on one line); flags only. Addresses scored exact after normalisation. An empty critical field goes to `needs_review`. Error recall on all cached v3: 23/54 -> 27/59, review load 312/5670 -> 313/5665; 0 boundary alarms on 415 ground-truth parties.
-- Latest eval baseline: **v2 on Groq** `qwen/qwen3.8-27b`, thinking off, 2026-11-11: 18 documents (the first 16 clean dev and the first 2 messy dev by id, all seen layouts). Clean: critical-field accuracy 85.1%, all critical right 14/16, first-try valid JSON 8/16, `needs_review` 2/16; messy: 2/2 valid first try, all critical right 1/2. See evals/CHANGELOG.md.
-- Latest result on those 18 documents: **prompt v3 + deterministic fixes** (key repair, reference-buyer rule, unit list, number normalisation), re-scored from cache on 2026-11-12. Clean: first-try valid 16/16, critical-field accuracy 100%, all fields 1088/1090 (the 2 misses are garbled units, both flagged `failed_check`). Messy: first-try valid 2/2, all critical right 1/2 (incoterm misread on a blurred photo). See evals/CHANGELOG.md.
-- **Where we stopped (2026-11-17, 13:15 UTC): whole-row review merged into `main` (after the party boundary work).** The full v3 run, approved by Salik, has only dev clean left. Next session, in this order (Salik, 2026-11-17, revised): 1) the new held-out layout `manifest` first (12 clean + 4 messy, 16 calls); 2) dev clean (26 calls) with the remaining quota. About 42 calls on about 30 a day, so dev clean likely finishes the day after.
-  - Critical fields include `buyer.name` and `consignee.name` (Salik, 2026-11-16); every number below uses that definition.
-  - **test_unseen_layout v3 is FROZEN, pre-inspection (2026-11-17)**: clean 99.1% / 22/24 (`20261116T074314_…`), messy 98.8% / 6/7 (`20261117T104316_…`). Table in evals/CHANGELOG.md. Its ledger failures were then read for the diagnosis.
-  - **Holdout applied (2026-11-17):** `ledger` is seen; the main dataset (seed 42) keeps its frozen rotation and splits (`MAIN_TEMPLATES`, `MAIN_HELD_OUT_TEMPLATES` in `synth/layouts.py`), so its ledger documents stay in test_unseen_layout and score as seen (evals take the group from today's list). `sidebar` stays held out and unread. New held-out layout `manifest`: `data/heldout_manifest` (seed 1117, ids `held_*`, split test_unseen_layout), generated, **not run yet**. Never tune on it, and don't read its documents' predictions.
-  - dev clean: **27/53 cached**, all critical right; 26 to go. dev messy: **16/16**, final report `20261117T113325_…` (critical 94.5%, all critical right 10/16; main failure row shift on `compact` photos).
-  - Ledger diagnosis (2026-11-17): the failure was a name/address boundary moved into the address (`Graf, Nina-Albers-Straße` read as name `Graf, Nina`), not a comma cut; the fuzzy address metric hid the address side. Diagnostic batch `data/diagnostic_ledger` (seed 1116): 10/10 all critical right. See evals/CHANGELOG.md.
-  - No processes were left after the 2026-11-17 runs (checked with `Get-CimInstance Win32_Process`).
-- **Resume the full run.** Each command stops at the first quota error and resumes from the cache next time, so repeat it until it prints the full count. Keep interim reports out of the repo with `REPORTS_DIR`:
-  ```bash
-  export REPORTS_DIR=/tmp/interim_reports   # any folder outside evals/reports
-  uv run python -m evals.run --dataset synthetic_clean --split test_unseen_layout --folder heldout_manifest --prompt v3   # until Scored 12/12
-  uv run python -m evals.run --dataset synthetic_messy --split test_unseen_layout --folder heldout_manifest --prompt v3   # until Scored 4/4
-  uv run python -m evals.run --dataset synthetic_clean --split dev --prompt v3                  # until Scored 53/53
-  ```
-  `manifest` is held out: report its numbers, never read its per-document predictions or tune on them. When a split is fully scored, write its final report into `evals/reports` from the cache at no cost (`unset REPORTS_DIR`, then the same command with `--offline`), and log it in `evals/CHANGELOG.md`. Groq allows about 200,000 tokens a day, but counts about 6,300 a call, so about 30 v3 calls on a full budget (see Known issues). If you run the commands in a background loop, check afterwards that no `bash`, `sleep` or `evals.run` process is left (see the lesson below).
-  - Lesson: on Windows, stopping a background shell loop ended only its wrapper. Two loops kept running overnight on 2026-11-11 (5 extra v2 calls; one v3 retry made twice). After stopping a background loop, check with `Get-CimInstance Win32_Process` and kill leftovers by PID.
+- Phase 4 summary: `app/pipeline/validate.py` (deterministic checks), exact code synonyms, the injected-error set and guardrail eval (catch rate 60/60; 0 false alarms on 113 clean ground-truth invoices), confidence scoring and the calibration table, the row-scoped line check, the party boundary check (0 alarms on 415 ground-truth parties), strict addresses, empty critical fields to `needs_review`, whole-row review. Error recall on all cached v3 53/59, review load 1212/5665 (photos drive it; see Known issues).
+- **v3 results** (`qwen/qwen3.8-27b` on Groq, thinking off, JSON object mode, prompt v3 + deterministic fixes). Critical fields include `buyer.name` and `consignee.name` (Salik, 2026-11-16).
+  - Dev clean (sample, 27/53): critical 100%, all critical right 27/27. Dev messy (16/16): critical 94.5%, all critical right 10/16, report `20261117T113325_…` (main failure: row shift on `compact` photos).
+  - **test_unseen_layout v3 is FROZEN, pre-inspection (2026-11-17)**: clean 99.1% / 22/24 (`20261116T074314_…`), messy 98.8% / 6/7 (`20261117T104316_…`). Its ledger failures were then read for the diagnosis.
+  - v2 -> v3 on the baseline's 18 documents: first-try valid JSON 8/16 -> 16/16, clean critical 85.1% -> 100%.
+  - **Holdout (2026-11-17):** `ledger` is seen; the main dataset (seed 42) keeps its frozen rotation and splits (`MAIN_TEMPLATES`, `MAIN_HELD_OUT_TEMPLATES` in `synth/layouts.py`), so its ledger documents stay in test_unseen_layout and score as seen. `sidebar` stays held out and unread. Held-out layout `manifest`: `data/heldout_manifest` (seed 1117, ids `held_*`). Never tune on it, and don't read its documents' predictions; report its numbers only.
+  - Ledger diagnosis (2026-11-17): a name/address boundary moved into the address (`Graf, Nina-Albers-Straße` read as name `Graf, Nina`). Diagnostic batch `data/diagnostic_ledger` (seed 1116): 10/10 all critical right.
+- **Running an extraction eval.** Each command stops at the first quota error and resumes from the cache next time. Keep interim reports out of the repo with `REPORTS_DIR` (any folder outside evals/reports). When a split is fully scored, write its final report into `evals/reports` from the cache at no cost (`unset REPORTS_DIR`, then the same command with `--offline`), and log it in `evals/CHANGELOG.md`. Groq counts about 6,300 tokens a v3 call against about 200,000 a day, so about 30 calls on a full budget.
+  - Lesson: on Windows, stopping a background shell loop ended only its wrapper. Two loops kept running overnight on 2026-11-11. After stopping a background loop, check with `Get-CimInstance Win32_Process` and kill leftovers by PID.
   - To replay the v2 baseline from cache, set `LLM_RESPONSE_FORMAT=json_schema` with `--prompt v2`: JSON object mode changed the cache key.
 - Known issues / open decisions:
+  - **hs_gold needs Salik's review:** all 86 gold codes exist in PCT 2026-27 but none is verified as the right classification (`verified: false`). Where an invoice line doesn't state what the 8-digit split turns on (mill-made or hand-loom), the gold is the ordinary commercial case; 6-digit is the target level.
+  - **HS is below target on test** (78.3% vs 80% 6-digit top-3; dev 81.0%). Measured headroom: retrieval recall 59-61/63 at k=30 (levers 4-5), at about 2-3x the rerank tokens. Not tuned further per Salik's stop rule.
+  - **gpt-oss-120b quota:** Groq's free tier allows 200,000 tokens a day for it (429 on 2026-11-23). An HS line costs about 1,600 tokens across the two calls, so about 120 lines a day. When it runs out, the line's HS stage is `failed` (retryable) and the document stays `needs_review`; there is no "re-run HS only" action yet (retry only re-queues failed documents).
+  - **HS confidence isn't calibrated yet:** suggestions carry retrieval rank and similarity; the hs report has an accuracy-by-similarity table, but no confidence score is shown until it's calibrated on verified gold.
+  - **`hs_query/v1` also returns 1-3 likely headings**, which retrieval doesn't use (lever 5 not adopted). Kept because the prompt was measured as is; drop them in `hs_query/v2` with a re-run.
+  - **HS-code existence check** verifies a printed code to the precision printed, at most 6 digits (an exporter's own national digits are never flagged). Salik to confirm this is the right rule for WeBOC filings.
   - **Charges and discounts, prompt v4 (planned by Salik, 2026-11-16, after tomorrow's runs):** real invoices often show freight, insurance, discounts and other charges between the subtotal and the total. v4 extracts them as fields, and the total check becomes lines + charges − discount = total with a rounding-only tolerance. A mismatch with no charges found goes to `needs_review`. The generator must produce invoices with charges too. Until then, the total check (rounding only, half a cent per line plus half for the total) flags the total on any real invoice with charges.
   - **Photos and OCR (Salik, 2026-11-16):** documents without a text layer send every critical field to `needs_review` ("no text layer to verify"). With whole-row review (2026-11-17) every line field follows its amount, so about four fifths of a photo's correct fields go to a person (905/1108 on messy dev, was 226/1108); error recall on messy dev 13/42 -> 39/42. A variant where the photo rule alone doesn't send a row measured 19/42 at 240/1108 (evals/CHANGELOG.md); Salik to decide. No OCR for now; revisit an OCR text layer (a new dependency, ask first) if photo review load becomes a problem in practice.
   - **Descriptions and addresses (Salik, 2026-11-16 and 2026-11-17):** a line description or an address is right only if it matches after normalising case, spacing and punctuation; names stay fuzzy (≥ 0.9).
@@ -41,7 +45,7 @@ Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H &
   - **No two-page held-out layout since 2026-11-17:** `ledger` was the only one and is seen now; `manifest` always fits one landscape page. Two-page invoices are tested on seen layouts only until a two-page held-out layout is added.
   - **Row shift on photos:** caught since 2026-11-17 by whole-row review (a line whose amount goes to review goes as a row), at the review cost above. Prompt changes wait for v4 (Salik, 2026-11-17).
   - **Code synonyms (Salik, 2026-11-16):** exact only, mapped before validation, with the printed value recorded in `rules_applied`: C&F and CNF -> CFR, RMB -> CNY, US$ -> USD (`app/pipeline/rules.py`). DDU stays flagged (not the same rule as DAP), and so does Rs (ambiguous across rupee currencies).
-  - Model is Groq `qwen/qwen3.8-27b` with thinking off (`reasoning_effort=none`), chosen by Salik to stay on the free tier (2026-11-11). Gemini's free tier allows only 20 requests per model per day; its 12 cached results are kept for the Phase 7 bake-off (`LLM_PROVIDER=gemini LLM_MODEL=gemini-3.5-flash LLM_REASONING_EFFORT= LLM_RESPONSE_FORMAT=json_schema LLM_MAX_OUTPUT_TOKENS=16000`, prompt v1).
+  - Model is Groq `qwen/qwen3.8-27b` with thinking off (`reasoning_effort=none`), chosen by Salik to stay on the free tier (2026-11-11). Gemini's free tier allows only 20 requests per model per day; its 12 cached results are kept for the v1.1 bake-off (`LLM_PROVIDER=gemini LLM_MODEL=gemini-3.5-flash LLM_REASONING_EFFORT= LLM_RESPONSE_FORMAT=json_schema LLM_MAX_OUTPUT_TOKENS=16000`, prompt v1).
   - **Units:** the accepted list is PCS, NOS, SET, PAIR, CTN, BAG, KG, MTR, MT (`app/schemas/constants.py`) plus exact synonyms in `app/pipeline/rules.py`. NOS is its own unit, never mapped to PCS; TON and M stay failing as ambiguous (Salik, 2026-11-12). **Align the list with Pakistan Customs/WeBOC unit codes once Salik confirms them with his operations contacts.**
   - Number formats: when both "," and "." appear, the last one is the decimal mark (confirmed by Salik, 2026-11-12). A single separator with exactly 3 digits after it is settled only by the document's other numbers; otherwise the document goes to `needs_review`. Currency is never used as evidence.
   - Groq per-minute limits are respected by client-side throttling (`app/llm/throttle.py`, `LLM_TOKENS_PER_MINUTE`, `LLM_OUTPUT_TOKENS_PER_MINUTE`, `LLM_REQUESTS_PER_MINUTE`), not by retries.
@@ -64,7 +68,7 @@ Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H &
   - PDFium isn't thread-safe. The Phase 6 worker must not render PDFs from multiple threads; use separate processes.
   - Synthetic layouts are still only 9 designs by one author, and `test_unseen_layout` shares their fonts, label lists and catalogue. It measures layout generalisation, not real-world accuracy, so report the `public` and `real` sets (DESIGN.md §6) separately.
   - Messy images are single-page only, so two-page invoices are tested in clean form only.
-  - Docker isn't installed on the dev machine, so `docker-compose.yml` has only been parsed as YAML, never run. Needed before Phase 5.
+  - Docker Desktop runs on the dev machine; `docker compose up -d` (Postgres + pgvector) is in use since 2026-11-23. The tariff ingest embeds 7,605 rows in about 2 minutes on CPU.
   - Synthetic files are byte-identical only on the same machine and Chromium version (fonts and renderer affect the bytes). Ground-truth JSON doesn't depend on either.
 
 (Phases 1–7 and their "Done when" checks are defined in docs/DESIGN.md and the kickoff prompt. Never start the next phase until the current one's check passes and Salik approves.)
@@ -88,8 +92,13 @@ uv run python -m evals.run --dataset synthetic_clean --split dev --limit 20
 uv run python -m evals.run --dataset synthetic_messy --split dev --model gemini-3.5-flash --prompt v1
 uv run python -m evals.run --dataset synthetic_clean --split test_unseen_layout   # reporting only
 uv run python -m evals.run --dataset synthetic_clean --split dev --fallback       # let the fallback model answer on rate limits
-uv run alembic upgrade head                         # DB migrations (Phase 6+)
-uv run uvicorn app.api.main:app --reload            # API (Phase 6+)
+uv run alembic upgrade head                         # DB migrations (tariff_codes since Phase 5)
+uv run python -m tariff.parse --pdf data/tariff/pct_2026-27.pdf --out tariff/pct_2026-27.csv   # PCT PDF -> committed CSV
+uv run python -m tariff.ingest --csv tariff/pct_2026-27.csv --version 2026-27   # embed + load pgvector (~2 min on CPU)
+uv run python -m evals.hs_run --split dev --prompt v1        # HS retrieval + rerank on hs_gold (test: reporting only)
+uv run uvicorn app.api.main:create_app --factory --reload   # API on :8000
+uv run python -m app.worker                         # process queued documents (--once: until the queue is empty)
+uv run streamlit run ui/app.py                      # review UI on :8501 (API_URL points it at the API)
 ```
 Keep this list accurate. If you add a command, add it here.
 
@@ -98,18 +107,20 @@ Keep this list accurate. If you add a command, add it here.
 app/api/        FastAPI routes only — thin, no business logic
 app/pipeline/   pure functions: preprocess, classify, extract, validate, hs_suggest
 app/schemas/    Pydantic models (RawInvoice from LLM, Invoice with Field[T])
-app/llm/        LLMClient protocol, OpenAI-compatible provider, disk cache, fallback, Langfuse tracing, factory
-app/db/         SQLAlchemy 2.0 models + Alembic migrations
-prompts/        versioned prompts: prompts/<doc_type>/v<N>.md (never edit an old version)
-evals/          metrics.py, dataset.py, report.py, run.py (CLI), guardrails.py (CLI), reports/, CHANGELOG.md
+app/llm/        LLMClient protocol, OpenAI-compatible provider, disk cache, fallback, Langfuse tracing, factory (extraction and HS roles)
+app/embeddings.py  local sentence-transformers embedder (bge-small)
+app/db/         SQLAlchemy 2.0 models, Alembic migrations, pgvector tariff index
+prompts/        versioned prompts: prompts/<doc_type>/v<N>.md and prompts/hs_rerank/v<N>.md (never edit an old version)
+evals/          metrics.py, dataset.py, report.py, run.py (CLI), guardrails.py (CLI), hs_metrics.py, hs_run.py (CLI), datasets/hs_gold.jsonl, reports/, CHANGELOG.md
 synth/          generator, layouts (+ label synonyms), Jinja2 templates, render, augment, manifest, generate (CLI), inject (CLI), catalogue.csv
-tariff/         PCT schedule ingestion -> pgvector
-web/            Next.js + Tailwind review UI
+tariff/         parse.py (PCT PDF -> pct_2026-27.csv, committed), ingest.py (CSV -> embeddings -> pgvector)
+app/worker.py   queue worker (one process, one thread: PDFium); app/storage.py: uploads by sha256 under storage/ (gitignored)
+ui/             Streamlit review UI (Salik, 2026-11-23: replaces the planned Next.js frontend)
 tests/          pytest; LLM always mocked (tests/fakes.py)
 ```
 
 ## Tech stack
-Python 3.12 · uv · FastAPI · Pydantic v2 · SQLAlchemy 2.0 + Alembic · PostgreSQL + pgvector · pypdfium2 · Playwright (Chromium, synthetic PDFs only) · Faker · sentence-transformers (local embeddings) · Langfuse · pytest · ruff · Next.js + Tailwind · Docker.
+Python 3.12 · uv · FastAPI · Pydantic v2 · SQLAlchemy 2.0 + Alembic · PostgreSQL + pgvector · pypdfium2 · Playwright (Chromium, synthetic PDFs only) · Faker · sentence-transformers (local embeddings) · Langfuse · pytest · ruff · Streamlit (review UI) · Docker.
 Free tiers only. Do not add a dependency without saying why and asking first.
 
 ## Design rules (non-negotiable)
@@ -142,7 +153,7 @@ Think like a senior engineer on every change: the best design, the fastest path 
 
 **No dead or irrelevant code**
 - Write only what the current phase needs. No placeholder features, "might need later" helpers, or unused parameters.
-- **Verify before deleting anything that looks unused.** Search the whole repo for references, and check indirect uses that a search misses: CLI entry points, FastAPI route decorators, Alembic migrations, Pydantic validators, pytest fixtures, files loaded by path (prompts, templates, catalogue), env/config keys and the Next.js frontend.
+- **Verify before deleting anything that looks unused.** Search the whole repo for references, and check indirect uses that a search misses: CLI entry points, FastAPI route decorators, Alembic migrations, Pydantic validators, pytest fixtures, files loaded by path (prompts, templates, catalogue), env/config keys and the Streamlit UI.
 - If it's confirmed unused and not needed by the current or next phase, delete it; git keeps history. If you're unsure whether it's needed, ask Salik instead of deleting.
 - Always list what you removed and why in your summary.
 - Commented-out code and stale TODOs go immediately; they never count as "needed".
@@ -162,7 +173,7 @@ Think like a senior engineer on every change: the best design, the fastest path 
 - Config via `pydantic-settings` reading `.env`; never hardcode keys or URLs.
 - Async in the API layer; pipeline functions stay sync unless there's a measured reason.
 - Comments explain *why*, not *what*. Docstrings on public functions.
-- Frontend: TypeScript strict, functional components, Tailwind, no UI library unless asked.
+- Frontend: Streamlit only, talking to the API over HTTP; no business logic in `ui/`.
 
 ## Testing rules
 - Never make real LLM calls in tests — mock `LLMClient`.
