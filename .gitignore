@@ -5,6 +5,7 @@
 data/
 
 # Real client documents: never commit these
+storage/
 evals/datasets/real/
 real_documents/
 
