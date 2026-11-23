@@ -1,0 +1,62 @@
+# Lint, tests (with a real Postgres + pgvector) and the offline eval gate, on every push
+# and pull request. No API keys: every LLM answer in tests is mocked, and the gate
+# replays committed fixtures (evals/fixtures).
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      # The version locked in uv.lock; no project install needed for linting.
+      - run: uvx ruff@0.17.4 check .
+      - run: uvx ruff@0.17.4 format --check .
+
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: tradedoc
+          POSTGRES_PASSWORD: ci-only
+          POSTGRES_DB: tradedoc
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U tradedoc"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      # tests/conftest.py creates and migrates its own tradedoc_test database from this.
+      DATABASE_URL: postgresql+psycopg://tradedoc:ci-only@127.0.0.1:5432/tradedoc
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv sync --frozen
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('uv.lock') }}
+      # Five test modules render synthetic invoices with headless Chromium.
+      - run: uv run --no-sync playwright install --with-deps chromium
+      - run: uv run --no-sync pytest -q
+
+  eval-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv sync --frozen --no-default-groups --group evals --group synth
+      - run: uv run --no-sync python -m evals.gate

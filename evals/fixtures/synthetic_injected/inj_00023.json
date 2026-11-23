@@ -1,0 +1,128 @@
+{
+  "id": "inj_00023",
+  "error": {
+    "kind": "bad_currency",
+    "path": "currency",
+    "original": "PKR",
+    "planted": "STG",
+    "method": "common non-ISO spelling"
+  },
+  "invoice": {
+    "invoice_number": "EXP2628916",
+    "invoice_date": "2026-06-04",
+    "shipper": {
+      "name": "Gussoni e figli",
+      "address": "Contrada Villadicani, 22 Appartamento 33 52026, Vaggio (AR)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Bambad-Zafar",
+      "address": "Plot 43, Block A, Peshawar 82093",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Wafeeq, Baaqir and Tali",
+      "address": "Plot 370, Block E, Lahore 73913",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "FAS",
+    "currency": "STG",
+    "line_items": [
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "46",
+        "unit": "PCS",
+        "unit_price": "13.16",
+        "amount": "605.36",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "70",
+        "unit": "PCS",
+        "unit_price": "30.14",
+        "amount": "2109.80",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "545",
+        "unit": "PCS",
+        "unit_price": "450.69",
+        "amount": "245626.05",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "22",
+        "unit": "PCS",
+        "unit_price": "81.18",
+        "amount": "1785.96",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "250127.17",
+    "gross_weight_kg": "3938.76",
+    "net_weight_kg": "3647.00"
+  },
+  "source": {
+    "invoice_number": "EXP2628916",
+    "invoice_date": "2026-06-04",
+    "shipper": {
+      "name": "Gussoni e figli",
+      "address": "Contrada Villadicani, 22 Appartamento 33 52026, Vaggio (AR)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Bambad-Zafar",
+      "address": "Plot 43, Block A, Peshawar 82093",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Wafeeq, Baaqir and Tali",
+      "address": "Plot 370, Block E, Lahore 73913",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "FAS",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "46",
+        "unit": "PCS",
+        "unit_price": "13.16",
+        "amount": "605.36",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "70",
+        "unit": "PCS",
+        "unit_price": "30.14",
+        "amount": "2109.80",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "545",
+        "unit": "PCS",
+        "unit_price": "450.69",
+        "amount": "245626.05",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "22",
+        "unit": "PCS",
+        "unit_price": "81.18",
+        "amount": "1785.96",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "250127.17",
+    "gross_weight_kg": "3938.76",
+    "net_weight_kg": "3647.00"
+  }
+}

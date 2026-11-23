@@ -1,0 +1,126 @@
+{
+  "invoice": {
+    "invoice_number": "953-45627",
+    "invoice_date": "2026-01-06",
+    "shipper": {
+      "name": "Harvey-Collins",
+      "address": "44 Tony Shores Vincentside CF31 8PT",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Omeir-Luqmaan",
+      "address": "Plot 93, Block C, Multan 81714",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Omeir-Luqmaan",
+      "address": "Plot 93, Block C, Multan 81714",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Ayyubi Inc",
+      "address": "Plot 137, Block F, Lahore 86151",
+      "country": "PK"
+    },
+    "incoterm": "CIF",
+    "currency": "EUR",
+    "line_items": [
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "814.93",
+        "unit": "KG",
+        "unit_price": "200.20",
+        "amount": "163148.99",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "359",
+        "unit": "PCS",
+        "unit_price": "63.41",
+        "amount": "22764.19",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "844.94",
+        "unit": "KG",
+        "unit_price": "458.98",
+        "amount": "387810.56",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "481",
+        "unit": "PCS",
+        "unit_price": "494.84",
+        "amount": "238018.04",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "237",
+        "unit": "PCS",
+        "unit_price": "101.26",
+        "amount": "23998.62",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "650.08",
+        "unit": "KG",
+        "unit_price": "79.75",
+        "amount": "51843.88",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "159",
+        "unit": "SET",
+        "unit_price": "416.38",
+        "amount": "66204.42",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "920",
+        "unit": "PCS",
+        "unit_price": "69.49",
+        "amount": "63930.80",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "898.85",
+        "unit": "KG",
+        "unit_price": "47.93",
+        "amount": "43081.88",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "16.49",
+        "unit": "KG",
+        "unit_price": "351.22",
+        "amount": "5791.62",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1066593.00",
+    "gross_weight_kg": "5095.43",
+    "net_weight_kg": "4947.02"
+  },
+  "true_hs_codes": [
+    "3907.6100",
+    "9506.6200",
+    "1511.9020",
+    "9405.4200",
+    "9018.9010",
+    "0804.5020",
+    "6302.2100",
+    "6302.6000",
+    "8544.1100",
+    "0902.4000"
+  ],
+  "buyer_reference": "As consignee"
+}

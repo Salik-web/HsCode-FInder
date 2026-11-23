@@ -1,0 +1,288 @@
+{
+  "id": "inj_00011",
+  "error": {
+    "kind": "bad_currency",
+    "path": "currency",
+    "original": "AED",
+    "planted": "RS",
+    "method": "common non-ISO spelling"
+  },
+  "invoice": {
+    "invoice_number": "INV-2026-90470",
+    "invoice_date": "2026-04-05",
+    "shipper": {
+      "name": "Pisaroni SPA",
+      "address": "Incrocio Elladio, 55 Appartamento 19 17042, Giovo (SV)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Qaim, Raatib and Raashid",
+      "address": "Plot 188, Block B, Rawalpindi 72421",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Qaim, Raatib and Raashid",
+      "address": "Plot 188, Block B, Rawalpindi 72421",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "FCA",
+    "currency": "RS",
+    "line_items": [
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "74",
+        "unit": "PCS",
+        "unit_price": "162.52",
+        "amount": "12026.48",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "341",
+        "unit": "PCS",
+        "unit_price": "314.81",
+        "amount": "107350.21",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "413",
+        "unit": "PCS",
+        "unit_price": "5.81",
+        "amount": "2399.53",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "954",
+        "unit": "PCS",
+        "unit_price": "81.86",
+        "amount": "78094.44",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "776",
+        "unit": "PCS",
+        "unit_price": "424.84",
+        "amount": "329675.84",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "707",
+        "unit": "PCS",
+        "unit_price": "105.15",
+        "amount": "74341.05",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.82",
+        "unit": "MT",
+        "unit_price": "267.97",
+        "amount": "487.71",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "383",
+        "unit": "SET",
+        "unit_price": "276.01",
+        "amount": "105711.83",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "27",
+        "unit": "PCS",
+        "unit_price": "488.91",
+        "amount": "13200.57",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "571.46",
+        "unit": "KG",
+        "unit_price": "285.69",
+        "amount": "163260.41",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "62",
+        "unit": "CTN",
+        "unit_price": "387.65",
+        "amount": "24034.30",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "87.12",
+        "unit": "KG",
+        "unit_price": "25.37",
+        "amount": "2210.23",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "93",
+        "unit": "PAIR",
+        "unit_price": "251.68",
+        "amount": "23406.24",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "62",
+        "unit": "PCS",
+        "unit_price": "194.27",
+        "amount": "12044.74",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "948243.58",
+    "gross_weight_kg": "8641.63",
+    "net_weight_kg": "8001.51"
+  },
+  "source": {
+    "invoice_number": "INV-2026-90470",
+    "invoice_date": "2026-04-05",
+    "shipper": {
+      "name": "Pisaroni SPA",
+      "address": "Incrocio Elladio, 55 Appartamento 19 17042, Giovo (SV)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Qaim, Raatib and Raashid",
+      "address": "Plot 188, Block B, Rawalpindi 72421",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Qaim, Raatib and Raashid",
+      "address": "Plot 188, Block B, Rawalpindi 72421",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "FCA",
+    "currency": "AED",
+    "line_items": [
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "74",
+        "unit": "PCS",
+        "unit_price": "162.52",
+        "amount": "12026.48",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "341",
+        "unit": "PCS",
+        "unit_price": "314.81",
+        "amount": "107350.21",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "413",
+        "unit": "PCS",
+        "unit_price": "5.81",
+        "amount": "2399.53",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "954",
+        "unit": "PCS",
+        "unit_price": "81.86",
+        "amount": "78094.44",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "776",
+        "unit": "PCS",
+        "unit_price": "424.84",
+        "amount": "329675.84",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "707",
+        "unit": "PCS",
+        "unit_price": "105.15",
+        "amount": "74341.05",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.82",
+        "unit": "MT",
+        "unit_price": "267.97",
+        "amount": "487.71",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "383",
+        "unit": "SET",
+        "unit_price": "276.01",
+        "amount": "105711.83",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "27",
+        "unit": "PCS",
+        "unit_price": "488.91",
+        "amount": "13200.57",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "571.46",
+        "unit": "KG",
+        "unit_price": "285.69",
+        "amount": "163260.41",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "62",
+        "unit": "CTN",
+        "unit_price": "387.65",
+        "amount": "24034.30",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "87.12",
+        "unit": "KG",
+        "unit_price": "25.37",
+        "amount": "2210.23",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "93",
+        "unit": "PAIR",
+        "unit_price": "251.68",
+        "amount": "23406.24",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "62",
+        "unit": "PCS",
+        "unit_price": "194.27",
+        "amount": "12044.74",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "948243.58",
+    "gross_weight_kg": "8641.63",
+    "net_weight_kg": "8001.51"
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "id": "inj_00013",
+  "error": {
+    "kind": "wrong_total",
+    "path": "total_amount",
+    "original": "210093.59",
+    "planted": "210093.95",
+    "method": "swap two adjacent digits"
+  },
+  "invoice": {
+    "invoice_number": "EXP2672664",
+    "invoice_date": "2026-08-29",
+    "shipper": {
+      "name": "Turner-Fletcher",
+      "address": "Studio 03 Iain Parkway East Elliot S8F 7SJ",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Royal West-Francië, van",
+      "address": "Elifbaan 91 3986MG Wellerlooi",
+      "country": "NL"
+    },
+    "consignee": {
+      "name": "Mahbeer LLC",
+      "address": "Plot 129, Block B, Karachi 48897",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Tafazal, Rabiah and Darain",
+      "address": "Plot 49, Block C, Faisalabad 83231",
+      "country": "PK"
+    },
+    "incoterm": "CIP",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "451",
+        "unit": "PCS",
+        "unit_price": "158.48",
+        "amount": "71474.48",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "34",
+        "unit": "PCS",
+        "unit_price": "183.57",
+        "amount": "6241.38",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "70.38",
+        "unit": "KG",
+        "unit_price": "448.62",
+        "amount": "31573.88",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "667",
+        "unit": "PAIR",
+        "unit_price": "123.36",
+        "amount": "82281.12",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "407.81",
+        "unit": "KG",
+        "unit_price": "45.42",
+        "amount": "18522.73",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "210093.95",
+    "gross_weight_kg": "1969.96",
+    "net_weight_kg": "1790.87"
+  },
+  "source": {
+    "invoice_number": "EXP2672664",
+    "invoice_date": "2026-08-29",
+    "shipper": {
+      "name": "Turner-Fletcher",
+      "address": "Studio 03 Iain Parkway East Elliot S8F 7SJ",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Royal West-Francië, van",
+      "address": "Elifbaan 91 3986MG Wellerlooi",
+      "country": "NL"
+    },
+    "consignee": {
+      "name": "Mahbeer LLC",
+      "address": "Plot 129, Block B, Karachi 48897",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Tafazal, Rabiah and Darain",
+      "address": "Plot 49, Block C, Faisalabad 83231",
+      "country": "PK"
+    },
+    "incoterm": "CIP",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "451",
+        "unit": "PCS",
+        "unit_price": "158.48",
+        "amount": "71474.48",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "34",
+        "unit": "PCS",
+        "unit_price": "183.57",
+        "amount": "6241.38",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "70.38",
+        "unit": "KG",
+        "unit_price": "448.62",
+        "amount": "31573.88",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "667",
+        "unit": "PAIR",
+        "unit_price": "123.36",
+        "amount": "82281.12",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "407.81",
+        "unit": "KG",
+        "unit_price": "45.42",
+        "amount": "18522.73",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "210093.59",
+    "gross_weight_kg": "1969.96",
+    "net_weight_kg": "1790.87"
+  }
+}

@@ -1,0 +1,366 @@
+{
+  "seed": 2026,
+  "as_of": "2026-10-01",
+  "documents": [
+    {
+      "id": "inj_00000",
+      "split": "injected",
+      "path": "inj_00000.json",
+      "kind": "wrong_line_amount"
+    },
+    {
+      "id": "inj_00001",
+      "split": "injected",
+      "path": "inj_00001.json",
+      "kind": "wrong_total"
+    },
+    {
+      "id": "inj_00002",
+      "split": "injected",
+      "path": "inj_00002.json",
+      "kind": "net_over_gross"
+    },
+    {
+      "id": "inj_00003",
+      "split": "injected",
+      "path": "inj_00003.json",
+      "kind": "invalid_incoterm"
+    },
+    {
+      "id": "inj_00004",
+      "split": "injected",
+      "path": "inj_00004.json",
+      "kind": "future_date"
+    },
+    {
+      "id": "inj_00005",
+      "split": "injected",
+      "path": "inj_00005.json",
+      "kind": "bad_currency"
+    },
+    {
+      "id": "inj_00006",
+      "split": "injected",
+      "path": "inj_00006.json",
+      "kind": "wrong_line_amount"
+    },
+    {
+      "id": "inj_00007",
+      "split": "injected",
+      "path": "inj_00007.json",
+      "kind": "wrong_total"
+    },
+    {
+      "id": "inj_00008",
+      "split": "injected",
+      "path": "inj_00008.json",
+      "kind": "net_over_gross"
+    },
+    {
+      "id": "inj_00009",
+      "split": "injected",
+      "path": "inj_00009.json",
+      "kind": "invalid_incoterm"
+    },
+    {
+      "id": "inj_00010",
+      "split": "injected",
+      "path": "inj_00010.json",
+      "kind": "future_date"
+    },
+    {
+      "id": "inj_00011",
+      "split": "injected",
+      "path": "inj_00011.json",
+      "kind": "bad_currency"
+    },
+    {
+      "id": "inj_00012",
+      "split": "injected",
+      "path": "inj_00012.json",
+      "kind": "wrong_line_amount"
+    },
+    {
+      "id": "inj_00013",
+      "split": "injected",
+      "path": "inj_00013.json",
+      "kind": "wrong_total"
+    },
+    {
+      "id": "inj_00014",
+      "split": "injected",
+      "path": "inj_00014.json",
+      "kind": "net_over_gross"
+    },
+    {
+      "id": "inj_00015",
+      "split": "injected",
+      "path": "inj_00015.json",
+      "kind": "invalid_incoterm"
+    },
+    {
+      "id": "inj_00016",
+      "split": "injected",
+      "path": "inj_00016.json",
+      "kind": "future_date"
+    },
+    {
+      "id": "inj_00017",
+      "split": "injected",
+      "path": "inj_00017.json",
+      "kind": "bad_currency"
+    },
+    {
+      "id": "inj_00018",
+      "split": "injected",
+      "path": "inj_00018.json",
+      "kind": "wrong_line_amount"
+    },
+    {
+      "id": "inj_00019",
+      "split": "injected",
+      "path": "inj_00019.json",
+      "kind": "wrong_total"
+    },
+    {
+      "id": "inj_00020",
+      "split": "injected",
+      "path": "inj_00020.json",
+      "kind": "net_over_gross"
+    },
+    {
+      "id": "inj_00021",
+      "split": "injected",
+      "path": "inj_00021.json",
+      "kind": "invalid_incoterm"
+    },
+    {
+      "id": "inj_00022",
+      "split": "injected",
+      "path": "inj_00022.json",
+      "kind": "future_date"
+    },
+    {
+      "id": "inj_00023",
+      "split": "injected",
+      "path": "inj_00023.json",
+      "kind": "bad_currency"
+    },
+    {
+      "id": "inj_00024",
+      "split": "injected",
+      "path": "inj_00024.json",
+      "kind": "wrong_line_amount"
+    },
+    {
+      "id": "inj_00025",
+      "split": "injected",
+      "path": "inj_00025.json",
+      "kind": "wrong_total"
+    },
+    {
+      "id": "inj_00026",
+      "split": "injected",
+      "path": "inj_00026.json",
+      "kind": "net_over_gross"
+    },
+    {
+      "id": "inj_00027",
+      "split": "injected",
+      "path": "inj_00027.json",
+      "kind": "invalid_incoterm"
+    },
+    {
+      "id": "inj_00028",
+      "split": "injected",
+      "path": "inj_00028.json",
+      "kind": "future_date"
+    },
+    {
+      "id": "inj_00029",
+      "split": "injected",
+      "path": "inj_00029.json",
+      "kind": "bad_currency"
+    },
+    {
+      "id": "inj_00030",
+      "split": "injected",
+      "path": "inj_00030.json",
+      "kind": "wrong_line_amount"
+    },
+    {
+      "id": "inj_00031",
+      "split": "injected",
+      "path": "inj_00031.json",
+      "kind": "wrong_total"
+    },
+    {
+      "id": "inj_00032",
+      "split": "injected",
+      "path": "inj_00032.json",
+      "kind": "net_over_gross"
+    },
+    {
+      "id": "inj_00033",
+      "split": "injected",
+      "path": "inj_00033.json",
+      "kind": "invalid_incoterm"
+    },
+    {
+      "id": "inj_00034",
+      "split": "injected",
+      "path": "inj_00034.json",
+      "kind": "future_date"
+    },
+    {
+      "id": "inj_00035",
+      "split": "injected",
+      "path": "inj_00035.json",
+      "kind": "bad_currency"
+    },
+    {
+      "id": "inj_00036",
+      "split": "injected",
+      "path": "inj_00036.json",
+      "kind": "wrong_line_amount"
+    },
+    {
+      "id": "inj_00037",
+      "split": "injected",
+      "path": "inj_00037.json",
+      "kind": "wrong_total"
+    },
+    {
+      "id": "inj_00038",
+      "split": "injected",
+      "path": "inj_00038.json",
+      "kind": "net_over_gross"
+    },
+    {
+      "id": "inj_00039",
+      "split": "injected",
+      "path": "inj_00039.json",
+      "kind": "invalid_incoterm"
+    },
+    {
+      "id": "inj_00040",
+      "split": "injected",
+      "path": "inj_00040.json",
+      "kind": "future_date"
+    },
+    {
+      "id": "inj_00041",
+      "split": "injected",
+      "path": "inj_00041.json",
+      "kind": "bad_currency"
+    },
+    {
+      "id": "inj_00042",
+      "split": "injected",
+      "path": "inj_00042.json",
+      "kind": "wrong_line_amount"
+    },
+    {
+      "id": "inj_00043",
+      "split": "injected",
+      "path": "inj_00043.json",
+      "kind": "wrong_total"
+    },
+    {
+      "id": "inj_00044",
+      "split": "injected",
+      "path": "inj_00044.json",
+      "kind": "net_over_gross"
+    },
+    {
+      "id": "inj_00045",
+      "split": "injected",
+      "path": "inj_00045.json",
+      "kind": "invalid_incoterm"
+    },
+    {
+      "id": "inj_00046",
+      "split": "injected",
+      "path": "inj_00046.json",
+      "kind": "future_date"
+    },
+    {
+      "id": "inj_00047",
+      "split": "injected",
+      "path": "inj_00047.json",
+      "kind": "bad_currency"
+    },
+    {
+      "id": "inj_00048",
+      "split": "injected",
+      "path": "inj_00048.json",
+      "kind": "wrong_line_amount"
+    },
+    {
+      "id": "inj_00049",
+      "split": "injected",
+      "path": "inj_00049.json",
+      "kind": "wrong_total"
+    },
+    {
+      "id": "inj_00050",
+      "split": "injected",
+      "path": "inj_00050.json",
+      "kind": "net_over_gross"
+    },
+    {
+      "id": "inj_00051",
+      "split": "injected",
+      "path": "inj_00051.json",
+      "kind": "invalid_incoterm"
+    },
+    {
+      "id": "inj_00052",
+      "split": "injected",
+      "path": "inj_00052.json",
+      "kind": "future_date"
+    },
+    {
+      "id": "inj_00053",
+      "split": "injected",
+      "path": "inj_00053.json",
+      "kind": "bad_currency"
+    },
+    {
+      "id": "inj_00054",
+      "split": "injected",
+      "path": "inj_00054.json",
+      "kind": "wrong_line_amount"
+    },
+    {
+      "id": "inj_00055",
+      "split": "injected",
+      "path": "inj_00055.json",
+      "kind": "wrong_total"
+    },
+    {
+      "id": "inj_00056",
+      "split": "injected",
+      "path": "inj_00056.json",
+      "kind": "net_over_gross"
+    },
+    {
+      "id": "inj_00057",
+      "split": "injected",
+      "path": "inj_00057.json",
+      "kind": "invalid_incoterm"
+    },
+    {
+      "id": "inj_00058",
+      "split": "injected",
+      "path": "inj_00058.json",
+      "kind": "future_date"
+    },
+    {
+      "id": "inj_00059",
+      "split": "injected",
+      "path": "inj_00059.json",
+      "kind": "bad_currency"
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+{
+  "id": "inj_00008",
+  "error": {
+    "kind": "net_over_gross",
+    "path": "net_weight_kg",
+    "original": "6937.04",
+    "planted": "7353.26",
+    "method": "swap net and gross"
+  },
+  "invoice": {
+    "invoice_number": "EXP2689321",
+    "invoice_date": "2026-03-19",
+    "shipper": {
+      "name": "Thomas, Harris and Mistry",
+      "address": "8 Jessica Canyon Lake Donnaborough SA1X 3FP",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Murphy-Hunter",
+      "address": "48336 Theresa Mall Kristinshire, TX 30299",
+      "country": "US"
+    },
+    "consignee": {
+      "name": "Murphy-Hunter",
+      "address": "48336 Theresa Mall Kristinshire, TX 30299",
+      "country": "US"
+    },
+    "notify_party": null,
+    "incoterm": "EXW",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Cotton terry towels",
+        "quantity": "255",
+        "unit": "PCS",
+        "unit_price": "457.55",
+        "amount": "116675.25",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "16",
+        "unit": "CTN",
+        "unit_price": "120.96",
+        "amount": "1935.36",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.21",
+        "unit": "MT",
+        "unit_price": "421.57",
+        "amount": "510.10",
+        "hs_code_on_doc": "7208.3700"
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "215",
+        "unit": "PCS",
+        "unit_price": "399.17",
+        "amount": "85821.55",
+        "hs_code_on_doc": "6109.1000"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "122.11",
+        "unit": "KG",
+        "unit_price": "199.94",
+        "amount": "24414.67",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "440",
+        "unit": "SET",
+        "unit_price": "465.84",
+        "amount": "204969.60",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "523.67",
+        "unit": "KG",
+        "unit_price": "450.62",
+        "amount": "235976.18",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "42",
+        "unit": "PCS",
+        "unit_price": "26.35",
+        "amount": "1106.70",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "761",
+        "unit": "PCS",
+        "unit_price": "289.92",
+        "amount": "220629.12",
+        "hs_code_on_doc": "9506.6200"
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "175.92",
+        "unit": "KG",
+        "unit_price": "143.10",
+        "amount": "25174.15",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "893.40",
+        "unit": "KG",
+        "unit_price": "426.82",
+        "amount": "381320.99",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "417.76",
+        "unit": "KG",
+        "unit_price": "141.17",
+        "amount": "58975.18",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "971",
+        "unit": "PAIR",
+        "unit_price": "397.07",
+        "amount": "385554.97",
+        "hs_code_on_doc": "4203.2900"
+      }
+    ],
+    "total_amount": "1743063.82",
+    "gross_weight_kg": "6937.04",
+    "net_weight_kg": "7353.26"
+  },
+  "source": {
+    "invoice_number": "EXP2689321",
+    "invoice_date": "2026-03-19",
+    "shipper": {
+      "name": "Thomas, Harris and Mistry",
+      "address": "8 Jessica Canyon Lake Donnaborough SA1X 3FP",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Murphy-Hunter",
+      "address": "48336 Theresa Mall Kristinshire, TX 30299",
+      "country": "US"
+    },
+    "consignee": {
+      "name": "Murphy-Hunter",
+      "address": "48336 Theresa Mall Kristinshire, TX 30299",
+      "country": "US"
+    },
+    "notify_party": null,
+    "incoterm": "EXW",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Cotton terry towels",
+        "quantity": "255",
+        "unit": "PCS",
+        "unit_price": "457.55",
+        "amount": "116675.25",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "16",
+        "unit": "CTN",
+        "unit_price": "120.96",
+        "amount": "1935.36",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.21",
+        "unit": "MT",
+        "unit_price": "421.57",
+        "amount": "510.10",
+        "hs_code_on_doc": "7208.3700"
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "215",
+        "unit": "PCS",
+        "unit_price": "399.17",
+        "amount": "85821.55",
+        "hs_code_on_doc": "6109.1000"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "122.11",
+        "unit": "KG",
+        "unit_price": "199.94",
+        "amount": "24414.67",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "440",
+        "unit": "SET",
+        "unit_price": "465.84",
+        "amount": "204969.60",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "523.67",
+        "unit": "KG",
+        "unit_price": "450.62",
+        "amount": "235976.18",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "42",
+        "unit": "PCS",
+        "unit_price": "26.35",
+        "amount": "1106.70",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "761",
+        "unit": "PCS",
+        "unit_price": "289.92",
+        "amount": "220629.12",
+        "hs_code_on_doc": "9506.6200"
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "175.92",
+        "unit": "KG",
+        "unit_price": "143.10",
+        "amount": "25174.15",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "893.40",
+        "unit": "KG",
+        "unit_price": "426.82",
+        "amount": "381320.99",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "417.76",
+        "unit": "KG",
+        "unit_price": "141.17",
+        "amount": "58975.18",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "971",
+        "unit": "PAIR",
+        "unit_price": "397.07",
+        "amount": "385554.97",
+        "hs_code_on_doc": "4203.2900"
+      }
+    ],
+    "total_amount": "1743063.82",
+    "gross_weight_kg": "7353.26",
+    "net_weight_kg": "6937.04"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "invoice": {
+    "invoice_number": "516-86333",
+    "invoice_date": "2026-05-28",
+    "shipper": {
+      "name": "Chauveau SA",
+      "address": "27, rue de Perez 15983 Saint Véronique",
+      "country": "FR"
+    },
+    "buyer": {
+      "name": "Ubaid, Qasif and Zarar",
+      "address": "Plot 237, Block G, Peshawar 37134",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Ubaid, Qasif and Zarar",
+      "address": "Plot 237, Block G, Peshawar 37134",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DDP",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Copper winding wire",
+        "quantity": "449.46",
+        "unit": "KG",
+        "unit_price": "275.77",
+        "amount": "123947.58",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "912",
+        "unit": "PCS",
+        "unit_price": "151.14",
+        "amount": "137839.68",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "68",
+        "unit": "PCS",
+        "unit_price": "312.86",
+        "amount": "21274.48",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "170",
+        "unit": "PCS",
+        "unit_price": "469.89",
+        "amount": "79881.30",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "846",
+        "unit": "SET",
+        "unit_price": "74.60",
+        "amount": "63111.60",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "99",
+        "unit": "PAIR",
+        "unit_price": "240.42",
+        "amount": "23801.58",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "62.91",
+        "unit": "MTR",
+        "unit_price": "339.24",
+        "amount": "21341.59",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "220",
+        "unit": "PCS",
+        "unit_price": "170.56",
+        "amount": "37523.20",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "508721.01",
+    "gross_weight_kg": "5011.92",
+    "net_weight_kg": "4819.15"
+  },
+  "true_hs_codes": [
+    "8544.1100",
+    "6109.1000",
+    "8501.4000",
+    "8471.3010",
+    "6302.2100",
+    "4203.2900",
+    "5209.4200",
+    "4011.1000"
+  ],
+  "buyer_reference": null
+}

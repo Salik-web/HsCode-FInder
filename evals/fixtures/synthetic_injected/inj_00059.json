@@ -1,0 +1,288 @@
+{
+  "id": "inj_00059",
+  "error": {
+    "kind": "bad_currency",
+    "path": "currency",
+    "original": "AED",
+    "planted": "YEN",
+    "method": "common non-ISO spelling"
+  },
+  "invoice": {
+    "invoice_number": "EXP2519962",
+    "invoice_date": "2025-11-06",
+    "shipper": {
+      "name": "Smith-Brown",
+      "address": "54956 Hogan Inlet Apt. 030 Stewartland, IA 09617",
+      "country": "US"
+    },
+    "buyer": {
+      "name": "Sadeed-Rabee",
+      "address": "Plot 248, Block B, Multan 46525",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Sadeed-Rabee",
+      "address": "Plot 248, Block B, Multan 46525",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DAP",
+    "currency": "YEN",
+    "line_items": [
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "40",
+        "unit": "PCS",
+        "unit_price": "170.72",
+        "amount": "6828.80",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "588",
+        "unit": "PCS",
+        "unit_price": "467.00",
+        "amount": "274596.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "566.42",
+        "unit": "KG",
+        "unit_price": "122.51",
+        "amount": "69392.11",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "433.52",
+        "unit": "MTR",
+        "unit_price": "482.19",
+        "amount": "209039.01",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.59",
+        "unit": "MT",
+        "unit_price": "141.81",
+        "amount": "225.48",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "997",
+        "unit": "PCS",
+        "unit_price": "237.54",
+        "amount": "236827.38",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "44",
+        "unit": "PCS",
+        "unit_price": "365.98",
+        "amount": "16103.12",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "864.48",
+        "unit": "KG",
+        "unit_price": "421.68",
+        "amount": "364533.93",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "36.47",
+        "unit": "KG",
+        "unit_price": "378.55",
+        "amount": "13805.72",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "30",
+        "unit": "PCS",
+        "unit_price": "183.40",
+        "amount": "5502.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "34",
+        "unit": "CTN",
+        "unit_price": "207.06",
+        "amount": "7040.04",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "871.93",
+        "unit": "KG",
+        "unit_price": "325.82",
+        "amount": "284092.23",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "36",
+        "unit": "PCS",
+        "unit_price": "389.82",
+        "amount": "14033.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "27",
+        "unit": "PCS",
+        "unit_price": "380.17",
+        "amount": "10264.59",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1512283.93",
+    "gross_weight_kg": "11055.40",
+    "net_weight_kg": "10630.19"
+  },
+  "source": {
+    "invoice_number": "EXP2519962",
+    "invoice_date": "2025-11-06",
+    "shipper": {
+      "name": "Smith-Brown",
+      "address": "54956 Hogan Inlet Apt. 030 Stewartland, IA 09617",
+      "country": "US"
+    },
+    "buyer": {
+      "name": "Sadeed-Rabee",
+      "address": "Plot 248, Block B, Multan 46525",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Sadeed-Rabee",
+      "address": "Plot 248, Block B, Multan 46525",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DAP",
+    "currency": "AED",
+    "line_items": [
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "40",
+        "unit": "PCS",
+        "unit_price": "170.72",
+        "amount": "6828.80",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "588",
+        "unit": "PCS",
+        "unit_price": "467.00",
+        "amount": "274596.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "566.42",
+        "unit": "KG",
+        "unit_price": "122.51",
+        "amount": "69392.11",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "433.52",
+        "unit": "MTR",
+        "unit_price": "482.19",
+        "amount": "209039.01",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.59",
+        "unit": "MT",
+        "unit_price": "141.81",
+        "amount": "225.48",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "997",
+        "unit": "PCS",
+        "unit_price": "237.54",
+        "amount": "236827.38",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "44",
+        "unit": "PCS",
+        "unit_price": "365.98",
+        "amount": "16103.12",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "864.48",
+        "unit": "KG",
+        "unit_price": "421.68",
+        "amount": "364533.93",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "36.47",
+        "unit": "KG",
+        "unit_price": "378.55",
+        "amount": "13805.72",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "30",
+        "unit": "PCS",
+        "unit_price": "183.40",
+        "amount": "5502.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "34",
+        "unit": "CTN",
+        "unit_price": "207.06",
+        "amount": "7040.04",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "871.93",
+        "unit": "KG",
+        "unit_price": "325.82",
+        "amount": "284092.23",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "36",
+        "unit": "PCS",
+        "unit_price": "389.82",
+        "amount": "14033.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "27",
+        "unit": "PCS",
+        "unit_price": "380.17",
+        "amount": "10264.59",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1512283.93",
+    "gross_weight_kg": "11055.40",
+    "net_weight_kg": "10630.19"
+  }
+}

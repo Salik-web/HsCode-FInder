@@ -1,0 +1,21 @@
+{
+  "document_sha256": "7e45a3f90ac760e4216ce61b544b2428451c00f1c4c8831bd01a58cda0930b29",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"EXP2699099\",\"invoice_date\":\"2026-03-10\",\"shipper\":{\"name\":\"Taj LLC\",\"address\":\"Plot 173, Block E, Sialkot 47520\",\"country\":\"PK\"},\"buyer\":{\"name\":\"Esparza, Johnson and Garcia\",\"address\":\"9849 Duncan Shoal Martinezside, VT 61653\",\"country\":\"US\"},\"consignee\":{\"name\":\"Krein e.V.\",\"address\":\"Cläre-Wesack-Weg 6525 33736 Wiedenbrück\",\"country\":\"DE\"},\"notify_party\":{\"name\":\"Heintze\",\"address\":\"Gehringerallee 9897 40358 Bayreuth\",\"country\":\"DE\"},\"incoterm\":\"DPU\",\"currency\":\"USD\",\"line_items\":[[\"Polypropylene granules\",\"982.61\",\"KG\",\"33.01\",\"32435.96\",null],[\"Copper winding wire\",\"334.41\",\"KG\",\"455.67\",\"152380.60\",null],[\"Cotton yarn, combed, 30s count\",\"54.72\",\"KG\",\"106.83\",\"5845.74\",null],[\"Cotton terry towels\",\"163\",\"PCS\",\"90.41\",\"14736.83\",null],[\"Fresh mangoes\",\"866.89\",\"KG\",\"85.87\",\"74439.84\",null],[\"Smartphones 5G\",\"671\",\"PCS\",\"311.95\",\"209318.45\",null],[\"Lithium-ion batteries 48V\",\"23\",\"PCS\",\"466.96\",\"10740.08\",null],[\"Refined palm olein\",\"769.85\",\"KG\",\"418.97\",\"322544.05\",null],[\"LED panel lights 40W\",\"475\",\"PCS\",\"135.17\",\"64205.75\",null],[\"Single-phase electric motors\",\"102\",\"PCS\",\"313.59\",\"31986.18\",null]],\"total_amount\":\"918633.48\",\"gross_weight_kg\":\"6655.09\",\"net_weight_kg\":\"6338.18\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 3474,
+      "output_tokens": 558
+    },
+    "latency_ms": 42930,
+    "cost_usd": "0",
+    "cached": false
+  }
+}

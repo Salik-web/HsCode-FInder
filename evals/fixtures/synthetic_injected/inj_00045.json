@@ -1,0 +1,96 @@
+{
+  "id": "inj_00045",
+  "error": {
+    "kind": "invalid_incoterm",
+    "path": "incoterm",
+    "original": "DDP",
+    "planted": "DES",
+    "method": "outdated or informal term"
+  },
+  "invoice": {
+    "invoice_number": "561-94069",
+    "invoice_date": "2026-05-20",
+    "shipper": {
+      "name": "Alcalde & Asociados S.Coop.",
+      "address": "Urbanización Evelia Cervera 265 Piso 6 Huelva, 02261",
+      "country": "ES"
+    },
+    "buyer": {
+      "name": "Raatib-Ghutayf",
+      "address": "Plot 153, Block A, Lahore 81367",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Sabir, Ayamin and Aadil",
+      "address": "Plot 378, Block E, Lahore 52223",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DES",
+    "currency": "CNY",
+    "line_items": [
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "766",
+        "unit": "PCS",
+        "unit_price": "179.00",
+        "amount": "137114.00",
+        "hs_code_on_doc": "9506.6200"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "145",
+        "unit": "PCS",
+        "unit_price": "443.28",
+        "amount": "64275.60",
+        "hs_code_on_doc": "8501.4000"
+      }
+    ],
+    "total_amount": "201389.60",
+    "gross_weight_kg": "2214.24",
+    "net_weight_kg": "2069.38"
+  },
+  "source": {
+    "invoice_number": "561-94069",
+    "invoice_date": "2026-05-20",
+    "shipper": {
+      "name": "Alcalde & Asociados S.Coop.",
+      "address": "Urbanización Evelia Cervera 265 Piso 6 Huelva, 02261",
+      "country": "ES"
+    },
+    "buyer": {
+      "name": "Raatib-Ghutayf",
+      "address": "Plot 153, Block A, Lahore 81367",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Sabir, Ayamin and Aadil",
+      "address": "Plot 378, Block E, Lahore 52223",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DDP",
+    "currency": "CNY",
+    "line_items": [
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "766",
+        "unit": "PCS",
+        "unit_price": "179.00",
+        "amount": "137114.00",
+        "hs_code_on_doc": "9506.6200"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "145",
+        "unit": "PCS",
+        "unit_price": "443.28",
+        "amount": "64275.60",
+        "hs_code_on_doc": "8501.4000"
+      }
+    ],
+    "total_amount": "201389.60",
+    "gross_weight_kg": "2214.24",
+    "net_weight_kg": "2069.38"
+  }
+}

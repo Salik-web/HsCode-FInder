@@ -357,18 +357,23 @@ def write_guardrail_report(report: GuardrailReport, reports_dir: Path) -> Path:
     return markdown
 
 
-def main() -> None:
-    settings = Settings()
-    manifest, documents = load_injected(settings.data_dir / INJECTED_DIR)
+def guardrail_report_for(data_dir: Path) -> GuardrailReport:
+    """The injected set and the clean dev ground truth under `data_dir` (no LLM calls)."""
+    manifest, documents = load_injected(data_dir / INJECTED_DIR)
     # Ground truth only (no extraction): dev, where thresholds may be looked at freely.
-    dev = load_documents(settings.data_dir, "synthetic_clean", "dev")
+    dev = load_documents(data_dir, "synthetic_clean", "dev")
     clean_sets = {
         INJECTED_SOURCES_NAME: [document.source for document in documents],
         CLEAN_DEV_NAME: [document.truth.invoice for document in dev],
     }
-    report = build_guardrail_report(
+    return build_guardrail_report(
         documents, manifest.seed, manifest.as_of, clean_sets, load_hs_code_table()
     )
+
+
+def main() -> None:
+    settings = Settings()
+    report = guardrail_report_for(settings.data_dir)
     path = write_guardrail_report(report, settings.reports_dir)
     print(f"Report: {path}")
     for kind in report.kinds:

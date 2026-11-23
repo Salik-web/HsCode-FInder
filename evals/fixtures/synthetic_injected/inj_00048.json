@@ -1,0 +1,280 @@
+{
+  "id": "inj_00048",
+  "error": {
+    "kind": "wrong_line_amount",
+    "path": "line_items[4].amount",
+    "original": "1003.52",
+    "planted": "1030.52",
+    "method": "swap two adjacent digits"
+  },
+  "invoice": {
+    "invoice_number": "696-86496",
+    "invoice_date": "2026-09-04",
+    "shipper": {
+      "name": "Qabeel-Aalam",
+      "address": "Plot 5, Block E, Multan 99899",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Baxter-Watkins",
+      "address": "365 Hickman Cliffs Jonesfort, TX 77421",
+      "country": "US"
+    },
+    "consignee": {
+      "name": "Baxter-Watkins",
+      "address": "365 Hickman Cliffs Jonesfort, TX 77421",
+      "country": "US"
+    },
+    "notify_party": {
+      "name": "Manning-Diaz",
+      "address": "02930 Chung Vista Johnmouth, MT 05894",
+      "country": "US"
+    },
+    "incoterm": "DAP",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "693.84",
+        "unit": "KG",
+        "unit_price": "44.43",
+        "amount": "30827.31",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "366.90",
+        "unit": "KG",
+        "unit_price": "395.72",
+        "amount": "145189.67",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "16",
+        "unit": "PCS",
+        "unit_price": "222.84",
+        "amount": "3565.44",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "788.72",
+        "unit": "MTR",
+        "unit_price": "234.21",
+        "amount": "184726.11",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "32",
+        "unit": "PCS",
+        "unit_price": "31.36",
+        "amount": "1030.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "733",
+        "unit": "PCS",
+        "unit_price": "293.31",
+        "amount": "214996.23",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "949",
+        "unit": "PCS",
+        "unit_price": "251.94",
+        "amount": "239091.06",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "989",
+        "unit": "PAIR",
+        "unit_price": "191.77",
+        "amount": "189660.53",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "974.24",
+        "unit": "KG",
+        "unit_price": "219.22",
+        "amount": "213572.89",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "783.46",
+        "unit": "KG",
+        "unit_price": "54.04",
+        "amount": "42338.18",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "593",
+        "unit": "SET",
+        "unit_price": "311.96",
+        "amount": "184992.28",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.66",
+        "unit": "MT",
+        "unit_price": "190.70",
+        "amount": "316.56",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "761",
+        "unit": "PCS",
+        "unit_price": "285.97",
+        "amount": "217623.17",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1667902.95",
+    "gross_weight_kg": "9719.12",
+    "net_weight_kg": "9168.98"
+  },
+  "source": {
+    "invoice_number": "696-86496",
+    "invoice_date": "2026-09-04",
+    "shipper": {
+      "name": "Qabeel-Aalam",
+      "address": "Plot 5, Block E, Multan 99899",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Baxter-Watkins",
+      "address": "365 Hickman Cliffs Jonesfort, TX 77421",
+      "country": "US"
+    },
+    "consignee": {
+      "name": "Baxter-Watkins",
+      "address": "365 Hickman Cliffs Jonesfort, TX 77421",
+      "country": "US"
+    },
+    "notify_party": {
+      "name": "Manning-Diaz",
+      "address": "02930 Chung Vista Johnmouth, MT 05894",
+      "country": "US"
+    },
+    "incoterm": "DAP",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "693.84",
+        "unit": "KG",
+        "unit_price": "44.43",
+        "amount": "30827.31",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "366.90",
+        "unit": "KG",
+        "unit_price": "395.72",
+        "amount": "145189.67",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "16",
+        "unit": "PCS",
+        "unit_price": "222.84",
+        "amount": "3565.44",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "788.72",
+        "unit": "MTR",
+        "unit_price": "234.21",
+        "amount": "184726.11",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "32",
+        "unit": "PCS",
+        "unit_price": "31.36",
+        "amount": "1003.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "733",
+        "unit": "PCS",
+        "unit_price": "293.31",
+        "amount": "214996.23",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "949",
+        "unit": "PCS",
+        "unit_price": "251.94",
+        "amount": "239091.06",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "989",
+        "unit": "PAIR",
+        "unit_price": "191.77",
+        "amount": "189660.53",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "974.24",
+        "unit": "KG",
+        "unit_price": "219.22",
+        "amount": "213572.89",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "783.46",
+        "unit": "KG",
+        "unit_price": "54.04",
+        "amount": "42338.18",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "593",
+        "unit": "SET",
+        "unit_price": "311.96",
+        "amount": "184992.28",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.66",
+        "unit": "MT",
+        "unit_price": "190.70",
+        "amount": "316.56",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "761",
+        "unit": "PCS",
+        "unit_price": "285.97",
+        "amount": "217623.17",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1667902.95",
+    "gross_weight_kg": "9719.12",
+    "net_weight_kg": "9168.98"
+  }
+}

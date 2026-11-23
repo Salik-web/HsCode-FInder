@@ -1,0 +1,128 @@
+{
+  "id": "inj_00003",
+  "error": {
+    "kind": "invalid_incoterm",
+    "path": "incoterm",
+    "original": "EXW",
+    "planted": "DEQ",
+    "method": "outdated or informal term"
+  },
+  "invoice": {
+    "invoice_number": "706-87835",
+    "invoice_date": "2026-03-31",
+    "shipper": {
+      "name": "Demir Aslan Şti.",
+      "address": "Plot 106, Block C, Gaziantep 98349",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Dawud PLC",
+      "address": "Plot 378, Block E, Lahore 20194",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Dawud PLC",
+      "address": "Plot 378, Block E, Lahore 20194",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DEQ",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "155",
+        "unit": "PCS",
+        "unit_price": "364.09",
+        "amount": "56433.95",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "816.93",
+        "unit": "KG",
+        "unit_price": "373.19",
+        "amount": "304870.11",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "469.58",
+        "unit": "KG",
+        "unit_price": "472.13",
+        "amount": "221702.81",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "936.26",
+        "unit": "KG",
+        "unit_price": "214.93",
+        "amount": "201230.36",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "784237.23",
+    "gross_weight_kg": "4450.22",
+    "net_weight_kg": "4082.77"
+  },
+  "source": {
+    "invoice_number": "706-87835",
+    "invoice_date": "2026-03-31",
+    "shipper": {
+      "name": "Demir Aslan Şti.",
+      "address": "Plot 106, Block C, Gaziantep 98349",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Dawud PLC",
+      "address": "Plot 378, Block E, Lahore 20194",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Dawud PLC",
+      "address": "Plot 378, Block E, Lahore 20194",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "EXW",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "155",
+        "unit": "PCS",
+        "unit_price": "364.09",
+        "amount": "56433.95",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "816.93",
+        "unit": "KG",
+        "unit_price": "373.19",
+        "amount": "304870.11",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "469.58",
+        "unit": "KG",
+        "unit_price": "472.13",
+        "amount": "221702.81",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "936.26",
+        "unit": "KG",
+        "unit_price": "214.93",
+        "amount": "201230.36",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "784237.23",
+    "gross_weight_kg": "4450.22",
+    "net_weight_kg": "4082.77"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "document_sha256": "d467979863c39dbd32630a7d01c3289076e984aca9f43258ccd6571649fe82de",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"516-86333\",\"invoice_date\":\"2026-05-28\",\"shipper\":{\"name\":\"Chauveau SA\",\"address\":\"27, rue de Perez 15983 Saint Véronique\",\"country\":\"FR\"},\"buyer\":{\"name\":\"Ubaid, Qasif and Zarar\",\"address\":\"Plot 237, Block G, Peshawar 37134\",\"country\":\"PK\"},\"consignee\":{\"name\":\"Ubaid, Qasif and Zarar\",\"address\":\"Plot 237, Block G, Peshawar 37134\",\"country\":\"PK\"},\"notify_party\":null,\"incoterm\":\"DDP\",\"currency\":\"SGD\",\"line_items\":[[\"Copper winding wire\",\"449.46\",\"KG\",\"275.77\",\"123947.58\",null],[\"Men's cotton T-shirts\",\"912\",\"PCS\",\"151.14\",\"137839.68\",null],[\"Single-phase electric motors\",\"68\",\"PCS\",\"312.86\",\"21274.48\",null],[\"Laptop computers 14 inch\",\"170\",\"PCS\",\"469.89\",\"79881.30\",null],[\"Printed cotton bed linen\",\"846\",\"SET\",\"74.60\",\"63111.60\",null],[\"Leather industrial work gloves\",\"99\",\"PAIR\",\"240.42\",\"23801.58\",null],[\"Woven denim fabric 12 oz\",\"62.91\",\"MTR\",\"339.24\",\"21341.59\",null],[\"Radial car tyres 205/55 R16\",\"220\",\"PCS\",\"170.56\",\"37523.20\",null]],\"total_amount\":\"508721.01\",\"gross_weight_kg\":\"5011.92\",\"net_weight_kg\":\"4819.15\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 3343,
+      "output_tokens": 469
+    },
+    "latency_ms": 1624,
+    "cost_usd": "0",
+    "cached": false
+  }
+}

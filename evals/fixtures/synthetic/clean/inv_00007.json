@@ -1,0 +1,104 @@
+{
+  "invoice": {
+    "invoice_number": "INV-2026-26949",
+    "invoice_date": "2026-04-10",
+    "shipper": {
+      "name": "General Motors Nederland",
+      "address": "Luuklaan 0 7871 MK Zelhem",
+      "country": "NL"
+    },
+    "buyer": {
+      "name": "Parry, Wilkins and Campbell",
+      "address": "2 Gillian Ridges Lake Bethanybury SR7 4RR",
+      "country": "GB"
+    },
+    "consignee": {
+      "name": "Jalaal, Darain and Basheerah",
+      "address": "Plot 373, Block F, Multan 29807",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CIP",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "399",
+        "unit": "PCS",
+        "unit_price": "30.41",
+        "amount": "12133.59",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "79",
+        "unit": "PCS",
+        "unit_price": "15.51",
+        "amount": "1225.29",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "123",
+        "unit": "CTN",
+        "unit_price": "170.47",
+        "amount": "20967.81",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "480",
+        "unit": "PCS",
+        "unit_price": "459.39",
+        "amount": "220507.20",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "418",
+        "unit": "PCS",
+        "unit_price": "364.70",
+        "amount": "152444.60",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "689.30",
+        "unit": "KG",
+        "unit_price": "311.02",
+        "amount": "214386.09",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "968.16",
+        "unit": "KG",
+        "unit_price": "18.09",
+        "amount": "17514.01",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "326.92",
+        "unit": "KG",
+        "unit_price": "166.38",
+        "amount": "54392.95",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "693571.54",
+    "gross_weight_kg": "6457.71",
+    "net_weight_kg": "5924.50"
+  },
+  "true_hs_codes": [
+    "6109.1000",
+    "8413.7010",
+    "4802.5600",
+    "6302.6000",
+    "8471.3010",
+    "3902.1000",
+    "8544.1100",
+    "3907.6100"
+  ],
+  "buyer_reference": null
+}

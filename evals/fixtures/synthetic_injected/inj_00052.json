@@ -1,0 +1,176 @@
+{
+  "id": "inj_00052",
+  "error": {
+    "kind": "future_date",
+    "path": "invoice_date",
+    "original": "2026-08-11",
+    "planted": "2026-11-09",
+    "method": "up to 180 days after 2026-10-01"
+  },
+  "invoice": {
+    "invoice_number": "CI/26/49764",
+    "invoice_date": "2026-11-09",
+    "shipper": {
+      "name": "Hamilton-Clark",
+      "address": "949 Thomas Square Poolefurt TQ6A 1DF",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Raashid LLC",
+      "address": "Plot 351, Block B, Sialkot 53790",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Yaman-Majd",
+      "address": "Plot 322, Block F, Rawalpindi 72037",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DAP",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "121.92",
+        "unit": "KG",
+        "unit_price": "444.69",
+        "amount": "54216.60",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "854",
+        "unit": "PCS",
+        "unit_price": "423.92",
+        "amount": "362027.68",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "1",
+        "unit": "PCS",
+        "unit_price": "64.49",
+        "amount": "64.49",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "355",
+        "unit": "PCS",
+        "unit_price": "52.75",
+        "amount": "18726.25",
+        "hs_code_on_doc": "6109.1000"
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "283.19",
+        "unit": "KG",
+        "unit_price": "198.50",
+        "amount": "56213.22",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "111",
+        "unit": "PCS",
+        "unit_price": "17.67",
+        "amount": "1961.37",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "443.99",
+        "unit": "MTR",
+        "unit_price": "57.01",
+        "amount": "25311.87",
+        "hs_code_on_doc": "5209.4200"
+      }
+    ],
+    "total_amount": "518521.48",
+    "gross_weight_kg": "1928.93",
+    "net_weight_kg": "1769.66"
+  },
+  "source": {
+    "invoice_number": "CI/26/49764",
+    "invoice_date": "2026-08-11",
+    "shipper": {
+      "name": "Hamilton-Clark",
+      "address": "949 Thomas Square Poolefurt TQ6A 1DF",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Raashid LLC",
+      "address": "Plot 351, Block B, Sialkot 53790",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Yaman-Majd",
+      "address": "Plot 322, Block F, Rawalpindi 72037",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DAP",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "121.92",
+        "unit": "KG",
+        "unit_price": "444.69",
+        "amount": "54216.60",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "854",
+        "unit": "PCS",
+        "unit_price": "423.92",
+        "amount": "362027.68",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "1",
+        "unit": "PCS",
+        "unit_price": "64.49",
+        "amount": "64.49",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "355",
+        "unit": "PCS",
+        "unit_price": "52.75",
+        "amount": "18726.25",
+        "hs_code_on_doc": "6109.1000"
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "283.19",
+        "unit": "KG",
+        "unit_price": "198.50",
+        "amount": "56213.22",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "111",
+        "unit": "PCS",
+        "unit_price": "17.67",
+        "amount": "1961.37",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "443.99",
+        "unit": "MTR",
+        "unit_price": "57.01",
+        "amount": "25311.87",
+        "hs_code_on_doc": "5209.4200"
+      }
+    ],
+    "total_amount": "518521.48",
+    "gross_weight_kg": "1928.93",
+    "net_weight_kg": "1769.66"
+  }
+}

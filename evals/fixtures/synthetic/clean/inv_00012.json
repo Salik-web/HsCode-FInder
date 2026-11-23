@@ -1,0 +1,99 @@
+{
+  "invoice": {
+    "invoice_number": "444-08135",
+    "invoice_date": "2026-05-13",
+    "shipper": {
+      "name": "Ghanee-Buraid",
+      "address": "Plot 168, Block A, Faisalabad 78973",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Behl LLC",
+      "address": "H.No. 099, Malhotra Street Alappuzha 157612",
+      "country": "IN"
+    },
+    "consignee": {
+      "name": "Behl LLC",
+      "address": "H.No. 099, Malhotra Street Alappuzha 157612",
+      "country": "IN"
+    },
+    "notify_party": {
+      "name": "Hora-Arora",
+      "address": "224 Ganguly Zila Bhubaneswar-883964",
+      "country": "IN"
+    },
+    "incoterm": "DPU",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "13",
+        "unit": "PCS",
+        "unit_price": "217.38",
+        "amount": "2825.94",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "673.09",
+        "unit": "KG",
+        "unit_price": "473.74",
+        "amount": "318869.66",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "15",
+        "unit": "PCS",
+        "unit_price": "104.69",
+        "amount": "1570.35",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "364.36",
+        "unit": "MTR",
+        "unit_price": "176.76",
+        "amount": "64404.27",
+        "hs_code_on_doc": "5209.4200"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "88",
+        "unit": "PCS",
+        "unit_price": "447.79",
+        "amount": "39405.52",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "198",
+        "unit": "PCS",
+        "unit_price": "402.56",
+        "amount": "79706.88",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "37",
+        "unit": "PCS",
+        "unit_price": "143.55",
+        "amount": "5311.35",
+        "hs_code_on_doc": "8507.6000"
+      }
+    ],
+    "total_amount": "512093.97",
+    "gross_weight_kg": "4876.90",
+    "net_weight_kg": "4734.85"
+  },
+  "true_hs_codes": [
+    "8541.4300",
+    "2924.2990",
+    "4011.1000",
+    "5209.4200",
+    "8413.7010",
+    "6302.6000",
+    "8507.6000"
+  ],
+  "buyer_reference": null
+}

@@ -1,0 +1,160 @@
+{
+  "id": "inj_00042",
+  "error": {
+    "kind": "wrong_line_amount",
+    "path": "line_items[0].amount",
+    "original": "21253.10",
+    "planted": "2125.31",
+    "method": "shift the decimal point"
+  },
+  "invoice": {
+    "invoice_number": "102-05909",
+    "invoice_date": "2026-02-07",
+    "shipper": {
+      "name": "Atkins-Hill",
+      "address": "Flat 2 Anthony Lakes Brownborough S6 2NR",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Rousseau",
+      "address": "27, rue Mathilde Joly 97146 Muller",
+      "country": "FR"
+    },
+    "consignee": {
+      "name": "Rousseau",
+      "address": "27, rue Mathilde Joly 97146 Muller",
+      "country": "FR"
+    },
+    "notify_party": null,
+    "incoterm": "EXW",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Cotton terry towels",
+        "quantity": "139",
+        "unit": "PCS",
+        "unit_price": "152.90",
+        "amount": "2125.31",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "290.59",
+        "unit": "KG",
+        "unit_price": "390.92",
+        "amount": "113597.44",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "15",
+        "unit": "PCS",
+        "unit_price": "82.20",
+        "amount": "1233.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "422",
+        "unit": "SET",
+        "unit_price": "94.52",
+        "amount": "39887.44",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "445",
+        "unit": "PAIR",
+        "unit_price": "171.59",
+        "amount": "76357.55",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "136",
+        "unit": "PCS",
+        "unit_price": "75.04",
+        "amount": "10205.44",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "262533.97",
+    "gross_weight_kg": "2915.59",
+    "net_weight_kg": "2650.54"
+  },
+  "source": {
+    "invoice_number": "102-05909",
+    "invoice_date": "2026-02-07",
+    "shipper": {
+      "name": "Atkins-Hill",
+      "address": "Flat 2 Anthony Lakes Brownborough S6 2NR",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Rousseau",
+      "address": "27, rue Mathilde Joly 97146 Muller",
+      "country": "FR"
+    },
+    "consignee": {
+      "name": "Rousseau",
+      "address": "27, rue Mathilde Joly 97146 Muller",
+      "country": "FR"
+    },
+    "notify_party": null,
+    "incoterm": "EXW",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Cotton terry towels",
+        "quantity": "139",
+        "unit": "PCS",
+        "unit_price": "152.90",
+        "amount": "21253.10",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "290.59",
+        "unit": "KG",
+        "unit_price": "390.92",
+        "amount": "113597.44",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "15",
+        "unit": "PCS",
+        "unit_price": "82.20",
+        "amount": "1233.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "422",
+        "unit": "SET",
+        "unit_price": "94.52",
+        "amount": "39887.44",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "445",
+        "unit": "PAIR",
+        "unit_price": "171.59",
+        "amount": "76357.55",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "136",
+        "unit": "PCS",
+        "unit_price": "75.04",
+        "amount": "10205.44",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "262533.97",
+    "gross_weight_kg": "2915.59",
+    "net_weight_kg": "2650.54"
+  }
+}

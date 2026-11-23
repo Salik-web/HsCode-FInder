@@ -1,0 +1,192 @@
+{
+  "id": "inj_00035",
+  "error": {
+    "kind": "bad_currency",
+    "path": "currency",
+    "original": "SAR",
+    "planted": "YEN",
+    "method": "common non-ISO spelling"
+  },
+  "invoice": {
+    "invoice_number": "167-96725",
+    "invoice_date": "2026-04-28",
+    "shipper": {
+      "name": "Mahbub-Saburah",
+      "address": "Plot 191, Block F, Faisalabad 10501",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Mani-Bhardwaj",
+      "address": "H.No. 93 Kapur Chowk, Karawal Nagar 412819",
+      "country": "IN"
+    },
+    "consignee": {
+      "name": "Mani-Bhardwaj",
+      "address": "H.No. 93 Kapur Chowk, Karawal Nagar 412819",
+      "country": "IN"
+    },
+    "notify_party": null,
+    "incoterm": "CFR",
+    "currency": "YEN",
+    "line_items": [
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "483",
+        "unit": "PCS",
+        "unit_price": "275.01",
+        "amount": "132829.83",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "875.08",
+        "unit": "KG",
+        "unit_price": "360.29",
+        "amount": "315282.57",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "75",
+        "unit": "CTN",
+        "unit_price": "397.44",
+        "amount": "29808.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "858",
+        "unit": "PCS",
+        "unit_price": "171.39",
+        "amount": "147052.62",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "492.51",
+        "unit": "KG",
+        "unit_price": "305.00",
+        "amount": "150215.55",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "731.61",
+        "unit": "MTR",
+        "unit_price": "279.79",
+        "amount": "204697.16",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "227.08",
+        "unit": "KG",
+        "unit_price": "268.68",
+        "amount": "61011.85",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "4",
+        "unit": "PCS",
+        "unit_price": "56.47",
+        "amount": "225.88",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1041123.46",
+    "gross_weight_kg": "5303.38",
+    "net_weight_kg": "4910.54"
+  },
+  "source": {
+    "invoice_number": "167-96725",
+    "invoice_date": "2026-04-28",
+    "shipper": {
+      "name": "Mahbub-Saburah",
+      "address": "Plot 191, Block F, Faisalabad 10501",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Mani-Bhardwaj",
+      "address": "H.No. 93 Kapur Chowk, Karawal Nagar 412819",
+      "country": "IN"
+    },
+    "consignee": {
+      "name": "Mani-Bhardwaj",
+      "address": "H.No. 93 Kapur Chowk, Karawal Nagar 412819",
+      "country": "IN"
+    },
+    "notify_party": null,
+    "incoterm": "CFR",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "483",
+        "unit": "PCS",
+        "unit_price": "275.01",
+        "amount": "132829.83",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "875.08",
+        "unit": "KG",
+        "unit_price": "360.29",
+        "amount": "315282.57",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "75",
+        "unit": "CTN",
+        "unit_price": "397.44",
+        "amount": "29808.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "858",
+        "unit": "PCS",
+        "unit_price": "171.39",
+        "amount": "147052.62",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "492.51",
+        "unit": "KG",
+        "unit_price": "305.00",
+        "amount": "150215.55",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "731.61",
+        "unit": "MTR",
+        "unit_price": "279.79",
+        "amount": "204697.16",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "227.08",
+        "unit": "KG",
+        "unit_price": "268.68",
+        "amount": "61011.85",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "4",
+        "unit": "PCS",
+        "unit_price": "56.47",
+        "amount": "225.88",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1041123.46",
+    "gross_weight_kg": "5303.38",
+    "net_weight_kg": "4910.54"
+  }
+}

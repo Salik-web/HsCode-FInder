@@ -1,0 +1,120 @@
+{
+  "id": "inj_00056",
+  "error": {
+    "kind": "net_over_gross",
+    "path": "net_weight_kg",
+    "original": "2005.85",
+    "planted": "2086.08",
+    "method": "swap net and gross"
+  },
+  "invoice": {
+    "invoice_number": "INV-2026-21944",
+    "invoice_date": "2026-03-26",
+    "shipper": {
+      "name": "Ubaydullah Ltd",
+      "address": "Plot 172, Block B, Faisalabad 73305",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Radhakrishnan, Choudhary and Nadkarni",
+      "address": "55/755, Prabhakar Nagar Dehradun 224586",
+      "country": "IN"
+    },
+    "consignee": {
+      "name": "Radhakrishnan, Choudhary and Nadkarni",
+      "address": "55/755, Prabhakar Nagar Dehradun 224586",
+      "country": "IN"
+    },
+    "notify_party": {
+      "name": "Dhaliwal-Vasa",
+      "address": "H.No. 14 Dass Circle, Bettiah 482010",
+      "country": "IN"
+    },
+    "incoterm": "FOB",
+    "currency": "EUR",
+    "line_items": [
+      {
+        "description": "Refined palm olein",
+        "quantity": "894.79",
+        "unit": "KG",
+        "unit_price": "382.35",
+        "amount": "342122.96",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "297.06",
+        "unit": "KG",
+        "unit_price": "499.93",
+        "amount": "148509.21",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "37",
+        "unit": "CTN",
+        "unit_price": "87.23",
+        "amount": "3227.51",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "493859.68",
+    "gross_weight_kg": "2005.85",
+    "net_weight_kg": "2086.08"
+  },
+  "source": {
+    "invoice_number": "INV-2026-21944",
+    "invoice_date": "2026-03-26",
+    "shipper": {
+      "name": "Ubaydullah Ltd",
+      "address": "Plot 172, Block B, Faisalabad 73305",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Radhakrishnan, Choudhary and Nadkarni",
+      "address": "55/755, Prabhakar Nagar Dehradun 224586",
+      "country": "IN"
+    },
+    "consignee": {
+      "name": "Radhakrishnan, Choudhary and Nadkarni",
+      "address": "55/755, Prabhakar Nagar Dehradun 224586",
+      "country": "IN"
+    },
+    "notify_party": {
+      "name": "Dhaliwal-Vasa",
+      "address": "H.No. 14 Dass Circle, Bettiah 482010",
+      "country": "IN"
+    },
+    "incoterm": "FOB",
+    "currency": "EUR",
+    "line_items": [
+      {
+        "description": "Refined palm olein",
+        "quantity": "894.79",
+        "unit": "KG",
+        "unit_price": "382.35",
+        "amount": "342122.96",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "297.06",
+        "unit": "KG",
+        "unit_price": "499.93",
+        "amount": "148509.21",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "37",
+        "unit": "CTN",
+        "unit_price": "87.23",
+        "amount": "3227.51",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "493859.68",
+    "gross_weight_kg": "2086.08",
+    "net_weight_kg": "2005.85"
+  }
+}

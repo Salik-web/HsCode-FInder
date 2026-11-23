@@ -1,0 +1,296 @@
+{
+  "id": "inj_00044",
+  "error": {
+    "kind": "net_over_gross",
+    "path": "net_weight_kg",
+    "original": "9637.19",
+    "planted": "10311.79",
+    "method": "swap net and gross"
+  },
+  "invoice": {
+    "invoice_number": "410-06598",
+    "invoice_date": "2026-08-05",
+    "shipper": {
+      "name": "Barlow Ltd",
+      "address": "5 Sian Hills North Hollie N8B 1NF",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Darain Ltd",
+      "address": "Plot 109, Block D, Multan 15890",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Darain Ltd",
+      "address": "Plot 109, Block D, Multan 15890",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Luqmaan-Batool",
+      "address": "Plot 333, Block C, Lahore 89140",
+      "country": "PK"
+    },
+    "incoterm": "CIF",
+    "currency": "EUR",
+    "line_items": [
+      {
+        "description": "Copper winding wire",
+        "quantity": "559.37",
+        "unit": "KG",
+        "unit_price": "93.49",
+        "amount": "52295.50",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "189",
+        "unit": "PCS",
+        "unit_price": "32.95",
+        "amount": "6227.55",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "190.12",
+        "unit": "KG",
+        "unit_price": "137.07",
+        "amount": "26059.75",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "121",
+        "unit": "PCS",
+        "unit_price": "189.99",
+        "amount": "22988.79",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "877",
+        "unit": "PCS",
+        "unit_price": "328.39",
+        "amount": "287998.03",
+        "hs_code_on_doc": "8517.1300"
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "167",
+        "unit": "PAIR",
+        "unit_price": "100.02",
+        "amount": "16703.34",
+        "hs_code_on_doc": "4203.2900"
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "861.30",
+        "unit": "KG",
+        "unit_price": "225.02",
+        "amount": "193809.73",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "40",
+        "unit": "PCS",
+        "unit_price": "303.57",
+        "amount": "12142.80",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "40",
+        "unit": "PCS",
+        "unit_price": "324.56",
+        "amount": "12982.40",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "22",
+        "unit": "BAG",
+        "unit_price": "405.31",
+        "amount": "8916.82",
+        "hs_code_on_doc": "2523.2900"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "224.89",
+        "unit": "KG",
+        "unit_price": "66.82",
+        "amount": "15027.15",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "934",
+        "unit": "PCS",
+        "unit_price": "231.04",
+        "amount": "215791.36",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "521.96",
+        "unit": "KG",
+        "unit_price": "234.93",
+        "amount": "122624.06",
+        "hs_code_on_doc": "3902.1000"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "66",
+        "unit": "CTN",
+        "unit_price": "146.05",
+        "amount": "9639.30",
+        "hs_code_on_doc": "4802.5600"
+      }
+    ],
+    "total_amount": "1003206.58",
+    "gross_weight_kg": "9637.19",
+    "net_weight_kg": "10311.79"
+  },
+  "source": {
+    "invoice_number": "410-06598",
+    "invoice_date": "2026-08-05",
+    "shipper": {
+      "name": "Barlow Ltd",
+      "address": "5 Sian Hills North Hollie N8B 1NF",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Darain Ltd",
+      "address": "Plot 109, Block D, Multan 15890",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Darain Ltd",
+      "address": "Plot 109, Block D, Multan 15890",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Luqmaan-Batool",
+      "address": "Plot 333, Block C, Lahore 89140",
+      "country": "PK"
+    },
+    "incoterm": "CIF",
+    "currency": "EUR",
+    "line_items": [
+      {
+        "description": "Copper winding wire",
+        "quantity": "559.37",
+        "unit": "KG",
+        "unit_price": "93.49",
+        "amount": "52295.50",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "189",
+        "unit": "PCS",
+        "unit_price": "32.95",
+        "amount": "6227.55",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "190.12",
+        "unit": "KG",
+        "unit_price": "137.07",
+        "amount": "26059.75",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "121",
+        "unit": "PCS",
+        "unit_price": "189.99",
+        "amount": "22988.79",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "877",
+        "unit": "PCS",
+        "unit_price": "328.39",
+        "amount": "287998.03",
+        "hs_code_on_doc": "8517.1300"
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "167",
+        "unit": "PAIR",
+        "unit_price": "100.02",
+        "amount": "16703.34",
+        "hs_code_on_doc": "4203.2900"
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "861.30",
+        "unit": "KG",
+        "unit_price": "225.02",
+        "amount": "193809.73",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "40",
+        "unit": "PCS",
+        "unit_price": "303.57",
+        "amount": "12142.80",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "40",
+        "unit": "PCS",
+        "unit_price": "324.56",
+        "amount": "12982.40",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "22",
+        "unit": "BAG",
+        "unit_price": "405.31",
+        "amount": "8916.82",
+        "hs_code_on_doc": "2523.2900"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "224.89",
+        "unit": "KG",
+        "unit_price": "66.82",
+        "amount": "15027.15",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "934",
+        "unit": "PCS",
+        "unit_price": "231.04",
+        "amount": "215791.36",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "521.96",
+        "unit": "KG",
+        "unit_price": "234.93",
+        "amount": "122624.06",
+        "hs_code_on_doc": "3902.1000"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "66",
+        "unit": "CTN",
+        "unit_price": "146.05",
+        "amount": "9639.30",
+        "hs_code_on_doc": "4802.5600"
+      }
+    ],
+    "total_amount": "1003206.58",
+    "gross_weight_kg": "10311.79",
+    "net_weight_kg": "9637.19"
+  }
+}

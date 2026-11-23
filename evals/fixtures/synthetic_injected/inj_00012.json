@@ -1,0 +1,112 @@
+{
+  "id": "inj_00012",
+  "error": {
+    "kind": "wrong_line_amount",
+    "path": "line_items[2].amount",
+    "original": "276286.89",
+    "planted": "2762868.90",
+    "method": "shift the decimal point"
+  },
+  "invoice": {
+    "invoice_number": "536-76484",
+    "invoice_date": "2025-12-31",
+    "shipper": {
+      "name": "Damurah and Sons",
+      "address": "Plot 301, Block C, Sialkot 34175",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Venier, Roncalli e Duodo Group",
+      "address": "Via Tognazzi, 4 38063, Borghetto All'Adige (TN)",
+      "country": "IT"
+    },
+    "consignee": {
+      "name": "Venier, Roncalli e Duodo Group",
+      "address": "Via Tognazzi, 4 38063, Borghetto All'Adige (TN)",
+      "country": "IT"
+    },
+    "notify_party": null,
+    "incoterm": "EXW",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Ball bearings",
+        "quantity": "174",
+        "unit": "PCS",
+        "unit_price": "162.74",
+        "amount": "28316.76",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "319.38",
+        "unit": "KG",
+        "unit_price": "84.35",
+        "amount": "26939.70",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "561",
+        "unit": "SET",
+        "unit_price": "492.49",
+        "amount": "2762868.90",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "331543.35",
+    "gross_weight_kg": "1205.69",
+    "net_weight_kg": "1148.28"
+  },
+  "source": {
+    "invoice_number": "536-76484",
+    "invoice_date": "2025-12-31",
+    "shipper": {
+      "name": "Damurah and Sons",
+      "address": "Plot 301, Block C, Sialkot 34175",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Venier, Roncalli e Duodo Group",
+      "address": "Via Tognazzi, 4 38063, Borghetto All'Adige (TN)",
+      "country": "IT"
+    },
+    "consignee": {
+      "name": "Venier, Roncalli e Duodo Group",
+      "address": "Via Tognazzi, 4 38063, Borghetto All'Adige (TN)",
+      "country": "IT"
+    },
+    "notify_party": null,
+    "incoterm": "EXW",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Ball bearings",
+        "quantity": "174",
+        "unit": "PCS",
+        "unit_price": "162.74",
+        "amount": "28316.76",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "319.38",
+        "unit": "KG",
+        "unit_price": "84.35",
+        "amount": "26939.70",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "561",
+        "unit": "SET",
+        "unit_price": "492.49",
+        "amount": "276286.89",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "331543.35",
+    "gross_weight_kg": "1205.69",
+    "net_weight_kg": "1148.28"
+  }
+}

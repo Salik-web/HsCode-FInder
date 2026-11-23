@@ -1,0 +1,304 @@
+{
+  "id": "inj_00019",
+  "error": {
+    "kind": "wrong_total",
+    "path": "total_amount",
+    "original": "1163383.77",
+    "planted": "116338.38",
+    "method": "shift the decimal point"
+  },
+  "invoice": {
+    "invoice_number": "511-93525",
+    "invoice_date": "2025-12-27",
+    "shipper": {
+      "name": "Gould, Williams and Atkinson",
+      "address": "465 Joseph Bridge North Brenda E0 1FL",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Ghasaan-Maalik",
+      "address": "Plot 250, Block A, Multan 41988",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Ghasaan-Maalik",
+      "address": "Plot 250, Block A, Multan 41988",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DPU",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "628.80",
+        "unit": "KG",
+        "unit_price": "371.99",
+        "amount": "233907.31",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "969",
+        "unit": "PAIR",
+        "unit_price": "209.02",
+        "amount": "202540.38",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "31",
+        "unit": "PCS",
+        "unit_price": "149.98",
+        "amount": "4649.38",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "79",
+        "unit": "PCS",
+        "unit_price": "468.29",
+        "amount": "36994.91",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "567",
+        "unit": "PCS",
+        "unit_price": "171.95",
+        "amount": "97495.65",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "404.78",
+        "unit": "KG",
+        "unit_price": "424.88",
+        "amount": "171982.93",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "903",
+        "unit": "SET",
+        "unit_price": "127.38",
+        "amount": "115024.14",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "355.12",
+        "unit": "MTR",
+        "unit_price": "232.48",
+        "amount": "82558.30",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "304.47",
+        "unit": "KG",
+        "unit_price": "325.31",
+        "amount": "99047.14",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "89",
+        "unit": "SET",
+        "unit_price": "437.02",
+        "amount": "38894.78",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "3",
+        "unit": "BAG",
+        "unit_price": "64.85",
+        "amount": "194.55",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "157.95",
+        "unit": "KG",
+        "unit_price": "274.16",
+        "amount": "43303.57",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "4",
+        "unit": "PCS",
+        "unit_price": "59.95",
+        "amount": "239.80",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "49",
+        "unit": "PCS",
+        "unit_price": "46.79",
+        "amount": "2292.71",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "327.36",
+        "unit": "KG",
+        "unit_price": "104.65",
+        "amount": "34258.22",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "116338.38",
+    "gross_weight_kg": "7011.68",
+    "net_weight_kg": "6374.25"
+  },
+  "source": {
+    "invoice_number": "511-93525",
+    "invoice_date": "2025-12-27",
+    "shipper": {
+      "name": "Gould, Williams and Atkinson",
+      "address": "465 Joseph Bridge North Brenda E0 1FL",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Ghasaan-Maalik",
+      "address": "Plot 250, Block A, Multan 41988",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Ghasaan-Maalik",
+      "address": "Plot 250, Block A, Multan 41988",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DPU",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "628.80",
+        "unit": "KG",
+        "unit_price": "371.99",
+        "amount": "233907.31",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "969",
+        "unit": "PAIR",
+        "unit_price": "209.02",
+        "amount": "202540.38",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "31",
+        "unit": "PCS",
+        "unit_price": "149.98",
+        "amount": "4649.38",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "79",
+        "unit": "PCS",
+        "unit_price": "468.29",
+        "amount": "36994.91",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "567",
+        "unit": "PCS",
+        "unit_price": "171.95",
+        "amount": "97495.65",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "404.78",
+        "unit": "KG",
+        "unit_price": "424.88",
+        "amount": "171982.93",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "903",
+        "unit": "SET",
+        "unit_price": "127.38",
+        "amount": "115024.14",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "355.12",
+        "unit": "MTR",
+        "unit_price": "232.48",
+        "amount": "82558.30",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "304.47",
+        "unit": "KG",
+        "unit_price": "325.31",
+        "amount": "99047.14",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "89",
+        "unit": "SET",
+        "unit_price": "437.02",
+        "amount": "38894.78",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "3",
+        "unit": "BAG",
+        "unit_price": "64.85",
+        "amount": "194.55",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "157.95",
+        "unit": "KG",
+        "unit_price": "274.16",
+        "amount": "43303.57",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "4",
+        "unit": "PCS",
+        "unit_price": "59.95",
+        "amount": "239.80",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "49",
+        "unit": "PCS",
+        "unit_price": "46.79",
+        "amount": "2292.71",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "327.36",
+        "unit": "KG",
+        "unit_price": "104.65",
+        "amount": "34258.22",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1163383.77",
+    "gross_weight_kg": "7011.68",
+    "net_weight_kg": "6374.25"
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "invoice": {
+    "invoice_number": "INV-2026-32213",
+    "invoice_date": "2026-04-14",
+    "shipper": {
+      "name": "Mills Ltd",
+      "address": "94 Palmer Dale New Dominictown G4 1ZE",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Raaghib-Jahdami",
+      "address": "Plot 392, Block G, Faisalabad 63601",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Raaghib-Jahdami",
+      "address": "Plot 392, Block G, Faisalabad 63601",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Ubaid, Aalam and Zafrul",
+      "address": "Plot 209, Block B, Peshawar 73496",
+      "country": "PK"
+    },
+    "incoterm": "FCA",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "987",
+        "unit": "PAIR",
+        "unit_price": "253.52",
+        "amount": "250224.24",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "9",
+        "unit": "PCS",
+        "unit_price": "188.48",
+        "amount": "1696.32",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "7",
+        "unit": "BAG",
+        "unit_price": "6.91",
+        "amount": "48.37",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "23",
+        "unit": "PCS",
+        "unit_price": "302.14",
+        "amount": "6949.22",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "190",
+        "unit": "PCS",
+        "unit_price": "315.64",
+        "amount": "59971.60",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.33",
+        "unit": "MT",
+        "unit_price": "4.09",
+        "amount": "5.44",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "20",
+        "unit": "CTN",
+        "unit_price": "328.02",
+        "amount": "6560.40",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "437.17",
+        "unit": "KG",
+        "unit_price": "289.06",
+        "amount": "126368.36",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "156",
+        "unit": "PCS",
+        "unit_price": "435.03",
+        "amount": "67864.68",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "970.85",
+        "unit": "KG",
+        "unit_price": "471.33",
+        "amount": "457590.73",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "681",
+        "unit": "PCS",
+        "unit_price": "335.07",
+        "amount": "228182.67",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "989.20",
+        "unit": "KG",
+        "unit_price": "396.63",
+        "amount": "392346.40",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "911.19",
+        "unit": "KG",
+        "unit_price": "444.89",
+        "amount": "405379.32",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "2003187.75",
+    "gross_weight_kg": "9237.77",
+    "net_weight_kg": "8882.47"
+  },
+  "true_hs_codes": [
+    "4203.2900",
+    "8541.4300",
+    "2523.2900",
+    "8507.6000",
+    "4011.1000",
+    "7208.3700",
+    "6907.2100",
+    "3907.6100",
+    "9018.9010",
+    "3902.1000",
+    "9506.6200",
+    "1511.9020",
+    "8544.1100"
+  ],
+  "buyer_reference": "Same as consignee"
+}

@@ -1,0 +1,80 @@
+{
+  "id": "inj_00021",
+  "error": {
+    "kind": "invalid_incoterm",
+    "path": "incoterm",
+    "original": "CPT",
+    "planted": "DAT",
+    "method": "outdated or informal term"
+  },
+  "invoice": {
+    "invoice_number": "INV-2025-68187",
+    "invoice_date": "2025-10-07",
+    "shipper": {
+      "name": "Babato Group",
+      "address": "Borgo Rocco, 9 55018, Segromigno In Monte (LU)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Wafeeq Ltd",
+      "address": "Plot 327, Block B, Karachi 90667",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Zaakir-Sabur",
+      "address": "Plot 85, Block A, Peshawar 68859",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DAT",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "525",
+        "unit": "SET",
+        "unit_price": "297.27",
+        "amount": "156066.75",
+        "hs_code_on_doc": "8714.1000"
+      }
+    ],
+    "total_amount": "156066.75",
+    "gross_weight_kg": "1911.00",
+    "net_weight_kg": "1837.50"
+  },
+  "source": {
+    "invoice_number": "INV-2025-68187",
+    "invoice_date": "2025-10-07",
+    "shipper": {
+      "name": "Babato Group",
+      "address": "Borgo Rocco, 9 55018, Segromigno In Monte (LU)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Wafeeq Ltd",
+      "address": "Plot 327, Block B, Karachi 90667",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Zaakir-Sabur",
+      "address": "Plot 85, Block A, Peshawar 68859",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CPT",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "525",
+        "unit": "SET",
+        "unit_price": "297.27",
+        "amount": "156066.75",
+        "hs_code_on_doc": "8714.1000"
+      }
+    ],
+    "total_amount": "156066.75",
+    "gross_weight_kg": "1911.00",
+    "net_weight_kg": "1837.50"
+  }
+}

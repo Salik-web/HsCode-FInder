@@ -1,0 +1,59 @@
+{
+  "invoice": {
+    "invoice_number": "CI/26/08521",
+    "invoice_date": "2026-05-09",
+    "shipper": {
+      "name": "van Laarhoven Groep",
+      "address": "Kickweg 36 8509VB Papendrecht",
+      "country": "NL"
+    },
+    "buyer": {
+      "name": "Jad-Rohaan",
+      "address": "Plot 346, Block G, Faisalabad 54139",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Jad-Rohaan",
+      "address": "Plot 346, Block G, Faisalabad 54139",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CPT",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "561",
+        "unit": "PCS",
+        "unit_price": "94.70",
+        "amount": "53126.70",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "547.28",
+        "unit": "KG",
+        "unit_price": "411.82",
+        "amount": "225380.85",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "35",
+        "unit": "BAG",
+        "unit_price": "95.95",
+        "amount": "3358.25",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "281865.80",
+    "gross_weight_kg": "3386.57",
+    "net_weight_kg": "3194.88"
+  },
+  "true_hs_codes": [
+    "8471.3010",
+    "2924.2990",
+    "2523.2900"
+  ],
+  "buyer_reference": null
+}

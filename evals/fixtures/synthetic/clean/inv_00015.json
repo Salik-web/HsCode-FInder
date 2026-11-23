@@ -1,0 +1,41 @@
+{
+  "invoice": {
+    "invoice_number": "INV-2026-17447",
+    "invoice_date": "2026-04-03",
+    "shipper": {
+      "name": "Schroeff & Schokman",
+      "address": "Kayleesingel 59 5510 TQ Kootstertille",
+      "country": "NL"
+    },
+    "buyer": {
+      "name": "Yadid PLC",
+      "address": "Plot 201, Block G, Multan 88936",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Yadid PLC",
+      "address": "Plot 201, Block G, Multan 88936",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "EXW",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "783.02",
+        "unit": "MTR",
+        "unit_price": "9.48",
+        "amount": "7423.03",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "7423.03",
+    "gross_weight_kg": "496.75",
+    "net_weight_kg": "477.64"
+  },
+  "true_hs_codes": [
+    "5209.4200"
+  ],
+  "buyer_reference": "As consignee"
+}

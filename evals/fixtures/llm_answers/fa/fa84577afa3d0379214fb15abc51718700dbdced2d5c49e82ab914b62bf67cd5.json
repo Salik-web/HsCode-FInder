@@ -1,0 +1,21 @@
+{
+  "document_sha256": "9881c8bf09b6fadeef08e44feafb20c4c70234bc03e9e6ced57a036686ac3aef",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"444-08135\",\"invoice_date\":\"2026-05-13\",\"shipper\":{\"name\":\"Ghanee-Buraid\",\"address\":\"Plot 168, Block A, Faisalabad 78973\",\"country\":\"PK\"},\"buyer\":{\"name\":\"Behl LLC\",\"address\":\"H.No. 099, Malhotra Street, Alappuzha 157612\",\"country\":\"IN\"},\"consignee\":{\"name\":\"Behl LLC\",\"address\":\"H.No. 099, Malhotra Street, Alappuzha 157612\",\"country\":\"IN\"},\"notify_party\":{\"name\":\"Hora-Arora\",\"address\":\"224 Ganguly Zila Bhubaneswar-883964\",\"country\":\"IN\"},\"incoterm\":\"DPU\",\"currency\":\"USD\",\"line_items\":[[\"Solar photovoltaic panels 550W\",\"13\",\"PCS\",\"217.38\",\"2825.94\",\"8541.4300\"],[\"Paracetamol API in bulk\",\"673.09\",\"KG\",\"473.74\",\"318869.66\",\"2924.2990\"],[\"Radial car tyres 205/55 R16\",\"15\",\"PCS\",\"104.69\",\"1570.35\",\"4011.1000\"],[\"Woven denim fabric 12 oz\",\"364.36\",\"MTR\",\"176.76\",\"64404.27\",\"5209.4200\"],[\"Centrifugal water pumps\",\"88\",\"PCS\",\"447.79\",\"39405.52\",\"8413.7010\"],[\"Cotton terry towels\",\"198\",\"PCS\",\"402.56\",\"79706.88\",\"6302.6000\"],[\"Lithium-ion batteries 48V\",\"37\",\"PCS\",\"143.55\",\"5311.35\",\"8507.6000\"]],\"total_amount\":\"512093.97\",\"gross_weight_kg\":\"4876.90\",\"net_weight_kg\":\"4734.85\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 3423,
+      "output_tokens": 525
+    },
+    "latency_ms": 1775,
+    "cost_usd": "0",
+    "cached": false
+  }
+}

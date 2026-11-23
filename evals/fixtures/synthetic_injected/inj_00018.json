@@ -1,0 +1,144 @@
+{
+  "id": "inj_00018",
+  "error": {
+    "kind": "wrong_line_amount",
+    "path": "line_items[3].amount",
+    "original": "721.28",
+    "planted": "72.13",
+    "method": "shift the decimal point"
+  },
+  "invoice": {
+    "invoice_number": "CI/26/04156",
+    "invoice_date": "2026-04-17",
+    "shipper": {
+      "name": "Höfig",
+      "address": "Rosina-Aumann-Straße 33-48 93162 Göppingen",
+      "country": "DE"
+    },
+    "buyer": {
+      "name": "Cherian Inc",
+      "address": "500 Saran Path Eluru-053653",
+      "country": "IN"
+    },
+    "consignee": {
+      "name": "Gulfam-Raid",
+      "address": "Plot 10, Block C, Peshawar 92574",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CIF",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "121",
+        "unit": "SET",
+        "unit_price": "174.02",
+        "amount": "21056.42",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "71",
+        "unit": "PCS",
+        "unit_price": "83.47",
+        "amount": "5926.37",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "224",
+        "unit": "PCS",
+        "unit_price": "249.60",
+        "amount": "55910.40",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "16",
+        "unit": "PCS",
+        "unit_price": "45.08",
+        "amount": "72.13",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "272.44",
+        "unit": "MTR",
+        "unit_price": "346.60",
+        "amount": "94427.70",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "178042.17",
+    "gross_weight_kg": "1850.52",
+    "net_weight_kg": "1682.29"
+  },
+  "source": {
+    "invoice_number": "CI/26/04156",
+    "invoice_date": "2026-04-17",
+    "shipper": {
+      "name": "Höfig",
+      "address": "Rosina-Aumann-Straße 33-48 93162 Göppingen",
+      "country": "DE"
+    },
+    "buyer": {
+      "name": "Cherian Inc",
+      "address": "500 Saran Path Eluru-053653",
+      "country": "IN"
+    },
+    "consignee": {
+      "name": "Gulfam-Raid",
+      "address": "Plot 10, Block C, Peshawar 92574",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CIF",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "121",
+        "unit": "SET",
+        "unit_price": "174.02",
+        "amount": "21056.42",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "71",
+        "unit": "PCS",
+        "unit_price": "83.47",
+        "amount": "5926.37",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "224",
+        "unit": "PCS",
+        "unit_price": "249.60",
+        "amount": "55910.40",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "16",
+        "unit": "PCS",
+        "unit_price": "45.08",
+        "amount": "721.28",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "272.44",
+        "unit": "MTR",
+        "unit_price": "346.60",
+        "amount": "94427.70",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "178042.17",
+    "gross_weight_kg": "1850.52",
+    "net_weight_kg": "1682.29"
+  }
+}

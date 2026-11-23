@@ -1,0 +1,50 @@
+{
+  "extraction": {
+    "synthetic_clean/dev": {
+      "documents": 12,
+      "scored": 12,
+      "groups": {
+        "seen": {
+          "documents": 12,
+          "critical_field_accuracy": 1.0
+        }
+      }
+    },
+    "synthetic_messy/dev": {
+      "documents": 4,
+      "scored": 4,
+      "groups": {
+        "seen": {
+          "documents": 4,
+          "critical_field_accuracy": 0.927536231884058
+        }
+      }
+    },
+    "synthetic_clean/test_unseen_layout": {
+      "documents": 4,
+      "scored": 4,
+      "groups": {
+        "seen": {
+          "documents": 2,
+          "critical_field_accuracy": 0.9166666666666666
+        },
+        "unseen": {
+          "documents": 2,
+          "critical_field_accuracy": 1.0
+        }
+      }
+    }
+  },
+  "caught": {
+    "wrong_line_amount": 10,
+    "wrong_total": 10,
+    "net_over_gross": 10,
+    "invalid_incoterm": 10,
+    "future_date": 10,
+    "bad_currency": 10
+  },
+  "clean_flagged": {
+    "injected set, before planting": 0,
+    "synthetic_clean dev ground truth": 0
+  }
+}

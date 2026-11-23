@@ -1,0 +1,322 @@
+{
+  "seed": 42,
+  "schema_version": "1.0",
+  "unseen_templates": [
+    "sidebar",
+    "ledger"
+  ],
+  "documents": [
+    {
+      "id": "inv_00000",
+      "dataset": "synthetic_clean",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "clean/inv_00000.pdf",
+      "ground_truth": "clean/inv_00000.json",
+      "sha256": "76c9db188221976ee5ff2a600a1ce8ddb80e96fa555b6cb20d2253c2a876f4f4",
+      "template": "classic",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00001",
+      "dataset": "synthetic_clean",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "clean/inv_00001.pdf",
+      "ground_truth": "clean/inv_00001.json",
+      "sha256": "7510ab07a80092a5235027c4c32abbc10f97e1973f7b3b088f01f878431a5387",
+      "template": "modern",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00002",
+      "dataset": "synthetic_clean",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "clean/inv_00002.pdf",
+      "ground_truth": "clean/inv_00002.json",
+      "sha256": "446445b254ab886e64cabfecc1ffeb9e41fb50e40bd24eb156b9c5a41caa1588",
+      "template": "compact",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00003",
+      "dataset": "synthetic_clean",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "clean/inv_00003.pdf",
+      "ground_truth": "clean/inv_00003.json",
+      "sha256": "36043f3041b5facdd5af9d6cffa5f2fdf1bf65adafdce19678b92698540fecc9",
+      "template": "airy",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00004",
+      "dataset": "synthetic_clean",
+      "split": "test_unseen_layout",
+      "layout_group": "unseen",
+      "path": "clean/inv_00004.pdf",
+      "ground_truth": "clean/inv_00004.json",
+      "sha256": "a84debf034002da5380bb8e27ff48baa7073da7dcce3e5928fc77a77a38f2750",
+      "template": "sidebar",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00005",
+      "dataset": "synthetic_clean",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "clean/inv_00005.pdf",
+      "ground_truth": "clean/inv_00005.json",
+      "sha256": "7e45a3f90ac760e4216ce61b544b2428451c00f1c4c8831bd01a58cda0930b29",
+      "template": "boxed",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00006",
+      "dataset": "synthetic_clean",
+      "split": "test_unseen_layout",
+      "layout_group": "unseen",
+      "path": "clean/inv_00006.pdf",
+      "ground_truth": "clean/inv_00006.json",
+      "sha256": "d467979863c39dbd32630a7d01c3289076e984aca9f43258ccd6571649fe82de",
+      "template": "ledger",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00007",
+      "dataset": "synthetic_clean",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "clean/inv_00007.pdf",
+      "ground_truth": "clean/inv_00007.json",
+      "sha256": "b77a1ab9064f0ab20ffd07a47f7857903b14f385a074a16767b37101ac743335",
+      "template": "summary",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00009",
+      "dataset": "synthetic_clean",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "clean/inv_00009.pdf",
+      "ground_truth": "clean/inv_00009.json",
+      "sha256": "3f8ec332e06cbf7b91d89855e1c908a0b215797fe2643d680882b680201a67bb",
+      "template": "modern",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00010",
+      "dataset": "synthetic_clean",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "clean/inv_00010.pdf",
+      "ground_truth": "clean/inv_00010.json",
+      "sha256": "3334c720785cadbbd018e103b84a8cfbb47f0a1559a284740136766015db9db5",
+      "template": "compact",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00011",
+      "dataset": "synthetic_clean",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "clean/inv_00011.pdf",
+      "ground_truth": "clean/inv_00011.json",
+      "sha256": "9539afefe154f15b43c4082dd60b59f1c9fa6c0bdf30bd3b9db30b8bc4accecc",
+      "template": "airy",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00012",
+      "dataset": "synthetic_clean",
+      "split": "test_unseen_layout",
+      "layout_group": "unseen",
+      "path": "clean/inv_00012.pdf",
+      "ground_truth": "clean/inv_00012.json",
+      "sha256": "9881c8bf09b6fadeef08e44feafb20c4c70234bc03e9e6ced57a036686ac3aef",
+      "template": "sidebar",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00014",
+      "dataset": "synthetic_clean",
+      "split": "test_unseen_layout",
+      "layout_group": "unseen",
+      "path": "clean/inv_00014.pdf",
+      "ground_truth": "clean/inv_00014.json",
+      "sha256": "619035ae27861bb5730e8e56393e350cb24aceabecce6436431bdacdcd7fbc04",
+      "template": "ledger",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00015",
+      "dataset": "synthetic_clean",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "clean/inv_00015.pdf",
+      "ground_truth": "clean/inv_00015.json",
+      "sha256": "86631b82909fdbdafc96b041b42bb21c21dbb92c933067a09c8725aad0d8e076",
+      "template": "summary",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00016",
+      "dataset": "synthetic_clean",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "clean/inv_00016.pdf",
+      "ground_truth": "clean/inv_00016.json",
+      "sha256": "94ffe7c8f9573bfc13be97e8992e97d48e07fb17a05d45e141d3fef9750e2f6d",
+      "template": "classic",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00017",
+      "dataset": "synthetic_clean",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "clean/inv_00017.pdf",
+      "ground_truth": "clean/inv_00017.json",
+      "sha256": "ee120e6634770d4b97fdcebc381b76033a8aa3c082b6e35ccbf18babb0162073",
+      "template": "modern",
+      "pages": 1,
+      "source_id": null,
+      "transforms": []
+    },
+    {
+      "id": "inv_00000_messy",
+      "dataset": "synthetic_messy",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "messy/inv_00000_messy.jpg",
+      "ground_truth": "clean/inv_00000.json",
+      "sha256": "538a7ac9e678ac678690763a2f41233ab4ca70e080da0083cd70d9e96f47feab",
+      "template": "classic",
+      "pages": 1,
+      "source_id": "inv_00000",
+      "transforms": [
+        {
+          "name": "perspective",
+          "strength": 0.035
+        },
+        {
+          "name": "rotation",
+          "strength": 1.849
+        },
+        {
+          "name": "blur",
+          "strength": 0.728
+        },
+        {
+          "name": "noise",
+          "strength": 8.964
+        },
+        {
+          "name": "jpeg",
+          "strength": 56.0
+        }
+      ]
+    },
+    {
+      "id": "inv_00003_messy",
+      "dataset": "synthetic_messy",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "messy/inv_00003_messy.jpg",
+      "ground_truth": "clean/inv_00003.json",
+      "sha256": "9a7a928d7fb5a8c6890ffe95448097c874d2bd3db70a443de3a92b582f810f5b",
+      "template": "airy",
+      "pages": 1,
+      "source_id": "inv_00003",
+      "transforms": [
+        {
+          "name": "perspective",
+          "strength": 0.021
+        },
+        {
+          "name": "rotation",
+          "strength": 2.474
+        }
+      ]
+    },
+    {
+      "id": "inv_00011_messy",
+      "dataset": "synthetic_messy",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "messy/inv_00011_messy.jpg",
+      "ground_truth": "clean/inv_00011.json",
+      "sha256": "dab3457b8921eeac403dfa92d8885baa21ebb64569c8e439d2994682a39347b8",
+      "template": "airy",
+      "pages": 1,
+      "source_id": "inv_00011",
+      "transforms": [
+        {
+          "name": "perspective",
+          "strength": 0.039
+        },
+        {
+          "name": "noise",
+          "strength": 4.377
+        }
+      ]
+    },
+    {
+      "id": "inv_00026_messy",
+      "dataset": "synthetic_messy",
+      "split": "dev",
+      "layout_group": "seen",
+      "path": "messy/inv_00026_messy.jpg",
+      "ground_truth": "clean/inv_00026.json",
+      "sha256": "8662eb6cd05c6dd3cef2a781dd46c87063935fdb2ff88a9504439fd716856a02",
+      "template": "compact",
+      "pages": 1,
+      "source_id": "inv_00026",
+      "transforms": [
+        {
+          "name": "perspective",
+          "strength": 0.022
+        },
+        {
+          "name": "blur",
+          "strength": 0.517
+        },
+        {
+          "name": "noise",
+          "strength": 11.44
+        }
+      ]
+    }
+  ]
+}

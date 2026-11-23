@@ -1,0 +1,24 @@
+{
+  "document_sha256": "8662eb6cd05c6dd3cef2a781dd46c87063935fdb2ff88a9504439fd716856a02",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"EXP2688959\",\"invoice_date\":\"2026-05-26\",\"shipper\":{\"name\":\"Förster AG\",\"address\":\"Täschegasse 22 35492 Oranienburg\",\"country\":\"DE\"},\"buyer\":{\"name\":\"Scott-Henderson\",\"address\":\"Flat 68Y Naylor Run Catherinestad, B91 9UZ\",\"country\":\"GB\"},\"consignee\":{\"name\":\"Yafir, Wafeq and Arauq\",\"address\":\"Plot 262, Block D, Rawalpindi 68816\",\"country\":\"PK\"},\"notify_party\":null,\"incoterm\":\"FCA\",\"currency\":\"USD\",\"line_items\":[[\"Leather industrial work gloves\",\"919\",\"PAIR\",\"353.67\",\"325022.73\",\"4203.2900\"],[\"Ceramic floor tiles\",\"72\",\"CTN\",\"362.84\",\"26124.48\",\"6907.2100\"],[\"Stainless steel surgical scissors\",\"993\",\"PCS\",\"403.37\",\"400546.41\",\"9018.3910\"],[\"Black tea in bulk packs\",\"197.66\",\"KG\",\"393.79\",\"77836.53\",\"0902.4000\"],[\"Hand-stitched footballs\",\"465\",\"PCS\",\"162.70\",\"75655.50\",\"9506.6200\"],[\"Printed cotton bed linen\",\"374\",\"SET\",\"254.25\",\"95089.50\",\"6302.2100\"],[\"Single-phase electric motors\",\"51\",\"PCS\",\"356.63\",\"18188.13\",\"8501.4000\"],[\"Portland cement\",\"29\",\"BAG\",\"336.81\",\"9767.49\",\"2523.2900\"],[\"Lithium-ion batteries 48V\",\"27\",\"PCS\",\"249.44\",\"107259.20\",\"8507.6000\"],[\"Ball bearings\",\"882.15\",\"KG\",\"372.41\",\"328521.48\",\"8482.1000\"],[\"Polypropylene granules\",\"882.15\",\"KG\",\"372.41\",\"328521.48\",\"3902.1000\"],[\"Fresh mangoes\",\"220.57\",\"KG\",\"107.11\",\"23625.25\",\"0804.5020\"]],\"total_amount\":\"1489322.85\",\"gross_weight_kg\":\"7885.75\",\"net_weight_kg\":\"7301.62\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 2876,
+      "output_tokens": 664
+    },
+    "latency_ms": 2071,
+    "call_ms": 2033,
+    "throttle_ms": 60000,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

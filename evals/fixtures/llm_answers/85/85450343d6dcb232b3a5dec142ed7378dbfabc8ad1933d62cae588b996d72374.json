@@ -1,0 +1,24 @@
+{
+  "document_sha256": "dab3457b8921eeac403dfa92d8885baa21ebb64569c8e439d2994682a39347b8",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"CI/26/43639\",\"invoice_date\":\"2026-04-11\",\"shipper\":{\"name\":\"Thornton Ltd\",\"address\":\"21058 Hughes Brook Apt. 051 Alvarezbury, VA 31870\",\"country\":\"US\"},\"buyer\":{\"name\":\"Sahir-Ghaneer\",\"address\":\"Plot 30, Block C, Rawalpindi 19311\",\"country\":\"PK\"},\"consignee\":{\"name\":\"Sahir-Ghaneer\",\"address\":\"Plot 30, Block C, Rawalpindi 19311\",\"country\":\"PK\"},\"notify_party\":null,\"incoterm\":\"FCA\",\"currency\":\"SAR\",\"line_items\":[[\"Refined palm olein\",\"36.93\",\"KG\",\"271.31\",\"10,019.48\",null],[\"Centrifugal water pumps\",\"42\",\"PCS\",\"495.04\",\"20,791.68\",null],[\"Printed cotton bed linen\",\"584\",\"SET\",\"58.92\",\"34,409.28\",null],[\"Men's cotton T-shirts\",\"711\",\"PCS\",\"334.31\",\"237,694.41\",null],[\"Hand-stitched footballs\",\"893\",\"PCS\",\"266.98\",\"238,413.14\",null],[\"Laptop computers 14 inch\",\"914\",\"PCS\",\"304.48\",\"278,294.72\",null]],\"total_amount\":\"819,622.71\",\"gross_weight_kg\":\"3,871.69\",\"net_weight_kg\":\"3,584.90\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 2876,
+      "output_tokens": 401
+    },
+    "latency_ms": 2246,
+    "call_ms": 2006,
+    "throttle_ms": 0,
+    "cost_usd": "0",
+    "cached": false
+  },
+  "rejection": null
+}

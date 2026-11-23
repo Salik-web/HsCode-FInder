@@ -1,0 +1,167 @@
+{
+  "invoice": {
+    "invoice_number": "CI/25/99554",
+    "invoice_date": "2025-10-24",
+    "shipper": {
+      "name": "Barkholz AG",
+      "address": "Türkan-Bähr-Straße 12 81062 Bamberg",
+      "country": "DE"
+    },
+    "buyer": {
+      "name": "Ossama Ltd",
+      "address": "Plot 162, Block D, Multan 29435",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Ossama Ltd",
+      "address": "Plot 162, Block D, Multan 29435",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "FOB",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "4",
+        "unit": "PCS",
+        "unit_price": "357.88",
+        "amount": "1431.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "117.44",
+        "unit": "KG",
+        "unit_price": "5.03",
+        "amount": "590.72",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "120.74",
+        "unit": "KG",
+        "unit_price": "15.29",
+        "amount": "1846.11",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "57",
+        "unit": "CTN",
+        "unit_price": "476.06",
+        "amount": "27135.42",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "38",
+        "unit": "PCS",
+        "unit_price": "165.54",
+        "amount": "6290.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "201",
+        "unit": "PCS",
+        "unit_price": "469.88",
+        "amount": "94445.88",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "191",
+        "unit": "PCS",
+        "unit_price": "272.69",
+        "amount": "52083.79",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "144",
+        "unit": "PCS",
+        "unit_price": "318.85",
+        "amount": "45914.40",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "199",
+        "unit": "SET",
+        "unit_price": "282.37",
+        "amount": "56191.63",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "527",
+        "unit": "SET",
+        "unit_price": "471.45",
+        "amount": "248454.15",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "707",
+        "unit": "PAIR",
+        "unit_price": "326.00",
+        "amount": "230482.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "633",
+        "unit": "PCS",
+        "unit_price": "368.34",
+        "amount": "233159.22",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "39",
+        "unit": "CTN",
+        "unit_price": "79.56",
+        "amount": "3102.84",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "1",
+        "unit": "PCS",
+        "unit_price": "19.51",
+        "amount": "19.51",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "416",
+        "unit": "PCS",
+        "unit_price": "484.21",
+        "amount": "201431.36",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1202579.07",
+    "gross_weight_kg": "4772.61",
+    "net_weight_kg": "4419.08"
+  },
+  "true_hs_codes": [
+    "8507.6000",
+    "3907.6100",
+    "0902.4000",
+    "4802.5600",
+    "4011.1000",
+    "8517.1300",
+    "6302.6000",
+    "9018.9010",
+    "8714.1000",
+    "6302.2100",
+    "4203.2900",
+    "8482.1000",
+    "6907.2100",
+    "8501.4000",
+    "9506.6200"
+  ],
+  "buyer_reference": null
+}

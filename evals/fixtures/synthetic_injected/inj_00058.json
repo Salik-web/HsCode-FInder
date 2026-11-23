@@ -1,0 +1,224 @@
+{
+  "id": "inj_00058",
+  "error": {
+    "kind": "future_date",
+    "path": "invoice_date",
+    "original": "2026-06-29",
+    "planted": "2026-10-25",
+    "method": "up to 180 days after 2026-10-01"
+  },
+  "invoice": {
+    "invoice_number": "CI/26/17297",
+    "invoice_date": "2026-10-25",
+    "shipper": {
+      "name": "Çamurcuoğlu Tic.",
+      "address": "Plot 330, Block C, Istanbul 40068",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Lajlaj, Man and Luay",
+      "address": "Plot 375, Block F, Karachi 80393",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Lajlaj, Man and Luay",
+      "address": "Plot 375, Block F, Karachi 80393",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "FAS",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Smartphones 5G",
+        "quantity": "35",
+        "unit": "PCS",
+        "unit_price": "468.83",
+        "amount": "16409.05",
+        "hs_code_on_doc": "8517.1300"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "43",
+        "unit": "PCS",
+        "unit_price": "477.79",
+        "amount": "20544.97",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "921",
+        "unit": "PAIR",
+        "unit_price": "37.46",
+        "amount": "34500.66",
+        "hs_code_on_doc": "4203.2900"
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "37.70",
+        "unit": "KG",
+        "unit_price": "387.39",
+        "amount": "14604.60",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "159",
+        "unit": "CTN",
+        "unit_price": "314.07",
+        "amount": "49937.13",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "460.55",
+        "unit": "KG",
+        "unit_price": "115.59",
+        "amount": "53234.97",
+        "hs_code_on_doc": "0902.4000"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "705",
+        "unit": "PCS",
+        "unit_price": "226.24",
+        "amount": "159499.20",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "190",
+        "unit": "PCS",
+        "unit_price": "250.32",
+        "amount": "47560.80",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "29",
+        "unit": "CTN",
+        "unit_price": "489.19",
+        "amount": "14186.51",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "833",
+        "unit": "PCS",
+        "unit_price": "355.92",
+        "amount": "296481.36",
+        "hs_code_on_doc": "6109.1000"
+      }
+    ],
+    "total_amount": "706959.25",
+    "gross_weight_kg": "8925.94",
+    "net_weight_kg": "8188.94"
+  },
+  "source": {
+    "invoice_number": "CI/26/17297",
+    "invoice_date": "2026-06-29",
+    "shipper": {
+      "name": "Çamurcuoğlu Tic.",
+      "address": "Plot 330, Block C, Istanbul 40068",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Lajlaj, Man and Luay",
+      "address": "Plot 375, Block F, Karachi 80393",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Lajlaj, Man and Luay",
+      "address": "Plot 375, Block F, Karachi 80393",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "FAS",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Smartphones 5G",
+        "quantity": "35",
+        "unit": "PCS",
+        "unit_price": "468.83",
+        "amount": "16409.05",
+        "hs_code_on_doc": "8517.1300"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "43",
+        "unit": "PCS",
+        "unit_price": "477.79",
+        "amount": "20544.97",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "921",
+        "unit": "PAIR",
+        "unit_price": "37.46",
+        "amount": "34500.66",
+        "hs_code_on_doc": "4203.2900"
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "37.70",
+        "unit": "KG",
+        "unit_price": "387.39",
+        "amount": "14604.60",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "159",
+        "unit": "CTN",
+        "unit_price": "314.07",
+        "amount": "49937.13",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "460.55",
+        "unit": "KG",
+        "unit_price": "115.59",
+        "amount": "53234.97",
+        "hs_code_on_doc": "0902.4000"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "705",
+        "unit": "PCS",
+        "unit_price": "226.24",
+        "amount": "159499.20",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "190",
+        "unit": "PCS",
+        "unit_price": "250.32",
+        "amount": "47560.80",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "29",
+        "unit": "CTN",
+        "unit_price": "489.19",
+        "amount": "14186.51",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "833",
+        "unit": "PCS",
+        "unit_price": "355.92",
+        "amount": "296481.36",
+        "hs_code_on_doc": "6109.1000"
+      }
+    ],
+    "total_amount": "706959.25",
+    "gross_weight_kg": "8925.94",
+    "net_weight_kg": "8188.94"
+  }
+}

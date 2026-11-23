@@ -1,0 +1,288 @@
+{
+  "id": "inj_00025",
+  "error": {
+    "kind": "wrong_total",
+    "path": "total_amount",
+    "original": "1614303.62",
+    "planted": "1614323.62",
+    "method": "change one digit"
+  },
+  "invoice": {
+    "invoice_number": "570-29353",
+    "invoice_date": "2026-06-20",
+    "shipper": {
+      "name": "Ioppi e figli",
+      "address": "Rotonda Pizzetti, 98 Piano 7 39016, St.Walburg Ulte (BZ)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Mitra Inc",
+      "address": "H.No. 725, Dyal Marg Tezpur-835558",
+      "country": "IN"
+    },
+    "consignee": {
+      "name": "Iftikhaar-Wahhaaj",
+      "address": "Plot 94, Block B, Karachi 10426",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "EXW",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "752",
+        "unit": "SET",
+        "unit_price": "484.59",
+        "amount": "364411.68",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "228.73",
+        "unit": "KG",
+        "unit_price": "91.29",
+        "amount": "20880.76",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "904",
+        "unit": "PCS",
+        "unit_price": "136.63",
+        "amount": "123513.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.38",
+        "unit": "MT",
+        "unit_price": "428.88",
+        "amount": "591.85",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "843.70",
+        "unit": "KG",
+        "unit_price": "142.99",
+        "amount": "120640.66",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "958.67",
+        "unit": "KG",
+        "unit_price": "52.32",
+        "amount": "50157.61",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "752",
+        "unit": "PCS",
+        "unit_price": "103.15",
+        "amount": "77568.80",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "705.29",
+        "unit": "KG",
+        "unit_price": "314.02",
+        "amount": "221475.17",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "598",
+        "unit": "PCS",
+        "unit_price": "133.86",
+        "amount": "80048.28",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "10",
+        "unit": "PCS",
+        "unit_price": "336.31",
+        "amount": "3363.10",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "17",
+        "unit": "PCS",
+        "unit_price": "430.54",
+        "amount": "7319.18",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "986",
+        "unit": "PCS",
+        "unit_price": "20.78",
+        "amount": "20489.08",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "812",
+        "unit": "PCS",
+        "unit_price": "49.53",
+        "amount": "40218.36",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "974.05",
+        "unit": "KG",
+        "unit_price": "496.51",
+        "amount": "483625.57",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1614323.62",
+    "gross_weight_kg": "9663.34",
+    "net_weight_kg": "9381.88"
+  },
+  "source": {
+    "invoice_number": "570-29353",
+    "invoice_date": "2026-06-20",
+    "shipper": {
+      "name": "Ioppi e figli",
+      "address": "Rotonda Pizzetti, 98 Piano 7 39016, St.Walburg Ulte (BZ)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Mitra Inc",
+      "address": "H.No. 725, Dyal Marg Tezpur-835558",
+      "country": "IN"
+    },
+    "consignee": {
+      "name": "Iftikhaar-Wahhaaj",
+      "address": "Plot 94, Block B, Karachi 10426",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "EXW",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "752",
+        "unit": "SET",
+        "unit_price": "484.59",
+        "amount": "364411.68",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "228.73",
+        "unit": "KG",
+        "unit_price": "91.29",
+        "amount": "20880.76",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "904",
+        "unit": "PCS",
+        "unit_price": "136.63",
+        "amount": "123513.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.38",
+        "unit": "MT",
+        "unit_price": "428.88",
+        "amount": "591.85",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "843.70",
+        "unit": "KG",
+        "unit_price": "142.99",
+        "amount": "120640.66",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "958.67",
+        "unit": "KG",
+        "unit_price": "52.32",
+        "amount": "50157.61",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "752",
+        "unit": "PCS",
+        "unit_price": "103.15",
+        "amount": "77568.80",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "705.29",
+        "unit": "KG",
+        "unit_price": "314.02",
+        "amount": "221475.17",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "598",
+        "unit": "PCS",
+        "unit_price": "133.86",
+        "amount": "80048.28",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "10",
+        "unit": "PCS",
+        "unit_price": "336.31",
+        "amount": "3363.10",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "17",
+        "unit": "PCS",
+        "unit_price": "430.54",
+        "amount": "7319.18",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "986",
+        "unit": "PCS",
+        "unit_price": "20.78",
+        "amount": "20489.08",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "812",
+        "unit": "PCS",
+        "unit_price": "49.53",
+        "amount": "40218.36",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "974.05",
+        "unit": "KG",
+        "unit_price": "496.51",
+        "amount": "483625.57",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1614303.62",
+    "gross_weight_kg": "9663.34",
+    "net_weight_kg": "9381.88"
+  }
+}

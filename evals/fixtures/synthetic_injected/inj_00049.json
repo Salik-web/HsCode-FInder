@@ -1,0 +1,136 @@
+{
+  "id": "inj_00049",
+  "error": {
+    "kind": "wrong_total",
+    "path": "total_amount",
+    "original": "583516.07",
+    "planted": "5835160.70",
+    "method": "shift the decimal point"
+  },
+  "invoice": {
+    "invoice_number": "177-24400",
+    "invoice_date": "2026-01-29",
+    "shipper": {
+      "name": "İnönü San.",
+      "address": "Plot 154, Block G, Bursa 41819",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Bilaal-Rabbani",
+      "address": "Plot 73, Block C, Karachi 82725",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Bilaal-Rabbani",
+      "address": "Plot 73, Block C, Karachi 82725",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Limazah and Sons",
+      "address": "Plot 37, Block D, Karachi 62530",
+      "country": "PK"
+    },
+    "incoterm": "CIF",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "83.78",
+        "unit": "MTR",
+        "unit_price": "448.96",
+        "amount": "37613.87",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "805.36",
+        "unit": "KG",
+        "unit_price": "435.65",
+        "amount": "350855.08",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "611.05",
+        "unit": "KG",
+        "unit_price": "251.00",
+        "amount": "153373.55",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "389",
+        "unit": "PCS",
+        "unit_price": "107.13",
+        "amount": "41673.57",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "5835160.70",
+    "gross_weight_kg": "1643.01",
+    "net_weight_kg": "1564.77"
+  },
+  "source": {
+    "invoice_number": "177-24400",
+    "invoice_date": "2026-01-29",
+    "shipper": {
+      "name": "İnönü San.",
+      "address": "Plot 154, Block G, Bursa 41819",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Bilaal-Rabbani",
+      "address": "Plot 73, Block C, Karachi 82725",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Bilaal-Rabbani",
+      "address": "Plot 73, Block C, Karachi 82725",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Limazah and Sons",
+      "address": "Plot 37, Block D, Karachi 62530",
+      "country": "PK"
+    },
+    "incoterm": "CIF",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "83.78",
+        "unit": "MTR",
+        "unit_price": "448.96",
+        "amount": "37613.87",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "805.36",
+        "unit": "KG",
+        "unit_price": "435.65",
+        "amount": "350855.08",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "611.05",
+        "unit": "KG",
+        "unit_price": "251.00",
+        "amount": "153373.55",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "389",
+        "unit": "PCS",
+        "unit_price": "107.13",
+        "amount": "41673.57",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "583516.07",
+    "gross_weight_kg": "1643.01",
+    "net_weight_kg": "1564.77"
+  }
+}

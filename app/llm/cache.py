@@ -70,10 +70,18 @@ class CachingClient:
     def model(self) -> str:
         return self._inner.model
 
+    @property
+    def call_options(self) -> dict[str, str]:
+        return self._call_options
+
+    def path_for(self, request: LLMRequest) -> Path:
+        """Where this request's answer is (or would be) stored; the eval gate copies it."""
+        return self._path(cache_key(request, self.model, self._call_options))
+
     def complete(self, request: LLMRequest) -> LLMResponse:
-        path = self._path(cache_key(request, self.model, self._call_options))
+        path = self.path_for(request)
         if path.exists():
-            return _replay(CacheEntry.model_validate_json(path.read_bytes()))
+            return replay(CacheEntry.model_validate_json(path.read_bytes()))
         try:
             response = self._inner.complete(request)
         except SchemaViolationError as error:
@@ -111,7 +119,8 @@ class CachingClient:
         return self._cache_dir / key[:2] / f"{key}.json"
 
 
-def _replay(entry: CacheEntry) -> LLMResponse:
+def replay(entry: CacheEntry) -> LLMResponse:
+    """The stored answer as the provider gave it: a response, or its schema rejection."""
     if entry.rejection is not None:
         rejection = entry.rejection
         error = SchemaViolationError(

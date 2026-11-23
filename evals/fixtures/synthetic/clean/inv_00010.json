@@ -1,0 +1,117 @@
+{
+  "invoice": {
+    "invoice_number": "211-76223",
+    "invoice_date": "2025-12-24",
+    "shipper": {
+      "name": "Hnos Arcos S.A.",
+      "address": "Vial de Elisa Cabello 19 Puerta 2 Jaén, 12807",
+      "country": "ES"
+    },
+    "buyer": {
+      "name": "Aryan-Darain",
+      "address": "Plot 211, Block C, Peshawar 75245",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Aryan-Darain",
+      "address": "Plot 211, Block C, Peshawar 75245",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Radi LLC",
+      "address": "Plot 167, Block D, Peshawar 54328",
+      "country": "PK"
+    },
+    "incoterm": "CPT",
+    "currency": "GBP",
+    "line_items": [
+      {
+        "description": "Ball bearings",
+        "quantity": "953",
+        "unit": "PCS",
+        "unit_price": "417.16",
+        "amount": "397553.48",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "438",
+        "unit": "PAIR",
+        "unit_price": "321.67",
+        "amount": "140891.46",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "850.56",
+        "unit": "KG",
+        "unit_price": "480.33",
+        "amount": "408549.48",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "78",
+        "unit": "CTN",
+        "unit_price": "441.37",
+        "amount": "34426.86",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "786",
+        "unit": "SET",
+        "unit_price": "1.18",
+        "amount": "927.48",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "482.07",
+        "unit": "MTR",
+        "unit_price": "220.95",
+        "amount": "106513.37",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "335.87",
+        "unit": "KG",
+        "unit_price": "374.84",
+        "amount": "125897.51",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "598",
+        "unit": "PCS",
+        "unit_price": "73.98",
+        "amount": "44240.04",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "639",
+        "unit": "PCS",
+        "unit_price": "435.35",
+        "amount": "278188.65",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1537188.33",
+    "gross_weight_kg": "6581.35",
+    "net_weight_kg": "6093.84"
+  },
+  "true_hs_codes": [
+    "8482.1000",
+    "4203.2900",
+    "5205.2400",
+    "6907.2100",
+    "6302.2100",
+    "5209.4200",
+    "8544.1100",
+    "6302.6000",
+    "9405.4200"
+  ],
+  "buyer_reference": "As consignee"
+}

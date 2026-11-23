@@ -1,0 +1,248 @@
+{
+  "id": "inj_00027",
+  "error": {
+    "kind": "invalid_incoterm",
+    "path": "incoterm",
+    "original": "CIF",
+    "planted": "DAF",
+    "method": "outdated or informal term"
+  },
+  "invoice": {
+    "invoice_number": "386-69501",
+    "invoice_date": "2026-04-27",
+    "shipper": {
+      "name": "Agnesi e figli",
+      "address": "Viale Flora, 31 Appartamento 41 91017, Scauri (TP)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Kasim Ltd",
+      "address": "Plot 124, Block A, Faisalabad 38480",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Kasim Ltd",
+      "address": "Plot 124, Block A, Faisalabad 38480",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Bambad-Saburah",
+      "address": "Plot 3, Block C, Faisalabad 36364",
+      "country": "PK"
+    },
+    "incoterm": "DAF",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Copper winding wire",
+        "quantity": "408.98",
+        "unit": "KG",
+        "unit_price": "168.24",
+        "amount": "68806.80",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "394",
+        "unit": "SET",
+        "unit_price": "145.27",
+        "amount": "57236.38",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.04",
+        "unit": "MT",
+        "unit_price": "200.36",
+        "amount": "208.37",
+        "hs_code_on_doc": "7208.3700"
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "526",
+        "unit": "PCS",
+        "unit_price": "346.39",
+        "amount": "182201.14",
+        "hs_code_on_doc": "8482.1000"
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "744.27",
+        "unit": "KG",
+        "unit_price": "223.25",
+        "amount": "166158.28",
+        "hs_code_on_doc": "3902.1000"
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "131",
+        "unit": "PCS",
+        "unit_price": "393.93",
+        "amount": "51604.83",
+        "hs_code_on_doc": "9506.6200"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "803",
+        "unit": "PCS",
+        "unit_price": "396.63",
+        "amount": "318493.89",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "47",
+        "unit": "PCS",
+        "unit_price": "66.36",
+        "amount": "3118.92",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "26",
+        "unit": "PCS",
+        "unit_price": "325.94",
+        "amount": "8474.44",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "402",
+        "unit": "PCS",
+        "unit_price": "435.49",
+        "amount": "175066.98",
+        "hs_code_on_doc": "9405.4200"
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "268",
+        "unit": "SET",
+        "unit_price": "164.81",
+        "amount": "44169.08",
+        "hs_code_on_doc": "8714.1000"
+      }
+    ],
+    "total_amount": "1075539.11",
+    "gross_weight_kg": "7222.13",
+    "net_weight_kg": "7011.78"
+  },
+  "source": {
+    "invoice_number": "386-69501",
+    "invoice_date": "2026-04-27",
+    "shipper": {
+      "name": "Agnesi e figli",
+      "address": "Viale Flora, 31 Appartamento 41 91017, Scauri (TP)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Kasim Ltd",
+      "address": "Plot 124, Block A, Faisalabad 38480",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Kasim Ltd",
+      "address": "Plot 124, Block A, Faisalabad 38480",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Bambad-Saburah",
+      "address": "Plot 3, Block C, Faisalabad 36364",
+      "country": "PK"
+    },
+    "incoterm": "CIF",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Copper winding wire",
+        "quantity": "408.98",
+        "unit": "KG",
+        "unit_price": "168.24",
+        "amount": "68806.80",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "394",
+        "unit": "SET",
+        "unit_price": "145.27",
+        "amount": "57236.38",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.04",
+        "unit": "MT",
+        "unit_price": "200.36",
+        "amount": "208.37",
+        "hs_code_on_doc": "7208.3700"
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "526",
+        "unit": "PCS",
+        "unit_price": "346.39",
+        "amount": "182201.14",
+        "hs_code_on_doc": "8482.1000"
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "744.27",
+        "unit": "KG",
+        "unit_price": "223.25",
+        "amount": "166158.28",
+        "hs_code_on_doc": "3902.1000"
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "131",
+        "unit": "PCS",
+        "unit_price": "393.93",
+        "amount": "51604.83",
+        "hs_code_on_doc": "9506.6200"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "803",
+        "unit": "PCS",
+        "unit_price": "396.63",
+        "amount": "318493.89",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "47",
+        "unit": "PCS",
+        "unit_price": "66.36",
+        "amount": "3118.92",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "26",
+        "unit": "PCS",
+        "unit_price": "325.94",
+        "amount": "8474.44",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "402",
+        "unit": "PCS",
+        "unit_price": "435.49",
+        "amount": "175066.98",
+        "hs_code_on_doc": "9405.4200"
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "268",
+        "unit": "SET",
+        "unit_price": "164.81",
+        "amount": "44169.08",
+        "hs_code_on_doc": "8714.1000"
+      }
+    ],
+    "total_amount": "1075539.11",
+    "gross_weight_kg": "7222.13",
+    "net_weight_kg": "7011.78"
+  }
+}

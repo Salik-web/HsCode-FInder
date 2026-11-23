@@ -1,0 +1,264 @@
+{
+  "id": "inj_00020",
+  "error": {
+    "kind": "net_over_gross",
+    "path": "net_weight_kg",
+    "original": "9138.90",
+    "planted": "9687.23",
+    "method": "swap net and gross"
+  },
+  "invoice": {
+    "invoice_number": "CI/26/44751",
+    "invoice_date": "2026-02-11",
+    "shipper": {
+      "name": "Aabid, Yadid and Eshan",
+      "address": "Plot 61, Block G, Karachi 71444",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Leal y Amaya S.C.P",
+      "address": "Alameda Eustaquio Lago 80 Sevilla, 29141",
+      "country": "ES"
+    },
+    "consignee": {
+      "name": "Leal y Amaya S.C.P",
+      "address": "Alameda Eustaquio Lago 80 Sevilla, 29141",
+      "country": "ES"
+    },
+    "notify_party": {
+      "name": "Hermanos Alemán S.A.",
+      "address": "Acceso de Modesta Ferrándiz 7 Puerta 5 Toledo, 01450",
+      "country": "ES"
+    },
+    "incoterm": "CIF",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Ball bearings",
+        "quantity": "51",
+        "unit": "PCS",
+        "unit_price": "239.64",
+        "amount": "12221.64",
+        "hs_code_on_doc": "8482.1000"
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "23",
+        "unit": "BAG",
+        "unit_price": "234.13",
+        "amount": "5384.99",
+        "hs_code_on_doc": "2523.2900"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "124.70",
+        "unit": "KG",
+        "unit_price": "373.78",
+        "amount": "46610.37",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "71",
+        "unit": "PCS",
+        "unit_price": "169.76",
+        "amount": "12052.96",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "53",
+        "unit": "CTN",
+        "unit_price": "484.39",
+        "amount": "25672.67",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "716.58",
+        "unit": "KG",
+        "unit_price": "22.34",
+        "amount": "16008.40",
+        "hs_code_on_doc": "0902.4000"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "71",
+        "unit": "PCS",
+        "unit_price": "63.79",
+        "amount": "4529.09",
+        "hs_code_on_doc": "8501.4000"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "437",
+        "unit": "PCS",
+        "unit_price": "154.54",
+        "amount": "67533.98",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "879.24",
+        "unit": "MTR",
+        "unit_price": "161.04",
+        "amount": "141592.81",
+        "hs_code_on_doc": "5209.4200"
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "890.57",
+        "unit": "KG",
+        "unit_price": "124.10",
+        "amount": "110519.74",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "23",
+        "unit": "PCS",
+        "unit_price": "470.72",
+        "amount": "10826.56",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "395",
+        "unit": "PCS",
+        "unit_price": "393.98",
+        "amount": "155622.10",
+        "hs_code_on_doc": "8471.3010"
+      }
+    ],
+    "total_amount": "608575.31",
+    "gross_weight_kg": "9138.90",
+    "net_weight_kg": "9687.23"
+  },
+  "source": {
+    "invoice_number": "CI/26/44751",
+    "invoice_date": "2026-02-11",
+    "shipper": {
+      "name": "Aabid, Yadid and Eshan",
+      "address": "Plot 61, Block G, Karachi 71444",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Leal y Amaya S.C.P",
+      "address": "Alameda Eustaquio Lago 80 Sevilla, 29141",
+      "country": "ES"
+    },
+    "consignee": {
+      "name": "Leal y Amaya S.C.P",
+      "address": "Alameda Eustaquio Lago 80 Sevilla, 29141",
+      "country": "ES"
+    },
+    "notify_party": {
+      "name": "Hermanos Alemán S.A.",
+      "address": "Acceso de Modesta Ferrándiz 7 Puerta 5 Toledo, 01450",
+      "country": "ES"
+    },
+    "incoterm": "CIF",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Ball bearings",
+        "quantity": "51",
+        "unit": "PCS",
+        "unit_price": "239.64",
+        "amount": "12221.64",
+        "hs_code_on_doc": "8482.1000"
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "23",
+        "unit": "BAG",
+        "unit_price": "234.13",
+        "amount": "5384.99",
+        "hs_code_on_doc": "2523.2900"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "124.70",
+        "unit": "KG",
+        "unit_price": "373.78",
+        "amount": "46610.37",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "71",
+        "unit": "PCS",
+        "unit_price": "169.76",
+        "amount": "12052.96",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "53",
+        "unit": "CTN",
+        "unit_price": "484.39",
+        "amount": "25672.67",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "716.58",
+        "unit": "KG",
+        "unit_price": "22.34",
+        "amount": "16008.40",
+        "hs_code_on_doc": "0902.4000"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "71",
+        "unit": "PCS",
+        "unit_price": "63.79",
+        "amount": "4529.09",
+        "hs_code_on_doc": "8501.4000"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "437",
+        "unit": "PCS",
+        "unit_price": "154.54",
+        "amount": "67533.98",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "879.24",
+        "unit": "MTR",
+        "unit_price": "161.04",
+        "amount": "141592.81",
+        "hs_code_on_doc": "5209.4200"
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "890.57",
+        "unit": "KG",
+        "unit_price": "124.10",
+        "amount": "110519.74",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "23",
+        "unit": "PCS",
+        "unit_price": "470.72",
+        "amount": "10826.56",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "395",
+        "unit": "PCS",
+        "unit_price": "393.98",
+        "amount": "155622.10",
+        "hs_code_on_doc": "8471.3010"
+      }
+    ],
+    "total_amount": "608575.31",
+    "gross_weight_kg": "9687.23",
+    "net_weight_kg": "9138.90"
+  }
+}

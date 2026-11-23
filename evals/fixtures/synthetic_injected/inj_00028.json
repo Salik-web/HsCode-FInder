@@ -1,0 +1,168 @@
+{
+  "id": "inj_00028",
+  "error": {
+    "kind": "future_date",
+    "path": "invoice_date",
+    "original": "2025-11-06",
+    "planted": "2026-11-07",
+    "method": "up to 180 days after 2026-10-01"
+  },
+  "invoice": {
+    "invoice_number": "INV-2025-55081",
+    "invoice_date": "2026-11-07",
+    "shipper": {
+      "name": "Cainero e figli",
+      "address": "Strada Navone, 61 Piano 5 35042, Este (PD)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Fidvi, Awmar and Zaheer",
+      "address": "Plot 363, Block D, Multan 54051",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Urrab-Ubadah",
+      "address": "Plot 176, Block F, Peshawar 33195",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Aasif Inc",
+      "address": "Plot 92, Block A, Sialkot 55487",
+      "country": "PK"
+    },
+    "incoterm": "CIP",
+    "currency": "GBP",
+    "line_items": [
+      {
+        "description": "Ball bearings",
+        "quantity": "924",
+        "unit": "PCS",
+        "unit_price": "480.66",
+        "amount": "444129.84",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "409",
+        "unit": "PAIR",
+        "unit_price": "486.70",
+        "amount": "199060.30",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "690",
+        "unit": "PCS",
+        "unit_price": "435.79",
+        "amount": "300695.10",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "239.65",
+        "unit": "KG",
+        "unit_price": "357.51",
+        "amount": "85677.27",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "507.65",
+        "unit": "KG",
+        "unit_price": "273.85",
+        "amount": "139019.95",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "100",
+        "unit": "CTN",
+        "unit_price": "177.75",
+        "amount": "17775.00",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1186357.46",
+    "gross_weight_kg": "2567.29",
+    "net_weight_kg": "2468.55"
+  },
+  "source": {
+    "invoice_number": "INV-2025-55081",
+    "invoice_date": "2025-11-06",
+    "shipper": {
+      "name": "Cainero e figli",
+      "address": "Strada Navone, 61 Piano 5 35042, Este (PD)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Fidvi, Awmar and Zaheer",
+      "address": "Plot 363, Block D, Multan 54051",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Urrab-Ubadah",
+      "address": "Plot 176, Block F, Peshawar 33195",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Aasif Inc",
+      "address": "Plot 92, Block A, Sialkot 55487",
+      "country": "PK"
+    },
+    "incoterm": "CIP",
+    "currency": "GBP",
+    "line_items": [
+      {
+        "description": "Ball bearings",
+        "quantity": "924",
+        "unit": "PCS",
+        "unit_price": "480.66",
+        "amount": "444129.84",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "409",
+        "unit": "PAIR",
+        "unit_price": "486.70",
+        "amount": "199060.30",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "690",
+        "unit": "PCS",
+        "unit_price": "435.79",
+        "amount": "300695.10",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "239.65",
+        "unit": "KG",
+        "unit_price": "357.51",
+        "amount": "85677.27",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "507.65",
+        "unit": "KG",
+        "unit_price": "273.85",
+        "amount": "139019.95",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "100",
+        "unit": "CTN",
+        "unit_price": "177.75",
+        "amount": "17775.00",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1186357.46",
+    "gross_weight_kg": "2567.29",
+    "net_weight_kg": "2468.55"
+  }
+}

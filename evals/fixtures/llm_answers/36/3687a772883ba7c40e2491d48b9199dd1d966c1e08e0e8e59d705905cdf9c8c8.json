@@ -1,0 +1,21 @@
+{
+  "document_sha256": "b77a1ab9064f0ab20ffd07a47f7857903b14f385a074a16767b37101ac743335",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"INV-2026-26949\",\"invoice_date\":\"2026-04-10\",\"shipper\":{\"name\":\"General Motors Nederland\",\"address\":\"Luuklaan 0 7871 MK Zelhem\",\"country\":\"NL\"},\"buyer\":{\"name\":\"Parry, Wilkins and Campbell\",\"address\":\"2 Gillian Ridges Lake Bethanybury SR7 4RR\",\"country\":\"GB\"},\"consignee\":{\"name\":\"Jalaal, Darain and Basheerah\",\"address\":\"Plot 373, Block F, Multan 29807\",\"country\":\"PK\"},\"notify_party\":null,\"incoterm\":\"CIP\",\"currency\":\"SAR\",\"line_items\":[[\"Men's cotton T-shirts\",\"399\",\"PCS\",\"30.41\",\"12133.59\",null],[\"Centrifugal water pumps\",\"79\",\"PCS\",\"15.51\",\"1225.29\",null],[\"Printing paper A4 80 gsm\",\"123\",\"CTN\",\"170.47\",\"20967.81\",null],[\"Cotton terry towels\",\"480\",\"PCS\",\"459.39\",\"220507.20\",null],[\"Laptop computers 14 inch\",\"418\",\"PCS\",\"364.70\",\"152444.60\",null],[\"Polypropylene granules\",\"689.30\",\"KG\",\"311.02\",\"214386.09\",null],[\"Copper winding wire\",\"968.16\",\"KG\",\"18.09\",\"17514.01\",null],[\"PET resin bottle grade\",\"326.92\",\"KG\",\"166.38\",\"54392.95\",null]],\"total_amount\":\"693571.54\",\"gross_weight_kg\":\"6457.71\",\"net_weight_kg\":\"5924.50\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 3317,
+      "output_tokens": 456
+    },
+    "latency_ms": 17023,
+    "cost_usd": "0",
+    "cached": false
+  }
+}

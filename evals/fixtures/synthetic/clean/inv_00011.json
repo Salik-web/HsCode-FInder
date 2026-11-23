@@ -1,0 +1,86 @@
+{
+  "invoice": {
+    "invoice_number": "CI/26/43639",
+    "invoice_date": "2026-04-11",
+    "shipper": {
+      "name": "Thornton Ltd",
+      "address": "21058 Hughes Brook Apt. 051 Alvarezbury, VA 31870",
+      "country": "US"
+    },
+    "buyer": {
+      "name": "Sabir-Ghanee",
+      "address": "Plot 30, Block C, Rawalpindi 19311",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Sabir-Ghanee",
+      "address": "Plot 30, Block C, Rawalpindi 19311",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "FCA",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Refined palm olein",
+        "quantity": "36.93",
+        "unit": "KG",
+        "unit_price": "271.31",
+        "amount": "10019.48",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "42",
+        "unit": "PCS",
+        "unit_price": "495.04",
+        "amount": "20791.68",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "584",
+        "unit": "SET",
+        "unit_price": "58.92",
+        "amount": "34409.28",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "711",
+        "unit": "PCS",
+        "unit_price": "334.31",
+        "amount": "237694.41",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "893",
+        "unit": "PCS",
+        "unit_price": "266.98",
+        "amount": "238413.14",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "914",
+        "unit": "PCS",
+        "unit_price": "304.48",
+        "amount": "278294.72",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "819622.71",
+    "gross_weight_kg": "3871.69",
+    "net_weight_kg": "3584.90"
+  },
+  "true_hs_codes": [
+    "1511.9020",
+    "8413.7010",
+    "6302.2100",
+    "6109.1000",
+    "9506.6200",
+    "8471.3010"
+  ],
+  "buyer_reference": "Same as consignee details"
+}

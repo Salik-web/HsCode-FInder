@@ -1,0 +1,224 @@
+{
+  "id": "inj_00001",
+  "error": {
+    "kind": "wrong_total",
+    "path": "total_amount",
+    "original": "909994.26",
+    "planted": "990994.26",
+    "method": "swap two adjacent digits"
+  },
+  "invoice": {
+    "invoice_number": "EXP2565863",
+    "invoice_date": "2025-12-08",
+    "shipper": {
+      "name": "Ertaş Alemdar A.Ş.",
+      "address": "Plot 323, Block D, Izmir 28423",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Garzón y Nevado S.C.P",
+      "address": "Ronda Montserrat Moliner 83 Granada, 02058",
+      "country": "ES"
+    },
+    "consignee": {
+      "name": "Reynolds and Sons",
+      "address": "Studio 90 Gail Isle Lake Nicholasfurt W56 8NS",
+      "country": "GB"
+    },
+    "notify_party": null,
+    "incoterm": "CIP",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "610",
+        "unit": "PCS",
+        "unit_price": "53.79",
+        "amount": "32811.90",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "624",
+        "unit": "PCS",
+        "unit_price": "496.29",
+        "amount": "309684.96",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "75",
+        "unit": "PCS",
+        "unit_price": "158.27",
+        "amount": "11870.25",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "1.69",
+        "unit": "KG",
+        "unit_price": "389.00",
+        "amount": "657.41",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "729.99",
+        "unit": "KG",
+        "unit_price": "444.31",
+        "amount": "324341.86",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "818.16",
+        "unit": "KG",
+        "unit_price": "17.43",
+        "amount": "14260.53",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "542.81",
+        "unit": "KG",
+        "unit_price": "99.27",
+        "amount": "53884.75",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "963",
+        "unit": "PCS",
+        "unit_price": "156.88",
+        "amount": "151075.44",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "24",
+        "unit": "CTN",
+        "unit_price": "136.31",
+        "amount": "3271.44",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "131.01",
+        "unit": "MTR",
+        "unit_price": "62.10",
+        "amount": "8135.72",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "990994.26",
+    "gross_weight_kg": "4901.64",
+    "net_weight_kg": "4713.12"
+  },
+  "source": {
+    "invoice_number": "EXP2565863",
+    "invoice_date": "2025-12-08",
+    "shipper": {
+      "name": "Ertaş Alemdar A.Ş.",
+      "address": "Plot 323, Block D, Izmir 28423",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Garzón y Nevado S.C.P",
+      "address": "Ronda Montserrat Moliner 83 Granada, 02058",
+      "country": "ES"
+    },
+    "consignee": {
+      "name": "Reynolds and Sons",
+      "address": "Studio 90 Gail Isle Lake Nicholasfurt W56 8NS",
+      "country": "GB"
+    },
+    "notify_party": null,
+    "incoterm": "CIP",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "610",
+        "unit": "PCS",
+        "unit_price": "53.79",
+        "amount": "32811.90",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "624",
+        "unit": "PCS",
+        "unit_price": "496.29",
+        "amount": "309684.96",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "75",
+        "unit": "PCS",
+        "unit_price": "158.27",
+        "amount": "11870.25",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "1.69",
+        "unit": "KG",
+        "unit_price": "389.00",
+        "amount": "657.41",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "729.99",
+        "unit": "KG",
+        "unit_price": "444.31",
+        "amount": "324341.86",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "818.16",
+        "unit": "KG",
+        "unit_price": "17.43",
+        "amount": "14260.53",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "542.81",
+        "unit": "KG",
+        "unit_price": "99.27",
+        "amount": "53884.75",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "963",
+        "unit": "PCS",
+        "unit_price": "156.88",
+        "amount": "151075.44",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "24",
+        "unit": "CTN",
+        "unit_price": "136.31",
+        "amount": "3271.44",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "131.01",
+        "unit": "MTR",
+        "unit_price": "62.10",
+        "amount": "8135.72",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "909994.26",
+    "gross_weight_kg": "4901.64",
+    "net_weight_kg": "4713.12"
+  }
+}

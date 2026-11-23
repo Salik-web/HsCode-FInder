@@ -1,0 +1,128 @@
+{
+  "id": "inj_00050",
+  "error": {
+    "kind": "net_over_gross",
+    "path": "net_weight_kg",
+    "original": "2359.51",
+    "planted": "2548.27",
+    "method": "swap net and gross"
+  },
+  "invoice": {
+    "invoice_number": "EXP2637496",
+    "invoice_date": "2026-03-14",
+    "shipper": {
+      "name": "Raashid Inc",
+      "address": "Plot 287, Block E, Peshawar 87258",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Staglieno, Capecchi e Tuzzolino e figli",
+      "address": "Stretto Caterina, 47 Piano 5 10058, Colle Sestriere (TO)",
+      "country": "IT"
+    },
+    "consignee": {
+      "name": "Staglieno, Capecchi e Tuzzolino e figli",
+      "address": "Stretto Caterina, 47 Piano 5 10058, Colle Sestriere (TO)",
+      "country": "IT"
+    },
+    "notify_party": null,
+    "incoterm": "EXW",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "225.37",
+        "unit": "KG",
+        "unit_price": "297.21",
+        "amount": "66982.22",
+        "hs_code_on_doc": "0902.4000"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "22",
+        "unit": "PCS",
+        "unit_price": "131.16",
+        "amount": "2885.52",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "70",
+        "unit": "CTN",
+        "unit_price": "14.75",
+        "amount": "1032.50",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "407.14",
+        "unit": "KG",
+        "unit_price": "310.67",
+        "amount": "126486.18",
+        "hs_code_on_doc": "5205.2400"
+      }
+    ],
+    "total_amount": "197386.42",
+    "gross_weight_kg": "2359.51",
+    "net_weight_kg": "2548.27"
+  },
+  "source": {
+    "invoice_number": "EXP2637496",
+    "invoice_date": "2026-03-14",
+    "shipper": {
+      "name": "Raashid Inc",
+      "address": "Plot 287, Block E, Peshawar 87258",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Staglieno, Capecchi e Tuzzolino e figli",
+      "address": "Stretto Caterina, 47 Piano 5 10058, Colle Sestriere (TO)",
+      "country": "IT"
+    },
+    "consignee": {
+      "name": "Staglieno, Capecchi e Tuzzolino e figli",
+      "address": "Stretto Caterina, 47 Piano 5 10058, Colle Sestriere (TO)",
+      "country": "IT"
+    },
+    "notify_party": null,
+    "incoterm": "EXW",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "225.37",
+        "unit": "KG",
+        "unit_price": "297.21",
+        "amount": "66982.22",
+        "hs_code_on_doc": "0902.4000"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "22",
+        "unit": "PCS",
+        "unit_price": "131.16",
+        "amount": "2885.52",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "70",
+        "unit": "CTN",
+        "unit_price": "14.75",
+        "amount": "1032.50",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "407.14",
+        "unit": "KG",
+        "unit_price": "310.67",
+        "amount": "126486.18",
+        "hs_code_on_doc": "5205.2400"
+      }
+    ],
+    "total_amount": "197386.42",
+    "gross_weight_kg": "2548.27",
+    "net_weight_kg": "2359.51"
+  }
+}

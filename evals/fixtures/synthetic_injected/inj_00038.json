@@ -1,0 +1,160 @@
+{
+  "id": "inj_00038",
+  "error": {
+    "kind": "net_over_gross",
+    "path": "net_weight_kg",
+    "original": "3785.43",
+    "planted": "3936.85",
+    "method": "swap net and gross"
+  },
+  "invoice": {
+    "invoice_number": "EXP2655660",
+    "invoice_date": "2026-03-02",
+    "shipper": {
+      "name": "Taylor, Neal and Parrish",
+      "address": "2164 Bowman Branch Lake Nathan, MA 60234",
+      "country": "US"
+    },
+    "buyer": {
+      "name": "Quadir, Qusay and Zaahid",
+      "address": "Plot 367, Block F, Sialkot 66952",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Quadir, Qusay and Zaahid",
+      "address": "Plot 367, Block F, Sialkot 66952",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "FOB",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "12",
+        "unit": "PCS",
+        "unit_price": "446.92",
+        "amount": "5363.04",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "469.03",
+        "unit": "KG",
+        "unit_price": "216.28",
+        "amount": "101441.81",
+        "hs_code_on_doc": "0902.4000"
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "419.98",
+        "unit": "KG",
+        "unit_price": "393.14",
+        "amount": "165110.94",
+        "hs_code_on_doc": "3902.1000"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "71",
+        "unit": "PCS",
+        "unit_price": "347.48",
+        "amount": "24671.08",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "317",
+        "unit": "PCS",
+        "unit_price": "496.92",
+        "amount": "157523.64",
+        "hs_code_on_doc": "9506.6200"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "232.11",
+        "unit": "KG",
+        "unit_price": "268.34",
+        "amount": "62284.40",
+        "hs_code_on_doc": "1511.9020"
+      }
+    ],
+    "total_amount": "516394.91",
+    "gross_weight_kg": "3785.43",
+    "net_weight_kg": "3936.85"
+  },
+  "source": {
+    "invoice_number": "EXP2655660",
+    "invoice_date": "2026-03-02",
+    "shipper": {
+      "name": "Taylor, Neal and Parrish",
+      "address": "2164 Bowman Branch Lake Nathan, MA 60234",
+      "country": "US"
+    },
+    "buyer": {
+      "name": "Quadir, Qusay and Zaahid",
+      "address": "Plot 367, Block F, Sialkot 66952",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Quadir, Qusay and Zaahid",
+      "address": "Plot 367, Block F, Sialkot 66952",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "FOB",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "12",
+        "unit": "PCS",
+        "unit_price": "446.92",
+        "amount": "5363.04",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "469.03",
+        "unit": "KG",
+        "unit_price": "216.28",
+        "amount": "101441.81",
+        "hs_code_on_doc": "0902.4000"
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "419.98",
+        "unit": "KG",
+        "unit_price": "393.14",
+        "amount": "165110.94",
+        "hs_code_on_doc": "3902.1000"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "71",
+        "unit": "PCS",
+        "unit_price": "347.48",
+        "amount": "24671.08",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "317",
+        "unit": "PCS",
+        "unit_price": "496.92",
+        "amount": "157523.64",
+        "hs_code_on_doc": "9506.6200"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "232.11",
+        "unit": "KG",
+        "unit_price": "268.34",
+        "amount": "62284.40",
+        "hs_code_on_doc": "1511.9020"
+      }
+    ],
+    "total_amount": "516394.91",
+    "gross_weight_kg": "3936.85",
+    "net_weight_kg": "3785.43"
+  }
+}

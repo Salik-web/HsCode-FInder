@@ -1,0 +1,240 @@
+{
+  "id": "inj_00015",
+  "error": {
+    "kind": "invalid_incoterm",
+    "path": "incoterm",
+    "original": "DDP",
+    "planted": "DDU",
+    "method": "outdated or informal term"
+  },
+  "invoice": {
+    "invoice_number": "INV-2026-05389",
+    "invoice_date": "2026-03-23",
+    "shipper": {
+      "name": "Fábrica Pineda & Asociados S.L.",
+      "address": "Glorieta Duilio Pablo 41 Piso 1 Castellón, 36899",
+      "country": "ES"
+    },
+    "buyer": {
+      "name": "Demirel Şti.",
+      "address": "Plot 215, Block E, Mersin 15019",
+      "country": "TR"
+    },
+    "consignee": {
+      "name": "Çamurcuoğlu A.Ş.",
+      "address": "Plot 364, Block F, Istanbul 31294",
+      "country": "TR"
+    },
+    "notify_party": null,
+    "incoterm": "DDU",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Cotton terry towels",
+        "quantity": "932",
+        "unit": "PCS",
+        "unit_price": "43.57",
+        "amount": "40607.24",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "19",
+        "unit": "PCS",
+        "unit_price": "322.61",
+        "amount": "6129.59",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "44",
+        "unit": "CTN",
+        "unit_price": "219.66",
+        "amount": "9665.04",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "46",
+        "unit": "CTN",
+        "unit_price": "309.62",
+        "amount": "14242.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "279.40",
+        "unit": "KG",
+        "unit_price": "484.42",
+        "amount": "135346.95",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "741.79",
+        "unit": "MTR",
+        "unit_price": "479.86",
+        "amount": "355955.35",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "631",
+        "unit": "PCS",
+        "unit_price": "200.54",
+        "amount": "126540.74",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "644",
+        "unit": "PAIR",
+        "unit_price": "129.41",
+        "amount": "83340.04",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "15",
+        "unit": "PCS",
+        "unit_price": "297.33",
+        "amount": "4459.95",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "900.63",
+        "unit": "KG",
+        "unit_price": "295.07",
+        "amount": "265748.89",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "255",
+        "unit": "PCS",
+        "unit_price": "47.85",
+        "amount": "12201.75",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1054238.06",
+    "gross_weight_kg": "6692.37",
+    "net_weight_kg": "6083.97"
+  },
+  "source": {
+    "invoice_number": "INV-2026-05389",
+    "invoice_date": "2026-03-23",
+    "shipper": {
+      "name": "Fábrica Pineda & Asociados S.L.",
+      "address": "Glorieta Duilio Pablo 41 Piso 1 Castellón, 36899",
+      "country": "ES"
+    },
+    "buyer": {
+      "name": "Demirel Şti.",
+      "address": "Plot 215, Block E, Mersin 15019",
+      "country": "TR"
+    },
+    "consignee": {
+      "name": "Çamurcuoğlu A.Ş.",
+      "address": "Plot 364, Block F, Istanbul 31294",
+      "country": "TR"
+    },
+    "notify_party": null,
+    "incoterm": "DDP",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Cotton terry towels",
+        "quantity": "932",
+        "unit": "PCS",
+        "unit_price": "43.57",
+        "amount": "40607.24",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "19",
+        "unit": "PCS",
+        "unit_price": "322.61",
+        "amount": "6129.59",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "44",
+        "unit": "CTN",
+        "unit_price": "219.66",
+        "amount": "9665.04",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "46",
+        "unit": "CTN",
+        "unit_price": "309.62",
+        "amount": "14242.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "279.40",
+        "unit": "KG",
+        "unit_price": "484.42",
+        "amount": "135346.95",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "741.79",
+        "unit": "MTR",
+        "unit_price": "479.86",
+        "amount": "355955.35",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "631",
+        "unit": "PCS",
+        "unit_price": "200.54",
+        "amount": "126540.74",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "644",
+        "unit": "PAIR",
+        "unit_price": "129.41",
+        "amount": "83340.04",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "15",
+        "unit": "PCS",
+        "unit_price": "297.33",
+        "amount": "4459.95",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "900.63",
+        "unit": "KG",
+        "unit_price": "295.07",
+        "amount": "265748.89",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "255",
+        "unit": "PCS",
+        "unit_price": "47.85",
+        "amount": "12201.75",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1054238.06",
+    "gross_weight_kg": "6692.37",
+    "net_weight_kg": "6083.97"
+  }
+}

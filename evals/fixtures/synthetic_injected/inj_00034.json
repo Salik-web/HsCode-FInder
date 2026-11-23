@@ -1,0 +1,176 @@
+{
+  "id": "inj_00034",
+  "error": {
+    "kind": "future_date",
+    "path": "invoice_date",
+    "original": "2025-12-23",
+    "planted": "2027-01-14",
+    "method": "up to 180 days after 2026-10-01"
+  },
+  "invoice": {
+    "invoice_number": "EXP2538406",
+    "invoice_date": "2027-01-14",
+    "shipper": {
+      "name": "Hotel Iberia S.A.U",
+      "address": "Cuesta de Maribel Díaz 81 Apt. 85 Pontevedra, 38117",
+      "country": "ES"
+    },
+    "buyer": {
+      "name": "Ball Inc",
+      "address": "Studio 82B Suzanne Via Port Lorraineview SK9E 0FZ",
+      "country": "GB"
+    },
+    "consignee": {
+      "name": "Ball Inc",
+      "address": "Studio 82B Suzanne Via Port Lorraineview SK9E 0FZ",
+      "country": "GB"
+    },
+    "notify_party": null,
+    "incoterm": "CFR",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "601.99",
+        "unit": "KG",
+        "unit_price": "164.57",
+        "amount": "99069.49",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "212.94",
+        "unit": "KG",
+        "unit_price": "378.57",
+        "amount": "80612.70",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "615",
+        "unit": "PCS",
+        "unit_price": "333.04",
+        "amount": "204819.60",
+        "hs_code_on_doc": "8482.1000"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "227",
+        "unit": "PCS",
+        "unit_price": "181.16",
+        "amount": "41123.32",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "265.94",
+        "unit": "KG",
+        "unit_price": "170.65",
+        "amount": "45382.66",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "80",
+        "unit": "PCS",
+        "unit_price": "230.37",
+        "amount": "18429.60",
+        "hs_code_on_doc": "8501.4000"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "745",
+        "unit": "PCS",
+        "unit_price": "461.10",
+        "amount": "343519.50",
+        "hs_code_on_doc": "9018.9010"
+      }
+    ],
+    "total_amount": "832956.87",
+    "gross_weight_kg": "4560.25",
+    "net_weight_kg": "4183.72"
+  },
+  "source": {
+    "invoice_number": "EXP2538406",
+    "invoice_date": "2025-12-23",
+    "shipper": {
+      "name": "Hotel Iberia S.A.U",
+      "address": "Cuesta de Maribel Díaz 81 Apt. 85 Pontevedra, 38117",
+      "country": "ES"
+    },
+    "buyer": {
+      "name": "Ball Inc",
+      "address": "Studio 82B Suzanne Via Port Lorraineview SK9E 0FZ",
+      "country": "GB"
+    },
+    "consignee": {
+      "name": "Ball Inc",
+      "address": "Studio 82B Suzanne Via Port Lorraineview SK9E 0FZ",
+      "country": "GB"
+    },
+    "notify_party": null,
+    "incoterm": "CFR",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "601.99",
+        "unit": "KG",
+        "unit_price": "164.57",
+        "amount": "99069.49",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "212.94",
+        "unit": "KG",
+        "unit_price": "378.57",
+        "amount": "80612.70",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "615",
+        "unit": "PCS",
+        "unit_price": "333.04",
+        "amount": "204819.60",
+        "hs_code_on_doc": "8482.1000"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "227",
+        "unit": "PCS",
+        "unit_price": "181.16",
+        "amount": "41123.32",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "265.94",
+        "unit": "KG",
+        "unit_price": "170.65",
+        "amount": "45382.66",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "80",
+        "unit": "PCS",
+        "unit_price": "230.37",
+        "amount": "18429.60",
+        "hs_code_on_doc": "8501.4000"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "745",
+        "unit": "PCS",
+        "unit_price": "461.10",
+        "amount": "343519.50",
+        "hs_code_on_doc": "9018.9010"
+      }
+    ],
+    "total_amount": "832956.87",
+    "gross_weight_kg": "4560.25",
+    "net_weight_kg": "4183.72"
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "id": "inj_00043",
+  "error": {
+    "kind": "wrong_total",
+    "path": "total_amount",
+    "original": "402244.35",
+    "planted": "402243.45",
+    "method": "swap two adjacent digits"
+  },
+  "invoice": {
+    "invoice_number": "CI/26/31069",
+    "invoice_date": "2026-06-20",
+    "shipper": {
+      "name": "BAM",
+      "address": "Corneliaboulevard 5 6041 TV Nunspeet",
+      "country": "NL"
+    },
+    "buyer": {
+      "name": "Haroldo Chaparro Pozo S.L.N.E",
+      "address": "C. de Delfina Aguiló 17 Lleida, 16312",
+      "country": "ES"
+    },
+    "consignee": {
+      "name": "Umar, Kachela and Omar",
+      "address": "Plot 255, Block G, Lahore 33307",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Sabur LLC",
+      "address": "Plot 81, Block G, Lahore 87907",
+      "country": "PK"
+    },
+    "incoterm": "CFR",
+    "currency": "GBP",
+    "line_items": [
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "655",
+        "unit": "SET",
+        "unit_price": "459.92",
+        "amount": "301247.60",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "80",
+        "unit": "CTN",
+        "unit_price": "409.65",
+        "amount": "32772.00",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "84.42",
+        "unit": "KG",
+        "unit_price": "269.65",
+        "amount": "22763.85",
+        "hs_code_on_doc": "3902.1000"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "23",
+        "unit": "PCS",
+        "unit_price": "440.78",
+        "amount": "10137.94",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "30",
+        "unit": "PCS",
+        "unit_price": "37.49",
+        "amount": "1124.70",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "501",
+        "unit": "PCS",
+        "unit_price": "68.26",
+        "amount": "34198.26",
+        "hs_code_on_doc": "9018.9010"
+      }
+    ],
+    "total_amount": "402243.45",
+    "gross_weight_kg": "4217.72",
+    "net_weight_kg": "4055.50"
+  },
+  "source": {
+    "invoice_number": "CI/26/31069",
+    "invoice_date": "2026-06-20",
+    "shipper": {
+      "name": "BAM",
+      "address": "Corneliaboulevard 5 6041 TV Nunspeet",
+      "country": "NL"
+    },
+    "buyer": {
+      "name": "Haroldo Chaparro Pozo S.L.N.E",
+      "address": "C. de Delfina Aguiló 17 Lleida, 16312",
+      "country": "ES"
+    },
+    "consignee": {
+      "name": "Umar, Kachela and Omar",
+      "address": "Plot 255, Block G, Lahore 33307",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Sabur LLC",
+      "address": "Plot 81, Block G, Lahore 87907",
+      "country": "PK"
+    },
+    "incoterm": "CFR",
+    "currency": "GBP",
+    "line_items": [
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "655",
+        "unit": "SET",
+        "unit_price": "459.92",
+        "amount": "301247.60",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "80",
+        "unit": "CTN",
+        "unit_price": "409.65",
+        "amount": "32772.00",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "84.42",
+        "unit": "KG",
+        "unit_price": "269.65",
+        "amount": "22763.85",
+        "hs_code_on_doc": "3902.1000"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "23",
+        "unit": "PCS",
+        "unit_price": "440.78",
+        "amount": "10137.94",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "30",
+        "unit": "PCS",
+        "unit_price": "37.49",
+        "amount": "1124.70",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "501",
+        "unit": "PCS",
+        "unit_price": "68.26",
+        "amount": "34198.26",
+        "hs_code_on_doc": "9018.9010"
+      }
+    ],
+    "total_amount": "402244.35",
+    "gross_weight_kg": "4217.72",
+    "net_weight_kg": "4055.50"
+  }
+}

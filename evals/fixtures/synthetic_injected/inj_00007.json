@@ -1,0 +1,128 @@
+{
+  "id": "inj_00007",
+  "error": {
+    "kind": "wrong_total",
+    "path": "total_amount",
+    "original": "377189.02",
+    "planted": "3771890.20",
+    "method": "shift the decimal point"
+  },
+  "invoice": {
+    "invoice_number": "CI/26/13964",
+    "invoice_date": "2026-08-29",
+    "shipper": {
+      "name": "Perrot S.A.S.",
+      "address": "85, avenue Thibaut Mendès 63220 Hubert",
+      "country": "FR"
+    },
+    "buyer": {
+      "name": "West Group",
+      "address": "Studio 7 Tony Fort Jacksontown B7F 1XX",
+      "country": "GB"
+    },
+    "consignee": {
+      "name": "Kamal-Yar",
+      "address": "Plot 143, Block C, Lahore 46502",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CFR",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "103.89",
+        "unit": "KG",
+        "unit_price": "284.30",
+        "amount": "29535.93",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "43",
+        "unit": "PCS",
+        "unit_price": "56.35",
+        "amount": "2423.05",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "903.31",
+        "unit": "KG",
+        "unit_price": "373.07",
+        "amount": "336997.86",
+        "hs_code_on_doc": "0902.4000"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "66",
+        "unit": "CTN",
+        "unit_price": "124.73",
+        "amount": "8232.18",
+        "hs_code_on_doc": "6907.2100"
+      }
+    ],
+    "total_amount": "3771890.20",
+    "gross_weight_kg": "4789.68",
+    "net_weight_kg": "4394.20"
+  },
+  "source": {
+    "invoice_number": "CI/26/13964",
+    "invoice_date": "2026-08-29",
+    "shipper": {
+      "name": "Perrot S.A.S.",
+      "address": "85, avenue Thibaut Mendès 63220 Hubert",
+      "country": "FR"
+    },
+    "buyer": {
+      "name": "West Group",
+      "address": "Studio 7 Tony Fort Jacksontown B7F 1XX",
+      "country": "GB"
+    },
+    "consignee": {
+      "name": "Kamal-Yar",
+      "address": "Plot 143, Block C, Lahore 46502",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CFR",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "103.89",
+        "unit": "KG",
+        "unit_price": "284.30",
+        "amount": "29535.93",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "43",
+        "unit": "PCS",
+        "unit_price": "56.35",
+        "amount": "2423.05",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "903.31",
+        "unit": "KG",
+        "unit_price": "373.07",
+        "amount": "336997.86",
+        "hs_code_on_doc": "0902.4000"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "66",
+        "unit": "CTN",
+        "unit_price": "124.73",
+        "amount": "8232.18",
+        "hs_code_on_doc": "6907.2100"
+      }
+    ],
+    "total_amount": "377189.02",
+    "gross_weight_kg": "4789.68",
+    "net_weight_kg": "4394.20"
+  }
+}

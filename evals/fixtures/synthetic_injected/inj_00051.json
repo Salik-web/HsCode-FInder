@@ -1,0 +1,224 @@
+{
+  "id": "inj_00051",
+  "error": {
+    "kind": "invalid_incoterm",
+    "path": "incoterm",
+    "original": "DPU",
+    "planted": "DAT",
+    "method": "outdated or informal term"
+  },
+  "invoice": {
+    "invoice_number": "EXP2569486",
+    "invoice_date": "2025-11-23",
+    "shipper": {
+      "name": "Goldstein s.r.l.",
+      "address": "Stretto Trentin, 780 Appartamento 9 37047, Villabella (VR)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Mahbeer Group",
+      "address": "Plot 374, Block F, Multan 25678",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Mahbeer Group",
+      "address": "Plot 374, Block F, Multan 25678",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DAT",
+    "currency": "AED",
+    "line_items": [
+      {
+        "description": "Cotton terry towels",
+        "quantity": "43",
+        "unit": "PCS",
+        "unit_price": "181.05",
+        "amount": "7785.15",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "88",
+        "unit": "PCS",
+        "unit_price": "103.17",
+        "amount": "9078.96",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "145",
+        "unit": "PCS",
+        "unit_price": "450.08",
+        "amount": "65261.60",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "230",
+        "unit": "PCS",
+        "unit_price": "15.05",
+        "amount": "3461.50",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "430.85",
+        "unit": "MTR",
+        "unit_price": "61.19",
+        "amount": "26363.71",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "485",
+        "unit": "PAIR",
+        "unit_price": "335.43",
+        "amount": "162683.55",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "639.39",
+        "unit": "KG",
+        "unit_price": "217.47",
+        "amount": "139048.14",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "496.17",
+        "unit": "KG",
+        "unit_price": "475.35",
+        "amount": "235854.41",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "61",
+        "unit": "PCS",
+        "unit_price": "18.25",
+        "amount": "1113.25",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "293",
+        "unit": "PCS",
+        "unit_price": "404.48",
+        "amount": "118512.64",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "769162.91",
+    "gross_weight_kg": "3248.31",
+    "net_weight_kg": "3035.80"
+  },
+  "source": {
+    "invoice_number": "EXP2569486",
+    "invoice_date": "2025-11-23",
+    "shipper": {
+      "name": "Goldstein s.r.l.",
+      "address": "Stretto Trentin, 780 Appartamento 9 37047, Villabella (VR)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Mahbeer Group",
+      "address": "Plot 374, Block F, Multan 25678",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Mahbeer Group",
+      "address": "Plot 374, Block F, Multan 25678",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DPU",
+    "currency": "AED",
+    "line_items": [
+      {
+        "description": "Cotton terry towels",
+        "quantity": "43",
+        "unit": "PCS",
+        "unit_price": "181.05",
+        "amount": "7785.15",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "88",
+        "unit": "PCS",
+        "unit_price": "103.17",
+        "amount": "9078.96",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "145",
+        "unit": "PCS",
+        "unit_price": "450.08",
+        "amount": "65261.60",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "230",
+        "unit": "PCS",
+        "unit_price": "15.05",
+        "amount": "3461.50",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "430.85",
+        "unit": "MTR",
+        "unit_price": "61.19",
+        "amount": "26363.71",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "485",
+        "unit": "PAIR",
+        "unit_price": "335.43",
+        "amount": "162683.55",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "639.39",
+        "unit": "KG",
+        "unit_price": "217.47",
+        "amount": "139048.14",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "496.17",
+        "unit": "KG",
+        "unit_price": "475.35",
+        "amount": "235854.41",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "61",
+        "unit": "PCS",
+        "unit_price": "18.25",
+        "amount": "1113.25",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "293",
+        "unit": "PCS",
+        "unit_price": "404.48",
+        "amount": "118512.64",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "769162.91",
+    "gross_weight_kg": "3248.31",
+    "net_weight_kg": "3035.80"
+  }
+}

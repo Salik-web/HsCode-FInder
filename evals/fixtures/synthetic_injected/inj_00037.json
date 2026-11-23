@@ -1,0 +1,96 @@
+{
+  "id": "inj_00037",
+  "error": {
+    "kind": "wrong_total",
+    "path": "total_amount",
+    "original": "579664.29",
+    "planted": "579663.29",
+    "method": "change one digit"
+  },
+  "invoice": {
+    "invoice_number": "INV-2025-48311",
+    "invoice_date": "2025-12-11",
+    "shipper": {
+      "name": "Wadood and Sons",
+      "address": "Plot 352, Block C, Lahore 33528",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Kari-Chokshi",
+      "address": "28/50 Khatri Marg Tadepalligudem-856971",
+      "country": "IN"
+    },
+    "consignee": {
+      "name": "Hernandez-Wilson",
+      "address": "972 Peter Cliff Sonyamouth, MH 68644",
+      "country": "US"
+    },
+    "notify_party": null,
+    "incoterm": "FOB",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "477",
+        "unit": "SET",
+        "unit_price": "391.73",
+        "amount": "186855.21",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "813",
+        "unit": "PCS",
+        "unit_price": "483.16",
+        "amount": "392809.08",
+        "hs_code_on_doc": "9405.4200"
+      }
+    ],
+    "total_amount": "579663.29",
+    "gross_weight_kg": "2259.07",
+    "net_weight_kg": "2131.20"
+  },
+  "source": {
+    "invoice_number": "INV-2025-48311",
+    "invoice_date": "2025-12-11",
+    "shipper": {
+      "name": "Wadood and Sons",
+      "address": "Plot 352, Block C, Lahore 33528",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Kari-Chokshi",
+      "address": "28/50 Khatri Marg Tadepalligudem-856971",
+      "country": "IN"
+    },
+    "consignee": {
+      "name": "Hernandez-Wilson",
+      "address": "972 Peter Cliff Sonyamouth, MH 68644",
+      "country": "US"
+    },
+    "notify_party": null,
+    "incoterm": "FOB",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "477",
+        "unit": "SET",
+        "unit_price": "391.73",
+        "amount": "186855.21",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "813",
+        "unit": "PCS",
+        "unit_price": "483.16",
+        "amount": "392809.08",
+        "hs_code_on_doc": "9405.4200"
+      }
+    ],
+    "total_amount": "579664.29",
+    "gross_weight_kg": "2259.07",
+    "net_weight_kg": "2131.20"
+  }
+}

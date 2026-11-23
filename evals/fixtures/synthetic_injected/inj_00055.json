@@ -1,0 +1,192 @@
+{
+  "id": "inj_00055",
+  "error": {
+    "kind": "wrong_total",
+    "path": "total_amount",
+    "original": "587755.14",
+    "planted": "578755.14",
+    "method": "swap two adjacent digits"
+  },
+  "invoice": {
+    "invoice_number": "INV-2025-53758",
+    "invoice_date": "2025-11-19",
+    "shipper": {
+      "name": "Wahhaaj-Kasim",
+      "address": "Plot 374, Block F, Faisalabad 94630",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Cannizzaro Group",
+      "address": "Incrocio Martina, 0 89844, Limbadi (VV)",
+      "country": "IT"
+    },
+    "consignee": {
+      "name": "Gupta-Contractor",
+      "address": "H.No. 269, Borah Circle Tirupati 221593",
+      "country": "IN"
+    },
+    "notify_party": null,
+    "incoterm": "DDP",
+    "currency": "CNY",
+    "line_items": [
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "80.55",
+        "unit": "KG",
+        "unit_price": "219.46",
+        "amount": "17677.50",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "246",
+        "unit": "PCS",
+        "unit_price": "75.11",
+        "amount": "18477.06",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "555",
+        "unit": "SET",
+        "unit_price": "36.92",
+        "amount": "20490.60",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "612.10",
+        "unit": "KG",
+        "unit_price": "115.14",
+        "amount": "70477.19",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "9",
+        "unit": "PCS",
+        "unit_price": "432.33",
+        "amount": "3890.97",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "107",
+        "unit": "SET",
+        "unit_price": "367.36",
+        "amount": "39307.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "94",
+        "unit": "PCS",
+        "unit_price": "296.67",
+        "amount": "27886.98",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "989",
+        "unit": "PCS",
+        "unit_price": "393.88",
+        "amount": "389547.32",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "578755.14",
+    "gross_weight_kg": "4478.45",
+    "net_weight_kg": "4224.95"
+  },
+  "source": {
+    "invoice_number": "INV-2025-53758",
+    "invoice_date": "2025-11-19",
+    "shipper": {
+      "name": "Wahhaaj-Kasim",
+      "address": "Plot 374, Block F, Faisalabad 94630",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Cannizzaro Group",
+      "address": "Incrocio Martina, 0 89844, Limbadi (VV)",
+      "country": "IT"
+    },
+    "consignee": {
+      "name": "Gupta-Contractor",
+      "address": "H.No. 269, Borah Circle Tirupati 221593",
+      "country": "IN"
+    },
+    "notify_party": null,
+    "incoterm": "DDP",
+    "currency": "CNY",
+    "line_items": [
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "80.55",
+        "unit": "KG",
+        "unit_price": "219.46",
+        "amount": "17677.50",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "246",
+        "unit": "PCS",
+        "unit_price": "75.11",
+        "amount": "18477.06",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "555",
+        "unit": "SET",
+        "unit_price": "36.92",
+        "amount": "20490.60",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "612.10",
+        "unit": "KG",
+        "unit_price": "115.14",
+        "amount": "70477.19",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "9",
+        "unit": "PCS",
+        "unit_price": "432.33",
+        "amount": "3890.97",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "107",
+        "unit": "SET",
+        "unit_price": "367.36",
+        "amount": "39307.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "94",
+        "unit": "PCS",
+        "unit_price": "296.67",
+        "amount": "27886.98",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "989",
+        "unit": "PCS",
+        "unit_price": "393.88",
+        "amount": "389547.32",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "587755.14",
+    "gross_weight_kg": "4478.45",
+    "net_weight_kg": "4224.95"
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "id": "inj_00032",
+  "error": {
+    "kind": "net_over_gross",
+    "path": "net_weight_kg",
+    "original": "3782.44",
+    "planted": "4009.39",
+    "method": "swap net and gross"
+  },
+  "invoice": {
+    "invoice_number": "551-55556",
+    "invoice_date": "2025-12-16",
+    "shipper": {
+      "name": "Bilgin Zorlu Ltd.",
+      "address": "Plot 211, Block E, Izmir 57153",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Schneider-Rios",
+      "address": "9812 Justin Lake Suite 858 West Cassandra, MD 95448",
+      "country": "US"
+    },
+    "consignee": {
+      "name": "Ayamin, Kaamil and Aazim",
+      "address": "Plot 398, Block B, Rawalpindi 56403",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DDP",
+    "currency": "CNY",
+    "line_items": [
+      {
+        "description": "Cotton terry towels",
+        "quantity": "649",
+        "unit": "PCS",
+        "unit_price": "426.13",
+        "amount": "276558.37",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "916.10",
+        "unit": "KG",
+        "unit_price": "329.82",
+        "amount": "302148.10",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "854.25",
+        "unit": "KG",
+        "unit_price": "475.80",
+        "amount": "406452.15",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "900",
+        "unit": "SET",
+        "unit_price": "1.85",
+        "amount": "1665.00",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "82",
+        "unit": "PCS",
+        "unit_price": "215.35",
+        "amount": "17658.70",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "296.39",
+        "unit": "KG",
+        "unit_price": "228.59",
+        "amount": "67751.79",
+        "hs_code_on_doc": "3902.1000"
+      }
+    ],
+    "total_amount": "1072234.11",
+    "gross_weight_kg": "3782.44",
+    "net_weight_kg": "4009.39"
+  },
+  "source": {
+    "invoice_number": "551-55556",
+    "invoice_date": "2025-12-16",
+    "shipper": {
+      "name": "Bilgin Zorlu Ltd.",
+      "address": "Plot 211, Block E, Izmir 57153",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Schneider-Rios",
+      "address": "9812 Justin Lake Suite 858 West Cassandra, MD 95448",
+      "country": "US"
+    },
+    "consignee": {
+      "name": "Ayamin, Kaamil and Aazim",
+      "address": "Plot 398, Block B, Rawalpindi 56403",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DDP",
+    "currency": "CNY",
+    "line_items": [
+      {
+        "description": "Cotton terry towels",
+        "quantity": "649",
+        "unit": "PCS",
+        "unit_price": "426.13",
+        "amount": "276558.37",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "916.10",
+        "unit": "KG",
+        "unit_price": "329.82",
+        "amount": "302148.10",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "854.25",
+        "unit": "KG",
+        "unit_price": "475.80",
+        "amount": "406452.15",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "900",
+        "unit": "SET",
+        "unit_price": "1.85",
+        "amount": "1665.00",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "82",
+        "unit": "PCS",
+        "unit_price": "215.35",
+        "amount": "17658.70",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "296.39",
+        "unit": "KG",
+        "unit_price": "228.59",
+        "amount": "67751.79",
+        "hs_code_on_doc": "3902.1000"
+      }
+    ],
+    "total_amount": "1072234.11",
+    "gross_weight_kg": "4009.39",
+    "net_weight_kg": "3782.44"
+  }
+}

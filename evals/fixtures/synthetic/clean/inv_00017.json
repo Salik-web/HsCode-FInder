@@ -1,0 +1,122 @@
+{
+  "invoice": {
+    "invoice_number": "EXP2523310",
+    "invoice_date": "2025-11-12",
+    "shipper": {
+      "name": "Liyaqat, Nabeel and Rafi",
+      "address": "Plot 400, Block A, Multan 50062",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Francisco Chaves Francisco S.Com.",
+      "address": "Via Renata Pinedo 603 Puerta 4 Valencia, 30828",
+      "country": "ES"
+    },
+    "consignee": {
+      "name": "Francisco Chaves Francisco S.Com.",
+      "address": "Via Renata Pinedo 603 Puerta 4 Valencia, 30828",
+      "country": "ES"
+    },
+    "notify_party": null,
+    "incoterm": "FAS",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "192.61",
+        "unit": "KG",
+        "unit_price": "127.83",
+        "amount": "24621.34",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "89",
+        "unit": "PCS",
+        "unit_price": "286.94",
+        "amount": "25537.66",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "230.09",
+        "unit": "KG",
+        "unit_price": "368.58",
+        "amount": "84806.57",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "96.72",
+        "unit": "KG",
+        "unit_price": "374.70",
+        "amount": "36240.98",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "77",
+        "unit": "SET",
+        "unit_price": "444.34",
+        "amount": "34214.18",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "803.59",
+        "unit": "KG",
+        "unit_price": "170.83",
+        "amount": "137277.28",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "125",
+        "unit": "PCS",
+        "unit_price": "148.79",
+        "amount": "18598.75",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "20",
+        "unit": "PCS",
+        "unit_price": "13.02",
+        "amount": "260.40",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "296.12",
+        "unit": "KG",
+        "unit_price": "286.40",
+        "amount": "84808.77",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "71",
+        "unit": "CTN",
+        "unit_price": "148.01",
+        "amount": "10508.71",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "456874.64",
+    "gross_weight_kg": "5651.79",
+    "net_weight_kg": "5331.88"
+  },
+  "true_hs_codes": [
+    "1006.3010",
+    "8413.7010",
+    "8544.1100",
+    "1511.9020",
+    "8714.1000",
+    "0804.5020",
+    "9506.6200",
+    "8507.6000",
+    "3902.1000",
+    "4802.5600"
+  ],
+  "buyer_reference": "Same as consignee details"
+}

@@ -1,0 +1,144 @@
+{
+  "id": "inj_00006",
+  "error": {
+    "kind": "wrong_line_amount",
+    "path": "line_items[3].amount",
+    "original": "18708.80",
+    "planted": "18708.84",
+    "method": "change one digit"
+  },
+  "invoice": {
+    "invoice_number": "INV-2026-73107",
+    "invoice_date": "2026-02-03",
+    "shipper": {
+      "name": "Azban, Ossama and Mahfuj",
+      "address": "Plot 2, Block F, Rawalpindi 21897",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Sauro, Beccheria e Mazzini Group",
+      "address": "Stretto Salvo, 7 20821, Meda (MB)",
+      "country": "IT"
+    },
+    "consignee": {
+      "name": "Sauro, Beccheria e Mazzini Group",
+      "address": "Stretto Salvo, 7 20821, Meda (MB)",
+      "country": "IT"
+    },
+    "notify_party": null,
+    "incoterm": "FOB",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "11",
+        "unit": "CTN",
+        "unit_price": "440.25",
+        "amount": "4842.75",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "195",
+        "unit": "PCS",
+        "unit_price": "177.32",
+        "amount": "34577.40",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "86",
+        "unit": "PCS",
+        "unit_price": "191.86",
+        "amount": "16499.96",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "160",
+        "unit": "CTN",
+        "unit_price": "116.93",
+        "amount": "18708.84",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "394.18",
+        "unit": "KG",
+        "unit_price": "475.14",
+        "amount": "187290.69",
+        "hs_code_on_doc": "1006.3010"
+      }
+    ],
+    "total_amount": "261919.60",
+    "gross_weight_kg": "6133.76",
+    "net_weight_kg": "5841.68"
+  },
+  "source": {
+    "invoice_number": "INV-2026-73107",
+    "invoice_date": "2026-02-03",
+    "shipper": {
+      "name": "Azban, Ossama and Mahfuj",
+      "address": "Plot 2, Block F, Rawalpindi 21897",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Sauro, Beccheria e Mazzini Group",
+      "address": "Stretto Salvo, 7 20821, Meda (MB)",
+      "country": "IT"
+    },
+    "consignee": {
+      "name": "Sauro, Beccheria e Mazzini Group",
+      "address": "Stretto Salvo, 7 20821, Meda (MB)",
+      "country": "IT"
+    },
+    "notify_party": null,
+    "incoterm": "FOB",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "11",
+        "unit": "CTN",
+        "unit_price": "440.25",
+        "amount": "4842.75",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "195",
+        "unit": "PCS",
+        "unit_price": "177.32",
+        "amount": "34577.40",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "86",
+        "unit": "PCS",
+        "unit_price": "191.86",
+        "amount": "16499.96",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "160",
+        "unit": "CTN",
+        "unit_price": "116.93",
+        "amount": "18708.80",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "394.18",
+        "unit": "KG",
+        "unit_price": "475.14",
+        "amount": "187290.69",
+        "hs_code_on_doc": "1006.3010"
+      }
+    ],
+    "total_amount": "261919.60",
+    "gross_weight_kg": "6133.76",
+    "net_weight_kg": "5841.68"
+  }
+}

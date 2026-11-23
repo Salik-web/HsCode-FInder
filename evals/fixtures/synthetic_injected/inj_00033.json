@@ -1,0 +1,288 @@
+{
+  "id": "inj_00033",
+  "error": {
+    "kind": "invalid_incoterm",
+    "path": "incoterm",
+    "original": "FOB",
+    "planted": "DEQ",
+    "method": "outdated or informal term"
+  },
+  "invoice": {
+    "invoice_number": "EXP2622001",
+    "invoice_date": "2026-09-05",
+    "shipper": {
+      "name": "İskenderun Demir Çelik",
+      "address": "Plot 24, Block F, Izmir 63236",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Limazah, Yaman and Majd",
+      "address": "Plot 311, Block B, Faisalabad 74963",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Daamin-Maalik",
+      "address": "Plot 367, Block F, Karachi 71757",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DEQ",
+    "currency": "GBP",
+    "line_items": [
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.96",
+        "unit": "MT",
+        "unit_price": "429.00",
+        "amount": "840.84",
+        "hs_code_on_doc": "7208.3700"
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "457",
+        "unit": "PCS",
+        "unit_price": "132.64",
+        "amount": "60616.48",
+        "hs_code_on_doc": "8482.1000"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "116.41",
+        "unit": "KG",
+        "unit_price": "149.32",
+        "amount": "17382.34",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "215.19",
+        "unit": "KG",
+        "unit_price": "96.50",
+        "amount": "20765.84",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "390",
+        "unit": "PCS",
+        "unit_price": "63.47",
+        "amount": "24753.30",
+        "hs_code_on_doc": "9405.4200"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "37",
+        "unit": "PCS",
+        "unit_price": "241.87",
+        "amount": "8949.19",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "741",
+        "unit": "PCS",
+        "unit_price": "153.06",
+        "amount": "113417.46",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "43",
+        "unit": "PCS",
+        "unit_price": "104.36",
+        "amount": "4487.48",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "79",
+        "unit": "PCS",
+        "unit_price": "254.78",
+        "amount": "20127.62",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "50",
+        "unit": "CTN",
+        "unit_price": "91.81",
+        "amount": "4590.50",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "942",
+        "unit": "PCS",
+        "unit_price": "173.34",
+        "amount": "163286.28",
+        "hs_code_on_doc": "6109.1000"
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "735",
+        "unit": "PAIR",
+        "unit_price": "85.67",
+        "amount": "62967.45",
+        "hs_code_on_doc": "4203.2900"
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "316.16",
+        "unit": "KG",
+        "unit_price": "76.92",
+        "amount": "24319.03",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "19",
+        "unit": "BAG",
+        "unit_price": "16.84",
+        "amount": "319.96",
+        "hs_code_on_doc": "2523.2900"
+      }
+    ],
+    "total_amount": "526823.77",
+    "gross_weight_kg": "10908.37",
+    "net_weight_kg": "10488.82"
+  },
+  "source": {
+    "invoice_number": "EXP2622001",
+    "invoice_date": "2026-09-05",
+    "shipper": {
+      "name": "İskenderun Demir Çelik",
+      "address": "Plot 24, Block F, Izmir 63236",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Limazah, Yaman and Majd",
+      "address": "Plot 311, Block B, Faisalabad 74963",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Daamin-Maalik",
+      "address": "Plot 367, Block F, Karachi 71757",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "FOB",
+    "currency": "GBP",
+    "line_items": [
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.96",
+        "unit": "MT",
+        "unit_price": "429.00",
+        "amount": "840.84",
+        "hs_code_on_doc": "7208.3700"
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "457",
+        "unit": "PCS",
+        "unit_price": "132.64",
+        "amount": "60616.48",
+        "hs_code_on_doc": "8482.1000"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "116.41",
+        "unit": "KG",
+        "unit_price": "149.32",
+        "amount": "17382.34",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "215.19",
+        "unit": "KG",
+        "unit_price": "96.50",
+        "amount": "20765.84",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "390",
+        "unit": "PCS",
+        "unit_price": "63.47",
+        "amount": "24753.30",
+        "hs_code_on_doc": "9405.4200"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "37",
+        "unit": "PCS",
+        "unit_price": "241.87",
+        "amount": "8949.19",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "741",
+        "unit": "PCS",
+        "unit_price": "153.06",
+        "amount": "113417.46",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "43",
+        "unit": "PCS",
+        "unit_price": "104.36",
+        "amount": "4487.48",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "79",
+        "unit": "PCS",
+        "unit_price": "254.78",
+        "amount": "20127.62",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "50",
+        "unit": "CTN",
+        "unit_price": "91.81",
+        "amount": "4590.50",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "942",
+        "unit": "PCS",
+        "unit_price": "173.34",
+        "amount": "163286.28",
+        "hs_code_on_doc": "6109.1000"
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "735",
+        "unit": "PAIR",
+        "unit_price": "85.67",
+        "amount": "62967.45",
+        "hs_code_on_doc": "4203.2900"
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "316.16",
+        "unit": "KG",
+        "unit_price": "76.92",
+        "amount": "24319.03",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "19",
+        "unit": "BAG",
+        "unit_price": "16.84",
+        "amount": "319.96",
+        "hs_code_on_doc": "2523.2900"
+      }
+    ],
+    "total_amount": "526823.77",
+    "gross_weight_kg": "10908.37",
+    "net_weight_kg": "10488.82"
+  }
+}

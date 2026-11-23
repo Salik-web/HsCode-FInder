@@ -1,0 +1,160 @@
+{
+  "id": "inj_00036",
+  "error": {
+    "kind": "wrong_line_amount",
+    "path": "line_items[4].amount",
+    "original": "335891.62",
+    "planted": "330891.62",
+    "method": "change one digit"
+  },
+  "invoice": {
+    "invoice_number": "EXP2688953",
+    "invoice_date": "2026-05-04",
+    "shipper": {
+      "name": "Yaman A.Ş.",
+      "address": "Plot 253, Block C, Bursa 83343",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Conradi GmbH & Co. KGaA",
+      "address": "Roggegasse 95/40 05448 Sömmerda",
+      "country": "DE"
+    },
+    "consignee": {
+      "name": "Aadil, Umair and Luqman",
+      "address": "Plot 125, Block C, Faisalabad 99234",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CFR",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "811",
+        "unit": "PCS",
+        "unit_price": "22.14",
+        "amount": "17955.54",
+        "hs_code_on_doc": "9405.4200"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "270",
+        "unit": "PCS",
+        "unit_price": "12.25",
+        "amount": "3307.50",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "463.09",
+        "unit": "MTR",
+        "unit_price": "154.94",
+        "amount": "71751.16",
+        "hs_code_on_doc": "5209.4200"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "129",
+        "unit": "PCS",
+        "unit_price": "468.76",
+        "amount": "60470.04",
+        "hs_code_on_doc": "8501.4000"
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "707.96",
+        "unit": "KG",
+        "unit_price": "474.45",
+        "amount": "330891.62",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "2",
+        "unit": "PCS",
+        "unit_price": "289.90",
+        "amount": "579.80",
+        "hs_code_on_doc": "8413.7010"
+      }
+    ],
+    "total_amount": "489955.66",
+    "gross_weight_kg": "4689.55",
+    "net_weight_kg": "4466.24"
+  },
+  "source": {
+    "invoice_number": "EXP2688953",
+    "invoice_date": "2026-05-04",
+    "shipper": {
+      "name": "Yaman A.Ş.",
+      "address": "Plot 253, Block C, Bursa 83343",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Conradi GmbH & Co. KGaA",
+      "address": "Roggegasse 95/40 05448 Sömmerda",
+      "country": "DE"
+    },
+    "consignee": {
+      "name": "Aadil, Umair and Luqman",
+      "address": "Plot 125, Block C, Faisalabad 99234",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CFR",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "811",
+        "unit": "PCS",
+        "unit_price": "22.14",
+        "amount": "17955.54",
+        "hs_code_on_doc": "9405.4200"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "270",
+        "unit": "PCS",
+        "unit_price": "12.25",
+        "amount": "3307.50",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "463.09",
+        "unit": "MTR",
+        "unit_price": "154.94",
+        "amount": "71751.16",
+        "hs_code_on_doc": "5209.4200"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "129",
+        "unit": "PCS",
+        "unit_price": "468.76",
+        "amount": "60470.04",
+        "hs_code_on_doc": "8501.4000"
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "707.96",
+        "unit": "KG",
+        "unit_price": "474.45",
+        "amount": "335891.62",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "2",
+        "unit": "PCS",
+        "unit_price": "289.90",
+        "amount": "579.80",
+        "hs_code_on_doc": "8413.7010"
+      }
+    ],
+    "total_amount": "489955.66",
+    "gross_weight_kg": "4689.55",
+    "net_weight_kg": "4466.24"
+  }
+}

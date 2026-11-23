@@ -1,0 +1,21 @@
+{
+  "document_sha256": "76c9db188221976ee5ff2a600a1ce8ddb80e96fa555b6cb20d2253c2a876f4f4",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"CI/25/99554\",\"invoice_date\":\"2025-10-24\",\"shipper\":{\"name\":\"Barkholz AG\",\"address\":\"Türkan-Bähr-Straße 12, 81062 Bamberg\",\"country\":\"DE\"},\"buyer\":{\"name\":\"Ossama Ltd\",\"address\":\"Plot 162, Block D, Multan 29435\",\"country\":\"PK\"},\"consignee\":{\"name\":\"Ossama Ltd\",\"address\":\"Plot 162, Block D, Multan 29435\",\"country\":\"PK\"},\"notify_party\":null,\"incoterm\":\"FOB\",\"currency\":\"USD\",\"line_items\":[[\"Lithium-ion batteries 48V\",\"4\",\"PCS\",\"357.88\",\"1431.52\",null],[\"PET resin bottle grade\",\"117.44\",\"KG\",\"5.03\",\"590.72\",null],[\"Black tea in bulk packs\",\"120.74\",\"KG\",\"15.29\",\"1846.11\",null],[\"Printing paper A4 80 gsm\",\"57\",\"CTN\",\"476.06\",\"27135.42\",null],[\"Radial car tyres 205/55 R16\",\"38\",\"PCS\",\"165.54\",\"6290.52\",null],[\"Smartphones 5G\",\"201\",\"PCS\",\"469.88\",\"94445.88\",null],[\"Cotton terry towels\",\"191\",\"PCS\",\"272.69\",\"52083.79\",null],[\"Stainless steel surgical scissors\",\"144\",\"PCS\",\"318.85\",\"45914.40\",null],[\"Motorcycle spare parts\",\"199\",\"SET\",\"282.37\",\"56191.63\",null],[\"Printed cotton bed linen\",\"527\",\"SET\",\"471.45\",\"248454.15\",null],[\"Leather industrial work gloves\",\"707\",\"PAIR\",\"326.00\",\"230482.00\",null],[\"Ball bearings\",\"633\",\"PCS\",\"368.34\",\"233159.22\",null],[\"Ceramic floor tiles\",\"39\",\"CTN\",\"79.56\",\"3102.84\",null],[\"Single-phase electric motors\",\"1\",\"PCS\",\"19.51\",\"19.51\",null],[\"Hand-stitched footballs\",\"416\",\"PCS\",\"484.21\",\"201431.36\",null]],\"total_amount\":\"1202579.07\",\"gross_weight_kg\":\"4772.61\",\"net_weight_kg\":\"4419.08\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 3578,
+      "output_tokens": 660
+    },
+    "latency_ms": 15679,
+    "cost_usd": "0",
+    "cached": false
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "id": "inj_00016",
+  "error": {
+    "kind": "future_date",
+    "path": "invoice_date",
+    "original": "2025-12-23",
+    "planted": "2027-01-02",
+    "method": "up to 180 days after 2026-10-01"
+  },
+  "invoice": {
+    "invoice_number": "EXP2544101",
+    "invoice_date": "2027-01-02",
+    "shipper": {
+      "name": "Battisti-Campano s.r.l.",
+      "address": "Canale Metella, 8 Appartamento 27 70024, La Murgetta (BA)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Letellier Charrier et Fils",
+      "address": "5, chemin Danielle Robert 73340 Noël-sur-Hernandez",
+      "country": "FR"
+    },
+    "consignee": {
+      "name": "Fazli, Gohar and Ejlaal",
+      "address": "Plot 256, Block F, Peshawar 81548",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CFR",
+    "currency": "EUR",
+    "line_items": [
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "630",
+        "unit": "PCS",
+        "unit_price": "364.78",
+        "amount": "229811.40",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "48",
+        "unit": "PCS",
+        "unit_price": "267.66",
+        "amount": "12847.68",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "16",
+        "unit": "PCS",
+        "unit_price": "128.97",
+        "amount": "2063.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "211.56",
+        "unit": "KG",
+        "unit_price": "382.29",
+        "amount": "80877.27",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "325599.87",
+    "gross_weight_kg": "1652.66",
+    "net_weight_kg": "1573.96"
+  },
+  "source": {
+    "invoice_number": "EXP2544101",
+    "invoice_date": "2025-12-23",
+    "shipper": {
+      "name": "Battisti-Campano s.r.l.",
+      "address": "Canale Metella, 8 Appartamento 27 70024, La Murgetta (BA)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Letellier Charrier et Fils",
+      "address": "5, chemin Danielle Robert 73340 Noël-sur-Hernandez",
+      "country": "FR"
+    },
+    "consignee": {
+      "name": "Fazli, Gohar and Ejlaal",
+      "address": "Plot 256, Block F, Peshawar 81548",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CFR",
+    "currency": "EUR",
+    "line_items": [
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "630",
+        "unit": "PCS",
+        "unit_price": "364.78",
+        "amount": "229811.40",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "48",
+        "unit": "PCS",
+        "unit_price": "267.66",
+        "amount": "12847.68",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "16",
+        "unit": "PCS",
+        "unit_price": "128.97",
+        "amount": "2063.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "211.56",
+        "unit": "KG",
+        "unit_price": "382.29",
+        "amount": "80877.27",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "325599.87",
+    "gross_weight_kg": "1652.66",
+    "net_weight_kg": "1573.96"
+  }
+}

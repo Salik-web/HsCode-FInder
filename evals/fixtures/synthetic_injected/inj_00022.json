@@ -1,0 +1,264 @@
+{
+  "id": "inj_00022",
+  "error": {
+    "kind": "future_date",
+    "path": "invoice_date",
+    "original": "2026-04-25",
+    "planted": "2026-12-11",
+    "method": "up to 180 days after 2026-10-01"
+  },
+  "invoice": {
+    "invoice_number": "CI/26/24149",
+    "invoice_date": "2026-12-11",
+    "shipper": {
+      "name": "Royal Verschuere",
+      "address": "Thomring 9 1137XB Den Horn",
+      "country": "NL"
+    },
+    "buyer": {
+      "name": "Batal PLC",
+      "address": "Plot 363, Block B, Peshawar 25604",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Batal PLC",
+      "address": "Plot 363, Block B, Peshawar 25604",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Qaim Group",
+      "address": "Plot 15, Block A, Multan 61145",
+      "country": "PK"
+    },
+    "incoterm": "EXW",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Refined palm olein",
+        "quantity": "462.84",
+        "unit": "KG",
+        "unit_price": "102.66",
+        "amount": "47515.15",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "482",
+        "unit": "PCS",
+        "unit_price": "304.62",
+        "amount": "146826.84",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "941",
+        "unit": "PCS",
+        "unit_price": "52.13",
+        "amount": "49054.33",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "89",
+        "unit": "PCS",
+        "unit_price": "52.47",
+        "amount": "4669.83",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "15",
+        "unit": "CTN",
+        "unit_price": "3.56",
+        "amount": "53.40",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "268",
+        "unit": "SET",
+        "unit_price": "173.64",
+        "amount": "46535.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "663.96",
+        "unit": "KG",
+        "unit_price": "16.38",
+        "amount": "10875.66",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "594",
+        "unit": "PCS",
+        "unit_price": "338.27",
+        "amount": "200932.38",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "377.32",
+        "unit": "KG",
+        "unit_price": "82.83",
+        "amount": "31253.42",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "948.31",
+        "unit": "KG",
+        "unit_price": "389.88",
+        "amount": "369727.10",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "703",
+        "unit": "PCS",
+        "unit_price": "212.55",
+        "amount": "149422.65",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "120",
+        "unit": "PCS",
+        "unit_price": "354.32",
+        "amount": "42518.40",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1099384.68",
+    "gross_weight_kg": "5039.44",
+    "net_weight_kg": "4754.19"
+  },
+  "source": {
+    "invoice_number": "CI/26/24149",
+    "invoice_date": "2026-04-25",
+    "shipper": {
+      "name": "Royal Verschuere",
+      "address": "Thomring 9 1137XB Den Horn",
+      "country": "NL"
+    },
+    "buyer": {
+      "name": "Batal PLC",
+      "address": "Plot 363, Block B, Peshawar 25604",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Batal PLC",
+      "address": "Plot 363, Block B, Peshawar 25604",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Qaim Group",
+      "address": "Plot 15, Block A, Multan 61145",
+      "country": "PK"
+    },
+    "incoterm": "EXW",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Refined palm olein",
+        "quantity": "462.84",
+        "unit": "KG",
+        "unit_price": "102.66",
+        "amount": "47515.15",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "482",
+        "unit": "PCS",
+        "unit_price": "304.62",
+        "amount": "146826.84",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "941",
+        "unit": "PCS",
+        "unit_price": "52.13",
+        "amount": "49054.33",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "89",
+        "unit": "PCS",
+        "unit_price": "52.47",
+        "amount": "4669.83",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "15",
+        "unit": "CTN",
+        "unit_price": "3.56",
+        "amount": "53.40",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "268",
+        "unit": "SET",
+        "unit_price": "173.64",
+        "amount": "46535.52",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "663.96",
+        "unit": "KG",
+        "unit_price": "16.38",
+        "amount": "10875.66",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "594",
+        "unit": "PCS",
+        "unit_price": "338.27",
+        "amount": "200932.38",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "377.32",
+        "unit": "KG",
+        "unit_price": "82.83",
+        "amount": "31253.42",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "948.31",
+        "unit": "KG",
+        "unit_price": "389.88",
+        "amount": "369727.10",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "703",
+        "unit": "PCS",
+        "unit_price": "212.55",
+        "amount": "149422.65",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "120",
+        "unit": "PCS",
+        "unit_price": "354.32",
+        "amount": "42518.40",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1099384.68",
+    "gross_weight_kg": "5039.44",
+    "net_weight_kg": "4754.19"
+  }
+}

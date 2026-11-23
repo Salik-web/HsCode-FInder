@@ -1,0 +1,88 @@
+{
+  "id": "inj_00046",
+  "error": {
+    "kind": "future_date",
+    "path": "invoice_date",
+    "original": "2025-11-13",
+    "planted": "2027-01-22",
+    "method": "up to 180 days after 2026-10-01"
+  },
+  "invoice": {
+    "invoice_number": "INV-2025-11530",
+    "invoice_date": "2027-01-22",
+    "shipper": {
+      "name": "Qadar Ltd",
+      "address": "Plot 13, Block G, Faisalabad 44062",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Ritter",
+      "address": "Steuerplatz 1/1 86195 Schwarzenberg",
+      "country": "DE"
+    },
+    "consignee": {
+      "name": "Ritter",
+      "address": "Steuerplatz 1/1 86195 Schwarzenberg",
+      "country": "DE"
+    },
+    "notify_party": {
+      "name": "Pohl",
+      "address": "Freudenbergerstr. 9 51771 Hamburg",
+      "country": "DE"
+    },
+    "incoterm": "CFR",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "7",
+        "unit": "PCS",
+        "unit_price": "318.78",
+        "amount": "2231.46",
+        "hs_code_on_doc": "8507.6000"
+      }
+    ],
+    "total_amount": "2231.46",
+    "gross_weight_kg": "337.05",
+    "net_weight_kg": "315.00"
+  },
+  "source": {
+    "invoice_number": "INV-2025-11530",
+    "invoice_date": "2025-11-13",
+    "shipper": {
+      "name": "Qadar Ltd",
+      "address": "Plot 13, Block G, Faisalabad 44062",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Ritter",
+      "address": "Steuerplatz 1/1 86195 Schwarzenberg",
+      "country": "DE"
+    },
+    "consignee": {
+      "name": "Ritter",
+      "address": "Steuerplatz 1/1 86195 Schwarzenberg",
+      "country": "DE"
+    },
+    "notify_party": {
+      "name": "Pohl",
+      "address": "Freudenbergerstr. 9 51771 Hamburg",
+      "country": "DE"
+    },
+    "incoterm": "CFR",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "7",
+        "unit": "PCS",
+        "unit_price": "318.78",
+        "amount": "2231.46",
+        "hs_code_on_doc": "8507.6000"
+      }
+    ],
+    "total_amount": "2231.46",
+    "gross_weight_kg": "337.05",
+    "net_weight_kg": "315.00"
+  }
+}

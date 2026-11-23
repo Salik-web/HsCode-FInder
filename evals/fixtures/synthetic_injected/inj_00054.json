@@ -1,0 +1,280 @@
+{
+  "id": "inj_00054",
+  "error": {
+    "kind": "wrong_line_amount",
+    "path": "line_items[11].amount",
+    "original": "26167.14",
+    "planted": "261671.40",
+    "method": "shift the decimal point"
+  },
+  "invoice": {
+    "invoice_number": "EXP2575512",
+    "invoice_date": "2025-10-01",
+    "shipper": {
+      "name": "Wafa LLC",
+      "address": "Plot 390, Block E, Peshawar 42334",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Wagner Stiftung & Co. KG",
+      "address": "Siegrid-Rädel-Allee 200 86158 Vechta",
+      "country": "DE"
+    },
+    "consignee": {
+      "name": "Wagner Stiftung & Co. KG",
+      "address": "Siegrid-Rädel-Allee 200 86158 Vechta",
+      "country": "DE"
+    },
+    "notify_party": {
+      "name": "Hövel Trommler AG & Co. KGaA",
+      "address": "Sarah-Kaul-Gasse 5/4 36204 Kehl",
+      "country": "DE"
+    },
+    "incoterm": "FCA",
+    "currency": "EUR",
+    "line_items": [
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "666",
+        "unit": "PCS",
+        "unit_price": "21.98",
+        "amount": "14638.68",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "722.05",
+        "unit": "KG",
+        "unit_price": "343.27",
+        "amount": "247858.10",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "500",
+        "unit": "PCS",
+        "unit_price": "278.48",
+        "amount": "139240.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "69",
+        "unit": "CTN",
+        "unit_price": "494.67",
+        "amount": "34132.23",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "667.08",
+        "unit": "KG",
+        "unit_price": "459.58",
+        "amount": "306576.63",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "47",
+        "unit": "PCS",
+        "unit_price": "383.05",
+        "amount": "18003.35",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "577",
+        "unit": "PCS",
+        "unit_price": "355.56",
+        "amount": "205158.12",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "245",
+        "unit": "PAIR",
+        "unit_price": "285.21",
+        "amount": "69876.45",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "962.73",
+        "unit": "MTR",
+        "unit_price": "450.95",
+        "amount": "434143.09",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "153.95",
+        "unit": "KG",
+        "unit_price": "405.65",
+        "amount": "62449.82",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "782.24",
+        "unit": "KG",
+        "unit_price": "411.18",
+        "amount": "321641.44",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "111",
+        "unit": "CTN",
+        "unit_price": "235.74",
+        "amount": "261671.40",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "213.36",
+        "unit": "KG",
+        "unit_price": "288.66",
+        "amount": "61588.50",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1941473.55",
+    "gross_weight_kg": "9797.28",
+    "net_weight_kg": "9420.46"
+  },
+  "source": {
+    "invoice_number": "EXP2575512",
+    "invoice_date": "2025-10-01",
+    "shipper": {
+      "name": "Wafa LLC",
+      "address": "Plot 390, Block E, Peshawar 42334",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Wagner Stiftung & Co. KG",
+      "address": "Siegrid-Rädel-Allee 200 86158 Vechta",
+      "country": "DE"
+    },
+    "consignee": {
+      "name": "Wagner Stiftung & Co. KG",
+      "address": "Siegrid-Rädel-Allee 200 86158 Vechta",
+      "country": "DE"
+    },
+    "notify_party": {
+      "name": "Hövel Trommler AG & Co. KGaA",
+      "address": "Sarah-Kaul-Gasse 5/4 36204 Kehl",
+      "country": "DE"
+    },
+    "incoterm": "FCA",
+    "currency": "EUR",
+    "line_items": [
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "666",
+        "unit": "PCS",
+        "unit_price": "21.98",
+        "amount": "14638.68",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "722.05",
+        "unit": "KG",
+        "unit_price": "343.27",
+        "amount": "247858.10",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "500",
+        "unit": "PCS",
+        "unit_price": "278.48",
+        "amount": "139240.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "69",
+        "unit": "CTN",
+        "unit_price": "494.67",
+        "amount": "34132.23",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "667.08",
+        "unit": "KG",
+        "unit_price": "459.58",
+        "amount": "306576.63",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "47",
+        "unit": "PCS",
+        "unit_price": "383.05",
+        "amount": "18003.35",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "577",
+        "unit": "PCS",
+        "unit_price": "355.56",
+        "amount": "205158.12",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "245",
+        "unit": "PAIR",
+        "unit_price": "285.21",
+        "amount": "69876.45",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "962.73",
+        "unit": "MTR",
+        "unit_price": "450.95",
+        "amount": "434143.09",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "153.95",
+        "unit": "KG",
+        "unit_price": "405.65",
+        "amount": "62449.82",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "782.24",
+        "unit": "KG",
+        "unit_price": "411.18",
+        "amount": "321641.44",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "111",
+        "unit": "CTN",
+        "unit_price": "235.74",
+        "amount": "26167.14",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "213.36",
+        "unit": "KG",
+        "unit_price": "288.66",
+        "amount": "61588.50",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1941473.55",
+    "gross_weight_kg": "9797.28",
+    "net_weight_kg": "9420.46"
+  }
+}

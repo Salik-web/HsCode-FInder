@@ -1,0 +1,72 @@
+{
+  "invoice": {
+    "invoice_number": "INV-2025-03116",
+    "invoice_date": "2025-12-02",
+    "shipper": {
+      "name": "Sadan, Raakin and Luqman",
+      "address": "Plot 88, Block C, Lahore 79117",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Graf",
+      "address": "Nina-Albers-Straße 345 14153 Kehl",
+      "country": "DE"
+    },
+    "consignee": {
+      "name": "Graf",
+      "address": "Nina-Albers-Straße 345 14153 Kehl",
+      "country": "DE"
+    },
+    "notify_party": {
+      "name": "Rogner",
+      "address": "Mansstr. 71 43477 Oschatz",
+      "country": "DE"
+    },
+    "incoterm": "EXW",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Smartphones 5G",
+        "quantity": "534",
+        "unit": "PCS",
+        "unit_price": "394.10",
+        "amount": "210449.40",
+        "hs_code_on_doc": "8517.1300"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "991.03",
+        "unit": "KG",
+        "unit_price": "333.00",
+        "amount": "330012.99",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "990.61",
+        "unit": "KG",
+        "unit_price": "497.91",
+        "amount": "493234.63",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "376",
+        "unit": "PCS",
+        "unit_price": "282.97",
+        "amount": "106396.72",
+        "hs_code_on_doc": "9506.6200"
+      }
+    ],
+    "total_amount": "1140093.74",
+    "gross_weight_kg": "2317.62",
+    "net_weight_kg": "2250.12"
+  },
+  "true_hs_codes": [
+    "8517.1300",
+    "3907.6100",
+    "2924.2990",
+    "9506.6200"
+  ],
+  "buyer_reference": null
+}

@@ -1,0 +1,21 @@
+{
+  "document_sha256": "94ffe7c8f9573bfc13be97e8992e97d48e07fb17a05d45e141d3fef9750e2f6d",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"EXP2564214\",\"invoice_date\":\"2025-12-09\",\"shipper\":{\"name\":\"Schulz KGaA\",\"address\":\"Knappestraße 62-10, 87312 Wismar\",\"country\":\"DE\"},\"buyer\":{\"name\":\"Ratta Ltd\",\"address\":\"68/858, Ganesh Circle, Gangtok-626651\",\"country\":\"IN\"},\"consignee\":{\"name\":\"Aabid, Ubaidah and Ubadah\",\"address\":\"Plot 89, Block E, Faisalabad 49318\",\"country\":\"PK\"},\"notify_party\":null,\"incoterm\":\"FCA\",\"currency\":\"EUR\",\"line_items\":[[\"Radial car tyres 205/55 R16\",\"234\",\"PCS\",\"94.94\",\"22215.96\",null]],\"total_amount\":\"22215.96\",\"gross_weight_kg\":\"2187.90\",\"net_weight_kg\":\"1989.00\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 3193,
+      "output_tokens": 240
+    },
+    "latency_ms": 1411,
+    "cost_usd": "0",
+    "cached": false
+  }
+}

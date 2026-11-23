@@ -1,0 +1,80 @@
+{
+  "id": "inj_00030",
+  "error": {
+    "kind": "wrong_line_amount",
+    "path": "line_items[0].amount",
+    "original": "2184.48",
+    "planted": "1284.48",
+    "method": "swap two adjacent digits"
+  },
+  "invoice": {
+    "invoice_number": "EXP2678057",
+    "invoice_date": "2026-05-03",
+    "shipper": {
+      "name": "Cheda SPA",
+      "address": "Incrocio Giacinto, 948 00037, Segni (RM)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Quadir-Ihab",
+      "address": "Plot 169, Block D, Multan 24123",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Quadir-Ihab",
+      "address": "Plot 169, Block D, Multan 24123",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CIP",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Portland cement",
+        "quantity": "37",
+        "unit": "BAG",
+        "unit_price": "59.04",
+        "amount": "1284.48",
+        "hs_code_on_doc": "2523.2900"
+      }
+    ],
+    "total_amount": "2184.48",
+    "gross_weight_kg": "1905.50",
+    "net_weight_kg": "1850.00"
+  },
+  "source": {
+    "invoice_number": "EXP2678057",
+    "invoice_date": "2026-05-03",
+    "shipper": {
+      "name": "Cheda SPA",
+      "address": "Incrocio Giacinto, 948 00037, Segni (RM)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Quadir-Ihab",
+      "address": "Plot 169, Block D, Multan 24123",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Quadir-Ihab",
+      "address": "Plot 169, Block D, Multan 24123",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CIP",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Portland cement",
+        "quantity": "37",
+        "unit": "BAG",
+        "unit_price": "59.04",
+        "amount": "2184.48",
+        "hs_code_on_doc": "2523.2900"
+      }
+    ],
+    "total_amount": "2184.48",
+    "gross_weight_kg": "1905.50",
+    "net_weight_kg": "1850.00"
+  }
+}

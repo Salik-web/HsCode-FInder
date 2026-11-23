@@ -1,0 +1,192 @@
+{
+  "id": "inj_00014",
+  "error": {
+    "kind": "net_over_gross",
+    "path": "net_weight_kg",
+    "original": "6279.45",
+    "planted": "6907.40",
+    "method": "swap net and gross"
+  },
+  "invoice": {
+    "invoice_number": "EXP2674439",
+    "invoice_date": "2026-05-19",
+    "shipper": {
+      "name": "Awj-Jabr",
+      "address": "Plot 319, Block A, Karachi 17675",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Yüksel Ltd.",
+      "address": "Plot 75, Block E, Izmir 25138",
+      "country": "TR"
+    },
+    "consignee": {
+      "name": "Gül Tic.",
+      "address": "Plot 305, Block E, Mersin 52687",
+      "country": "TR"
+    },
+    "notify_party": null,
+    "incoterm": "CPT",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "381",
+        "unit": "PCS",
+        "unit_price": "193.81",
+        "amount": "73841.61",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "678.62",
+        "unit": "KG",
+        "unit_price": "445.65",
+        "amount": "302427.00",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "594.32",
+        "unit": "KG",
+        "unit_price": "115.35",
+        "amount": "68554.81",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "107",
+        "unit": "CTN",
+        "unit_price": "341.17",
+        "amount": "36505.19",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "415",
+        "unit": "PCS",
+        "unit_price": "351.70",
+        "amount": "145955.50",
+        "hs_code_on_doc": "9405.4200"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "728",
+        "unit": "SET",
+        "unit_price": "46.73",
+        "amount": "34019.44",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "923.61",
+        "unit": "KG",
+        "unit_price": "35.34",
+        "amount": "32640.38",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "948.72",
+        "unit": "KG",
+        "unit_price": "402.10",
+        "amount": "381480.31",
+        "hs_code_on_doc": "1006.3010"
+      }
+    ],
+    "total_amount": "1075424.24",
+    "gross_weight_kg": "6279.45",
+    "net_weight_kg": "6907.40"
+  },
+  "source": {
+    "invoice_number": "EXP2674439",
+    "invoice_date": "2026-05-19",
+    "shipper": {
+      "name": "Awj-Jabr",
+      "address": "Plot 319, Block A, Karachi 17675",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Yüksel Ltd.",
+      "address": "Plot 75, Block E, Izmir 25138",
+      "country": "TR"
+    },
+    "consignee": {
+      "name": "Gül Tic.",
+      "address": "Plot 305, Block E, Mersin 52687",
+      "country": "TR"
+    },
+    "notify_party": null,
+    "incoterm": "CPT",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "381",
+        "unit": "PCS",
+        "unit_price": "193.81",
+        "amount": "73841.61",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "678.62",
+        "unit": "KG",
+        "unit_price": "445.65",
+        "amount": "302427.00",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "594.32",
+        "unit": "KG",
+        "unit_price": "115.35",
+        "amount": "68554.81",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "107",
+        "unit": "CTN",
+        "unit_price": "341.17",
+        "amount": "36505.19",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "415",
+        "unit": "PCS",
+        "unit_price": "351.70",
+        "amount": "145955.50",
+        "hs_code_on_doc": "9405.4200"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "728",
+        "unit": "SET",
+        "unit_price": "46.73",
+        "amount": "34019.44",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "923.61",
+        "unit": "KG",
+        "unit_price": "35.34",
+        "amount": "32640.38",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "948.72",
+        "unit": "KG",
+        "unit_price": "402.10",
+        "amount": "381480.31",
+        "hs_code_on_doc": "1006.3010"
+      }
+    ],
+    "total_amount": "1075424.24",
+    "gross_weight_kg": "6907.40",
+    "net_weight_kg": "6279.45"
+  }
+}

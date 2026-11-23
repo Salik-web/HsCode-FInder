@@ -1,0 +1,240 @@
+{
+  "id": "inj_00004",
+  "error": {
+    "kind": "future_date",
+    "path": "invoice_date",
+    "original": "2025-12-22",
+    "planted": "2027-03-23",
+    "method": "up to 180 days after 2026-10-01"
+  },
+  "invoice": {
+    "invoice_number": "INV-2025-01681",
+    "invoice_date": "2027-03-23",
+    "shipper": {
+      "name": "Comercializadora Luz y asociados S.Com.",
+      "address": "Alameda de Aitor Verdugo 29 La Rioja, 29514",
+      "country": "ES"
+    },
+    "buyer": {
+      "name": "Sullivan, Nichols and Horne",
+      "address": "013 Laura Light East Jonathan, FL 56108",
+      "country": "US"
+    },
+    "consignee": {
+      "name": "Sullivan, Nichols and Horne",
+      "address": "013 Laura Light East Jonathan, FL 56108",
+      "country": "US"
+    },
+    "notify_party": null,
+    "incoterm": "DDP",
+    "currency": "AED",
+    "line_items": [
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "621",
+        "unit": "SET",
+        "unit_price": "488.30",
+        "amount": "303234.30",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "432",
+        "unit": "PCS",
+        "unit_price": "253.91",
+        "amount": "109689.12",
+        "hs_code_on_doc": "8517.1300"
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "268.51",
+        "unit": "MTR",
+        "unit_price": "266.04",
+        "amount": "71434.40",
+        "hs_code_on_doc": "5209.4200"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "143",
+        "unit": "PCS",
+        "unit_price": "231.83",
+        "amount": "33151.69",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "411.34",
+        "unit": "KG",
+        "unit_price": "23.80",
+        "amount": "9789.89",
+        "hs_code_on_doc": "3902.1000"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "953.80",
+        "unit": "KG",
+        "unit_price": "37.56",
+        "amount": "35824.73",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "21",
+        "unit": "CTN",
+        "unit_price": "162.96",
+        "amount": "3422.16",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "280",
+        "unit": "PCS",
+        "unit_price": "482.68",
+        "amount": "135150.40",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "739.45",
+        "unit": "KG",
+        "unit_price": "100.64",
+        "amount": "74418.25",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "95",
+        "unit": "CTN",
+        "unit_price": "137.99",
+        "amount": "13109.05",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "925",
+        "unit": "PCS",
+        "unit_price": "293.91",
+        "amount": "271866.75",
+        "hs_code_on_doc": "8482.1000"
+      }
+    ],
+    "total_amount": "1061090.74",
+    "gross_weight_kg": "5891.74",
+    "net_weight_kg": "5356.13"
+  },
+  "source": {
+    "invoice_number": "INV-2025-01681",
+    "invoice_date": "2025-12-22",
+    "shipper": {
+      "name": "Comercializadora Luz y asociados S.Com.",
+      "address": "Alameda de Aitor Verdugo 29 La Rioja, 29514",
+      "country": "ES"
+    },
+    "buyer": {
+      "name": "Sullivan, Nichols and Horne",
+      "address": "013 Laura Light East Jonathan, FL 56108",
+      "country": "US"
+    },
+    "consignee": {
+      "name": "Sullivan, Nichols and Horne",
+      "address": "013 Laura Light East Jonathan, FL 56108",
+      "country": "US"
+    },
+    "notify_party": null,
+    "incoterm": "DDP",
+    "currency": "AED",
+    "line_items": [
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "621",
+        "unit": "SET",
+        "unit_price": "488.30",
+        "amount": "303234.30",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "432",
+        "unit": "PCS",
+        "unit_price": "253.91",
+        "amount": "109689.12",
+        "hs_code_on_doc": "8517.1300"
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "268.51",
+        "unit": "MTR",
+        "unit_price": "266.04",
+        "amount": "71434.40",
+        "hs_code_on_doc": "5209.4200"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "143",
+        "unit": "PCS",
+        "unit_price": "231.83",
+        "amount": "33151.69",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "411.34",
+        "unit": "KG",
+        "unit_price": "23.80",
+        "amount": "9789.89",
+        "hs_code_on_doc": "3902.1000"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "953.80",
+        "unit": "KG",
+        "unit_price": "37.56",
+        "amount": "35824.73",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "21",
+        "unit": "CTN",
+        "unit_price": "162.96",
+        "amount": "3422.16",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "280",
+        "unit": "PCS",
+        "unit_price": "482.68",
+        "amount": "135150.40",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "739.45",
+        "unit": "KG",
+        "unit_price": "100.64",
+        "amount": "74418.25",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "95",
+        "unit": "CTN",
+        "unit_price": "137.99",
+        "amount": "13109.05",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "925",
+        "unit": "PCS",
+        "unit_price": "293.91",
+        "amount": "271866.75",
+        "hs_code_on_doc": "8482.1000"
+      }
+    ],
+    "total_amount": "1061090.74",
+    "gross_weight_kg": "5891.74",
+    "net_weight_kg": "5356.13"
+  }
+}

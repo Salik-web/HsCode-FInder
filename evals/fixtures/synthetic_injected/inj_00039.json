@@ -1,0 +1,112 @@
+{
+  "id": "inj_00039",
+  "error": {
+    "kind": "invalid_incoterm",
+    "path": "incoterm",
+    "original": "FOB",
+    "planted": "DES",
+    "method": "outdated or informal term"
+  },
+  "invoice": {
+    "invoice_number": "EXP2622134",
+    "invoice_date": "2026-03-03",
+    "shipper": {
+      "name": "Gallet Thierry et Fils",
+      "address": "avenue Robin 09329 Masse",
+      "country": "FR"
+    },
+    "buyer": {
+      "name": "Dehmel",
+      "address": "Hubert-Jockel-Straße 5437 57971 Gifhorn",
+      "country": "DE"
+    },
+    "consignee": {
+      "name": "Baleegh-Ayyubi",
+      "address": "Plot 393, Block E, Faisalabad 41277",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DES",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Copper winding wire",
+        "quantity": "707.49",
+        "unit": "KG",
+        "unit_price": "423.56",
+        "amount": "299664.46",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "52",
+        "unit": "CTN",
+        "unit_price": "362.37",
+        "amount": "18843.24",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "243.78",
+        "unit": "KG",
+        "unit_price": "245.07",
+        "amount": "59743.16",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "378250.86",
+    "gross_weight_kg": "2179.08",
+    "net_weight_kg": "2095.27"
+  },
+  "source": {
+    "invoice_number": "EXP2622134",
+    "invoice_date": "2026-03-03",
+    "shipper": {
+      "name": "Gallet Thierry et Fils",
+      "address": "avenue Robin 09329 Masse",
+      "country": "FR"
+    },
+    "buyer": {
+      "name": "Dehmel",
+      "address": "Hubert-Jockel-Straße 5437 57971 Gifhorn",
+      "country": "DE"
+    },
+    "consignee": {
+      "name": "Baleegh-Ayyubi",
+      "address": "Plot 393, Block E, Faisalabad 41277",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "FOB",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Copper winding wire",
+        "quantity": "707.49",
+        "unit": "KG",
+        "unit_price": "423.56",
+        "amount": "299664.46",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "52",
+        "unit": "CTN",
+        "unit_price": "362.37",
+        "amount": "18843.24",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "243.78",
+        "unit": "KG",
+        "unit_price": "245.07",
+        "amount": "59743.16",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "378250.86",
+    "gross_weight_kg": "2179.08",
+    "net_weight_kg": "2095.27"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "id": "inj_00000",
+  "error": {
+    "kind": "wrong_line_amount",
+    "path": "line_items[0].amount",
+    "original": "154048.27",
+    "planted": "15404.83",
+    "method": "shift the decimal point"
+  },
+  "invoice": {
+    "invoice_number": "INV-2026-26629",
+    "invoice_date": "2026-03-12",
+    "shipper": {
+      "name": "Monroe Ltd",
+      "address": "5200 Jones Villages Port Luis, MA 34617",
+      "country": "US"
+    },
+    "buyer": {
+      "name": "Raatib and Sons",
+      "address": "Plot 400, Block G, Peshawar 26264",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Raatib and Sons",
+      "address": "Plot 400, Block G, Peshawar 26264",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Ihsaan-Tabassum",
+      "address": "Plot 34, Block D, Faisalabad 30269",
+      "country": "PK"
+    },
+    "incoterm": "FAS",
+    "currency": "EUR",
+    "line_items": [
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "340.86",
+        "unit": "KG",
+        "unit_price": "451.94",
+        "amount": "15404.83",
+        "hs_code_on_doc": "1006.3010"
+      }
+    ],
+    "total_amount": "154048.27",
+    "gross_weight_kg": "357.90",
+    "net_weight_kg": "340.86"
+  },
+  "source": {
+    "invoice_number": "INV-2026-26629",
+    "invoice_date": "2026-03-12",
+    "shipper": {
+      "name": "Monroe Ltd",
+      "address": "5200 Jones Villages Port Luis, MA 34617",
+      "country": "US"
+    },
+    "buyer": {
+      "name": "Raatib and Sons",
+      "address": "Plot 400, Block G, Peshawar 26264",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Raatib and Sons",
+      "address": "Plot 400, Block G, Peshawar 26264",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Ihsaan-Tabassum",
+      "address": "Plot 34, Block D, Faisalabad 30269",
+      "country": "PK"
+    },
+    "incoterm": "FAS",
+    "currency": "EUR",
+    "line_items": [
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "340.86",
+        "unit": "KG",
+        "unit_price": "451.94",
+        "amount": "154048.27",
+        "hs_code_on_doc": "1006.3010"
+      }
+    ],
+    "total_amount": "154048.27",
+    "gross_weight_kg": "357.90",
+    "net_weight_kg": "340.86"
+  }
+}

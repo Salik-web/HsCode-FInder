@@ -1,0 +1,104 @@
+{
+  "id": "inj_00002",
+  "error": {
+    "kind": "net_over_gross",
+    "path": "net_weight_kg",
+    "original": "1426.01",
+    "planted": "1554.35",
+    "method": "swap net and gross"
+  },
+  "invoice": {
+    "invoice_number": "INV-2026-26358",
+    "invoice_date": "2026-05-15",
+    "shipper": {
+      "name": "Yadid Inc",
+      "address": "Plot 111, Block E, Peshawar 77475",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Michaud Durand et Fils",
+      "address": "rue de Jacquot 20601 Vaillant",
+      "country": "FR"
+    },
+    "consignee": {
+      "name": "Michaud Durand et Fils",
+      "address": "rue de Jacquot 20601 Vaillant",
+      "country": "FR"
+    },
+    "notify_party": {
+      "name": "Hamel",
+      "address": "25, rue de Vallet 68854 RousseauBourg",
+      "country": "FR"
+    },
+    "incoterm": "CPT",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "907",
+        "unit": "PCS",
+        "unit_price": "179.23",
+        "amount": "162561.61",
+        "hs_code_on_doc": "9506.6200"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "37",
+        "unit": "PCS",
+        "unit_price": "129.19",
+        "amount": "4780.03",
+        "hs_code_on_doc": "8541.4300"
+      }
+    ],
+    "total_amount": "167341.64",
+    "gross_weight_kg": "1426.01",
+    "net_weight_kg": "1554.35"
+  },
+  "source": {
+    "invoice_number": "INV-2026-26358",
+    "invoice_date": "2026-05-15",
+    "shipper": {
+      "name": "Yadid Inc",
+      "address": "Plot 111, Block E, Peshawar 77475",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Michaud Durand et Fils",
+      "address": "rue de Jacquot 20601 Vaillant",
+      "country": "FR"
+    },
+    "consignee": {
+      "name": "Michaud Durand et Fils",
+      "address": "rue de Jacquot 20601 Vaillant",
+      "country": "FR"
+    },
+    "notify_party": {
+      "name": "Hamel",
+      "address": "25, rue de Vallet 68854 RousseauBourg",
+      "country": "FR"
+    },
+    "incoterm": "CPT",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "907",
+        "unit": "PCS",
+        "unit_price": "179.23",
+        "amount": "162561.61",
+        "hs_code_on_doc": "9506.6200"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "37",
+        "unit": "PCS",
+        "unit_price": "129.19",
+        "amount": "4780.03",
+        "hs_code_on_doc": "8541.4300"
+      }
+    ],
+    "total_amount": "167341.64",
+    "gross_weight_kg": "1554.35",
+    "net_weight_kg": "1426.01"
+  }
+}

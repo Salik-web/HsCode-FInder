@@ -1,0 +1,140 @@
+{
+  "invoice": {
+    "invoice_number": "INV-2025-57843",
+    "invoice_date": "2025-12-11",
+    "shipper": {
+      "name": "Wensen & van Klaarwater",
+      "address": "Mayapad 56 8193PS De Glind",
+      "country": "NL"
+    },
+    "buyer": {
+      "name": "Ibrahim, Rabb and Gulshan",
+      "address": "Plot 102, Block E, Sialkot 65310",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Ibrahim, Rabb and Gulshan",
+      "address": "Plot 102, Block E, Sialkot 65310",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CIP",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "701.99",
+        "unit": "KG",
+        "unit_price": "295.92",
+        "amount": "207732.88",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "758",
+        "unit": "PCS",
+        "unit_price": "52.59",
+        "amount": "39863.22",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "515.56",
+        "unit": "KG",
+        "unit_price": "310.97",
+        "amount": "160323.69",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "46",
+        "unit": "PCS",
+        "unit_price": "355.06",
+        "amount": "16332.76",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "51",
+        "unit": "PCS",
+        "unit_price": "488.01",
+        "amount": "24888.51",
+        "hs_code_on_doc": "8501.4000"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "908",
+        "unit": "PCS",
+        "unit_price": "69.60",
+        "amount": "63196.80",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "522.23",
+        "unit": "KG",
+        "unit_price": "305.12",
+        "amount": "159342.82",
+        "hs_code_on_doc": "5205.2400"
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "541.15",
+        "unit": "KG",
+        "unit_price": "197.55",
+        "amount": "106904.18",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "84",
+        "unit": "PCS",
+        "unit_price": "477.79",
+        "amount": "40134.36",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "129",
+        "unit": "PCS",
+        "unit_price": "180.45",
+        "amount": "23278.05",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "549",
+        "unit": "SET",
+        "unit_price": "41.73",
+        "amount": "22909.77",
+        "hs_code_on_doc": "8714.1000"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "24",
+        "unit": "PCS",
+        "unit_price": "238.51",
+        "amount": "5724.24",
+        "hs_code_on_doc": "8507.6000"
+      }
+    ],
+    "total_amount": "870631.28",
+    "gross_weight_kg": "12488.93",
+    "net_weight_kg": "11457.73"
+  },
+  "true_hs_codes": [
+    "2924.2990",
+    "8471.3010",
+    "3907.6100",
+    "8541.4300",
+    "8501.4000",
+    "6302.6000",
+    "5205.2400",
+    "8544.1100",
+    "8413.7010",
+    "4011.1000",
+    "8714.1000",
+    "8507.6000"
+  ],
+  "buyer_reference": null
+}

@@ -1,0 +1,21 @@
+{
+  "document_sha256": "7510ab07a80092a5235027c4c32abbc10f97e1973f7b3b088f01f878431a5387",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"INV-2026-50238\",\"invoice_date\":\"2026-09-06\",\"shipper\":{\"name\":\"Martinez SARL\",\"address\":\"3, chemin de Boutin 81139 Lebretondan\",\"country\":\"FR\"},\"buyer\":{\"name\":\"Ghannam Ltd\",\"address\":\"Plot 32, Block D, Lahore 90237\",\"country\":\"PK\"},\"consignee\":{\"name\":\"Ghannam Ltd\",\"address\":\"Plot 32, Block D, Lahore 90237\",\"country\":\"PK\"},\"notify_party\":null,\"incoterm\":\"CPT\",\"currency\":\"USD\",\"line_items\":[[\"Smartphones 5G\",\"123\",\"PCS\",\"94.93\",\"11676.39\",\"8517.1300\"],[\"Cotton yarn, combed, 30s count\",\"773.76\",\"KG\",\"241.14\",\"186584.49\",\"5205.2400\"],[\"Hot-rolled steel coils\",\"1.13\",\"MT\",\"351.34\",\"397.01\",\"7208.3700\"],[\"Woven denim fabric 12 oz\",\"808.92\",\"MTR\",\"436.25\",\"352891.35\",\"5209.4200\"],[\"Men's cotton T-shirts\",\"417\",\"PCS\",\"12.84\",\"5354.28\",\"6109.1000\"],[\"Stainless steel surgical scissors\",\"852\",\"PCS\",\"174.79\",\"148921.08\",\"9018.9010\"],[\"PET resin bottle grade\",\"229.30\",\"KG\",\"483.40\",\"110843.62\",\"3907.6100\"],[\"LED panel lights 40W\",\"741\",\"PCS\",\"213.05\",\"157870.05\",\"9405.4200\"],[\"Motorcycle spare parts\",\"550\",\"SET\",\"290.71\",\"159890.50\",\"8714.1000\"],[\"Refined palm olein\",\"563.87\",\"KG\",\"169.24\",\"95429.36\",\"1511.9020\"],[\"Radial car tyres 205/55 R16\",\"170\",\"PCS\",\"420.88\",\"71549.60\",\"4011.1000\"]],\"total_amount\":\"1301407.73\",\"gross_weight_kg\":\"8303.85\",\"net_weight_kg\":\"8061.99\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 3563,
+      "output_tokens": 644
+    },
+    "latency_ms": 30414,
+    "cost_usd": "0",
+    "cached": false
+  }
+}

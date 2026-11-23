@@ -1,0 +1,96 @@
+{
+  "id": "inj_00009",
+  "error": {
+    "kind": "invalid_incoterm",
+    "path": "incoterm",
+    "original": "CIF",
+    "planted": "DES",
+    "method": "outdated or informal term"
+  },
+  "invoice": {
+    "invoice_number": "922-19997",
+    "invoice_date": "2026-08-01",
+    "shipper": {
+      "name": "Transportes Avanzadas S.L.N.E",
+      "address": "Pasadizo de Tatiana Piquer 3 Burgos, 41658",
+      "country": "ES"
+    },
+    "buyer": {
+      "name": "Marshall, Chapman and Patel",
+      "address": "35 Malcolm Mill Port Nathanton L41 1UB",
+      "country": "GB"
+    },
+    "consignee": {
+      "name": "Labeeb-Tadeen",
+      "address": "Plot 400, Block C, Faisalabad 53701",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DES",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "164.04",
+        "unit": "KG",
+        "unit_price": "241.23",
+        "amount": "39571.37",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "978",
+        "unit": "SET",
+        "unit_price": "483.28",
+        "amount": "472647.84",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "512219.21",
+    "gross_weight_kg": "1625.23",
+    "net_weight_kg": "1533.24"
+  },
+  "source": {
+    "invoice_number": "922-19997",
+    "invoice_date": "2026-08-01",
+    "shipper": {
+      "name": "Transportes Avanzadas S.L.N.E",
+      "address": "Pasadizo de Tatiana Piquer 3 Burgos, 41658",
+      "country": "ES"
+    },
+    "buyer": {
+      "name": "Marshall, Chapman and Patel",
+      "address": "35 Malcolm Mill Port Nathanton L41 1UB",
+      "country": "GB"
+    },
+    "consignee": {
+      "name": "Labeeb-Tadeen",
+      "address": "Plot 400, Block C, Faisalabad 53701",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CIF",
+    "currency": "PKR",
+    "line_items": [
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "164.04",
+        "unit": "KG",
+        "unit_price": "241.23",
+        "amount": "39571.37",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "978",
+        "unit": "SET",
+        "unit_price": "483.28",
+        "amount": "472647.84",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "512219.21",
+    "gross_weight_kg": "1625.23",
+    "net_weight_kg": "1533.24"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "document_sha256": "36043f3041b5facdd5af9d6cffa5f2fdf1bf65adafdce19678b92698540fecc9",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"INV-2025-57843\",\"invoice_date\":\"2025-12-11\",\"shipper\":{\"name\":\"Wensen & van Klaarwater\",\"address\":\"Mayapad 56 8193PS De Glind\",\"country\":\"NL\"},\"buyer\":{\"name\":\"Ibrahim, Rabb and Gulshan\",\"address\":\"Plot 102, Block E, Sialkot 65310\",\"country\":\"PK\"},\"consignee\":{\"name\":\"Ibrahim, Rabb and Gulshan\",\"address\":\"Plot 102, Block E, Sialkot 65310\",\"country\":\"PK\"},\"notify_party\":null,\"incoterm\":\"CIP\",\"currency\":\"SGD\",\"line_items\":[[\"Paracetamol API in bulk\",\"701.99\",\"KG\",\"295.92\",\"207732.88\",\"2924.2990\"],[\"Laptop computers 14 inch\",\"758\",\"PCS\",\"52.59\",\"39863.22\",\"8471.3010\"],[\"PET resin bottle grade\",\"515.56\",\"KG\",\"310.97\",\"160323.69\",\"3907.6100\"],[\"Solar photovoltaic panels 550W\",\"46\",\"PCS\",\"355.06\",\"16332.76\",\"8541.4300\"],[\"Single-phase electric motors\",\"51\",\"PCS\",\"488.01\",\"24888.51\",\"8501.4000\"],[\"Cotton terry towels\",\"908\",\"PCS\",\"69.60\",\"63196.80\",\"6302.6000\"],[\"Cotton yarn, combed, 30s count\",\"522.23\",\"KG\",\"305.12\",\"159342.82\",\"5205.2400\"],[\"Copper winding wire\",\"541.15\",\"KG\",\"197.55\",\"106904.18\",\"8544.1100\"],[\"Centrifugal water pumps\",\"84\",\"PCS\",\"477.79\",\"40134.36\",\"8413.7010\"],[\"Radial car tyres 205/55 R16\",\"129\",\"PCS\",\"180.45\",\"23278.05\",\"4011.1000\"],[\"Motorcycle spare parts\",\"549\",\"SET\",\"41.73\",\"22909.77\",\"8714.1000\"],[\"Lithium-ion batteries 48V\",\"24\",\"PCS\",\"238.51\",\"5724.24\",\"8507.6000\"]],\"total_amount\":\"870631.28\",\"gross_weight_kg\":\"12488.93\",\"net_weight_kg\":\"11457.73\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 3578,
+      "output_tokens": 696
+    },
+    "latency_ms": 17348,
+    "cost_usd": "0",
+    "cached": false
+  }
+}

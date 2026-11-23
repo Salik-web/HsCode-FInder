@@ -1,0 +1,288 @@
+{
+  "id": "inj_00026",
+  "error": {
+    "kind": "net_over_gross",
+    "path": "net_weight_kg",
+    "original": "8560.00",
+    "planted": "9416.00",
+    "method": "swap net and gross"
+  },
+  "invoice": {
+    "invoice_number": "EXP2696059",
+    "invoice_date": "2026-07-17",
+    "shipper": {
+      "name": "Zayyir-Umair",
+      "address": "Plot 328, Block B, Multan 30122",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Becker SA",
+      "address": "avenue Martel 44601 Lacroix",
+      "country": "FR"
+    },
+    "consignee": {
+      "name": "Becker SA",
+      "address": "avenue Martel 44601 Lacroix",
+      "country": "FR"
+    },
+    "notify_party": null,
+    "incoterm": "CIP",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "469.37",
+        "unit": "MTR",
+        "unit_price": "225.54",
+        "amount": "105861.71",
+        "hs_code_on_doc": "5209.4200"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "77",
+        "unit": "SET",
+        "unit_price": "31.17",
+        "amount": "2400.09",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "17",
+        "unit": "PCS",
+        "unit_price": "318.59",
+        "amount": "5416.03",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "66",
+        "unit": "PCS",
+        "unit_price": "7.73",
+        "amount": "510.18",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "998.62",
+        "unit": "KG",
+        "unit_price": "126.17",
+        "amount": "125995.89",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "662",
+        "unit": "PCS",
+        "unit_price": "97.41",
+        "amount": "64485.42",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "583",
+        "unit": "PCS",
+        "unit_price": "286.80",
+        "amount": "167204.40",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "229",
+        "unit": "SET",
+        "unit_price": "378.44",
+        "amount": "86662.76",
+        "hs_code_on_doc": "8714.1000"
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "590.77",
+        "unit": "KG",
+        "unit_price": "99.87",
+        "amount": "59000.20",
+        "hs_code_on_doc": "3902.1000"
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "458.04",
+        "unit": "KG",
+        "unit_price": "392.87",
+        "amount": "179950.17",
+        "hs_code_on_doc": "5205.2400"
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "698.81",
+        "unit": "KG",
+        "unit_price": "70.73",
+        "amount": "49426.83",
+        "hs_code_on_doc": "0902.4000"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "122",
+        "unit": "PCS",
+        "unit_price": "139.91",
+        "amount": "17069.02",
+        "hs_code_on_doc": "8501.4000"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "31",
+        "unit": "CTN",
+        "unit_price": "201.91",
+        "amount": "6259.21",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "510",
+        "unit": "PCS",
+        "unit_price": "468.72",
+        "amount": "239047.20",
+        "hs_code_on_doc": "8517.1300"
+      }
+    ],
+    "total_amount": "1109289.11",
+    "gross_weight_kg": "8560.00",
+    "net_weight_kg": "9416.00"
+  },
+  "source": {
+    "invoice_number": "EXP2696059",
+    "invoice_date": "2026-07-17",
+    "shipper": {
+      "name": "Zayyir-Umair",
+      "address": "Plot 328, Block B, Multan 30122",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Becker SA",
+      "address": "avenue Martel 44601 Lacroix",
+      "country": "FR"
+    },
+    "consignee": {
+      "name": "Becker SA",
+      "address": "avenue Martel 44601 Lacroix",
+      "country": "FR"
+    },
+    "notify_party": null,
+    "incoterm": "CIP",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "469.37",
+        "unit": "MTR",
+        "unit_price": "225.54",
+        "amount": "105861.71",
+        "hs_code_on_doc": "5209.4200"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "77",
+        "unit": "SET",
+        "unit_price": "31.17",
+        "amount": "2400.09",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "17",
+        "unit": "PCS",
+        "unit_price": "318.59",
+        "amount": "5416.03",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "66",
+        "unit": "PCS",
+        "unit_price": "7.73",
+        "amount": "510.18",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "998.62",
+        "unit": "KG",
+        "unit_price": "126.17",
+        "amount": "125995.89",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "662",
+        "unit": "PCS",
+        "unit_price": "97.41",
+        "amount": "64485.42",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "583",
+        "unit": "PCS",
+        "unit_price": "286.80",
+        "amount": "167204.40",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "229",
+        "unit": "SET",
+        "unit_price": "378.44",
+        "amount": "86662.76",
+        "hs_code_on_doc": "8714.1000"
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "590.77",
+        "unit": "KG",
+        "unit_price": "99.87",
+        "amount": "59000.20",
+        "hs_code_on_doc": "3902.1000"
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "458.04",
+        "unit": "KG",
+        "unit_price": "392.87",
+        "amount": "179950.17",
+        "hs_code_on_doc": "5205.2400"
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "698.81",
+        "unit": "KG",
+        "unit_price": "70.73",
+        "amount": "49426.83",
+        "hs_code_on_doc": "0902.4000"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "122",
+        "unit": "PCS",
+        "unit_price": "139.91",
+        "amount": "17069.02",
+        "hs_code_on_doc": "8501.4000"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "31",
+        "unit": "CTN",
+        "unit_price": "201.91",
+        "amount": "6259.21",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "510",
+        "unit": "PCS",
+        "unit_price": "468.72",
+        "amount": "239047.20",
+        "hs_code_on_doc": "8517.1300"
+      }
+    ],
+    "total_amount": "1109289.11",
+    "gross_weight_kg": "9416.00",
+    "net_weight_kg": "8560.00"
+  }
+}

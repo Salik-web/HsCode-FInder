@@ -1,0 +1,272 @@
+{
+  "id": "inj_00029",
+  "error": {
+    "kind": "bad_currency",
+    "path": "currency",
+    "original": "AED",
+    "planted": "NTD",
+    "method": "common non-ISO spelling"
+  },
+  "invoice": {
+    "invoice_number": "INV-2026-81320",
+    "invoice_date": "2026-08-10",
+    "shipper": {
+      "name": "Allen, Carroll and Wilson",
+      "address": "676 Nichols Loop Suite 788 South Larry, AS 15252",
+      "country": "US"
+    },
+    "buyer": {
+      "name": "Saboor LLC",
+      "address": "Plot 82, Block A, Peshawar 58217",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Saboor LLC",
+      "address": "Plot 82, Block A, Peshawar 58217",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CPT",
+    "currency": "NTD",
+    "line_items": [
+      {
+        "description": "Fresh mangoes",
+        "quantity": "102.93",
+        "unit": "KG",
+        "unit_price": "282.48",
+        "amount": "29075.67",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "602",
+        "unit": "SET",
+        "unit_price": "435.62",
+        "amount": "262243.24",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "55",
+        "unit": "CTN",
+        "unit_price": "311.04",
+        "amount": "17107.20",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "651",
+        "unit": "PAIR",
+        "unit_price": "251.24",
+        "amount": "163557.24",
+        "hs_code_on_doc": "4203.2900"
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "377",
+        "unit": "PCS",
+        "unit_price": "438.12",
+        "amount": "165171.24",
+        "hs_code_on_doc": "9506.6200"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "5",
+        "unit": "PCS",
+        "unit_price": "178.23",
+        "amount": "891.15",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "671",
+        "unit": "PCS",
+        "unit_price": "414.19",
+        "amount": "277921.49",
+        "hs_code_on_doc": "6109.1000"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "619",
+        "unit": "PCS",
+        "unit_price": "354.23",
+        "amount": "219268.37",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "100.63",
+        "unit": "KG",
+        "unit_price": "330.98",
+        "amount": "33306.52",
+        "hs_code_on_doc": "5205.2400"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "172",
+        "unit": "PCS",
+        "unit_price": "8.98",
+        "amount": "1544.56",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "423.32",
+        "unit": "KG",
+        "unit_price": "59.33",
+        "amount": "25115.58",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "33",
+        "unit": "PCS",
+        "unit_price": "314.68",
+        "amount": "10384.44",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "289",
+        "unit": "SET",
+        "unit_price": "90.93",
+        "amount": "26278.77",
+        "hs_code_on_doc": "8714.1000"
+      }
+    ],
+    "total_amount": "1231865.47",
+    "gross_weight_kg": "8055.54",
+    "net_weight_kg": "7323.22"
+  },
+  "source": {
+    "invoice_number": "INV-2026-81320",
+    "invoice_date": "2026-08-10",
+    "shipper": {
+      "name": "Allen, Carroll and Wilson",
+      "address": "676 Nichols Loop Suite 788 South Larry, AS 15252",
+      "country": "US"
+    },
+    "buyer": {
+      "name": "Saboor LLC",
+      "address": "Plot 82, Block A, Peshawar 58217",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Saboor LLC",
+      "address": "Plot 82, Block A, Peshawar 58217",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CPT",
+    "currency": "AED",
+    "line_items": [
+      {
+        "description": "Fresh mangoes",
+        "quantity": "102.93",
+        "unit": "KG",
+        "unit_price": "282.48",
+        "amount": "29075.67",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "602",
+        "unit": "SET",
+        "unit_price": "435.62",
+        "amount": "262243.24",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "55",
+        "unit": "CTN",
+        "unit_price": "311.04",
+        "amount": "17107.20",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "651",
+        "unit": "PAIR",
+        "unit_price": "251.24",
+        "amount": "163557.24",
+        "hs_code_on_doc": "4203.2900"
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "377",
+        "unit": "PCS",
+        "unit_price": "438.12",
+        "amount": "165171.24",
+        "hs_code_on_doc": "9506.6200"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "5",
+        "unit": "PCS",
+        "unit_price": "178.23",
+        "amount": "891.15",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "671",
+        "unit": "PCS",
+        "unit_price": "414.19",
+        "amount": "277921.49",
+        "hs_code_on_doc": "6109.1000"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "619",
+        "unit": "PCS",
+        "unit_price": "354.23",
+        "amount": "219268.37",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "100.63",
+        "unit": "KG",
+        "unit_price": "330.98",
+        "amount": "33306.52",
+        "hs_code_on_doc": "5205.2400"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "172",
+        "unit": "PCS",
+        "unit_price": "8.98",
+        "amount": "1544.56",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "423.32",
+        "unit": "KG",
+        "unit_price": "59.33",
+        "amount": "25115.58",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "33",
+        "unit": "PCS",
+        "unit_price": "314.68",
+        "amount": "10384.44",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "289",
+        "unit": "SET",
+        "unit_price": "90.93",
+        "amount": "26278.77",
+        "hs_code_on_doc": "8714.1000"
+      }
+    ],
+    "total_amount": "1231865.47",
+    "gross_weight_kg": "8055.54",
+    "net_weight_kg": "7323.22"
+  }
+}

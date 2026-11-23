@@ -1,0 +1,21 @@
+{
+  "document_sha256": "446445b254ab886e64cabfecc1ffeb9e41fb50e40bd24eb156b9c5a41caa1588",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"953-45627\",\"invoice_date\":\"2026-01-06\",\"shipper\":{\"name\":\"Harvey-Collins\",\"address\":\"44 Tony Shores Vincentside CF31 8PT\",\"country\":\"GB\"},\"buyer\":{\"name\":\"As consignee\",\"address\":null,\"country\":null},\"consignee\":{\"name\":\"Omeir-Luqmaan\",\"address\":\"Plot 93, Block C, Multan 81714\",\"country\":\"PK\"},\"notify_party\":{\"name\":\"Ayyubi Inc\",\"address\":\"Plot 137, Block F, Lahore 86151\",\"country\":\"PK\"},\"incoterm\":\"CIF\",\"currency\":\"EUR\",\"line_items\":[[\"PET resin bottle grade\",\"814.93\",\"KG\",\"200.20\",\"163148.99\",null],[\"Hand-stitched footballs\",\"359\",\"PCS\",\"63.41\",\"22764.19\",null],[\"Refined palm olein\",\"844.94\",\"KG\",\"458.98\",\"387810.56\",null],[\"LED panel lights 40W\",\"481\",\"PCS\",\"494.84\",\"238018.04\",null],[\"Stainless steel surgical scissors\",\"237\",\"PCS\",\"101.26\",\"23998.62\",null],[\"Fresh mangoes\",\"650.08\",\"KG\",\"79.75\",\"51843.88\",null],[\"Printed cotton bed linen\",\"159\",\"SET\",\"416.38\",\"66204.42\",null],[\"Cotton terry towels\",\"920\",\"PCS\",\"69.49\",\"63930.80\",null],[\"Copper winding wire\",\"898.85\",\"KG\",\"47.93\",\"43081.88\",null],[\"Black tea in bulk packs\",\"16.49\",\"KG\",\"351.22\",\"5791.62\",null]],\"total_amount\":\"1066593.00\",\"gross_weight_kg\":\"5095.43\",\"net_weight_kg\":\"4947.02\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 3400,
+      "output_tokens": 521
+    },
+    "latency_ms": 3708,
+    "cost_usd": "0",
+    "cached": false
+  }
+}

@@ -1,0 +1,264 @@
+{
+  "id": "inj_00017",
+  "error": {
+    "kind": "bad_currency",
+    "path": "currency",
+    "original": "SAR",
+    "planted": "USD$",
+    "method": "common non-ISO spelling"
+  },
+  "invoice": {
+    "invoice_number": "CI/25/91101",
+    "invoice_date": "2025-11-13",
+    "shipper": {
+      "name": "Consultoría NIGK S.A.",
+      "address": "Cuesta de Telmo Hernández 3 Badajoz, 19666",
+      "country": "ES"
+    },
+    "buyer": {
+      "name": "Tadeen Ltd",
+      "address": "Plot 22, Block E, Multan 85366",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Baashir, Zaakir and Aabid",
+      "address": "Plot 324, Block A, Rawalpindi 37283",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Ihsaan and Sons",
+      "address": "Plot 230, Block A, Faisalabad 40468",
+      "country": "PK"
+    },
+    "incoterm": "CFR",
+    "currency": "USD$",
+    "line_items": [
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "348",
+        "unit": "PCS",
+        "unit_price": "451.52",
+        "amount": "157128.96",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "521.97",
+        "unit": "KG",
+        "unit_price": "299.59",
+        "amount": "156376.99",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "368",
+        "unit": "PAIR",
+        "unit_price": "55.23",
+        "amount": "20324.64",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "26",
+        "unit": "PCS",
+        "unit_price": "413.92",
+        "amount": "10761.92",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "98",
+        "unit": "PCS",
+        "unit_price": "208.16",
+        "amount": "20399.68",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "264",
+        "unit": "PCS",
+        "unit_price": "457.81",
+        "amount": "120861.84",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "147",
+        "unit": "PCS",
+        "unit_price": "280.48",
+        "amount": "41230.56",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "781",
+        "unit": "SET",
+        "unit_price": "39.66",
+        "amount": "30974.46",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "172.88",
+        "unit": "KG",
+        "unit_price": "410.44",
+        "amount": "70956.87",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "553",
+        "unit": "PCS",
+        "unit_price": "346.57",
+        "amount": "191653.21",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "459.33",
+        "unit": "KG",
+        "unit_price": "40.25",
+        "amount": "18488.03",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "793.31",
+        "unit": "KG",
+        "unit_price": "387.82",
+        "amount": "307661.48",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1146818.64",
+    "gross_weight_kg": "8258.86",
+    "net_weight_kg": "7791.38"
+  },
+  "source": {
+    "invoice_number": "CI/25/91101",
+    "invoice_date": "2025-11-13",
+    "shipper": {
+      "name": "Consultoría NIGK S.A.",
+      "address": "Cuesta de Telmo Hernández 3 Badajoz, 19666",
+      "country": "ES"
+    },
+    "buyer": {
+      "name": "Tadeen Ltd",
+      "address": "Plot 22, Block E, Multan 85366",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Baashir, Zaakir and Aabid",
+      "address": "Plot 324, Block A, Rawalpindi 37283",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Ihsaan and Sons",
+      "address": "Plot 230, Block A, Faisalabad 40468",
+      "country": "PK"
+    },
+    "incoterm": "CFR",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "348",
+        "unit": "PCS",
+        "unit_price": "451.52",
+        "amount": "157128.96",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "521.97",
+        "unit": "KG",
+        "unit_price": "299.59",
+        "amount": "156376.99",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "368",
+        "unit": "PAIR",
+        "unit_price": "55.23",
+        "amount": "20324.64",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "26",
+        "unit": "PCS",
+        "unit_price": "413.92",
+        "amount": "10761.92",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "98",
+        "unit": "PCS",
+        "unit_price": "208.16",
+        "amount": "20399.68",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "264",
+        "unit": "PCS",
+        "unit_price": "457.81",
+        "amount": "120861.84",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "147",
+        "unit": "PCS",
+        "unit_price": "280.48",
+        "amount": "41230.56",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "781",
+        "unit": "SET",
+        "unit_price": "39.66",
+        "amount": "30974.46",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "172.88",
+        "unit": "KG",
+        "unit_price": "410.44",
+        "amount": "70956.87",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "553",
+        "unit": "PCS",
+        "unit_price": "346.57",
+        "amount": "191653.21",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "459.33",
+        "unit": "KG",
+        "unit_price": "40.25",
+        "amount": "18488.03",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "793.31",
+        "unit": "KG",
+        "unit_price": "387.82",
+        "amount": "307661.48",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1146818.64",
+    "gross_weight_kg": "8258.86",
+    "net_weight_kg": "7791.38"
+  }
+}

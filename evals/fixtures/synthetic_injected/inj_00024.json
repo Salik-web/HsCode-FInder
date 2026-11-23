@@ -1,0 +1,312 @@
+{
+  "id": "inj_00024",
+  "error": {
+    "kind": "wrong_line_amount",
+    "path": "line_items[0].amount",
+    "original": "3725.76",
+    "planted": "3925.76",
+    "method": "change one digit"
+  },
+  "invoice": {
+    "invoice_number": "CI/26/26287",
+    "invoice_date": "2026-07-09",
+    "shipper": {
+      "name": "Sauli, Garzoni e Toso s.r.l.",
+      "address": "Piazza Bonaventura, 48 52028, Malva (AR)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Dyer, Cross and Faulkner",
+      "address": "Flat 07R James Harbor Lake Eleanormouth FY70 2LF",
+      "country": "GB"
+    },
+    "consignee": {
+      "name": "Qusay, Mahbub and Bizhan",
+      "address": "Plot 351, Block D, Peshawar 18599",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Saafir and Sons",
+      "address": "Plot 190, Block G, Faisalabad 61923",
+      "country": "PK"
+    },
+    "incoterm": "FCA",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Portland cement",
+        "quantity": "24",
+        "unit": "BAG",
+        "unit_price": "155.24",
+        "amount": "3925.76",
+        "hs_code_on_doc": "2523.2900"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "608",
+        "unit": "PCS",
+        "unit_price": "267.42",
+        "amount": "162591.36",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "690.62",
+        "unit": "KG",
+        "unit_price": "104.90",
+        "amount": "72446.04",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "996.48",
+        "unit": "KG",
+        "unit_price": "479.30",
+        "amount": "477612.86",
+        "hs_code_on_doc": "5205.2400"
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "994.30",
+        "unit": "KG",
+        "unit_price": "316.17",
+        "amount": "314367.83",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "870.18",
+        "unit": "KG",
+        "unit_price": "47.60",
+        "amount": "41420.57",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "735.26",
+        "unit": "KG",
+        "unit_price": "247.67",
+        "amount": "182101.84",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "842.69",
+        "unit": "KG",
+        "unit_price": "267.78",
+        "amount": "225655.53",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "30",
+        "unit": "PCS",
+        "unit_price": "320.37",
+        "amount": "9611.10",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "314",
+        "unit": "PCS",
+        "unit_price": "444.87",
+        "amount": "139689.18",
+        "hs_code_on_doc": "8482.1000"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "977",
+        "unit": "PCS",
+        "unit_price": "393.41",
+        "amount": "384361.57",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "567",
+        "unit": "PCS",
+        "unit_price": "224.13",
+        "amount": "127081.71",
+        "hs_code_on_doc": "9405.4200"
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "476",
+        "unit": "SET",
+        "unit_price": "419.51",
+        "amount": "199686.76",
+        "hs_code_on_doc": "8714.1000"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "85",
+        "unit": "CTN",
+        "unit_price": "475.43",
+        "amount": "40411.55",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "902",
+        "unit": "PCS",
+        "unit_price": "189.22",
+        "amount": "170676.44",
+        "hs_code_on_doc": "6109.1000"
+      }
+    ],
+    "total_amount": "2551440.10",
+    "gross_weight_kg": "13784.70",
+    "net_weight_kg": "13128.29"
+  },
+  "source": {
+    "invoice_number": "CI/26/26287",
+    "invoice_date": "2026-07-09",
+    "shipper": {
+      "name": "Sauli, Garzoni e Toso s.r.l.",
+      "address": "Piazza Bonaventura, 48 52028, Malva (AR)",
+      "country": "IT"
+    },
+    "buyer": {
+      "name": "Dyer, Cross and Faulkner",
+      "address": "Flat 07R James Harbor Lake Eleanormouth FY70 2LF",
+      "country": "GB"
+    },
+    "consignee": {
+      "name": "Qusay, Mahbub and Bizhan",
+      "address": "Plot 351, Block D, Peshawar 18599",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Saafir and Sons",
+      "address": "Plot 190, Block G, Faisalabad 61923",
+      "country": "PK"
+    },
+    "incoterm": "FCA",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Portland cement",
+        "quantity": "24",
+        "unit": "BAG",
+        "unit_price": "155.24",
+        "amount": "3725.76",
+        "hs_code_on_doc": "2523.2900"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "608",
+        "unit": "PCS",
+        "unit_price": "267.42",
+        "amount": "162591.36",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "690.62",
+        "unit": "KG",
+        "unit_price": "104.90",
+        "amount": "72446.04",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "996.48",
+        "unit": "KG",
+        "unit_price": "479.30",
+        "amount": "477612.86",
+        "hs_code_on_doc": "5205.2400"
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "994.30",
+        "unit": "KG",
+        "unit_price": "316.17",
+        "amount": "314367.83",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "870.18",
+        "unit": "KG",
+        "unit_price": "47.60",
+        "amount": "41420.57",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "735.26",
+        "unit": "KG",
+        "unit_price": "247.67",
+        "amount": "182101.84",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "842.69",
+        "unit": "KG",
+        "unit_price": "267.78",
+        "amount": "225655.53",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "30",
+        "unit": "PCS",
+        "unit_price": "320.37",
+        "amount": "9611.10",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "314",
+        "unit": "PCS",
+        "unit_price": "444.87",
+        "amount": "139689.18",
+        "hs_code_on_doc": "8482.1000"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "977",
+        "unit": "PCS",
+        "unit_price": "393.41",
+        "amount": "384361.57",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "567",
+        "unit": "PCS",
+        "unit_price": "224.13",
+        "amount": "127081.71",
+        "hs_code_on_doc": "9405.4200"
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "476",
+        "unit": "SET",
+        "unit_price": "419.51",
+        "amount": "199686.76",
+        "hs_code_on_doc": "8714.1000"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "85",
+        "unit": "CTN",
+        "unit_price": "475.43",
+        "amount": "40411.55",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "902",
+        "unit": "PCS",
+        "unit_price": "189.22",
+        "amount": "170676.44",
+        "hs_code_on_doc": "6109.1000"
+      }
+    ],
+    "total_amount": "2551440.10",
+    "gross_weight_kg": "13784.70",
+    "net_weight_kg": "13128.29"
+  }
+}

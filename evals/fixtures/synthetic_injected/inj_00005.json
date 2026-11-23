@@ -1,0 +1,232 @@
+{
+  "id": "inj_00005",
+  "error": {
+    "kind": "bad_currency",
+    "path": "currency",
+    "original": "SGD",
+    "planted": "USD$",
+    "method": "common non-ISO spelling"
+  },
+  "invoice": {
+    "invoice_number": "472-89124",
+    "invoice_date": "2026-02-25",
+    "shipper": {
+      "name": "Harloff Kade AG",
+      "address": "Hannelore-Hande-Gasse 56-18 53516 Brilon",
+      "country": "DE"
+    },
+    "buyer": {
+      "name": "Raatib Group",
+      "address": "Plot 155, Block C, Lahore 38691",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Saabir, Zahaar and Liyaqat",
+      "address": "Plot 281, Block C, Faisalabad 29197",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Taj, Baleegh and Saburah",
+      "address": "Plot 195, Block A, Lahore 80932",
+      "country": "PK"
+    },
+    "incoterm": "FAS",
+    "currency": "USD$",
+    "line_items": [
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.17",
+        "unit": "MT",
+        "unit_price": "154.49",
+        "amount": "180.75",
+        "hs_code_on_doc": "7208.3700"
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "25",
+        "unit": "BAG",
+        "unit_price": "108.49",
+        "amount": "2712.25",
+        "hs_code_on_doc": "2523.2900"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "41",
+        "unit": "CTN",
+        "unit_price": "390.47",
+        "amount": "16009.27",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "394",
+        "unit": "PCS",
+        "unit_price": "148.93",
+        "amount": "58678.42",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "909.52",
+        "unit": "KG",
+        "unit_price": "392.36",
+        "amount": "356859.27",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "39",
+        "unit": "PCS",
+        "unit_price": "265.03",
+        "amount": "10336.17",
+        "hs_code_on_doc": "8501.4000"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "219",
+        "unit": "PCS",
+        "unit_price": "30.16",
+        "amount": "6605.04",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "760.84",
+        "unit": "MTR",
+        "unit_price": "402.24",
+        "amount": "306040.28",
+        "hs_code_on_doc": "5209.4200"
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "898.25",
+        "unit": "KG",
+        "unit_price": "318.07",
+        "amount": "285706.38",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "693",
+        "unit": "PCS",
+        "unit_price": "348.28",
+        "amount": "241358.04",
+        "hs_code_on_doc": "9405.4200"
+      }
+    ],
+    "total_amount": "1284485.87",
+    "gross_weight_kg": "9694.03",
+    "net_weight_kg": "9411.68"
+  },
+  "source": {
+    "invoice_number": "472-89124",
+    "invoice_date": "2026-02-25",
+    "shipper": {
+      "name": "Harloff Kade AG",
+      "address": "Hannelore-Hande-Gasse 56-18 53516 Brilon",
+      "country": "DE"
+    },
+    "buyer": {
+      "name": "Raatib Group",
+      "address": "Plot 155, Block C, Lahore 38691",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Saabir, Zahaar and Liyaqat",
+      "address": "Plot 281, Block C, Faisalabad 29197",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Taj, Baleegh and Saburah",
+      "address": "Plot 195, Block A, Lahore 80932",
+      "country": "PK"
+    },
+    "incoterm": "FAS",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.17",
+        "unit": "MT",
+        "unit_price": "154.49",
+        "amount": "180.75",
+        "hs_code_on_doc": "7208.3700"
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "25",
+        "unit": "BAG",
+        "unit_price": "108.49",
+        "amount": "2712.25",
+        "hs_code_on_doc": "2523.2900"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "41",
+        "unit": "CTN",
+        "unit_price": "390.47",
+        "amount": "16009.27",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "394",
+        "unit": "PCS",
+        "unit_price": "148.93",
+        "amount": "58678.42",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "909.52",
+        "unit": "KG",
+        "unit_price": "392.36",
+        "amount": "356859.27",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "39",
+        "unit": "PCS",
+        "unit_price": "265.03",
+        "amount": "10336.17",
+        "hs_code_on_doc": "8501.4000"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "219",
+        "unit": "PCS",
+        "unit_price": "30.16",
+        "amount": "6605.04",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "760.84",
+        "unit": "MTR",
+        "unit_price": "402.24",
+        "amount": "306040.28",
+        "hs_code_on_doc": "5209.4200"
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "898.25",
+        "unit": "KG",
+        "unit_price": "318.07",
+        "amount": "285706.38",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "693",
+        "unit": "PCS",
+        "unit_price": "348.28",
+        "amount": "241358.04",
+        "hs_code_on_doc": "9405.4200"
+      }
+    ],
+    "total_amount": "1284485.87",
+    "gross_weight_kg": "9694.03",
+    "net_weight_kg": "9411.68"
+  }
+}

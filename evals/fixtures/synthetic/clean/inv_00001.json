@@ -1,0 +1,131 @@
+{
+  "invoice": {
+    "invoice_number": "INV-2026-50238",
+    "invoice_date": "2026-09-06",
+    "shipper": {
+      "name": "Martinez SARL",
+      "address": "3, chemin de Boutin 81139 Lebretondan",
+      "country": "FR"
+    },
+    "buyer": {
+      "name": "Ghannam Ltd",
+      "address": "Plot 32, Block D, Lahore 90237",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Ghannam Ltd",
+      "address": "Plot 32, Block D, Lahore 90237",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CPT",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Smartphones 5G",
+        "quantity": "123",
+        "unit": "PCS",
+        "unit_price": "94.93",
+        "amount": "11676.39",
+        "hs_code_on_doc": "8517.1300"
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "773.76",
+        "unit": "KG",
+        "unit_price": "241.14",
+        "amount": "186584.49",
+        "hs_code_on_doc": "5205.2400"
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.13",
+        "unit": "MT",
+        "unit_price": "351.34",
+        "amount": "397.01",
+        "hs_code_on_doc": "7208.3700"
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "808.92",
+        "unit": "MTR",
+        "unit_price": "436.25",
+        "amount": "352891.35",
+        "hs_code_on_doc": "5209.4200"
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "417",
+        "unit": "PCS",
+        "unit_price": "12.84",
+        "amount": "5354.28",
+        "hs_code_on_doc": "6109.1000"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "852",
+        "unit": "PCS",
+        "unit_price": "174.79",
+        "amount": "148921.08",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "229.30",
+        "unit": "KG",
+        "unit_price": "483.40",
+        "amount": "110843.62",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "741",
+        "unit": "PCS",
+        "unit_price": "213.05",
+        "amount": "157870.05",
+        "hs_code_on_doc": "9405.4200"
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "550",
+        "unit": "SET",
+        "unit_price": "290.71",
+        "amount": "159890.50",
+        "hs_code_on_doc": "8714.1000"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "563.87",
+        "unit": "KG",
+        "unit_price": "169.24",
+        "amount": "95429.36",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "170",
+        "unit": "PCS",
+        "unit_price": "420.88",
+        "amount": "71549.60",
+        "hs_code_on_doc": "4011.1000"
+      }
+    ],
+    "total_amount": "1301407.73",
+    "gross_weight_kg": "8303.85",
+    "net_weight_kg": "8061.99"
+  },
+  "true_hs_codes": [
+    "8517.1300",
+    "5205.2400",
+    "7208.3700",
+    "5209.4200",
+    "6109.1000",
+    "9018.9010",
+    "3907.6100",
+    "9405.4200",
+    "8714.1000",
+    "1511.9020",
+    "4011.1000"
+  ],
+  "buyer_reference": null
+}

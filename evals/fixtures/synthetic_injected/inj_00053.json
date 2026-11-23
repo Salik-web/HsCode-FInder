@@ -1,0 +1,240 @@
+{
+  "id": "inj_00053",
+  "error": {
+    "kind": "bad_currency",
+    "path": "currency",
+    "original": "SGD",
+    "planted": "EURO",
+    "method": "common non-ISO spelling"
+  },
+  "invoice": {
+    "invoice_number": "EXP2523111",
+    "invoice_date": "2025-12-27",
+    "shipper": {
+      "name": "Ross-Taylor",
+      "address": "6138 Jones Loop Suite 867 Rojasborough, SD 40166",
+      "country": "US"
+    },
+    "buyer": {
+      "name": "Sadan, Ubaid and Lahiah",
+      "address": "Plot 123, Block C, Sialkot 34885",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Sadan, Ubaid and Lahiah",
+      "address": "Plot 123, Block C, Sialkot 34885",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DAP",
+    "currency": "EURO",
+    "line_items": [
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "30",
+        "unit": "PCS",
+        "unit_price": "207.84",
+        "amount": "6235.20",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "892",
+        "unit": "PCS",
+        "unit_price": "364.42",
+        "amount": "325062.64",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "394",
+        "unit": "PCS",
+        "unit_price": "143.19",
+        "amount": "56416.86",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "19.91",
+        "unit": "KG",
+        "unit_price": "181.78",
+        "amount": "3619.24",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "138",
+        "unit": "PCS",
+        "unit_price": "196.08",
+        "amount": "27059.04",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "36",
+        "unit": "BAG",
+        "unit_price": "328.42",
+        "amount": "11823.12",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "666",
+        "unit": "SET",
+        "unit_price": "144.89",
+        "amount": "96496.74",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "50",
+        "unit": "PCS",
+        "unit_price": "92.68",
+        "amount": "4634.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "804.95",
+        "unit": "KG",
+        "unit_price": "64.90",
+        "amount": "52241.26",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "742",
+        "unit": "PCS",
+        "unit_price": "320.64",
+        "amount": "237914.88",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "741.14",
+        "unit": "KG",
+        "unit_price": "420.42",
+        "amount": "311590.08",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1133093.06",
+    "gross_weight_kg": "7810.59",
+    "net_weight_kg": "7299.62"
+  },
+  "source": {
+    "invoice_number": "EXP2523111",
+    "invoice_date": "2025-12-27",
+    "shipper": {
+      "name": "Ross-Taylor",
+      "address": "6138 Jones Loop Suite 867 Rojasborough, SD 40166",
+      "country": "US"
+    },
+    "buyer": {
+      "name": "Sadan, Ubaid and Lahiah",
+      "address": "Plot 123, Block C, Sialkot 34885",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Sadan, Ubaid and Lahiah",
+      "address": "Plot 123, Block C, Sialkot 34885",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DAP",
+    "currency": "SGD",
+    "line_items": [
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "30",
+        "unit": "PCS",
+        "unit_price": "207.84",
+        "amount": "6235.20",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "892",
+        "unit": "PCS",
+        "unit_price": "364.42",
+        "amount": "325062.64",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "394",
+        "unit": "PCS",
+        "unit_price": "143.19",
+        "amount": "56416.86",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "19.91",
+        "unit": "KG",
+        "unit_price": "181.78",
+        "amount": "3619.24",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "138",
+        "unit": "PCS",
+        "unit_price": "196.08",
+        "amount": "27059.04",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "36",
+        "unit": "BAG",
+        "unit_price": "328.42",
+        "amount": "11823.12",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "666",
+        "unit": "SET",
+        "unit_price": "144.89",
+        "amount": "96496.74",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "50",
+        "unit": "PCS",
+        "unit_price": "92.68",
+        "amount": "4634.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "804.95",
+        "unit": "KG",
+        "unit_price": "64.90",
+        "amount": "52241.26",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "742",
+        "unit": "PCS",
+        "unit_price": "320.64",
+        "amount": "237914.88",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "741.14",
+        "unit": "KG",
+        "unit_price": "420.42",
+        "amount": "311590.08",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "1133093.06",
+    "gross_weight_kg": "7810.59",
+    "net_weight_kg": "7299.62"
+  }
+}

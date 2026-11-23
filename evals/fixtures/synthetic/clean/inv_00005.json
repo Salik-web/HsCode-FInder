@@ -1,0 +1,126 @@
+{
+  "invoice": {
+    "invoice_number": "EXP2699099",
+    "invoice_date": "2026-03-10",
+    "shipper": {
+      "name": "Taj LLC",
+      "address": "Plot 173, Block E, Sialkot 47520",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Esparza, Johnson and Garcia",
+      "address": "9849 Duncan Shoal Martinezside, VT 61653",
+      "country": "US"
+    },
+    "consignee": {
+      "name": "Krein e.V.",
+      "address": "Cläre-Wesack-Weg 6525 33736 Wiedenbrück",
+      "country": "DE"
+    },
+    "notify_party": {
+      "name": "Heintze",
+      "address": "Gehringerallee 9897 40358 Bayreuth",
+      "country": "DE"
+    },
+    "incoterm": "DPU",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Polypropylene granules",
+        "quantity": "982.61",
+        "unit": "KG",
+        "unit_price": "33.01",
+        "amount": "32435.96",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "334.41",
+        "unit": "KG",
+        "unit_price": "455.67",
+        "amount": "152380.60",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "54.72",
+        "unit": "KG",
+        "unit_price": "106.83",
+        "amount": "5845.74",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "163",
+        "unit": "PCS",
+        "unit_price": "90.41",
+        "amount": "14736.83",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "866.89",
+        "unit": "KG",
+        "unit_price": "85.87",
+        "amount": "74439.84",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "671",
+        "unit": "PCS",
+        "unit_price": "311.95",
+        "amount": "209318.45",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "23",
+        "unit": "PCS",
+        "unit_price": "466.96",
+        "amount": "10740.08",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "769.85",
+        "unit": "KG",
+        "unit_price": "418.97",
+        "amount": "322544.05",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "LED panel lights 40W",
+        "quantity": "475",
+        "unit": "PCS",
+        "unit_price": "135.17",
+        "amount": "64205.75",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "102",
+        "unit": "PCS",
+        "unit_price": "313.59",
+        "amount": "31986.18",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "918633.48",
+    "gross_weight_kg": "6655.09",
+    "net_weight_kg": "6338.18"
+  },
+  "true_hs_codes": [
+    "3902.1000",
+    "8544.1100",
+    "5205.2400",
+    "6302.6000",
+    "0804.5020",
+    "8517.1300",
+    "8507.6000",
+    "1511.9020",
+    "9405.4200",
+    "8501.4000"
+  ],
+  "buyer_reference": null
+}

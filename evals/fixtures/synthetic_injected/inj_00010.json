@@ -1,0 +1,112 @@
+{
+  "id": "inj_00010",
+  "error": {
+    "kind": "future_date",
+    "path": "invoice_date",
+    "original": "2026-01-30",
+    "planted": "2027-01-07",
+    "method": "up to 180 days after 2026-10-01"
+  },
+  "invoice": {
+    "invoice_number": "CI/26/70349",
+    "invoice_date": "2027-01-07",
+    "shipper": {
+      "name": "Saafir, Ghazzal and Limazah",
+      "address": "Plot 129, Block G, Karachi 41159",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Manolesso SPA",
+      "address": "Piazza Adinolfi, 15 86094, Civitanova Del Sannio (IS)",
+      "country": "IT"
+    },
+    "consignee": {
+      "name": "Manolesso SPA",
+      "address": "Piazza Adinolfi, 15 86094, Civitanova Del Sannio (IS)",
+      "country": "IT"
+    },
+    "notify_party": null,
+    "incoterm": "FOB",
+    "currency": "EUR",
+    "line_items": [
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "11",
+        "unit": "PCS",
+        "unit_price": "168.55",
+        "amount": "1854.05",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "509",
+        "unit": "SET",
+        "unit_price": "336.93",
+        "amount": "171497.37",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "34",
+        "unit": "PCS",
+        "unit_price": "350.74",
+        "amount": "11925.16",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "185276.58",
+    "gross_weight_kg": "2926.96",
+    "net_weight_kg": "2735.48"
+  },
+  "source": {
+    "invoice_number": "CI/26/70349",
+    "invoice_date": "2026-01-30",
+    "shipper": {
+      "name": "Saafir, Ghazzal and Limazah",
+      "address": "Plot 129, Block G, Karachi 41159",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Manolesso SPA",
+      "address": "Piazza Adinolfi, 15 86094, Civitanova Del Sannio (IS)",
+      "country": "IT"
+    },
+    "consignee": {
+      "name": "Manolesso SPA",
+      "address": "Piazza Adinolfi, 15 86094, Civitanova Del Sannio (IS)",
+      "country": "IT"
+    },
+    "notify_party": null,
+    "incoterm": "FOB",
+    "currency": "EUR",
+    "line_items": [
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "11",
+        "unit": "PCS",
+        "unit_price": "168.55",
+        "amount": "1854.05",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "509",
+        "unit": "SET",
+        "unit_price": "336.93",
+        "amount": "171497.37",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "34",
+        "unit": "PCS",
+        "unit_price": "350.74",
+        "amount": "11925.16",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "185276.58",
+    "gross_weight_kg": "2926.96",
+    "net_weight_kg": "2735.48"
+  }
+}

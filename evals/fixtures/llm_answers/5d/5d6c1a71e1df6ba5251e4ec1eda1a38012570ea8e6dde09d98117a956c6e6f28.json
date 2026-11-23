@@ -1,0 +1,21 @@
+{
+  "document_sha256": "3334c720785cadbbd018e103b84a8cfbb47f0a1559a284740136766015db9db5",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"211-76223\",\"invoice_date\":\"2025-12-24\",\"shipper\":{\"name\":\"Hnos Arcos S.A.\",\"address\":\"Vial de Elisa Cabello 19 Puerta 2, Jaén, 12807\",\"country\":\"ES\"},\"buyer\":{\"name\":\"Aryan-Darain\",\"address\":\"Plot 211, Block C, Peshawar 75245\",\"country\":\"PK\"},\"consignee\":{\"name\":\"Aryan-Darain\",\"address\":\"Plot 211, Block C, Peshawar 75245\",\"country\":\"PK\"},\"notify_party\":{\"name\":\"Radi LLC\",\"address\":\"Plot 167, Block D, Peshawar 54328\",\"country\":\"PK\"},\"incoterm\":\"CPT\",\"currency\":\"GBP\",\"line_items\":[[\"Ball bearings\",\"953\",\"PCS\",\"417.16\",\"397553.48\",null],[\"Leather industrial work gloves\",\"438\",\"PAIR\",\"321.67\",\"140891.46\",null],[\"Cotton yarn, combed, 30s count\",\"850.56\",\"KG\",\"480.33\",\"408549.48\",null],[\"Ceramic floor tiles\",\"78\",\"CTN\",\"441.37\",\"34426.86\",null],[\"Printed cotton bed linen\",\"786\",\"SET\",\"1.18\",\"927.48\",null],[\"Woven denim fabric 12 oz\",\"482.07\",\"MTR\",\"220.95\",\"106513.37\",null],[\"Copper winding wire\",\"335.87\",\"KG\",\"374.84\",\"125897.51\",null],[\"Cotton terry towels\",\"598\",\"PCS\",\"73.98\",\"44240.04\",null],[\"LED panel lights 40W\",\"639\",\"PCS\",\"435.35\",\"278188.65\",null]],\"total_amount\":\"1537188.33\",\"gross_weight_kg\":\"6581.35\",\"net_weight_kg\":\"6093.84\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 3389,
+      "output_tokens": 532
+    },
+    "latency_ms": 1750,
+    "cost_usd": "0",
+    "cached": false
+  }
+}

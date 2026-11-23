@@ -1,0 +1,21 @@
+{
+  "document_sha256": "a84debf034002da5380bb8e27ff48baa7073da7dcce3e5928fc77a77a38f2750",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"INV-2026-32213\",\"invoice_date\":\"2026-04-14\",\"shipper\":{\"name\":\"Mills Ltd\",\"address\":\"94 Palmer Dale New Dominictown, G4 1ZE\",\"country\":\"GB\"},\"buyer\":{\"name\":\"Raaghib-Jahdami\",\"address\":\"Plot 392, Block G, Faisalabad, 63601\",\"country\":\"PK\"},\"consignee\":{\"name\":\"Raaghib-Jahdami\",\"address\":\"Plot 392, Block G, Faisalabad, 63601\",\"country\":\"PK\"},\"notify_party\":{\"name\":\"Ubaid, Aalam and Zafrul\",\"address\":\"Plot 209, Block B, Peshawar 73496\",\"country\":\"PK\"},\"incoterm\":\"FCA\",\"currency\":\"SGD\",\"line_items\":[[\"Leather industrial work gloves\",\"987\",\"PAIR\",\"253.52\",\"250224.24\",null],[\"Solar photovoltaic panels 550W\",\"9\",\"PCS\",\"188.48\",\"1696.32\",null],[\"Portland cement\",\"7\",\"BAG\",\"6.91\",\"48.37\",null],[\"Lithium-ion batteries 48V\",\"23\",\"PCS\",\"302.14\",\"6949.22\",null],[\"Radial car tyres 205/55 R16\",\"190\",\"PCS\",\"315.64\",\"59971.60\",null],[\"Hot-rolled steel coils\",\"1.33\",\"MT\",\"4.09\",\"5.44\",null],[\"Ceramic floor tiles\",\"20\",\"CTN\",\"328.02\",\"6560.40\",null],[\"PET resin bottle grade\",\"437.17\",\"KG\",\"289.06\",\"126368.36\",null],[\"Stainless steel surgical scissors\",\"156\",\"PCS\",\"435.03\",\"67864.68\",null],[\"Polypropylene granules\",\"970.85\",\"KG\",\"471.33\",\"457590.73\",null],[\"Hand-stitched footballs\",\"681\",\"PCS\",\"335.07\",\"228182.67\",null],[\"Refined palm olein\",\"989.20\",\"KG\",\"396.63\",\"392346.40\",null],[\"Copper winding wire\",\"911.19\",\"KG\",\"444.89\",\"405379.32\",null]],\"total_amount\":\"2003187.75\",\"gross_weight_kg\":\"9237.77\",\"net_weight_kg\":\"8882.47\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 3492,
+      "output_tokens": 651
+    },
+    "latency_ms": 2293,
+    "cost_usd": "0",
+    "cached": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "document_sha256": "ee120e6634770d4b97fdcebc381b76033a8aa3c082b6e35ccbf18babb0162073",
+  "model": "qwen/qwen3.8-27b",
+  "prompt_version": "v3",
+  "attempt": 1,
+  "call_options": {
+    "reasoning_effort": "none",
+    "response_format": "json_object"
+  },
+  "response": {
+    "content": "{\"invoice_number\":\"EXP2523310\",\"invoice_date\":\"2025-11-12\",\"shipper\":{\"name\":\"Liyaqat, Nabeel and Rafi\",\"address\":\"Plot 400, Block A, Multan 50062\",\"country\":\"PK\"},\"buyer\":{\"name\":\"Francisco Chaves Francisco S.Com.\",\"address\":\"Via Renata Pinedo 603 Puerta 4 Valencia, 30828\",\"country\":\"ES\"},\"consignee\":{\"name\":\"Francisco Chaves Francisco S.Com.\",\"address\":\"Via Renata Pinedo 603 Puerta 4 Valencia, 30828\",\"country\":\"ES\"},\"notify_party\":null,\"incoterm\":\"FAS\",\"currency\":\"SAR\",\"line_items\":[[\"Basmati rice long grain\",\"192.61\",\"KG\",\"127.83\",\"24621.34\",null],[\"Centrifugal water pumps\",\"89\",\"PCS\",\"286.94\",\"25537.66\",null],[\"Copper winding wire\",\"230.09\",\"KG\",\"368.58\",\"84806.57\",null],[\"Refined palm olein\",\"96.72\",\"KG\",\"374.70\",\"36240.98\",null],[\"Motorcycle spare parts\",\"77\",\"SET\",\"444.34\",\"34214.18\",null],[\"Fresh mangoes\",\"803.59\",\"KG\",\"170.83\",\"137277.28\",null],[\"Hand-stitched footballs\",\"125\",\"PCS\",\"148.79\",\"18598.75\",null],[\"Lithium-ion batteries 48V\",\"20\",\"PCS\",\"13.02\",\"260.40\",null],[\"Polypropylene granules\",\"296.12\",\"KG\",\"286.40\",\"84808.77\",null],[\"Printing paper A4 80 gsm\",\"71\",\"CTN\",\"148.01\",\"10508.71\",null]],\"total_amount\":\"456874.64\",\"gross_weight_kg\":\"5651.79\",\"net_weight_kg\":\"5331.88\"}",
+    "model": "qwen/qwen3.8-27b",
+    "usage": {
+      "input_tokens": 3401,
+      "output_tokens": 536
+    },
+    "latency_ms": 1896,
+    "cost_usd": "0",
+    "cached": false
+  }
+}

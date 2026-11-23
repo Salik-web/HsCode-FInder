@@ -1,0 +1,232 @@
+{
+  "id": "inj_00040",
+  "error": {
+    "kind": "future_date",
+    "path": "invoice_date",
+    "original": "2026-06-19",
+    "planted": "2027-02-19",
+    "method": "up to 180 days after 2026-10-01"
+  },
+  "invoice": {
+    "invoice_number": "CI/26/69412",
+    "invoice_date": "2027-02-19",
+    "shipper": {
+      "name": "Jalil-Ubayd",
+      "address": "Plot 73, Block A, Faisalabad 62903",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Guilbert SA",
+      "address": "32, boulevard de Vallée 32318 Guillotnec",
+      "country": "FR"
+    },
+    "consignee": {
+      "name": "Palla-Prashad",
+      "address": "206 Doctor Ganj, Katihar-943383",
+      "country": "IN"
+    },
+    "notify_party": {
+      "name": "Sani-Salvi",
+      "address": "599 Narain Road, Agra-165540",
+      "country": "IN"
+    },
+    "incoterm": "DPU",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "429",
+        "unit": "SET",
+        "unit_price": "174.37",
+        "amount": "74804.73",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "61",
+        "unit": "PCS",
+        "unit_price": "276.28",
+        "amount": "16853.08",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "163.82",
+        "unit": "KG",
+        "unit_price": "119.95",
+        "amount": "19650.21",
+        "hs_code_on_doc": "5205.2400"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "729",
+        "unit": "PCS",
+        "unit_price": "29.07",
+        "amount": "21192.03",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "677",
+        "unit": "PAIR",
+        "unit_price": "251.90",
+        "amount": "170536.30",
+        "hs_code_on_doc": "4203.2900"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "8.25",
+        "unit": "KG",
+        "unit_price": "153.36",
+        "amount": "1265.22",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "42",
+        "unit": "PCS",
+        "unit_price": "86.50",
+        "amount": "3633.00",
+        "hs_code_on_doc": "9506.6200"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "162",
+        "unit": "PCS",
+        "unit_price": "89.29",
+        "amount": "14464.98",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "79.69",
+        "unit": "KG",
+        "unit_price": "201.61",
+        "amount": "16066.30",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "7",
+        "unit": "PCS",
+        "unit_price": "480.37",
+        "amount": "3362.59",
+        "hs_code_on_doc": "8507.6000"
+      }
+    ],
+    "total_amount": "341828.44",
+    "gross_weight_kg": "4571.65",
+    "net_weight_kg": "4194.17"
+  },
+  "source": {
+    "invoice_number": "CI/26/69412",
+    "invoice_date": "2026-06-19",
+    "shipper": {
+      "name": "Jalil-Ubayd",
+      "address": "Plot 73, Block A, Faisalabad 62903",
+      "country": "PK"
+    },
+    "buyer": {
+      "name": "Guilbert SA",
+      "address": "32, boulevard de Vallée 32318 Guillotnec",
+      "country": "FR"
+    },
+    "consignee": {
+      "name": "Palla-Prashad",
+      "address": "206 Doctor Ganj, Katihar-943383",
+      "country": "IN"
+    },
+    "notify_party": {
+      "name": "Sani-Salvi",
+      "address": "599 Narain Road, Agra-165540",
+      "country": "IN"
+    },
+    "incoterm": "DPU",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "429",
+        "unit": "SET",
+        "unit_price": "174.37",
+        "amount": "74804.73",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "61",
+        "unit": "PCS",
+        "unit_price": "276.28",
+        "amount": "16853.08",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "Cotton yarn, combed, 30s count",
+        "quantity": "163.82",
+        "unit": "KG",
+        "unit_price": "119.95",
+        "amount": "19650.21",
+        "hs_code_on_doc": "5205.2400"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "729",
+        "unit": "PCS",
+        "unit_price": "29.07",
+        "amount": "21192.03",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "677",
+        "unit": "PAIR",
+        "unit_price": "251.90",
+        "amount": "170536.30",
+        "hs_code_on_doc": "4203.2900"
+      },
+      {
+        "description": "Refined palm olein",
+        "quantity": "8.25",
+        "unit": "KG",
+        "unit_price": "153.36",
+        "amount": "1265.22",
+        "hs_code_on_doc": "1511.9020"
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "42",
+        "unit": "PCS",
+        "unit_price": "86.50",
+        "amount": "3633.00",
+        "hs_code_on_doc": "9506.6200"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "162",
+        "unit": "PCS",
+        "unit_price": "89.29",
+        "amount": "14464.98",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "79.69",
+        "unit": "KG",
+        "unit_price": "201.61",
+        "amount": "16066.30",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "7",
+        "unit": "PCS",
+        "unit_price": "480.37",
+        "amount": "3362.59",
+        "hs_code_on_doc": "8507.6000"
+      }
+    ],
+    "total_amount": "341828.44",
+    "gross_weight_kg": "4571.65",
+    "net_weight_kg": "4194.17"
+  }
+}

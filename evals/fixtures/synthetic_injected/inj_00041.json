@@ -1,0 +1,192 @@
+{
+  "id": "inj_00041",
+  "error": {
+    "kind": "bad_currency",
+    "path": "currency",
+    "original": "EUR",
+    "planted": "STG",
+    "method": "common non-ISO spelling"
+  },
+  "invoice": {
+    "invoice_number": "EXP2641933",
+    "invoice_date": "2026-06-07",
+    "shipper": {
+      "name": "Kade KG",
+      "address": "Seipring 7-6 77871 Heinsberg",
+      "country": "DE"
+    },
+    "buyer": {
+      "name": "Fábrica KXO S.A.",
+      "address": "Cañada de Francisco Parejo 25 Huelva, 30532",
+      "country": "ES"
+    },
+    "consignee": {
+      "name": "Fábrica KXO S.A.",
+      "address": "Cañada de Francisco Parejo 25 Huelva, 30532",
+      "country": "ES"
+    },
+    "notify_party": null,
+    "incoterm": "DAP",
+    "currency": "STG",
+    "line_items": [
+      {
+        "description": "Copper winding wire",
+        "quantity": "89.50",
+        "unit": "KG",
+        "unit_price": "141.74",
+        "amount": "12685.73",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "629",
+        "unit": "PCS",
+        "unit_price": "84.23",
+        "amount": "52980.67",
+        "hs_code_on_doc": "8482.1000"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "360",
+        "unit": "PCS",
+        "unit_price": "387.00",
+        "amount": "139320.00",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "17",
+        "unit": "BAG",
+        "unit_price": "187.51",
+        "amount": "3187.67",
+        "hs_code_on_doc": "2523.2900"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "889",
+        "unit": "PCS",
+        "unit_price": "330.23",
+        "amount": "293574.47",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "157",
+        "unit": "CTN",
+        "unit_price": "102.36",
+        "amount": "16070.52",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "70",
+        "unit": "PCS",
+        "unit_price": "481.81",
+        "amount": "33726.70",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "227",
+        "unit": "SET",
+        "unit_price": "451.65",
+        "amount": "102524.55",
+        "hs_code_on_doc": "6302.2100"
+      }
+    ],
+    "total_amount": "654070.31",
+    "gross_weight_kg": "4645.49",
+    "net_weight_kg": "4223.17"
+  },
+  "source": {
+    "invoice_number": "EXP2641933",
+    "invoice_date": "2026-06-07",
+    "shipper": {
+      "name": "Kade KG",
+      "address": "Seipring 7-6 77871 Heinsberg",
+      "country": "DE"
+    },
+    "buyer": {
+      "name": "Fábrica KXO S.A.",
+      "address": "Cañada de Francisco Parejo 25 Huelva, 30532",
+      "country": "ES"
+    },
+    "consignee": {
+      "name": "Fábrica KXO S.A.",
+      "address": "Cañada de Francisco Parejo 25 Huelva, 30532",
+      "country": "ES"
+    },
+    "notify_party": null,
+    "incoterm": "DAP",
+    "currency": "EUR",
+    "line_items": [
+      {
+        "description": "Copper winding wire",
+        "quantity": "89.50",
+        "unit": "KG",
+        "unit_price": "141.74",
+        "amount": "12685.73",
+        "hs_code_on_doc": "8544.1100"
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "629",
+        "unit": "PCS",
+        "unit_price": "84.23",
+        "amount": "52980.67",
+        "hs_code_on_doc": "8482.1000"
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "360",
+        "unit": "PCS",
+        "unit_price": "387.00",
+        "amount": "139320.00",
+        "hs_code_on_doc": "6302.6000"
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "17",
+        "unit": "BAG",
+        "unit_price": "187.51",
+        "amount": "3187.67",
+        "hs_code_on_doc": "2523.2900"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "889",
+        "unit": "PCS",
+        "unit_price": "330.23",
+        "amount": "293574.47",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "157",
+        "unit": "CTN",
+        "unit_price": "102.36",
+        "amount": "16070.52",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "70",
+        "unit": "PCS",
+        "unit_price": "481.81",
+        "amount": "33726.70",
+        "hs_code_on_doc": "4011.1000"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "227",
+        "unit": "SET",
+        "unit_price": "451.65",
+        "amount": "102524.55",
+        "hs_code_on_doc": "6302.2100"
+      }
+    ],
+    "total_amount": "654070.31",
+    "gross_weight_kg": "4645.49",
+    "net_weight_kg": "4223.17"
+  }
+}

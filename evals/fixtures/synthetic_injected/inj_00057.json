@@ -1,0 +1,256 @@
+{
+  "id": "inj_00057",
+  "error": {
+    "kind": "invalid_incoterm",
+    "path": "incoterm",
+    "original": "CIF",
+    "planted": "DAT",
+    "method": "outdated or informal term"
+  },
+  "invoice": {
+    "invoice_number": "EXP2603710",
+    "invoice_date": "2026-04-14",
+    "shipper": {
+      "name": "Smith-Davidson",
+      "address": "Studio 70 Samuel Mills Leontown SG96 1NE",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Mahfuj, Yasir and Liyaaqat",
+      "address": "Plot 147, Block D, Sialkot 97016",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Mahfuj, Yasir and Liyaaqat",
+      "address": "Plot 147, Block D, Sialkot 97016",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "DAT",
+    "currency": "AED",
+    "line_items": [
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "488",
+        "unit": "SET",
+        "unit_price": "367.99",
+        "amount": "179579.12",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "8",
+        "unit": "PCS",
+        "unit_price": "138.99",
+        "amount": "1111.92",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "288.24",
+        "unit": "KG",
+        "unit_price": "321.54",
+        "amount": "92680.69",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "196",
+        "unit": "SET",
+        "unit_price": "45.00",
+        "amount": "8820.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "209",
+        "unit": "PCS",
+        "unit_price": "115.40",
+        "amount": "24118.60",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "757.05",
+        "unit": "MTR",
+        "unit_price": "52.27",
+        "amount": "39571.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "431",
+        "unit": "PCS",
+        "unit_price": "100.91",
+        "amount": "43492.21",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "635.06",
+        "unit": "KG",
+        "unit_price": "440.15",
+        "amount": "279521.66",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "139",
+        "unit": "PCS",
+        "unit_price": "426.26",
+        "amount": "59250.14",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "213.85",
+        "unit": "KG",
+        "unit_price": "392.49",
+        "amount": "83933.99",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "449",
+        "unit": "PCS",
+        "unit_price": "162.18",
+        "amount": "72818.82",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "15",
+        "unit": "PCS",
+        "unit_price": "101.04",
+        "amount": "1515.60",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "886413.75",
+    "gross_weight_kg": "6811.10",
+    "net_weight_kg": "6549.13"
+  },
+  "source": {
+    "invoice_number": "EXP2603710",
+    "invoice_date": "2026-04-14",
+    "shipper": {
+      "name": "Smith-Davidson",
+      "address": "Studio 70 Samuel Mills Leontown SG96 1NE",
+      "country": "GB"
+    },
+    "buyer": {
+      "name": "Mahfuj, Yasir and Liyaaqat",
+      "address": "Plot 147, Block D, Sialkot 97016",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Mahfuj, Yasir and Liyaaqat",
+      "address": "Plot 147, Block D, Sialkot 97016",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "CIF",
+    "currency": "AED",
+    "line_items": [
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "488",
+        "unit": "SET",
+        "unit_price": "367.99",
+        "amount": "179579.12",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "8",
+        "unit": "PCS",
+        "unit_price": "138.99",
+        "amount": "1111.92",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "288.24",
+        "unit": "KG",
+        "unit_price": "321.54",
+        "amount": "92680.69",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "196",
+        "unit": "SET",
+        "unit_price": "45.00",
+        "amount": "8820.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Radial car tyres 205/55 R16",
+        "quantity": "209",
+        "unit": "PCS",
+        "unit_price": "115.40",
+        "amount": "24118.60",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "757.05",
+        "unit": "MTR",
+        "unit_price": "52.27",
+        "amount": "39571.00",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Men's cotton T-shirts",
+        "quantity": "431",
+        "unit": "PCS",
+        "unit_price": "100.91",
+        "amount": "43492.21",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "635.06",
+        "unit": "KG",
+        "unit_price": "440.15",
+        "amount": "279521.66",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Smartphones 5G",
+        "quantity": "139",
+        "unit": "PCS",
+        "unit_price": "426.26",
+        "amount": "59250.14",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "213.85",
+        "unit": "KG",
+        "unit_price": "392.49",
+        "amount": "83933.99",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "449",
+        "unit": "PCS",
+        "unit_price": "162.18",
+        "amount": "72818.82",
+        "hs_code_on_doc": null
+      },
+      {
+        "description": "Cotton terry towels",
+        "quantity": "15",
+        "unit": "PCS",
+        "unit_price": "101.04",
+        "amount": "1515.60",
+        "hs_code_on_doc": null
+      }
+    ],
+    "total_amount": "886413.75",
+    "gross_weight_kg": "6811.10",
+    "net_weight_kg": "6549.13"
+  }
+}

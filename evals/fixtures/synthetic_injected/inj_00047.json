@@ -1,0 +1,272 @@
+{
+  "id": "inj_00047",
+  "error": {
+    "kind": "bad_currency",
+    "path": "currency",
+    "original": "SAR",
+    "planted": "USD$",
+    "method": "common non-ISO spelling"
+  },
+  "invoice": {
+    "invoice_number": "CI/26/30040",
+    "invoice_date": "2026-05-05",
+    "shipper": {
+      "name": "Zorlu İhsanoğlu Şti.",
+      "address": "Plot 221, Block A, Izmir 86694",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Lankle & van Beeck",
+      "address": "Muhammedring 69 1357 PK Buitenkaag",
+      "country": "NL"
+    },
+    "consignee": {
+      "name": "Baseer, Yahyaa and Karaamat",
+      "address": "Plot 378, Block D, Rawalpindi 23500",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "EXW",
+    "currency": "USD$",
+    "line_items": [
+      {
+        "description": "Fresh mangoes",
+        "quantity": "787.03",
+        "unit": "KG",
+        "unit_price": "403.75",
+        "amount": "317763.36",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "569",
+        "unit": "PCS",
+        "unit_price": "420.13",
+        "amount": "239053.97",
+        "hs_code_on_doc": "8482.1000"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "51",
+        "unit": "CTN",
+        "unit_price": "487.18",
+        "amount": "24846.18",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "26",
+        "unit": "PCS",
+        "unit_price": "85.26",
+        "amount": "2216.76",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "39",
+        "unit": "BAG",
+        "unit_price": "295.90",
+        "amount": "11540.10",
+        "hs_code_on_doc": "2523.2900"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "69",
+        "unit": "CTN",
+        "unit_price": "460.71",
+        "amount": "31788.99",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "614.50",
+        "unit": "KG",
+        "unit_price": "56.63",
+        "amount": "34799.14",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "38",
+        "unit": "PCS",
+        "unit_price": "158.99",
+        "amount": "6041.62",
+        "hs_code_on_doc": "8501.4000"
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "187",
+        "unit": "SET",
+        "unit_price": "9.40",
+        "amount": "1757.80",
+        "hs_code_on_doc": "8714.1000"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "55.20",
+        "unit": "KG",
+        "unit_price": "126.03",
+        "amount": "6956.86",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.32",
+        "unit": "MT",
+        "unit_price": "443.12",
+        "amount": "584.92",
+        "hs_code_on_doc": "7208.3700"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "50",
+        "unit": "PCS",
+        "unit_price": "453.24",
+        "amount": "22662.00",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "649",
+        "unit": "PCS",
+        "unit_price": "313.01",
+        "amount": "203143.49",
+        "hs_code_on_doc": "9506.6200"
+      }
+    ],
+    "total_amount": "903155.19",
+    "gross_weight_kg": "9775.13",
+    "net_weight_kg": "9051.05"
+  },
+  "source": {
+    "invoice_number": "CI/26/30040",
+    "invoice_date": "2026-05-05",
+    "shipper": {
+      "name": "Zorlu İhsanoğlu Şti.",
+      "address": "Plot 221, Block A, Izmir 86694",
+      "country": "TR"
+    },
+    "buyer": {
+      "name": "Lankle & van Beeck",
+      "address": "Muhammedring 69 1357 PK Buitenkaag",
+      "country": "NL"
+    },
+    "consignee": {
+      "name": "Baseer, Yahyaa and Karaamat",
+      "address": "Plot 378, Block D, Rawalpindi 23500",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "EXW",
+    "currency": "SAR",
+    "line_items": [
+      {
+        "description": "Fresh mangoes",
+        "quantity": "787.03",
+        "unit": "KG",
+        "unit_price": "403.75",
+        "amount": "317763.36",
+        "hs_code_on_doc": "0804.5020"
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "569",
+        "unit": "PCS",
+        "unit_price": "420.13",
+        "amount": "239053.97",
+        "hs_code_on_doc": "8482.1000"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "51",
+        "unit": "CTN",
+        "unit_price": "487.18",
+        "amount": "24846.18",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Solar photovoltaic panels 550W",
+        "quantity": "26",
+        "unit": "PCS",
+        "unit_price": "85.26",
+        "amount": "2216.76",
+        "hs_code_on_doc": "8541.4300"
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "39",
+        "unit": "BAG",
+        "unit_price": "295.90",
+        "amount": "11540.10",
+        "hs_code_on_doc": "2523.2900"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "69",
+        "unit": "CTN",
+        "unit_price": "460.71",
+        "amount": "31788.99",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "Paracetamol API in bulk",
+        "quantity": "614.50",
+        "unit": "KG",
+        "unit_price": "56.63",
+        "amount": "34799.14",
+        "hs_code_on_doc": "2924.2990"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "38",
+        "unit": "PCS",
+        "unit_price": "158.99",
+        "amount": "6041.62",
+        "hs_code_on_doc": "8501.4000"
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "187",
+        "unit": "SET",
+        "unit_price": "9.40",
+        "amount": "1757.80",
+        "hs_code_on_doc": "8714.1000"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "55.20",
+        "unit": "KG",
+        "unit_price": "126.03",
+        "amount": "6956.86",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Hot-rolled steel coils",
+        "quantity": "1.32",
+        "unit": "MT",
+        "unit_price": "443.12",
+        "amount": "584.92",
+        "hs_code_on_doc": "7208.3700"
+      },
+      {
+        "description": "Laptop computers 14 inch",
+        "quantity": "50",
+        "unit": "PCS",
+        "unit_price": "453.24",
+        "amount": "22662.00",
+        "hs_code_on_doc": "8471.3010"
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "649",
+        "unit": "PCS",
+        "unit_price": "313.01",
+        "amount": "203143.49",
+        "hs_code_on_doc": "9506.6200"
+      }
+    ],
+    "total_amount": "903155.19",
+    "gross_weight_kg": "9775.13",
+    "net_weight_kg": "9051.05"
+  }
+}

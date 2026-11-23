@@ -1,0 +1,140 @@
+{
+  "invoice": {
+    "invoice_number": "EXP2688959",
+    "invoice_date": "2026-05-26",
+    "shipper": {
+      "name": "Förster AG",
+      "address": "Täschegasse 22 35492 Oranienburg",
+      "country": "DE"
+    },
+    "buyer": {
+      "name": "Scott-Henderson",
+      "address": "Flat 68Y Naylor Run Catherinestad B91 9UZ",
+      "country": "GB"
+    },
+    "consignee": {
+      "name": "Yafir, Wafeeq and Auraq",
+      "address": "Plot 262, Block D, Rawalpindi 68816",
+      "country": "PK"
+    },
+    "notify_party": null,
+    "incoterm": "FCA",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "919",
+        "unit": "PAIR",
+        "unit_price": "353.67",
+        "amount": "325022.73",
+        "hs_code_on_doc": "4203.2900"
+      },
+      {
+        "description": "Ceramic floor tiles",
+        "quantity": "72",
+        "unit": "CTN",
+        "unit_price": "362.84",
+        "amount": "26124.48",
+        "hs_code_on_doc": "6907.2100"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "993",
+        "unit": "PCS",
+        "unit_price": "403.37",
+        "amount": "400546.41",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "Black tea in bulk packs",
+        "quantity": "197.66",
+        "unit": "KG",
+        "unit_price": "393.79",
+        "amount": "77836.53",
+        "hs_code_on_doc": "0902.4000"
+      },
+      {
+        "description": "Hand-stitched footballs",
+        "quantity": "465",
+        "unit": "PCS",
+        "unit_price": "162.70",
+        "amount": "75655.50",
+        "hs_code_on_doc": "9506.6200"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "374",
+        "unit": "SET",
+        "unit_price": "254.25",
+        "amount": "95089.50",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Single-phase electric motors",
+        "quantity": "51",
+        "unit": "PCS",
+        "unit_price": "356.63",
+        "amount": "18188.13",
+        "hs_code_on_doc": "8501.4000"
+      },
+      {
+        "description": "Portland cement",
+        "quantity": "29",
+        "unit": "BAG",
+        "unit_price": "336.81",
+        "amount": "9767.49",
+        "hs_code_on_doc": "2523.2900"
+      },
+      {
+        "description": "Lithium-ion batteries 48V",
+        "quantity": "27",
+        "unit": "PCS",
+        "unit_price": "62.45",
+        "amount": "1686.15",
+        "hs_code_on_doc": "8507.6000"
+      },
+      {
+        "description": "Ball bearings",
+        "quantity": "430",
+        "unit": "PCS",
+        "unit_price": "249.44",
+        "amount": "107259.20",
+        "hs_code_on_doc": "8482.1000"
+      },
+      {
+        "description": "Polypropylene granules",
+        "quantity": "882.15",
+        "unit": "KG",
+        "unit_price": "372.41",
+        "amount": "328521.48",
+        "hs_code_on_doc": "3902.1000"
+      },
+      {
+        "description": "Fresh mangoes",
+        "quantity": "220.57",
+        "unit": "KG",
+        "unit_price": "107.11",
+        "amount": "23625.25",
+        "hs_code_on_doc": "0804.5020"
+      }
+    ],
+    "total_amount": "1489322.85",
+    "gross_weight_kg": "7885.75",
+    "net_weight_kg": "7301.62"
+  },
+  "true_hs_codes": [
+    "4203.2900",
+    "6907.2100",
+    "9018.9010",
+    "0902.4000",
+    "9506.6200",
+    "6302.2100",
+    "8501.4000",
+    "2523.2900",
+    "8507.6000",
+    "8482.1000",
+    "3902.1000",
+    "0804.5020"
+  ],
+  "buyer_reference": null
+}

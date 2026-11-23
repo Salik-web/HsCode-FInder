@@ -1,0 +1,232 @@
+{
+  "id": "inj_00031",
+  "error": {
+    "kind": "wrong_total",
+    "path": "total_amount",
+    "original": "1351801.08",
+    "planted": "1351800.18",
+    "method": "swap two adjacent digits"
+  },
+  "invoice": {
+    "invoice_number": "CI/26/82274",
+    "invoice_date": "2026-02-22",
+    "shipper": {
+      "name": "Gomez S.A.S.",
+      "address": "8, rue de Barbier 20443 Lefèvre",
+      "country": "FR"
+    },
+    "buyer": {
+      "name": "Awj LLC",
+      "address": "Plot 264, Block D, Rawalpindi 93838",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Awj LLC",
+      "address": "Plot 264, Block D, Rawalpindi 93838",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Rabbani Group",
+      "address": "Plot 104, Block G, Karachi 90272",
+      "country": "PK"
+    },
+    "incoterm": "DDP",
+    "currency": "CNY",
+    "line_items": [
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "724.95",
+        "unit": "MTR",
+        "unit_price": "494.10",
+        "amount": "358197.80",
+        "hs_code_on_doc": "5209.4200"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "129",
+        "unit": "CTN",
+        "unit_price": "208.78",
+        "amount": "26932.62",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "851",
+        "unit": "SET",
+        "unit_price": "155.32",
+        "amount": "132177.32",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "189",
+        "unit": "SET",
+        "unit_price": "246.18",
+        "amount": "46528.02",
+        "hs_code_on_doc": "8714.1000"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "720.57",
+        "unit": "KG",
+        "unit_price": "401.66",
+        "amount": "289424.15",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "643",
+        "unit": "PAIR",
+        "unit_price": "219.54",
+        "amount": "141164.22",
+        "hs_code_on_doc": "4203.2900"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "164",
+        "unit": "PCS",
+        "unit_price": "407.62",
+        "amount": "66849.68",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "73",
+        "unit": "PCS",
+        "unit_price": "338.00",
+        "amount": "24674.00",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "141.80",
+        "unit": "KG",
+        "unit_price": "184.47",
+        "amount": "26157.85",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "508.26",
+        "unit": "KG",
+        "unit_price": "471.60",
+        "amount": "239695.42",
+        "hs_code_on_doc": "8544.1100"
+      }
+    ],
+    "total_amount": "1351800.18",
+    "gross_weight_kg": "7172.09",
+    "net_weight_kg": "6766.12"
+  },
+  "source": {
+    "invoice_number": "CI/26/82274",
+    "invoice_date": "2026-02-22",
+    "shipper": {
+      "name": "Gomez S.A.S.",
+      "address": "8, rue de Barbier 20443 Lefèvre",
+      "country": "FR"
+    },
+    "buyer": {
+      "name": "Awj LLC",
+      "address": "Plot 264, Block D, Rawalpindi 93838",
+      "country": "PK"
+    },
+    "consignee": {
+      "name": "Awj LLC",
+      "address": "Plot 264, Block D, Rawalpindi 93838",
+      "country": "PK"
+    },
+    "notify_party": {
+      "name": "Rabbani Group",
+      "address": "Plot 104, Block G, Karachi 90272",
+      "country": "PK"
+    },
+    "incoterm": "DDP",
+    "currency": "CNY",
+    "line_items": [
+      {
+        "description": "Woven denim fabric 12 oz",
+        "quantity": "724.95",
+        "unit": "MTR",
+        "unit_price": "494.10",
+        "amount": "358197.80",
+        "hs_code_on_doc": "5209.4200"
+      },
+      {
+        "description": "Printing paper A4 80 gsm",
+        "quantity": "129",
+        "unit": "CTN",
+        "unit_price": "208.78",
+        "amount": "26932.62",
+        "hs_code_on_doc": "4802.5600"
+      },
+      {
+        "description": "Printed cotton bed linen",
+        "quantity": "851",
+        "unit": "SET",
+        "unit_price": "155.32",
+        "amount": "132177.32",
+        "hs_code_on_doc": "6302.2100"
+      },
+      {
+        "description": "Motorcycle spare parts",
+        "quantity": "189",
+        "unit": "SET",
+        "unit_price": "246.18",
+        "amount": "46528.02",
+        "hs_code_on_doc": "8714.1000"
+      },
+      {
+        "description": "Basmati rice long grain",
+        "quantity": "720.57",
+        "unit": "KG",
+        "unit_price": "401.66",
+        "amount": "289424.15",
+        "hs_code_on_doc": "1006.3010"
+      },
+      {
+        "description": "Leather industrial work gloves",
+        "quantity": "643",
+        "unit": "PAIR",
+        "unit_price": "219.54",
+        "amount": "141164.22",
+        "hs_code_on_doc": "4203.2900"
+      },
+      {
+        "description": "Stainless steel surgical scissors",
+        "quantity": "164",
+        "unit": "PCS",
+        "unit_price": "407.62",
+        "amount": "66849.68",
+        "hs_code_on_doc": "9018.9010"
+      },
+      {
+        "description": "Centrifugal water pumps",
+        "quantity": "73",
+        "unit": "PCS",
+        "unit_price": "338.00",
+        "amount": "24674.00",
+        "hs_code_on_doc": "8413.7010"
+      },
+      {
+        "description": "PET resin bottle grade",
+        "quantity": "141.80",
+        "unit": "KG",
+        "unit_price": "184.47",
+        "amount": "26157.85",
+        "hs_code_on_doc": "3907.6100"
+      },
+      {
+        "description": "Copper winding wire",
+        "quantity": "508.26",
+        "unit": "KG",
+        "unit_price": "471.60",
+        "amount": "239695.42",
+        "hs_code_on_doc": "8544.1100"
+      }
+    ],
+    "total_amount": "1351801.08",
+    "gross_weight_kg": "7172.09",
+    "net_weight_kg": "6766.12"
+  }
+}
