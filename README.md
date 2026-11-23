@@ -42,14 +42,14 @@ All results are on **synthetic invoices**: 9 layouts, generated with ground trut
 
 **Guardrails.** 60 invoices with one planted error each (wrong totals, net over gross, outdated Incoterms, future dates, invalid currencies): **60/60 caught**, and 0 of 53 correct invoices flagged.
 
-**HS code suggestion** (`openai/gpt-oss-120b`, 86 invoice-style lines with gold PCT codes; the gold codes are not yet verified by a licensed customs agent):
+**HS code suggestion** (`openai/gpt-oss-120b`, 86 invoice-style lines with gold PCT codes). **The gold codes have not yet been verified by a customs professional**; a sample is being checked. Until then, read these numbers as provisional.
 
 | Split | Items | Top-3, 6-digit HS | Top-3, 4-digit heading | Top-3, 8-digit PCT |
 | --- | --- | --- | --- | --- |
 | Dev (tuned on) | 63 | 81.0% | 90.5% | 77.8% |
 | Test (run once, frozen) | 23 | 78.3% | 82.6% | 73.9% |
 
-Retrieval is the bottleneck. When the right code is among the 10 candidates, the reranker almost always puts it in its top 3. The tuning steps and their measured effect are in the changelog.
+Retrieval is the bottleneck. When the right code is among the 10 candidates, the reranker almost always puts it in its top 3. The tuning steps and their measured effect are in the changelog. Two further steps (30–50 candidates, and boosting the headings the query step predicts) raised retrieval recall on dev from 81% to 94–97%. They are measured but not shipped, and planned for v1.1. The test split stays frozen.
 
 Suggestions are only suggestions: a licensed person makes the final classification.
 
