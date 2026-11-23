@@ -213,6 +213,7 @@ Think like a senior engineer on every change: the best design, the fastest path 
 
 ## Never
 - Commit `.env`, API keys or real client documents.
+- Add `Co-Authored-By: Claude ...` or any other Claude/Anthropic attribution (trailers, "Generated with Claude Code" lines) to commit messages or PR descriptions (Salik, 2026-11-23). `.claude/settings.json` sets `includeCoAuthoredBy: false`; history was rewritten without them.
 - Return or store unvalidated LLM output.
 - Let the LLM do the arithmetic that guardrails check.
 - Edit an existing prompt version file — create a new one.
