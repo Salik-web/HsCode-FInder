@@ -1,0 +1,5 @@
+# Files that run or are read inside the Linux image keep LF line endings on every
+# checkout, including Windows with core.autocrlf: bash fails on a CRLF start.sh.
+*.sh text eol=lf
+Dockerfile text eol=lf
+.dockerignore text eol=lf
