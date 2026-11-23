@@ -1,6 +1,7 @@
 """Embed the parsed tariff and load it into tariff_codes (pgvector). Idempotent.
 
 uv run python -m tariff.ingest --csv tariff/pct_2026-27.csv --version 2026-27
+uv run python -m tariff.ingest --csv tariff/pct_2026-27.csv --version 2026-27 --if-empty
 
 Replaces the whole table in one transaction, so a search never sees half a tariff.
 Run `alembic upgrade head` first.
@@ -10,7 +11,7 @@ import argparse
 import time
 from pathlib import Path
 
-from sqlalchemy import delete, insert
+from sqlalchemy import delete, func, insert, select
 from sqlalchemy.orm import Session
 
 from app.config import Settings
@@ -40,12 +41,31 @@ def tariff_records(
     ]
 
 
+def _already_loaded(settings: Settings, version: str) -> bool:
+    statement = select(func.count()).where(
+        TariffCode.tariff_version == version,
+        TariffCode.embedding_model == settings.embedding_model,
+        TariffCode.embedding_text == EMBEDDING_TEXT_RECIPE,
+    )
+    with Session(make_engine(settings)) as session:
+        return (session.scalar(statement) or 0) > 0
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--csv", type=Path, required=True)
     parser.add_argument("--version", required=True, help="tariff year, e.g. 2026-27")
+    parser.add_argument(
+        "--if-empty",
+        action="store_true",
+        help="do nothing when the table already holds this version, model and text recipe "
+        "(container start: only the first boot on a new database embeds the tariff)",
+    )
     args = parser.parse_args()
     settings = Settings()
+    if args.if_empty and _already_loaded(settings, args.version):
+        print("Tariff already loaded; nothing to do")
+        return
     rows = read_csv(args.csv)
     started = time.perf_counter()
     embedder = SentenceTransformerEmbedder(settings.embedding_model)

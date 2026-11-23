@@ -1,0 +1,14 @@
+# Only what the image needs (see Dockerfile). Never secrets, real documents or caches.
+.env
+.git
+.venv
+.cache
+data
+storage
+evals
+synth
+tests
+docs
+**/__pycache__
+.ruff_cache
+.pytest_cache
