@@ -3,6 +3,7 @@
 Skipped when no Postgres is reachable (set DATABASE_URL or POSTGRES_* as for the app).
 """
 
+import dataclasses
 import json
 import os
 from collections.abc import Iterator
@@ -257,3 +258,37 @@ def test_a_rate_limited_run_fails_retryably_and_can_be_requeued(
     assert client.post(f"/documents/{document['id']}/approve").status_code == 409
     assert client.post(f"/documents/{document['id']}/retry").json()["status"] == "queued"
     assert client.post(f"/documents/{document['id']}/retry").status_code == 409
+
+
+def test_hs_rerun_refreshes_only_the_unfinished_lines(
+    client: TestClient, settings: Settings
+) -> None:
+    lines = line_count()
+    document = upload(client, image_pdf(1))
+    deps = worker(settings, [answer_with_truth()], lines)
+    limited = [RateLimitedError("quota")] * lines  # every line's first (query) call
+    process_next(dataclasses.replace(deps, hs_client=FakeClient("hs-model", limited)), ANCHOR_DATE)
+    url = f"/documents/{document['id']}"
+    review = client.get(f"{url}/review").json()
+    assert {h["result"]["hs"]["stage"]["status"] for h in review["hs_lines"]} == {"failed"}
+
+    edited = client.post(
+        f"{url}/corrections",
+        json=[{"field_path": "line_items[0].description", "new_value": "Polo shirts, cotton"}],
+    )
+    assert edited.status_code == 200
+    assert client.post(f"{url}/hs/rerun").json()["status"] == "hs_queued"
+    late = client.post(
+        f"{url}/corrections", json=[{"field_path": "invoice_number", "new_value": "X"}]
+    )
+    assert late.status_code == 409  # no edits while the worker re-runs HS
+
+    retried = dataclasses.replace(deps, hs_client=FakeClient("hs-model", hs_answers(lines)))
+    assert process_next(retried, ANCHOR_DATE) == document["id"]
+    assert retried.hs_client.requests[0].text.count("Polo shirts, cotton") == 1  # corrected text
+    after = client.get(f"{url}/review").json()
+    assert after["document"]["status"] == "needs_review"  # the photo's fields still need a person
+    assert {h["result"]["hs"]["stage"]["status"] for h in after["hs_lines"]} == {"ok"}
+    assert after["invoice"]["line_items"][0]["description"] == "Polo shirts, cotton"
+    assert len(after["corrections"]) == 1  # the review survived the re-run
+    assert client.post(f"{url}/hs/rerun").status_code == 409  # nothing left to re-run

@@ -17,17 +17,20 @@ from app.pipeline.hs_suggest import HSLineResult
 from app.pipeline.review import DocumentStatus
 from app.schemas.result import PipelineResult
 
-# Oldest queued document first; SKIP LOCKED lets several workers claim different ones.
+# Oldest waiting document first; SKIP LOCKED lets several workers claim different ones.
+# Returns what was asked for: a full run (queued) or an HS re-run (hs_queued).
 CLAIM_NEXT = text(
     """
-    UPDATE documents SET status = 'processing', updated_at = :now
-    WHERE id = (
-        SELECT id FROM documents WHERE status = 'queued'
-        ORDER BY created_at, id
+    WITH next AS (
+        SELECT id, status FROM documents
+        WHERE status IN ('queued', 'hs_queued')
+        ORDER BY updated_at, id
         FOR UPDATE SKIP LOCKED
         LIMIT 1
     )
-    RETURNING id
+    UPDATE documents SET status = 'processing', updated_at = :now
+    FROM next WHERE documents.id = next.id
+    RETURNING documents.id, next.status
     """
 )
 
@@ -69,8 +72,10 @@ def list_documents(session: Session, limit: int, offset: int) -> tuple[list[Docu
     return list(documents), total
 
 
-def claim_next_document(session: Session) -> str | None:
-    return session.execute(CLAIM_NEXT, {"now": now()}).scalar_one_or_none()
+def claim_next_document(session: Session) -> tuple[str, DocumentStatus] | None:
+    """The claimed document's id and the status it was claimed from."""
+    row = session.execute(CLAIM_NEXT, {"now": now()}).first()
+    return None if row is None else (row[0], row[1])
 
 
 def set_status(
@@ -129,6 +134,21 @@ def save_hs_line(
             result=line.model_dump(mode="json"),
         )
     )
+
+
+def replace_hs_line(
+    record: HSSuggestionRecord,
+    line: HSLineResult,
+    model: str,
+    query_prompt_version: str,
+    rerank_prompt_version: str,
+) -> None:
+    """A re-run replaces the line's result; any earlier choice is cleared with it."""
+    record.result = line.model_dump(mode="json")
+    record.model = model
+    record.query_prompt_version = query_prompt_version
+    record.rerank_prompt_version = rerank_prompt_version
+    record.chosen_code = None
 
 
 def latest_run(session: Session, document_id: str) -> ExtractionRun | None:

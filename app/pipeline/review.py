@@ -17,7 +17,10 @@ from app.pipeline.hs_suggest import HSLineResult
 from app.schemas.raw import RawInvoice, RawLineItem, RawParty
 from app.schemas.result import PipelineResult
 
-DocumentStatus = Literal["queued", "processing", "needs_review", "ready", "approved", "failed"]
+# hs_queued: a reviewer asked the worker to re-run HS for the lines whose HS step failed.
+DocumentStatus = Literal[
+    "queued", "processing", "hs_queued", "needs_review", "ready", "approved", "failed"
+]
 # A person can correct, choose HS codes and approve only in these.
 REVIEWABLE_STATUSES: tuple[DocumentStatus, ...] = ("needs_review", "ready")
 # A path names one leaf field: "invoice_number", "buyer.name", "line_items[2].amount".
@@ -59,6 +62,11 @@ def status_after_run(result: PipelineResult, hs: list[HSLineResult]) -> Document
     fields_ok = all(assessment.status == "ok" for assessment in result.assessments)
     hs_ok = all(line.hs.stage.status == "ok" for line in hs)
     return "ready" if fields_ok and hs_ok else "needs_review"
+
+
+def lines_needing_hs(hs: dict[int, HSLineResult]) -> list[int]:
+    """Lines whose HS step didn't finish (rate limit, failed validation): worth re-running."""
+    return sorted(index for index, line in hs.items() if line.hs.stage.status != "ok")
 
 
 def field_value(invoice: RawInvoice, path: str) -> Any:

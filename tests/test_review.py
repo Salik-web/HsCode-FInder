@@ -15,6 +15,7 @@ from app.pipeline.review import (
     export_csv,
     export_json,
     field_value,
+    lines_needing_hs,
     safe_filename,
     status_after_run,
 )
@@ -82,6 +83,12 @@ def test_one_field_in_review_or_one_hs_step_not_ok_needs_review() -> None:
 def test_no_invoice_is_failed_unless_extraction_asked_for_review() -> None:
     assert status_after_run(result(None, extract=FAILED, statuses=()), []) == "failed"
     assert status_after_run(result(None, extract=REVIEW, statuses=()), []) == "needs_review"
+
+
+def test_lines_needing_hs_are_those_whose_hs_step_didnt_finish() -> None:
+    lines = {0: hs_line(), 1: hs_line(FAILED), 2: hs_line(REVIEW), 3: hs_line()}
+    assert lines_needing_hs(lines) == [1, 2]
+    assert lines_needing_hs({0: hs_line()}) == []
 
 
 # --- corrections --------------------------------------------------------------------------

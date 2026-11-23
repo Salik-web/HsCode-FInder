@@ -21,6 +21,7 @@ from app.config import Settings
 from app.db import repository
 from app.db.models import Document, ExtractionRun
 from app.db.session import make_engine
+from app.pipeline.hs_suggest import HSLineResult
 from app.pipeline.preprocess import MAX_FILE_BYTES, InvalidDocumentError, detect_media_type
 from app.pipeline.review import (
     REVIEWABLE_STATUSES,
@@ -31,6 +32,7 @@ from app.pipeline.review import (
     export_csv,
     export_json,
     field_value,
+    lines_needing_hs,
     safe_filename,
 )
 from app.schemas.raw import RawInvoice
@@ -242,6 +244,22 @@ def _routes(app: FastAPI) -> None:
         return HSLineOut(
             line_index=line.line_index, result=line.result, chosen_code=line.chosen_code
         )
+
+    @app.post("/documents/{document_id}/hs/rerun", status_code=status.HTTP_202_ACCEPTED)
+    def rerun_hs(document_id: DocumentId, session: SessionDep) -> DocumentOut:
+        """Queue an HS re-run for the lines whose HS step failed or was rate-limited."""
+        document = _document(session, document_id)
+        _editable(document)
+        run = _run(session, document_id)
+        lines = {
+            record.line_index: HSLineResult.model_validate(record.result)
+            for record in repository.hs_lines(session, run.id)
+        }
+        if not lines_needing_hs(lines):
+            raise HTTPException(status.HTTP_409_CONFLICT, "every line's HS step finished")
+        repository.set_status(session, document_id, "hs_queued")
+        session.refresh(document)
+        return DocumentOut.of(document)
 
     @app.post("/documents/{document_id}/approve")
     def approve(document_id: DocumentId, session: SessionDep) -> DocumentOut:

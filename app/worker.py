@@ -25,13 +25,22 @@ from app.llm.client import LLMClient
 from app.llm.factory import build_client, build_hs_client
 from app.pipeline.hs_suggest import Embedder, HSLineResult, TariffIndex, classify_line
 from app.pipeline.prompts import QUERY_TASK, RERANK_TASK, TaskPrompt, load_task_prompt
-from app.pipeline.review import status_after_run
+from app.pipeline.review import (
+    CorrectionInput,
+    apply_corrections,
+    lines_needing_hs,
+    status_after_run,
+)
 from app.pipeline.run import PipelineConfig, complete_pipeline, preprocess_stage
 from app.pipeline.validate import HSCodeTable
 from app.schemas.result import PipelineResult
 from app.storage import DocumentStorage
 
 logger = logging.getLogger(__name__)
+
+
+class HSRerunError(RuntimeError):
+    """An HS re-run was claimed for a document with nothing to re-run."""
 
 
 @dataclass(frozen=True)
@@ -67,11 +76,15 @@ def build_deps(settings: Settings) -> WorkerDeps:
 
 
 def process_next(deps: WorkerDeps, today: date) -> str | None:
-    """Claim and process one queued document; its id, or None when the queue is empty."""
+    """Claim and process one waiting document; its id, or None when nothing waits."""
     with Session(deps.engine) as session, session.begin():
-        document_id = repository.claim_next_document(session)
-    if document_id is None:
+        claimed = repository.claim_next_document(session)
+    if claimed is None:
         return None
+    document_id, requested = claimed
+    if requested == "hs_queued":
+        _rerun_hs(deps, document_id)
+        return document_id
     try:
         result, hs = _run(deps, document_id, today)
     except Exception as error:  # stage boundary: any failure becomes the document's status
@@ -100,6 +113,69 @@ def process_next(deps: WorkerDeps, today: date) -> str | None:
             retryable=failed_stage.retryable,
         )
     return document_id
+
+
+def _rerun_hs(deps: WorkerDeps, document_id: str) -> None:
+    """Re-run HS for the lines whose HS step didn't finish, with their reviewed descriptions.
+
+    Extraction, corrections and other lines' choices are kept; only those lines' results
+    are replaced. Any failure returns the document to needs_review, never loses the review.
+    """
+    try:
+        result, refreshed, all_lines = _refreshed_hs_lines(deps, document_id)
+        with Session(deps.engine) as session, session.begin():
+            run = repository.latest_run(session, document_id)
+            if run is None:
+                raise HSRerunError("the run disappeared during the re-run")
+            for record in repository.hs_lines(session, run.id):
+                if record.line_index in refreshed:
+                    repository.replace_hs_line(
+                        record,
+                        refreshed[record.line_index],
+                        model=deps.hs_client.model,
+                        query_prompt_version=deps.query_prompt.version,
+                        rerank_prompt_version=deps.rerank_prompt.version,
+                    )
+            repository.set_status(session, document_id, status_after_run(result, all_lines))
+    except Exception as error:  # stage boundary: the review must stay usable
+        logger.exception("HS re-run failed", extra={"document_id": document_id})
+        with Session(deps.engine) as session, session.begin():
+            repository.set_status(
+                session, document_id, "needs_review", error=f"HS re-run: {type(error).__name__}"
+            )
+
+
+def _refreshed_hs_lines(
+    deps: WorkerDeps, document_id: str
+) -> tuple[PipelineResult, dict[int, HSLineResult], list[HSLineResult]]:
+    """The run's result, the re-run lines' new HS results, and every line's result after."""
+    with Session(deps.engine) as session:
+        run = repository.latest_run(session, document_id)
+        if run is None:
+            raise HSRerunError("no run to re-run HS for")
+        result = PipelineResult.model_validate(run.result)
+        corrections = repository.corrections_for(session, run.id)
+        lines = {
+            record.line_index: HSLineResult.model_validate(record.result)
+            for record in repository.hs_lines(session, run.id)
+        }
+    if result.invoice is None:
+        raise HSRerunError("no invoice to re-run HS for")
+    edits = [CorrectionInput(field_path=c.field_path, new_value=c.new_value) for c in corrections]
+    invoice = apply_corrections(result.invoice, edits)
+    refreshed: dict[int, HSLineResult] = {}
+    for index in lines_needing_hs(lines):
+        description = invoice.line_items[index].description
+        if description:
+            refreshed[index] = classify_line(
+                description,
+                deps.embedder,
+                deps.index,
+                deps.query_prompt,
+                deps.rerank_prompt,
+                deps.hs_client,
+            )
+    return result, refreshed, list((lines | refreshed).values())
 
 
 def _run(

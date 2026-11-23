@@ -19,6 +19,7 @@ STATUS_ICONS = {"ok": "✅", "needs_review": "🟡", "failed_check": "🔴"}
 DOCUMENT_ICONS = {
     "queued": "⏳",
     "processing": "⚙️",
+    "hs_queued": "🔁",
     "needs_review": "🟡",
     "ready": "✅",
     "approved": "📦",
@@ -74,7 +75,7 @@ def document_view(document_id: str) -> None:
     document = api().get(f"/documents/{document_id}").json()
     st.subheader(f"{DOCUMENT_ICONS.get(document['status'], '')} {document['filename']}")
     st.caption(f"Status: {document['status']} · id {document_id[:12]}…")
-    if document["status"] in ("queued", "processing"):
+    if document["status"] in ("queued", "processing", "hs_queued"):
         st.info("Waiting for the worker (`python -m app.worker`). Press Refresh.")
         return
     if document["status"] == "failed":
@@ -146,36 +147,52 @@ def hs_section(document_id: str, status: str, review: dict[str, Any]) -> None:
         return
     st.markdown("#### HS code suggestions")
     st.caption("Suggestions only: a licensed person makes the final classification.")
+    reviewable = status in ("needs_review", "ready")
+    unfinished = [h for h in review["hs_lines"] if h["result"]["hs"]["stage"]["status"] != "ok"]
+    if unfinished and reviewable and st.button(f"Re-run HS for {len(unfinished)} line(s)"):
+        response = api().post(f"/documents/{document_id}/hs/rerun")
+        if response.status_code == 202:
+            st.rerun()
+        show_error(response)
     lines = (review["invoice"] or {}).get("line_items", [])
     for hs_line in review["hs_lines"]:
         index = hs_line["line_index"]
         description = lines[index]["description"] if index < len(lines) else ""
-        result = hs_line["result"]["hs"]
         with st.expander(f"Line {index + 1}: {description}", expanded=False):
-            if result["stage"]["status"] != "ok":
-                st.warning(
-                    f"No suggestion ({result['stage']['status']}): {result['stage']['error']}"
-                )
-            options = [s["code"] for s in result["suggestions"]]
-            for suggestion in result["suggestions"]:
-                st.write(f"**{suggestion['code']}**: {suggestion['reason']}")
-            candidates = [c["code"] for c in result["candidates"] if c["code"] not in options]
-            choices = options + candidates
-            if not choices or status not in ("needs_review", "ready"):
-                st.caption(f"Chosen: {hs_line['chosen_code'] or 'none'}")
-                continue
-            current = hs_line["chosen_code"]
-            picked = st.selectbox(
-                "Chosen code",
-                choices,
-                index=choices.index(current) if current in choices else 0,
-                key=f"hs-{document_id}-{index}",
-            )
-            if st.button("Save code", key=f"hs-save-{document_id}-{index}"):
-                url = f"/documents/{document_id}/lines/{index}/hs_code"
-                response = api().put(url, json={"code": picked})
-                if response.status_code != 200:
-                    show_error(response)
+            hs_line_view(document_id, reviewable, hs_line)
+
+
+def hs_line_view(document_id: str, reviewable: bool, hs_line: dict[str, Any]) -> None:
+    index = hs_line["line_index"]
+    result = hs_line["result"]["hs"]
+    if result["stage"]["status"] != "ok":
+        st.warning(f"No suggestion ({result['stage']['status']}): {result['stage']['error']}")
+    options = [s["code"] for s in result["suggestions"]]
+    for suggestion in result["suggestions"]:
+        st.write(f"**{suggestion['code']}**: {suggestion['reason']}")
+    st.caption(f"Chosen: {hs_line['chosen_code'] or 'none'}")
+    if not reviewable:
+        return
+    choices = options + [c["code"] for c in result["candidates"] if c["code"] not in options]
+    current = hs_line["chosen_code"]
+    picked = None
+    if choices:
+        picked = st.selectbox(
+            "Pick a suggested or retrieved code",
+            choices,
+            index=choices.index(current) if current in choices else 0,
+            key=f"hs-{document_id}-{index}",
+        )
+    typed = st.text_input(
+        "Or type any PCT code (NNNN.NNNN)", key=f"hs-typed-{document_id}-{index}"
+    ).strip()
+    code = typed or picked
+    if code and st.button("Save code", key=f"hs-save-{document_id}-{index}"):
+        url = f"/documents/{document_id}/lines/{index}/hs_code"
+        response = api().put(url, json={"code": code})
+        if response.status_code == 200:
+            st.rerun()
+        show_error(response)
 
 
 def finish_section(document_id: str, status: str) -> None:
