@@ -10,7 +10,7 @@ TradeDoc AI extracts structured data from trade documents (commercial invoices f
 Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H & J Corporation) and as a public portfolio project.
 
 ## Status
-- Current phase: **Phase 6 gate (FastAPI + worker + Streamlit review UI): built and checked end to end locally on 2026-11-23, waiting for Salik's approval before Phase 7.** Manifest run and Phase 5 are done (below).
+- Current phase: **Phase 7 (deploy, demo mode, CI eval gate, README): built and verified locally on 2026-11-23, waiting for Salik to create the Space, Neon project and secrets and run the deploy.** Phase 6 approved by Salik on 2026-11-23.
 - **Plan: fast free plan (Salik, 2026-11-23).** Order: 1) the `manifest` held-out run (16 calls, the last extraction run) -> 2) Phase 5 (tariff parse, pgvector, retrieval, rerank, hs_gold eval) -> 3) Phase 6 (FastAPI + Streamlit review UI) -> 4) Phase 7 (Docker image, Hugging Face Spaces deploy, Neon or Supabase Postgres, offline CI eval gate from the cache, README with results). Work autonomously inside a phase; stop at each gate with evidence.
   - **Dev clean is closed as a sample:** 27/53 documents, critical-field accuracy 100%, all critical right 27/27. The other 26 are not run. Recorded as a sample in the README and evals/CHANGELOG.md; never present it as the full split.
   - **HS rerank** uses Groq `openai/gpt-oss-120b` (text only, its own per-model daily quota). No vision calls for HS.
@@ -19,6 +19,11 @@ Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H &
 - Completed phases: Phase 1 — Foundation + synthetic data (approved by Salik, 2026-11-07). Phases 2–4 built and measured (see above and evals/CHANGELOG.md). Phase 5 done 2026-11-23 (HS top-3 measured on hs_gold, test split frozen; Salik's order moved straight on to Phase 6).
 - **Manifest held-out run (2026-11-23, final):** clean 12/12 all critical right (100%), messy 3/4 (critical 98.4%); reports `20261123T111641_…`, `20261123T111649_…`. No more extraction runs before the v1.1 bake-off.
 - **Phase 5 (2026-11-23):** tariff parsed (`tariff/pct_2026-27.csv`, 7,605 codes, committed), pgvector + full-text index (migrations 0001–0002), HS stage = `hs_query/v1` rewrite -> vector and full-text retrieval of description and rewrite, fused (RRF), top 10 -> `hs_rerank/v1`. hs_gold: 86 invoice-style lines (rewritten after a tariff-wording leak), dev 63 / test 23, **gold not verified by a person yet**. Levers tuned on dev in Salik's order; stopped at lever 3 (query rewrite) when 6-digit top-3 reached 81.0% (dev); levers 4-5 measured on retrieval only (recall 59-61/63 at k=30), not adopted. **Test split FROZEN: 6-digit top-3 78.3% (18/23)**, report `20261123T132503_…`. Table in evals/CHANGELOG.md. The HS-code existence check (`hs_code_exists`) is wired in: 0 new flags on all cached sets.
+- **Phase 7 (2026-11-23, local; Salik's plan with his three changes):**
+  - Demo mode (`DEMO_MODE`): samples in `demo/samples` replayed from `demo/llm_cache` (no API calls); caps 2 per session (UI), 3 per visitor per day and 10 per day in total (API, `upload_log`, rolling day); visitor = salted sha256 of the first `X-Forwarded-For` entry (fallback `X-Real-Ip`, else only the global cap); HS on the first 5 lines; retry and HS re-run off; the upload's original deleted once processed; uploads purged after 60 minutes; samples reset; orphans from a restarted Space purged (`app/retention.py`). `LLM_CACHE_ENABLED=false` in the image, so a visitor's extracted data isn't kept in an answer cache.
+  - Image: `Dockerfile` (CPU torch from the PyTorch index on Linux, bge-small baked in, `HF_HUB_OFFLINE=1`, uid 1000), `deploy/start.sh` (idempotent cold start: migrate, embed the tariff only on a new database, seed samples, API on 127.0.0.1, worker, Streamlit on 7860). About 2.2 GB unpacked (torch 0.8 GB). Verified: three cold starts on fresh databases (UI healthy in about 145 s, tariff embedded offline in about 125 s), samples seeded from cache, visitor A's 4th upload 429, visitor B allowed with a different hash, upload processed then its original deleted, nothing cached.
+  - CI (`.github/workflows/ci.yml`): ruff, pytest with a pgvector service and Chromium, and the offline eval gate (`evals/gate.py`, fixtures in `evals/fixtures`, baseline in the changelog). Deploy (`.github/workflows/deploy.yml`, manual): builds the image, pushes it to GHCR, and pushes a README + one-line Dockerfile (`FROM ghcr.io/...:<sha>`) to the Space, because Spaces reject binary files pushed without Xet.
+  - Not yet done (needs Salik's accounts): the Space, Neon, secrets, first deploy, and the post-deploy check that two visitors hash differently behind the Space's proxy.
 - **Phase 6 (2026-11-23):** tables `documents`, `extraction_runs`, `hs_suggestions`, `corrections` (migration 0003); `app/api/main.py` (upload, list, review, corrections, HS choice, approve, export JSON/CSV, retry, page images, health); `app/worker.py` (claims with SKIP LOCKED, runs the same `complete_pipeline` plus `classify_line`, saves page images so the API never touches PDFium); `app/pipeline/review.py` (status, corrections replayed and validated as RawInvoice, CSV export with a formula-injection guard); `ui/app.py` (Streamlit, talks to the API only). Gate evidence: `tests/test_api.py` (whole workflow on the `tradedoc_test` database, LLM mocked) and a live local run on `inv_00015` (upload -> worker -> review -> correction -> HS choice -> approve -> JSON and CSV export). The live run found and fixed a 500 on documents without a notify party (regression test in `tests/test_review.py`).
 - Branch: everything is merged into `main`; no open feature branches. Salik pushes.
 - Phase 4 summary: `app/pipeline/validate.py` (deterministic checks), exact code synonyms, the injected-error set and guardrail eval (catch rate 60/60; 0 false alarms on 113 clean ground-truth invoices), confidence scoring and the calibration table, the row-scoped line check, the party boundary check (0 alarms on 415 ground-truth parties), strict addresses, empty critical fields to `needs_review`, whole-row review. Error recall on all cached v3 53/59, review load 1212/5665 (photos drive it; see Known issues).
@@ -68,6 +73,8 @@ Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H &
   - PDFium isn't thread-safe. The Phase 6 worker must not render PDFs from multiple threads; use separate processes.
   - Synthetic layouts are still only 9 designs by one author, and `test_unseen_layout` shares their fonts, label lists and catalogue. It measures layout generalisation, not real-world accuracy, so report the `public` and `real` sets (DESIGN.md §6) separately.
   - Messy images are single-page only, so two-page invoices are tested in clean form only.
+  - **PDFium renders PDF pages to different bytes on Linux than on Windows** (seen 2026-11-23); photos match. The LLM cache key hashes page images, so a Windows cache misses on Linux: the CI gate keys fixtures without images, and the demo cache is built by the image (`deploy/build_demo_cache.sh <database url>`). Rebuild it after changing a sample, a prompt or the model, then prune stale entries.
+  - **The demo shares the Groq organization's daily quota with the evals** (limits are per organization, not per key). Worst case at the demo caps: about 143k tokens a day per model. Run big evals when the demo is quiet, or lower `DEMO_DAILY_UPLOADS`.
   - Docker Desktop runs on the dev machine; `docker compose up -d` (Postgres + pgvector) is in use since 2026-11-23. The tariff ingest embeds 7,605 rows in about 2 minutes on CPU.
   - Synthetic files are byte-identical only on the same machine and Chromium version (fonts and renderer affect the bytes). Ground-truth JSON doesn't depend on either.
 
@@ -99,6 +106,11 @@ uv run python -m evals.hs_run --split dev --prompt v1        # HS retrieval + re
 uv run uvicorn app.api.main:create_app --factory --reload   # API on :8000
 uv run python -m app.worker                         # process queued documents (--once: until the queue is empty)
 uv run streamlit run ui/app.py                      # review UI on :8501 (API_URL points it at the API)
+uv run python -m evals.gate                         # offline CI eval gate from evals/fixtures (no API keys)
+uv run python -m evals.gate --refresh               # after an evaluated change: rebuild fixtures + baseline
+uv run python -m app.demo seed                      # demo samples from demo/llm_cache (cache only)
+uv run python -m app.demo seed --live               # once, locally: fill demo/llm_cache with live calls
+docker build -t tradedoc-ai .                       # the demo image (API + worker + UI on :7860)
 ```
 Keep this list accurate. If you add a command, add it here.
 
@@ -115,6 +127,8 @@ evals/          metrics.py, dataset.py, report.py, run.py (CLI), guardrails.py (
 synth/          generator, layouts (+ label synonyms), Jinja2 templates, render, augment, manifest, generate (CLI), inject (CLI), catalogue.csv
 tariff/         parse.py (PCT PDF -> pct_2026-27.csv, committed), ingest.py (CSV -> embeddings -> pgvector)
 app/worker.py   queue worker (one process, one thread: PDFium); app/storage.py: uploads by sha256 under storage/ (gitignored)
+app/demo.py, app/retention.py, demo/   public demo: samples + committed LLM cache, upload caps, deletion, cold starts
+Dockerfile, deploy/, .github/   demo image, start script, Space README; CI (lint, tests, eval gate), manual deploy
 ui/             Streamlit review UI (Salik, 2026-11-23: replaces the planned Next.js frontend)
 tests/          pytest; LLM always mocked (tests/fakes.py)
 ```

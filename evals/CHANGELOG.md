@@ -2,6 +2,12 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-23: CI eval gate baseline (Phase 7; no API calls)
+
+- `evals/gate.py` replays a smoke set from committed fixtures (`evals/fixtures`): clean dev 12 (seen), photo dev 4 (seen), and the first 4 by id of test_unseen_layout (2 `ledger` now seen, 2 `sidebar` unseen), plus the 60-document injected set. Prompt v3, `qwen/qwen3.8-27b`, git of this branch.
+- Baseline (`evals/fixtures/baseline.json`): critical-field accuracy clean dev 100% (12), photos 92.8% (4), test_unseen_layout seen 91.7% (2) / unseen 100% (2); guardrails 60/60 caught, 0 clean ground truth flagged. It fails on an unscored document, a drop of more than 2 points in any set and group, or any guardrail regression.
+- **Cross-platform finding:** PDFium renders a PDF page to different bytes on Linux than on Windows (photos, through Pillow, match). The production cache key hashes the page images, so Windows cache entries miss in CI and in the Linux demo image. The gate therefore keys fixture answers on the request without its images (model, call options, prompt version, attempt, system prompt, user text with the text layer): checked identical in a Linux container (`python:3.12-slim`) and on Windows. A prompt or text-layer change still fails the gate; an image-only preprocessing change (resolution) doesn't. The demo's sample cache is built by the image itself (`deploy/build_demo_cache.sh`).
+
 ## 2026-11-23: HS suggestion (Phase 5): hs_gold, retrieval levers, dev report
 
 - Tariff: FBR PCT 2026-27 PDF parsed into 7,605 8-digit codes in 96 chapters (`tariff/pct_2026-27.csv`, committed). Every code-like line is accounted for: 7,393 dashed, 209 heading-level, 2 irregular (`8708.1020` without dashes, `8414.1000` printed as `#NAME?`). Heading titles missing from the text layer: 11.03 and 63.09. 50 random rows checked against the PDF text: all match.
