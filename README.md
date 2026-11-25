@@ -116,6 +116,7 @@ Retrieval is the bottleneck. When the right code is among the 10 candidates, the
 - **Two-page invoices** are tested only on seen layouts.
 - **Extra pages aren't recognised.** A long document is read from the front (see below), so terms or instructions printed before the last invoice page can push that page out. Choosing the invoice pages is planned for v1.1. Documents over 2 pages are not in any eval set.
 - **Generated text layers can differ slightly between systems.** Regenerated with the bundled fonts, 121 of 122 PDFs have the same text layer on Windows and Linux. `inv_00027` has a stray `k` line at the end of page 1 on Linux. The frozen eval data and the CI gate aren't affected.
+- **Groq's free tier reads at most 2 pages per document.** Three pages exceed its limit of 7,000 input tokens a minute. The other pages aren't read, the document carries a warning, and it goes to review. With a higher limit it reads up to 3, the most this model accepts.
 - **Free-tier quotas.** Groq allows about 200,000 tokens a day per model, which is why the demo limits uploads.
 
 ## Using it with your own documents

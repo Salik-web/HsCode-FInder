@@ -195,8 +195,8 @@ Error: output failed validation 2 times
 
 ### Not scored
 
-- inv_00026: RateLimitedError: groq rate limit: Error code: 429 - Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01kqptx4pzfhns3x8ezck1c0af` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 196388, Requested 4431. Please try again in 5m53.808s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
-- inv_00027: RateLimitedError: groq rate limit: Error code: 429 - Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01kqptx4pzfhns3x8ezck1c0af` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 196527, Requested 6395. Please try again in 21m2.304s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+- inv_00026: RateLimitedError: groq rate limit: Error code: 429 - Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_[redacted]` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 196388, Requested 4431. Please try again in 5m53.808s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+- inv_00027: RateLimitedError: groq rate limit: Error code: 429 - Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_[redacted]` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 196527, Requested 6395. Please try again in 21m2.304s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
 - inv_00029: skipped after the LLM became unavailable
 - inv_00032: skipped after the LLM became unavailable
 - inv_00034: skipped after the LLM became unavailable

@@ -102,8 +102,8 @@ Previous: `20261111T083025_synthetic_messy_dev_gemini-3.5-flash_v1` (model `gemi
 
 ### Not scored
 
-- inv_00011_messy: RateLimitedError: groq rate limit: Error code: 429 - Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01kqptx4pzfhns3x8ezck1c0af` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199880, Requested 3637. Please try again in 25m19.344s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
-- inv_00026_messy: RateLimitedError: groq rate limit: Error code: 429 - Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_01kqptx4pzfhns3x8ezck1c0af` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199741, Requested 3770. Please try again in 25m16.752s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+- inv_00011_messy: RateLimitedError: groq rate limit: Error code: 429 - Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_[redacted]` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199880, Requested 3637. Please try again in 25m19.344s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
+- inv_00026_messy: RateLimitedError: groq rate limit: Error code: 429 - Rate limit reached for model `qwen/qwen3.8-27b` in organization `org_[redacted]` service tier `on_demand` on tokens per day (TPD): Limit 200000, Used 199741, Requested 3770. Please try again in 25m16.752s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing
 - inv_00034_messy: skipped after the LLM became unavailable
 - inv_00043_messy: skipped after the LLM became unavailable
 - inv_00045_messy: skipped after the LLM became unavailable

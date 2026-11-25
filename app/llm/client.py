@@ -1,24 +1,46 @@
 """The provider-neutral interface every LLM call goes through."""
 
+import re
 from decimal import Decimal
 from typing import Any, Protocol
 
 from pydantic import BaseModel, ConfigDict
 
 MS_PER_SECOND = 1000
+# Provider errors name the account (Groq's rate limits quote the organization) and may echo
+# part of a key. They are stored with runs and written into committed eval reports.
+ACCOUNT_ID = re.compile(
+    r"\b(?P<kind>org|proj|project|user|acct|account|req)[-_](?=[A-Za-z0-9]*\d)[A-Za-z0-9]{8,}\b"
+    r"|\b(?P<key>gsk_|sk-|AIza)[A-Za-z0-9_*-]{4,}"
+    r"|(?P<number>\bprojects/|\bproject_number:\s*)\d{5,}"
+)
+
+
+def strip_account_ids(text: str) -> str:
+    """The text with account, project, request and key identifiers replaced by their kind."""
+    return ACCOUNT_ID.sub(_redacted, text)
+
+
+def _redacted(match: re.Match[str]) -> str:
+    if match["kind"]:
+        return f"{match['kind']}_[redacted]"
+    return f"{match['key'] or match['number']}[redacted]"
 
 
 class LLMError(RuntimeError):
     """An LLM call failed after the provider's own retries.
 
-    The exception's own text is the technical detail, kept with the run. `plain` is what a
-    reviewer reads; it never quotes the provider.
+    The exception's own text is the technical detail, kept with the run, without account
+    identifiers. `plain` is what a reviewer reads; it never quotes the provider.
     """
 
     plain = (
         "The AI service couldn't process this document. Your file is kept: try again, and "
         "report it if it keeps happening."
     )
+
+    def __init__(self, message: str) -> None:
+        super().__init__(strip_account_ids(message))
 
 
 class RateLimitedError(LLMError):

@@ -34,6 +34,7 @@ from app.llm.client import (
     SchemaViolationError,
     TooManyImagesError,
     Usage,
+    strip_account_ids,
 )
 from app.llm.fallback import FallbackClient
 from app.llm.openai_compatible import OpenAICompatibleClient
@@ -334,6 +335,74 @@ def test_request_too_large_is_permanent_not_a_rate_limit() -> None:
     )
     with pytest.raises(RequestTooLargeError, match="OTPM"):
         client.complete(make_request())
+
+
+ORG_ID = "org_01abcdefghijklmnopqrstuvwx"  # the shape of Groq's, not a real one
+ERROR_NAMING_THE_ACCOUNT = (
+    f"Rate limit reached for model `qwen/qwen3.8-27b` in organization `{ORG_ID}` service tier "
+    "`on_demand` on tokens per day (TPD): Limit 200000, Used 196388, Requested 4431."
+)
+
+
+@pytest.mark.parametrize("status", [400, 401, 413, 429, 500])
+def test_no_provider_error_keeps_the_account_id(status: int) -> None:
+    """Regression: two committed eval reports quoted the Groq organization ID."""
+    body = {"error": {"message": ERROR_NAMING_THE_ACCOUNT}}
+    client = provider_with(lambda _: httpx2.Response(status, json=body, headers=NO_WAIT))
+    with pytest.raises(LLMError) as caught:
+        client.complete(make_request())
+    assert ORG_ID not in str(caught.value)
+    assert "org_[redacted]" in str(caught.value)
+    assert "Used 196388" in str(caught.value)  # the useful detail stays
+
+
+def test_a_cached_schema_rejection_keeps_no_account_id(tmp_path: Path) -> None:
+    rejection = SchemaViolationError(f"rejected for {ORG_ID}", model="model-a", latency_ms=1)
+    client = CachingClient(FakeClient("model-a", [rejection]), tmp_path, {})
+    with pytest.raises(SchemaViolationError):
+        client.complete(make_request())
+    [stored] = tmp_path.rglob("*.json")
+    assert ORG_ID not in stored.read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize(
+    ("text", "stripped"),
+    [
+        (f"in organization `{ORG_ID}`", "in organization `org_[redacted]`"),
+        ("project proj_a1B2c3D4e5F6", "project proj_[redacted]"),
+        ("request req-0123456789abcdef failed", "request req_[redacted] failed"),
+        ("user_2x4YqZ81mNp", "user_[redacted]"),
+        (
+            "Incorrect API key provided: gsk_abcd****wxyz",
+            "Incorrect API key provided: gsk_[redacted]",
+        ),
+        ("projects/123456789012/quotas", "projects/[redacted]/quotas"),
+        ("consumer project_number:123456789012", "consumer project_number:[redacted]"),
+    ],
+)
+def test_account_identifiers_are_replaced_by_their_kind(text: str, stripped: str) -> None:
+    assert strip_account_ids(text) == stripped
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Too many images provided. This model supports up to 3 images",
+        "GenerateRequestsPerDayPerProjectPerModel-FreeTier",
+        "Rate limit reached for model `openai/gpt-oss-120b`: Limit 200000, Used 196388",
+        "user_message and project_settings and org_chart are not identifiers",
+        "line_items.0.unit: 'req_unit' is not a unit",
+    ],
+)
+def test_ordinary_error_text_is_left_alone(text: str) -> None:
+    assert strip_account_ids(text) == text
+
+
+def test_committed_reports_hold_no_account_ids() -> None:
+    reports = Path(__file__).parents[1] / "evals" / "reports"
+    for report in reports.glob("*.*"):
+        text = report.read_text(encoding="utf-8")
+        assert strip_account_ids(text) == text, report.name
 
 
 def test_http_413_is_too_large_whatever_its_message() -> None:
