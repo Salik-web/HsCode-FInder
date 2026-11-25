@@ -254,3 +254,39 @@ def test_a_rate_limited_query_step_stops_the_line_before_retrieval() -> None:
     assert line.hs.stage.status == "failed"
     assert line.hs.stage.retryable is True
     assert index.limits == []
+
+
+def test_the_models_never_see_a_printed_code_and_it_is_only_compared() -> None:
+    """Regression: a form that prints the exporter's code in the description cell put it in
+    front of the HS models, which repeated it."""
+    index = FakeIndex(vector={float(len(DESCRIPTION)): ["6109.1000"]}, lexical={})
+    client = FakeClient("m", [query_answer(), answer("6109.1000")])
+    line = classify_line(
+        f"{DESCRIPTION} - 6105.10.4000.8",
+        FakeEmbedder(),
+        index,
+        QUERY_PROMPT,
+        PROMPT,
+        client,
+        printed_code="6105.10.4000.8",
+    )
+    for request in client.requests:
+        assert DESCRIPTION in request.text
+        assert "6105" not in request.text
+    assert line.mismatch is not None
+    assert (line.mismatch.printed, line.mismatch.suggested) == ("6105.10.4000.8", "6109.1000")
+
+
+def test_a_printed_code_that_agrees_is_no_mismatch() -> None:
+    index = FakeIndex(vector={float(len(DESCRIPTION)): ["6109.1000"]}, lexical={})
+    client = FakeClient("m", [query_answer(), answer("6109.1000")])
+    line = classify_line(
+        DESCRIPTION,
+        FakeEmbedder(),
+        index,
+        QUERY_PROMPT,
+        PROMPT,
+        client,
+        printed_code="6109.10.0012",
+    )
+    assert line.mismatch is None

@@ -260,3 +260,30 @@ def test_a_bad_file_stays_not_retryable(client: TestClient, settings: Settings) 
     process_next(worker(settings, [], 0), ANCHOR_DATE)
     failed = client.get(f"/documents/{document['id']}").json()
     assert (failed["status"], failed["retryable"]) == ("failed", False)
+
+
+def test_a_printed_code_that_disagrees_with_the_suggestion_reaches_the_reviewer(
+    client: TestClient, settings: Settings
+) -> None:
+    truth = generate_ground_truth(42, 5, load_catalogue()).invoice
+    first = truth.line_items[0]
+    coded = first.model_copy(
+        update={"description": f"{first.description} - 6105.10.4000", "hs_code_on_doc": None}
+    )
+    rest = [line.model_copy(update={"hs_code_on_doc": None}) for line in truth.line_items[1:]]
+    answered = truth.model_copy(update={"line_items": [coded, *rest]})
+    content = answered.model_dump_json()
+    answer = answer_with_truth().model_copy(update={"content": content})
+    document = upload(client, image_pdf(1))
+    deps = worker(settings, [answer], line_count())
+    process_next(deps, ANCHOR_DATE)
+    assert not any("6105.10.4000" in request.text for request in deps.hs_client.requests)
+    review = client.get(f"/documents/{document['id']}/review").json()
+    [line] = [x for x in review["invoice"]["line_items"] if x["hs_code_on_doc"]]
+    assert (line["description"], line["hs_code_on_doc"]) == (first.description, "6105.10.4000")
+    assert review["hs_lines"][0]["result"]["mismatch"] == {
+        "printed": "6105.10.4000",
+        "suggested": "6109.1000",
+        "digits": 6,
+    }
+    assert review["hs_lines"][1]["result"]["mismatch"] is None

@@ -26,6 +26,11 @@ from app.llm.client import (
     SchemaViolationError,
 )
 from app.pipeline.extract import format_validation_errors
+from app.pipeline.printed_hs import (
+    PrintedCodeMismatch,
+    printed_code_mismatch,
+    split_printed_code,
+)
 from app.pipeline.prompts import TaskPrompt
 from app.schemas.hs import HSCandidate, HSSuggestion, RerankAnswer
 from app.schemas.result import LLMCall, StageResult
@@ -93,6 +98,8 @@ class HSLineResult(BaseModel):
 
     query: QueryResult
     hs: HSResult
+    # Set when the line prints an HS code our top suggestion disagrees with.
+    mismatch: PrintedCodeMismatch | None = None
 
 
 class _Asked[T](BaseModel):
@@ -125,21 +132,27 @@ def classify_line(
     query_prompt: TaskPrompt,
     rerank_prompt: TaskPrompt,
     client: LLMClient,
+    printed_code: str | None = None,
 ) -> HSLineResult:
-    """Query understanding, fused retrieval, rerank.
+    """Query understanding, fused retrieval, rerank, then the printed code's comparison.
+
+    `printed_code` is the line's hs_code_on_doc. The models never see it, or a code left in
+    the description: they would repeat it. It is only compared with their answer.
 
     A query step that ends in needs_review (or a non-retryable failure) doesn't stop the
     line: retrieval uses the description alone, and the query stage says why. A
     retryable failure (rate limit) stops it, since the rerank call would fail the same way.
     """
-    query = understand_query(description, query_prompt, client)
+    goods = split_printed_code(description, printed_code).description
+    query = understand_query(goods, query_prompt, client)
     if query.stage.status == "failed" and query.stage.retryable:
         hs = HSResult(stage=query.stage, suggestions=[], candidates=[], calls=[])
         return HSLineResult(query=query, hs=hs)
     rewrite = None if query.answer is None else query.answer.tariff_description
-    candidates = retrieve_candidates(description, rewrite, embedder, index)
+    candidates = retrieve_candidates(goods, rewrite, embedder, index)
+    hs = suggest_hs_codes(goods, candidates, rerank_prompt, client)
     return HSLineResult(
-        query=query, hs=suggest_hs_codes(description, candidates, rerank_prompt, client)
+        query=query, hs=hs, mismatch=printed_code_mismatch(printed_code, hs.suggestions)
     )
 
 

@@ -9,8 +9,9 @@ Incoterm = Literal["EXW", "FCA", "FAS", "FOB", "CFR", "CIF", "CPT", "CIP", "DAP"
 INCOTERMS: tuple[str, ...] = get_args(Incoterm)
 
 # Units of measure the system accepts. NOS ("numbers") is its own unit, not a synonym of
-# PCS (Salik, 2026-11-12). To be aligned with Pakistan Customs/WeBOC unit codes.
-Unit = Literal["PCS", "NOS", "SET", "PAIR", "CTN", "BAG", "KG", "MTR", "MT"]
+# PCS (Salik, 2026-11-12); so is EA (2026-11-25), until his operations contacts say whether
+# it is one of the others. To be aligned with Pakistan Customs/WeBOC unit codes.
+Unit = Literal["PCS", "NOS", "EA", "SET", "PAIR", "CTN", "BAG", "KG", "MTR", "MT"]
 UNITS: tuple[str, ...] = get_args(Unit)
 
 # Critical fields: a document counts as right only if all of them are. Every field that

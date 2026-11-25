@@ -196,6 +196,7 @@ def _refreshed_hs_lines(
                 deps.query_prompt,
                 deps.rerank_prompt,
                 deps.hs_client,
+                printed_code=invoice.line_items[index].hs_code_on_doc,
             )
     return result, refreshed, list((lines | refreshed).values())
 
@@ -226,6 +227,7 @@ def _run(
                 deps.query_prompt,
                 deps.rerank_prompt,
                 deps.hs_client,
+                printed_code=lines[index].hs_code_on_doc,
             )
     return result, hs
 

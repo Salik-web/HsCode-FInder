@@ -7,6 +7,7 @@ from decimal import Decimal
 import pytest
 
 from app.pipeline.confidence import (
+    ADDRESSES_REVIEWED_ON_SCANS,
     CRITICAL_FIELD_EMPTY,
     LINE_FIELDS,
     NO_TEXT_LAYER_TO_VERIFY,
@@ -313,6 +314,9 @@ def test_without_a_text_layer_critical_fields_always_go_to_review() -> None:
             # every amount is in review on a photo, so every row is (Salik, 2026-11-17)
             assert assessment.status == "needs_review", path
             assert assessment.reasons[-1] == ROW_UNDER_REVIEW
+        elif path in ADDRESSES_REVIEWED_ON_SCANS:
+            assert assessment.status == "needs_review", path
+            assert assessment.reasons[-1] == NO_TEXT_LAYER_TO_VERIFY
         else:
             assert assessment.status == "ok", path
 
@@ -448,6 +452,25 @@ def test_an_empty_critical_field_never_hides_a_failed_check() -> None:
     check = FieldCheck(path="line_items[0].amount", status="failed_check", rule="r", detail="d")
     scores = assess(emptied(invoice), page_for(invoice), checks=[check])
     assert scores["line_items[0].amount"].status == "failed_check"
+
+
+def test_on_a_scan_the_three_main_addresses_go_to_review_and_nothing_else_is_added() -> None:
+    """Regression: a misread place name in a scanned address passed as ok."""
+    invoice = make_invoice()
+    scores = assess(invoice, None)
+    for name in ("shipper", "buyer", "consignee"):
+        assert scores[f"{name}.address"].status == "needs_review"
+        assert scores[f"{name}.address"].confidence == 0.60  # the evidence is unchanged
+        assert scores[f"{name}.country"].status == "ok"
+    for path in ("shipper.name", "notify_party.address", "invoice_date", "net_weight_kg"):
+        assert scores[path].status == "ok"
+
+
+def test_with_a_text_layer_addresses_are_scored_as_usual() -> None:
+    invoice = make_invoice()
+    scores = assess(invoice, page_for(invoice))
+    for path in ADDRESSES_REVIEWED_ON_SCANS:
+        assert scores[path].status == "ok"
 
 
 def test_with_a_text_layer_critical_fields_are_scored_as_usual() -> None:

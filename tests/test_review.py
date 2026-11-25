@@ -8,6 +8,7 @@ from decimal import Decimal
 import pytest
 
 from app.pipeline.hs_suggest import HSLineResult, HSResult, QueryResult
+from app.pipeline.printed_hs import PrintedCodeMismatch
 from app.pipeline.review import (
     CorrectionInput,
     InvalidCorrectionError,
@@ -78,6 +79,13 @@ def test_one_field_in_review_or_one_hs_step_not_ok_needs_review() -> None:
         status_after_run(result(invoice(), statuses=("ok", "failed_check")), []) == "needs_review"
     )
     assert status_after_run(result(invoice()), [hs_line(), hs_line(FAILED)]) == "needs_review"
+
+
+def test_a_printed_code_that_disagrees_needs_review_even_when_every_field_passed() -> None:
+    mismatch = PrintedCodeMismatch(printed="6105.10", suggested="6109.1000", digits=6)
+    line = hs_line().model_copy(update={"mismatch": mismatch})
+    assert status_after_run(result(invoice()), [hs_line(), line]) == "needs_review"
+    assert lines_needing_hs({0: line}) == []  # its HS step finished: re-running won't help
 
 
 def test_a_warning_needs_review_even_when_every_field_passed() -> None:

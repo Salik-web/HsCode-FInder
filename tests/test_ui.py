@@ -126,3 +126,37 @@ def test_a_failed_hs_line_shows_the_plain_message(monkeypatch: pytest.MonkeyPatc
     shown = [warning.value for warning in page.warning]
     assert f"No suggestion (failed): {PLAIN_ERROR}" in shown
     assert not any("groq" in text for text in shown)
+
+
+def test_a_printed_code_mismatch_shows_both_codes_and_reasons_are_marked_unverified(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    reviewed = {"status": "needs_review", "error": None, "retryable": False}
+    ok = {"status": "ok", "error": None, "message": None}
+    suggestion = {"code": "6109.1000", "reason": "T-shirts of cotton"}
+    review = {
+        "result": {"warnings": [], "pages_read": 1},
+        "invoice": {"line_items": [{"description": "Cotton shirts"}]},
+        "fields": [],
+        "hs_lines": [
+            {
+                "line_index": 0,
+                "chosen_code": None,
+                "result": {
+                    "hs": {"stage": ok, "suggestions": [suggestion], "candidates": []},
+                    "mismatch": {
+                        "printed": "6105.10.4000.8",
+                        "suggested": "6109.1000",
+                        "digits": 6,
+                    },
+                },
+            }
+        ],
+        "corrections": [],
+    }
+    page = show(reviewed, monkeypatch, **{f"/documents/{DOCUMENT_ID}/review": review})
+    [warning] = [w.value for w in page.warning if "6105.10.4000.8" in w.value]
+    assert "6109.1000" in warning
+    captions = [caption.value for caption in page.caption]
+    assert "Model explanation, not verified: T-shirts of cotton" in captions
+    assert page.expander[0].label.startswith("🟡")

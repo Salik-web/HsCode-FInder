@@ -114,7 +114,7 @@ def verify_invoice(
     `text_layer` is None without one (a photo), or where there is no page (eval ground truth).
     `hs_codes` is None where no tariff is loaded; the HS-code check is then skipped.
     """
-    outcome = apply_rules(invoice)
+    outcome = apply_rules(invoice, None if hs_codes is None else hs_codes.headings)
     found = validate_invoice(outcome.invoice, as_of, text_layer=text_layer, hs_codes=hs_codes)
     return outcome.model_copy(update={"checks": [*outcome.checks, *found]})
 

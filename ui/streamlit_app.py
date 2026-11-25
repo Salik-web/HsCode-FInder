@@ -206,7 +206,8 @@ def hs_section(document_id: str, status: str, review: dict[str, Any]) -> None:
     for hs_line in review["hs_lines"]:
         index = hs_line["line_index"]
         description = lines[index]["description"] if index < len(lines) else ""
-        with st.expander(f"Line {index + 1}: {description}", expanded=False):
+        marker = "🟡 " if hs_line["result"].get("mismatch") else ""
+        with st.expander(f"{marker}Line {index + 1}: {description}", expanded=False):
             hs_line_view(document_id, reviewable, hs_line)
 
 
@@ -216,9 +217,17 @@ def hs_line_view(document_id: str, reviewable: bool, hs_line: dict[str, Any]) ->
     if result["stage"]["status"] != "ok":
         reason = result["stage"].get("message") or result["stage"]["error"]
         st.warning(f"No suggestion ({result['stage']['status']}): {reason}")
+    mismatch = hs_line["result"].get("mismatch")
+    if mismatch:
+        st.warning(
+            f"The invoice prints {mismatch['printed']}, our top suggestion is "
+            f"{mismatch['suggested']}: they differ within the first {mismatch['digits']} "
+            "digits. Neither is confirmed."
+        )
     options = [s["code"] for s in result["suggestions"]]
     for suggestion in result["suggestions"]:
-        st.write(f"**{suggestion['code']}**: {suggestion['reason']}")
+        st.write(f"**{suggestion['code']}**")
+        st.caption(f"Model explanation, not verified: {suggestion['reason']}")
     st.caption(f"Chosen: {hs_line['chosen_code'] or 'none'}")
     if not reviewable:
         return

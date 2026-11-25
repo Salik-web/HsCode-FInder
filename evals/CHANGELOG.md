@@ -2,6 +2,23 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-25: printed HS codes, scanned addresses, EA (rules and guardrails; offline, no API calls)
+
+- Why: the first real document (a scan, kept local) printed the exporter's HS code inside each description, so the HS models could read it; a misread place name in an address passed as ok; `Ea.` failed the unit check.
+- Printed codes move out of descriptions by rule and never reach the HS models; a printed code that differs from our top suggestion at 6 digits sends the line to review with both codes. `EA` is an accepted unit (`Ea.`, `EACH`). Without a text layer, the shipper's, buyer's and consignee's addresses go to review.
+- **hs_gold re-run offline:** dev and test identical to the committed reports (6-digit top-3 81.0% and 78.3%), every answer from the cache. No hs_gold or synthetic description ends in a code.
+- **Extraction re-scored offline:** accuracy identical in every set and layout group; PDFs' review numbers unchanged too. Photos:
+
+| Set (cached v3 photos) | Wrong fields caught, before -> after | Correct fields sent to review, before -> after |
+| --- | --- | --- |
+| Dev, seen (16) | 39/42 -> 40/42 | 905/1108 -> 951/1108 |
+| Test, `ledger`, seen (3) | 1/4 -> 4/4 | 77/113 -> 83/113 |
+| Test, unseen (4) | no wrong fields | 228/280 -> 240/280 |
+| Held-out layout, unseen (4) | 1/5 -> 4/5 | 251/299 -> 260/299 |
+
+- The rule came from the real document, not from these sets; the test and held-out numbers are reported only.
+- The gate passes against its existing baseline (it holds accuracy and catch rates, not review load).
+
 ## 2026-11-25: page limit per model (pipeline change; no score change)
 
 - Why: a 4-page PDF failed with Groq's HTTP 400, "This model supports up to 3 images". Documents are now cut to the model's `max_images`, then page by page while the provider says the request is too large; the result records `pages_read` and a warning.

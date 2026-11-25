@@ -56,13 +56,15 @@ class CorrectionInput(BaseModel):
 
 def status_after_run(result: PipelineResult, hs: list[HSLineResult]) -> DocumentStatus:
     """failed: no invoice came out. needs_review: any field, or any line's HS step, needs a
-    person, or a warning says part of the document wasn't read. ready: every field passed.
-    HS codes are suggestions either way."""
+    person, a warning says part of the document wasn't read, or a printed HS code disagrees
+    with our top suggestion. ready: every field passed. HS codes are suggestions either way."""
     if result.invoice is None:
         return "needs_review" if result.extract.status == "needs_review" else "failed"
     fields_ok = all(assessment.status == "ok" for assessment in result.assessments)
     hs_ok = all(line.hs.stage.status == "ok" for line in hs)
-    return "ready" if fields_ok and hs_ok and not result.warnings else "needs_review"
+    codes_agree = all(line.mismatch is None for line in hs)
+    passed = fields_ok and hs_ok and codes_agree and not result.warnings
+    return "ready" if passed else "needs_review"
 
 
 def lines_needing_hs(hs: dict[int, HSLineResult]) -> list[int]:

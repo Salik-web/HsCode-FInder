@@ -8,6 +8,9 @@
 - Units: only a fixed list is accepted. Exact, well-known synonyms map to it
   ("PIECES" -> "PCS"). Anything else keeps its value and is marked failed_check: a
   near-miss like "MET" could be MT or MTR, and guessing would hide the error.
+- Printed HS codes: a code at the end of a description moves to `hs_code_on_doc`
+  (app/pipeline/printed_hs.py). If the line already has a different code, nothing moves
+  and the code is marked failed_check.
 """
 
 import ast
@@ -16,6 +19,7 @@ import unicodedata
 
 from pydantic import BaseModel
 
+from app.pipeline.printed_hs import same_code, split_printed_code
 from app.schemas.constants import UNITS
 from app.schemas.raw import RawInvoice, RawLineItem
 from app.schemas.result import FieldCheck
@@ -42,6 +46,7 @@ UNIT_SYNONYMS: dict[str, str] = {
     "PAIRS": "PAIR",
     "PR": "PAIR",
     "PRS": "PAIR",
+    "EACH": "EA",
     "CTNS": "CTN",
     "CARTON": "CTN",
     "CARTONS": "CTN",
@@ -63,6 +68,7 @@ UNIT_SYNONYMS: dict[str, str] = {
 }
 REFERENCE_RULE = "buyer resolved_by_rule: the buyer block refers to the consignee"
 UNIT_RULE = "unit_list"
+HS_CODE_CONFLICT_RULE = "hs_code_conflict"
 
 # Exact synonyms of a code, as printed on real invoices (Salik, 2026-11-16). Each has one
 # meaning. Deliberately absent: DDU (not the same rule as DAP) and Rs (several rupees).
@@ -99,15 +105,17 @@ class RuleOutcome(BaseModel):
     checks: list[FieldCheck]
 
 
-def apply_rules(invoice: RawInvoice) -> RuleOutcome:
+def apply_rules(invoice: RawInvoice, known_headings: frozenset[str] | None = None) -> RuleOutcome:
+    """`known_headings` are the tariff's 4-digit headings; None when no tariff is loaded."""
     invoice, applied = resolve_buyer_reference(invoice)
     lines: list[RawLineItem] = []
     checks: list[FieldCheck] = []
     for index, line in enumerate(invoice.line_items):
         unit, change, check = check_unit(line.unit, f"line_items[{index}].unit")
+        line, moved, conflict = move_printed_hs_code(line, f"line_items[{index}]", known_headings)
         lines.append(line.model_copy(update={"unit": unit}))
-        applied += [change] if change else []
-        checks += [check] if check else []
+        applied += [*([change] if change else []), *moved]
+        checks += [found for found in (check, conflict) if found]
     return RuleOutcome(
         invoice=invoice.model_copy(update={"line_items": lines}), applied=applied, checks=checks
     )
@@ -167,3 +175,33 @@ def check_unit(unit: str | None, path: str) -> tuple[str | None, str | None, Fie
         detail=f"{unit!r} is not a known unit or an exact synonym of one",
     )
     return unit, None, check
+
+
+def move_printed_hs_code(
+    line: RawLineItem, path: str, known_headings: frozenset[str] | None = None
+) -> tuple[RawLineItem, list[str], FieldCheck | None]:
+    """The line with a trailing HS code moved, the changes made, and a conflict if any."""
+    if line.description is None:
+        return line, [], None
+    split = split_printed_code(line.description, line.hs_code_on_doc, known_headings)
+    if split.code is None:
+        return line, [], None
+    code_path = f"{path}.hs_code_on_doc"
+    if line.hs_code_on_doc is not None and not same_code(split.code, line.hs_code_on_doc):
+        conflict = FieldCheck(
+            path=code_path,
+            status="failed_check",
+            rule=HS_CODE_CONFLICT_RULE,
+            detail=f"the description ends with {split.code}, not {line.hs_code_on_doc}",
+        )
+        return line, [], conflict
+    changes = [describe_change(f"{path}.description", line.description, split.description)]
+    if line.hs_code_on_doc is None:
+        changes.append(f"{code_path}: {split.code} taken from the end of the description")
+    moved = line.model_copy(
+        update={
+            "description": split.description,
+            "hs_code_on_doc": line.hs_code_on_doc or split.code,
+        }
+    )
+    return moved, changes, None

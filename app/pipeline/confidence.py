@@ -19,7 +19,9 @@ down as a reason, so a person (or a report) can see why a field was trusted or n
 Below REVIEW_THRESHOLD, a field's status is needs_review. Without a text layer, nothing
 can verify a value, so critical fields always go to needs_review ("no text layer to
 verify", Salik 2026-11-16); their score is left as the evidence gives it, because the
-status is a policy, not a measurement. Non-critical fields keep the threshold.
+status is a policy, not a measurement. The shipper's, buyer's and consignee's addresses
+go with them (Salik, 2026-11-25: a misread place name in a scanned address passed as
+ok). Other non-critical fields keep the threshold.
 
 An empty critical field (None) always goes to needs_review ("critical field is empty",
 Salik 2026-11-17): None means not found, and nothing on the page can confirm a value
@@ -88,6 +90,8 @@ HEADER_FIELDS = (
 )
 PARTIES = ("shipper", "buyer", "consignee", "notify_party")
 PARTY_FIELDS = ("name", "address", "country")
+# Not critical fields, but reviewed like them where no text layer can verify them.
+ADDRESSES_REVIEWED_ON_SCANS = ("shipper.address", "buyer.address", "consignee.address")
 LINE_FIELDS = ("description", "quantity", "unit", "unit_price", "amount", "hs_code_on_doc")
 ROW_SCOPED_FIELDS = ("quantity", "unit", "unit_price", "amount")
 ROW_MAX_LINES = 3  # text lines a wrapped description cell may take
@@ -188,7 +192,7 @@ def assess_fields(
         if status == "ok" and value is None and is_critical(path):
             status = "needs_review"
             reasons.append(CRITICAL_FIELD_EMPTY)
-        if status == "ok" and page is None and is_critical(path):
+        if status == "ok" and page is None and needs_a_text_layer(path):
             status = "needs_review"
             reasons.append(NO_TEXT_LAYER_TO_VERIFY)
         if status == "ok" and score < REVIEW_THRESHOLD:
@@ -223,6 +227,11 @@ def is_critical(path: str) -> bool:
     if path in CRITICAL_HEADER_FIELDS:
         return True
     return path.startswith("line_items[") and path.endswith(f"].{CRITICAL_LINE_FIELD}")
+
+
+def needs_a_text_layer(path: str) -> bool:
+    """Fields a person must read on a photo or scan, because nothing else can verify them."""
+    return is_critical(path) or path in ADDRESSES_REVIEWED_ON_SCANS
 
 
 def normalise(text: str) -> str:
