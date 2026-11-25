@@ -109,6 +109,7 @@ Retrieval is the bottleneck. When the right code is among the 10 candidates, the
 ## Limitations
 
 - **Synthetic data only.** 9 layouts by one author, which share fonts and label lists. A set of redacted real documents is the next step.
+- **The extraction eval set is frozen and can't be regenerated.** Its pages were printed with Windows fonts; since 2026-11-25 the generator uses the open fonts in `synth/fonts`, so the same seed gives the same ground truth but different files. The exact files behind the extraction results are a GitHub Release asset, `tradedoc-eval-data-frozen-2026-11-25.zip` (SHA-256 `9dabce8079f609b7210202ed6935c8a39f17e597e70a3af653465bb56bbd48c0`). The recorded model answers are a second asset, `tradedoc-llm-cache-frozen-2026-11-25.zip` (SHA-256 `aa47fc01578dd51221d371e5ae3a274cd5888dfb87fbd14208efe39f65534b70`). **The exact scores replay on Windows only:** cache keys include the rendered page images, and PDFs render to different bytes on Linux, so PDF answers miss there (photos still hit). Elsewhere the model has to be called again.
 - **HS is below target on test** (78.3% against 80%), and its gold codes are unverified.
 - **Photos send about four fifths of their fields to review.** There is no OCR text layer to verify them against yet.
 - **Charges and discounts** between subtotal and total aren't extracted yet (prompt v4), so the total check flags such invoices.
@@ -138,7 +139,7 @@ uv run python -m evals.gate                         # offline eval gate, as in C
 
 **CI.** GitHub Actions runs ruff and the tests (against a real Postgres), plus an offline eval gate. The gate replays a 20-document smoke set and the injected-error set from committed fixtures. It fails if critical-field accuracy drops by more than 2 points, if the guardrails catch less, or if a prompt changed without the evals being re-run.
 
-To run the full evals, generate the synthetic data with `uv run python -m synth.generate --n 100 --messy 30 --seed 42`, then use the commands in `CLAUDE.md`. The ground truth is identical to the one behind the results above, but the pages are not: those were printed with Windows fonts, and since 2026-11-25 the generator uses the open fonts in `synth/fonts`. Page layout, and which documents become photos, differ slightly, so expect slightly different numbers.
+To run the full evals on the data behind the results above, download `tradedoc-eval-data-frozen-2026-11-25.zip` from the GitHub Releases, unzip it into `data/` and check it with `sha256sum -c SHA256SUMS`; then use the commands in `CLAUDE.md`. To replay the recorded answers without calling a model (Windows only), also unzip `tradedoc-llm-cache-frozen-2026-11-25.zip` into `.cache/`, check it the same way, and add `--offline`. `uv run python -m synth.generate --n 100 --messy 30 --seed 42` gives the same ground truth but overwrites `data/synthetic` with different pages and photos (see Limitations).
 
 ## Repository
 

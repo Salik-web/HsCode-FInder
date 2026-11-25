@@ -2,6 +2,22 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-25: extraction eval data and recorded answers frozen and archived (no API calls, no score change)
+
+- The font change below means the generator no longer produces the files the results were measured on, so `data/synthetic`, `data/diagnostic_ledger` and `data/heldout_manifest` are now a frozen eval set. They are archived as `tradedoc-eval-data-frozen-2026-11-25.zip`, a GitHub Release asset.
+  - Zip SHA-256: `9dabce8079f609b7210202ed6935c8a39f17e597e70a3af653465bb56bbd48c0`
+  - `SHA256SUMS` (inside the zip) SHA-256: `5f6be779901e804f52c2878a6c5a1d3657a91881094615e35db2971f3f882389`
+  - 281 files: 130 + 10 + 16 documents, their ground truth and the three `manifest.json` files (seeds 42, 1116, 1117; printed 2026-11-11, 2026-11-16 and 2026-11-17 with Chromium's Skia/PDF m156). The injected-error set isn't in it: it's JSON only and committed in `evals/fixtures`.
+- Checked: every document matches its `manifest.json` hash, and the unzipped files match `SHA256SUMS`. Scored offline from the unzipped copy with the local LLM cache, all 8 extraction rows in the README come out with the same critical-field accuracy, and the diagnostic batch too (10/10).
+- **Recorded model answers:** a second Release asset, `tradedoc-llm-cache-frozen-2026-11-25.zip`.
+  - Zip SHA-256: `aa47fc01578dd51221d371e5ae3a274cd5888dfb87fbd14208efe39f65534b70`
+  - `SHA256SUMS` (inside the zip) SHA-256: `e8460db417fd88b34394184140e862bfe1b2e72768d2e5662a45547311e23043`
+  - 392 entries from `.cache/llm`: 150 extraction answers for the archived documents (104 v3 and 34 earlier `qwen/qwen3.8-27b`, 12 `gemini-3.5-flash`) and 242 HS answers for the committed `hs_gold` items. 64 entries are left out: 63 for the `hs_gold` wording before its rewrite, and one for a synthetic invoice line. So the leaky-set baseline (76.2%) can't be replayed from it.
+  - Contents audited: entries hold the answer text, model, options, token counts and timings. They hold no prompts, page images, request headers or provider request ids, and no API key format or value from `.env`.
+  - Replayed offline from the unzipped copies, on Windows: the extraction results are identical to those from the full cache, and the HS dev and test reports match the committed ones (6-digit top-3 81.0% and 78.3%). HS replay also needs the tariff index.
+  - **Windows only.** Cache keys hash PDFium's page images, which differ on Linux: there, 0 of 53 dev, 0 of 24 test and 0 of 12 held-out PDFs are found. Photos are (16/16, 7/7 and 4/4). HS keys hold no images; HS wasn't replayed on Linux.
+- Old code isn't a substitute for the zip. Rendering commit `ee6fe09` (before the font change) on the original machine today gives 13 different PDFs, all `classic` (Times New Roman). Their text layers and page images are the same, but their bytes (and so their cache keys) are not. Windows' Times New Roman files are dated 2026-11-11 13:08, 14 minutes after the set was printed, so a font update is the likely cause. The other 117 documents of the main set, and all 26 diagnostic and held-out ones, come out identical.
+
 ## 2026-11-25: bundled fonts in the synthetic generator (no eval run, no API calls, no score change)
 
 - Why: CI failed on Linux because the layouts named Windows-only fonts, so lines wrapped differently there. The templates now use open fonts in `synth/fonts` through `@font-face`, and Chromium runs without font hinting. Before: 5 of 1,046 tests failed on Linux with the fonts alone (hinting shifted letters); now 1,046 pass on Linux and on Windows.
