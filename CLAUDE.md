@@ -75,7 +75,7 @@ Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H &
   - Messy images are single-page only, so two-page invoices are tested in clean form only.
   - **PDFium renders PDF pages to different bytes on Linux than on Windows** (seen 2026-11-23); photos match. The LLM cache key hashes page images, so a Windows cache misses on Linux: the CI gate keys fixtures without images, and the demo cache is built by the image (`deploy/build_demo_cache.sh <database url>`). Rebuild it after changing a sample, a prompt or the model, then prune stale entries.
   - **The demo shares the Groq organization's daily quota with the evals** (limits are per organization, not per key). Worst case at the demo caps: about 143k tokens a day per model. Run big evals when the demo is quiet, or lower `DEMO_DAILY_UPLOADS`.
-  - Docker Desktop runs on the dev machine; `docker compose up -d` (Postgres + pgvector) is in use since 2026-11-23. The tariff ingest embeds 7,605 rows in about 2 minutes on CPU.
+  - Docker Desktop runs on the dev machine; `docker compose up -d` (Postgres + pgvector) is in use since 2026-11-23. The tariff ingest embeds 7,605 rows on CPU: 2 to 7 minutes (7 on a fresh clone, 2026-11-25).
   - Synthetic files are byte-identical only on the same machine and Chromium version (the renderer affects the bytes). Ground-truth JSON doesn't depend on it.
   - **Synthetic fonts (2026-11-25):** layouts use only open fonts bundled in `synth/fonts`, embedded as data URIs, and Chromium runs with `--font-render-hinting=none`, so text and line wraps match across OSes (121/122 regenerated PDFs have the same text layer on Windows and Linux). PDF bytes and PDFium page images still differ by OS, so the gate's image-free keys and the image-built demo cache stay. Rendering is about 2.3x slower per document on Windows (0.58 s to 1.34 s).
   - **Stray `k` in `inv_00027` on Linux (seen 2026-11-25, not fixed):** regenerated on Linux, page 1's text layer ends with an extra line `k`. It is the `k` of `kg` in the net weight row that moves to page 2: the glyph is also written into page 1's bottom margin, where it is clipped (one dark pixel at 216 DPI). Windows doesn't write it. Only PDFs generated on Linux with the bundled fonts are affected, so not `data/`, the gate fixtures or the demo samples, and the printed-text check still passes. It matters only if a new eval set is generated on Linux.
@@ -104,7 +104,7 @@ uv run python -m evals.run --dataset synthetic_clean --split test_unseen_layout 
 uv run python -m evals.run --dataset synthetic_clean --split dev --fallback       # let the fallback model answer on rate limits
 uv run alembic upgrade head                         # DB migrations (tariff_codes since Phase 5)
 uv run python -m tariff.parse --pdf data/tariff/pct_2026-27.pdf --out tariff/pct_2026-27.csv   # PCT PDF -> committed CSV
-uv run python -m tariff.ingest --csv tariff/pct_2026-27.csv --version 2026-27   # embed + load pgvector (~2 min on CPU)
+uv run python -m tariff.ingest --csv tariff/pct_2026-27.csv --version 2026-27   # embed + load pgvector (2 to 7 min on CPU)
 uv run python -m evals.hs_run --split dev --prompt v1        # HS retrieval + rerank on hs_gold (test: reporting only)
 uv run uvicorn app.api.main:create_app --factory --reload   # API on :8000
 uv run python -m app.worker                         # process queued documents (--once: until the queue is empty)

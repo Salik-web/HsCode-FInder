@@ -164,7 +164,7 @@ uv sync
 uv run playwright install chromium                  # only for generating synthetic invoices
 docker compose up -d                                # Postgres + pgvector
 uv run alembic upgrade head
-uv run python -m tariff.ingest --csv tariff/pct_2026-27.csv --version 2026-27   # ~2 min
+uv run python -m tariff.ingest --csv tariff/pct_2026-27.csv --version 2026-27   # 2 to 7 min
 
 uv run uvicorn app.api.main:create_app --factory   # API on :8000 (docs at /docs)
 uv run python -m app.worker                         # processes uploads
