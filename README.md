@@ -109,12 +109,51 @@ Retrieval is the bottleneck. When the right code is among the 10 candidates, the
 ## Limitations
 
 - **Synthetic data only.** 9 layouts by one author, which share fonts and label lists. A set of redacted real documents is the next step.
-- **The extraction eval set is frozen and can't be regenerated.** Its pages were printed with Windows fonts; since 2026-11-25 the generator uses the open fonts in `synth/fonts`, so the same seed gives the same ground truth but different files. The exact files behind the extraction results are a GitHub Release asset, `tradedoc-eval-data-frozen-2026-11-25.zip` (SHA-256 `9dabce8079f609b7210202ed6935c8a39f17e597e70a3af653465bb56bbd48c0`). The recorded model answers are a second asset, `tradedoc-llm-cache-frozen-2026-11-25.zip` (SHA-256 `aa47fc01578dd51221d371e5ae3a274cd5888dfb87fbd14208efe39f65534b70`). **The exact scores replay on Windows only:** cache keys include the rendered page images, and PDFs render to different bytes on Linux, so PDF answers miss there (photos still hit). Elsewhere the model has to be called again.
+- **The extraction eval set is frozen and can't be regenerated.** Its pages were printed with Windows fonts; since 2026-11-25 the generator uses the open fonts in `synth/fonts`, so the same seed gives the same ground truth but different files. The exact files behind the extraction results are in the [`eval-data-v3` release](https://github.com/Salik-web/HsCode-FInder/releases/tag/eval-data-v3), as `tradedoc-eval-data-frozen-2026-11-25.zip` (SHA-256 `9dabce8079f609b7210202ed6935c8a39f17e597e70a3af653465bb56bbd48c0`). The recorded model answers are a second file there, `tradedoc-llm-cache-frozen-2026-11-25.zip` (SHA-256 `aa47fc01578dd51221d371e5ae3a274cd5888dfb87fbd14208efe39f65534b70`). **The exact scores replay on Windows only:** cache keys include the rendered page images, and PDFs render to different bytes on Linux, so PDF answers miss there (photos still hit). Elsewhere the model has to be called again.
 - **HS is below target on test** (78.3% against 80%), and its gold codes are unverified.
 - **Photos send about four fifths of their fields to review.** There is no OCR text layer to verify them against yet.
 - **Charges and discounts** between subtotal and total aren't extracted yet (prompt v4), so the total check flags such invoices.
 - **Two-page invoices** are tested only on seen layouts.
+- **Generated text layers can differ slightly between systems.** Regenerated with the bundled fonts, 121 of 122 PDFs have the same text layer on Windows and Linux. `inv_00027` has a stray `k` line at the end of page 1 on Linux. The frozen eval data and the CI gate aren't affected.
 - **Free-tier quotas.** Groq allows about 200,000 tokens a day per model, which is why the demo limits uploads.
+
+## Using it with your own documents
+
+**Before you start**
+
+- **Commercial invoices only.** Packing lists and bills of lading aren't supported, and nothing checks the document type: one of those would be read as if it were an invoice. Files can be PDF, JPEG or PNG, up to 10 MB and 5 pages. An invoice with more than about 16 lines may not fit Groq's free-tier output limit.
+- **HS codes are for Pakistan only.** Suggestions come from the Pakistan Customs Tariff (PCT 2026-27). They are suggestions for a customs professional to check, not a classification. Another country's tariff would need its own table and its own evaluation.
+- **Accuracy is measured on synthetic invoices only**, never on real ones. Expect different results on yours, and review every document before you use it.
+- **Your documents leave your machine.** Page images and extracted text go to Groq (or the provider you configure), so check that you are allowed to send them. Uploads stay in `storage/`, extracted data in Postgres, and model answers in `.cache/llm` (set `LLM_CACHE_ENABLED=false` to stop that last one). Outside demo mode nothing is deleted automatically, and there is no login: keep the API and the UI on your own machine.
+- **Exact numbers need the frozen data.** The generator no longer produces the files behind the results above. They are in the [`eval-data-v3` release](https://github.com/Salik-web/HsCode-FInder/releases/tag/eval-data-v3).
+
+**Set up** (Python 3.12, [uv](https://docs.astral.sh/uv/) and Docker)
+
+1. Get a Groq API key at [console.groq.com](https://console.groq.com/keys); the free tier is enough to try it.
+2. Copy `.env.example` to `.env`. Set `GROQ_API_KEY` and change `POSTGRES_PASSWORD`.
+3. Start the database and install the app:
+
+   ```bash
+   uv sync
+   docker compose up -d
+   uv run alembic upgrade head
+   ```
+
+4. Load the tariff: 7,605 codes, embedded on your CPU (2 to 7 minutes). The first run downloads the embedding model from Hugging Face.
+
+   ```bash
+   uv run python -m tariff.ingest --csv tariff/pct_2026-27.csv --version 2026-27
+   ```
+
+5. Start each of these in its own terminal. Load the tariff first, because the worker reads the list of codes when it starts.
+
+   ```bash
+   uv run uvicorn app.api.main:create_app --factory
+   uv run python -m app.worker
+   uv run streamlit run ui/app.py --server.address 127.0.0.1
+   ```
+
+6. Open <http://localhost:8501>, upload an invoice, correct what is flagged, choose the HS codes, approve and export. On Groq's free tier, plan on about 30 invoices a day and about 120 lines with HS codes.
 
 ## Run it locally
 
@@ -139,7 +178,7 @@ uv run python -m evals.gate                         # offline eval gate, as in C
 
 **CI.** GitHub Actions runs ruff and the tests (against a real Postgres), plus an offline eval gate. The gate replays a 20-document smoke set and the injected-error set from committed fixtures. It fails if critical-field accuracy drops by more than 2 points, if the guardrails catch less, or if a prompt changed without the evals being re-run.
 
-To run the full evals on the data behind the results above, download `tradedoc-eval-data-frozen-2026-11-25.zip` from the GitHub Releases, unzip it into `data/` and check it with `sha256sum -c SHA256SUMS`; then use the commands in `CLAUDE.md`. To replay the recorded answers without calling a model (Windows only), also unzip `tradedoc-llm-cache-frozen-2026-11-25.zip` into `.cache/`, check it the same way, and add `--offline`. `uv run python -m synth.generate --n 100 --messy 30 --seed 42` gives the same ground truth but overwrites `data/synthetic` with different pages and photos (see Limitations).
+To run the full evals on the data behind the results above, download `tradedoc-eval-data-frozen-2026-11-25.zip` from the [`eval-data-v3` release](https://github.com/Salik-web/HsCode-FInder/releases/tag/eval-data-v3), unzip it into `data/` and check it with `sha256sum -c SHA256SUMS`; then use the commands in `CLAUDE.md`. To replay the recorded answers without calling a model (Windows only), also unzip `tradedoc-llm-cache-frozen-2026-11-25.zip` into `.cache/`, check it the same way, and add `--offline`. `uv run python -m synth.generate --n 100 --messy 30 --seed 42` gives the same ground truth but overwrites `data/synthetic` with different pages and photos (see Limitations).
 
 ## Repository
 
@@ -154,3 +193,7 @@ To run the full evals on the data behind the results above, download `tradedoc-e
 | `tariff/` | PCT 2026-27 parser and the parsed table |
 | `prompts/` | Versioned prompts; an old version is never edited |
 | `Dockerfile`, `deploy/`, `.github/` | The demo image, its start script, CI and the manual deploy workflow |
+
+## License
+
+The code is under the [MIT License](LICENSE). The fonts in `synth/fonts` keep their own licences, in `synth/fonts/licenses`. The tariff table is parsed from the Pakistan Customs Tariff published by the Federal Board of Revenue.
