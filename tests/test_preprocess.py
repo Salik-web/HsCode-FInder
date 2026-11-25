@@ -12,11 +12,12 @@ from app.pipeline.preprocess import (
     InvalidDocumentError,
     clean_text_layer,
     detect_media_type,
+    first_pages,
     prepare_document,
 )
 from synth.generator import generate_ground_truth, load_catalogue
 from synth.layouts import pick_labels
-from synth.render import open_browser_page, render_html, render_pdf
+from synth.render import open_browser_page, print_pdf, render_html, render_pdf
 
 EXIF_ORIENTATION_TAG = 0x0112
 ROTATE_90_CLOCKWISE = 6
@@ -28,6 +29,13 @@ def image_pdf(pages: int) -> bytes:
     buffer = io.BytesIO()
     images[0].save(buffer, format="PDF", save_all=True, append_images=images[1:])
     return buffer.getvalue()
+
+
+def text_pdf(page_texts: list[str]) -> bytes:
+    """A PDF with one page, and one text layer, per text."""
+    pages = "".join(f'<p style="break-after: page">{text}</p>' for text in page_texts[:-1])
+    with open_browser_page() as page:
+        return print_pdf(page, f"<html><body>{pages}<p>{page_texts[-1]}</p></body></html>")
 
 
 def encode(image: Image.Image, image_format: str, **options: object) -> bytes:
@@ -162,3 +170,25 @@ def test_large_photo_is_downscaled_keeping_its_shape() -> None:
     (page,) = prepare_document(photo).pages
     assert image_size(page.data) == (MAX_IMAGE_SIDE_PX, 1500)
     assert page.media_type == "image/png"
+
+
+# --- the model's image limit -----------------------------------------------------------------
+
+
+def test_first_pages_cuts_the_images_and_the_text_layer_together() -> None:
+    document = prepare_document(text_pdf(["Alpha", "Bravo", "Charlie", "Delta terms"]))
+    assert len(document.pages) == 4
+    cut = first_pages(document, 3)
+    assert cut.pages == document.pages[:3]
+    assert cut.text_layer is not None
+    assert "Charlie" in cut.text_layer
+    assert "Delta" not in cut.text_layer
+    assert cut.document_sha256 == document.document_sha256
+    assert document.text_layer is not None
+    assert "Delta" in document.text_layer  # the original keeps every page
+
+
+@pytest.mark.parametrize("limit", [4, 5, None])
+def test_first_pages_changes_nothing_within_the_limit(limit: int | None) -> None:
+    document = prepare_document(image_pdf(4))
+    assert first_pages(document, limit) is document

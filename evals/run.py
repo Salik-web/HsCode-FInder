@@ -255,6 +255,7 @@ def main(argv: list[str] | None = None) -> None:
         as_of=ANCHOR_DATE,
         offline=args.offline,
         hs_codes=load_hs_code_table(),
+        max_images=settings.extraction_max_images(use_fallback=args.fallback),
     )
     report, path = run_eval(
         documents, client, config, settings.reports_dir, settings.llm_concurrency

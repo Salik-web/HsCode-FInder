@@ -222,6 +222,7 @@ def _ask[T](
                 status="failed",
                 error=f"{type(error).__name__}: {error}",
                 retryable=isinstance(error, RETRYABLE_ERRORS),
+                message=error.plain,
             )
             return _Asked(stage=stage, parsed=None, calls=calls)
         try:

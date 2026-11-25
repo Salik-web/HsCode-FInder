@@ -119,7 +119,7 @@ def document_view(document_id: str) -> None:
         st.info("Waiting for the worker (`python -m app.worker`). Press Refresh.")
         return
     if document["status"] == "failed":
-        st.error(f"Processing failed: {document['error']}")
+        st.error(document["error"])
         if document["retryable"] and not settings().demo_mode and st.button("Retry"):
             api().post(f"/documents/{document_id}/retry")
             st.rerun()
@@ -129,12 +129,16 @@ def document_view(document_id: str) -> None:
         show_error(response)
         return
     review = response.json()
+    for warning in review["result"].get("warnings", []):
+        st.warning(warning, icon="⚠️")
+    pages_read = review["result"].get("pages_read") or document["page_count"]
     left, right = st.columns([1, 1])
     with left:
         for number in range(1, (document["page_count"] or 0) + 1):
             image = api().get(f"/documents/{document_id}/pages/{number}")
             if image.status_code == 200:
-                st.image(image.content, caption=f"Page {number}", use_container_width=True)
+                caption = f"Page {number}" if number <= pages_read else f"Page {number} (not read)"
+                st.image(image.content, caption=caption, use_container_width=True)
     with right:
         fields_editor(document_id, document["status"], review)
     hs_section(document_id, document["status"], review)
@@ -210,7 +214,8 @@ def hs_line_view(document_id: str, reviewable: bool, hs_line: dict[str, Any]) ->
     index = hs_line["line_index"]
     result = hs_line["result"]["hs"]
     if result["stage"]["status"] != "ok":
-        st.warning(f"No suggestion ({result['stage']['status']}): {result['stage']['error']}")
+        reason = result["stage"].get("message") or result["stage"]["error"]
+        st.warning(f"No suggestion ({result['stage']['status']}): {reason}")
     options = [s["code"] for s in result["suggestions"]]
     for suggestion in result["suggestions"]:
         st.write(f"**{suggestion['code']}**: {suggestion['reason']}")

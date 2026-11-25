@@ -49,7 +49,7 @@ def document(text_layer: str | None = "Invoice No INV-1") -> PreparedDocument:
         document_sha256="c" * 64,
         media_type="application/pdf",
         pages=[ImageInput(media_type="image/png", data=b"page")],
-        text_layer=text_layer,
+        page_texts=None if text_layer is None else [text_layer],
     )
 
 

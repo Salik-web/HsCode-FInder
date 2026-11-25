@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 
 from app.config import Settings
 from app.db.session import make_engine
-from app.llm.client import LLMResponse, RateLimitedError
+from app.llm.client import LLMError, LLMResponse, RateLimitedError
 from app.pipeline.prompts import QUERY_TASK, RERANK_TASK, load_task_prompt
 from app.pipeline.validate import HSCodeTable
 from app.schemas.hs import HSCandidate
@@ -53,6 +53,7 @@ def worker(settings: Settings, extraction: list[LLMResponse | Exception], lines:
         embedder=FakeEmbedder(),
         index=FakeIndex(),
         hs_codes=HSCodeTable.from_codes(TARIFF),
+        max_images=3,
         # v1 answers in the raw format that answer_with_truth() returns.
         invoice_prompt_version="v1",
         query_prompt=load_task_prompt(QUERY_TASK, "v1"),
@@ -175,7 +176,7 @@ def test_a_rate_limited_run_fails_retryably_and_can_be_requeued(
     failed = client.get(f"/documents/{document['id']}").json()
     assert failed["status"] == "failed"
     assert failed["retryable"] is True
-    assert "RateLimitedError" in failed["error"]
+    assert failed["error"] == RateLimitedError.plain
     assert client.post(f"/documents/{document['id']}/approve").status_code == 409
     assert client.post(f"/documents/{document['id']}/retry").json()["status"] == "queued"
     assert client.post(f"/documents/{document['id']}/retry").status_code == 409
@@ -213,3 +214,49 @@ def test_hs_rerun_refreshes_only_the_unfinished_lines(
     assert after["invoice"]["line_items"][0]["description"] == "Polo shirts, cotton"
     assert len(after["corrections"]) == 1  # the review survived the re-run
     assert client.post(f"{url}/hs/rerun").status_code == 409  # nothing left to re-run
+
+
+def test_a_four_page_pdf_is_read_up_to_the_limit_and_says_so(
+    client: TestClient, settings: Settings
+) -> None:
+    document = upload(client, image_pdf(4))
+    deps = worker(settings, [answer_with_truth()], line_count())
+    process_next(deps, ANCHOR_DATE)
+    assert len(deps.extract_client.requests[0].images) == 3
+    url = f"/documents/{document['id']}"
+    processed = client.get(url).json()
+    assert processed["status"] == "needs_review"
+    assert processed["page_count"] == 4
+    review = client.get(f"{url}/review").json()
+    assert review["result"]["pages_read"] == 3
+    [warning] = review["result"]["warnings"]
+    assert warning.startswith("Only the first 3 of 4 pages were read.")
+    assert client.get(f"{url}/pages/4").status_code == 200  # the reviewer sees every page
+    client.post(f"{url}/approve")
+    assert client.get(f"{url}/export").json()["provenance"]["warnings"] == [warning]
+
+
+def test_a_provider_error_is_plain_and_the_document_can_be_retried(
+    client: TestClient, settings: Settings
+) -> None:
+    document = upload(client, image_pdf(4))
+    raw = "groq HTTP 400: Error code: 400 - Too many images provided."
+    process_next(worker(settings, [LLMError(raw)], 0), ANCHOR_DATE)
+    url = f"/documents/{document['id']}"
+    failed = client.get(url).json()
+    assert failed["status"] == "failed"
+    assert failed["error"] == LLMError.plain
+    assert failed["retryable"] is True
+    # The technical detail stays with the run, for whoever debugs it.
+    assert raw in client.get(f"{url}/review").json()["result"]["extract"]["error"]
+    assert client.post(f"{url}/retry").json()["status"] == "queued"
+    process_next(worker(settings, [answer_with_truth()], line_count()), ANCHOR_DATE)
+    retried = client.get(url).json()
+    assert (retried["status"], retried["error"]) == ("needs_review", None)
+
+
+def test_a_bad_file_stays_not_retryable(client: TestClient, settings: Settings) -> None:
+    document = upload(client, b"%PDF-1.7 this is not really a pdf")
+    process_next(worker(settings, [], 0), ANCHOR_DATE)
+    failed = client.get(f"/documents/{document['id']}").json()
+    assert (failed["status"], failed["retryable"]) == ("failed", False)

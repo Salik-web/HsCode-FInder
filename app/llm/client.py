@@ -9,23 +9,61 @@ MS_PER_SECOND = 1000
 
 
 class LLMError(RuntimeError):
-    """An LLM call failed after the provider's own retries."""
+    """An LLM call failed after the provider's own retries.
+
+    The exception's own text is the technical detail, kept with the run. `plain` is what a
+    reviewer reads; it never quotes the provider.
+    """
+
+    plain = (
+        "The AI service couldn't process this document. Your file is kept: try again, and "
+        "report it if it keeps happening."
+    )
 
 
 class RateLimitedError(LLMError):
     """The provider refused the call for rate or quota reasons; try later or elsewhere."""
 
+    plain = "The AI service's usage limit has been reached. Wait a while, then try again."
+
 
 class LLMUnavailableError(LLMError):
     """The provider timed out or couldn't be reached."""
+
+    plain = "The AI service didn't respond. Wait a few minutes, then try again."
+
+
+class ProviderAccessError(LLMError):
+    """The provider refused the API key, or the key may not use this model."""
+
+    plain = "The AI service refused this app's API key. Check the key, then try again."
 
 
 class NotCachedError(LLMError):
     """An offline run needed an answer that isn't in the cache."""
 
+    plain = "There is no saved answer for this document, and the app is running offline."
+
 
 class RequestTooLargeError(LLMError):
     """The request can never fit the provider's limits; waiting won't help."""
+
+    plain = "This document is too large for the AI service. Try fewer pages or a smaller file."
+
+
+class TooManyImagesError(LLMError):
+    """The request has more page images than the model accepts; it was never sent."""
+
+    plain = "This document has more pages than the AI service accepts. Try fewer pages."
+
+
+class OutputLimitError(LLMError):
+    """The answer was cut off at the model's output limit."""
+
+    plain = (
+        "This invoice has too many lines for the AI service to return in one answer. Try "
+        "splitting it into smaller files."
+    )
 
 
 class SchemaViolationError(LLMError):

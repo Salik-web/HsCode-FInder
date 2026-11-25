@@ -15,15 +15,19 @@ from app.llm.client import (
     LLMRequest,
     LLMResponse,
     LLMUnavailableError,
+    OutputLimitError,
+    ProviderAccessError,
     RateLimitedError,
     RequestTooLargeError,
     SchemaViolationError,
+    TooManyImagesError,
     Usage,
 )
 
 TOKENS_PER_MILLION = Decimal(1_000_000)
-# Groq's 429 for a request that exceeds a per-minute limit on its own: no wait fixes it.
+# Groq's 429 or 413 for a request that exceeds a per-minute limit on its own: no wait fixes it.
 TOO_LARGE_MARKER = "request too large"
+HTTP_CONTENT_TOO_LARGE = 413
 # Groq's 400 when strict mode rejects the generated JSON.
 SCHEMA_REJECTED_CODE = "json_validate_failed"
 
@@ -76,6 +80,11 @@ class OpenAICompatibleClient:
         return self._provider.name
 
     def complete(self, request: LLMRequest) -> LLMResponse:
+        limit = self._provider.max_images
+        if limit is not None and len(request.images) > limit:
+            raise TooManyImagesError(
+                f"{self._name}: {len(request.images)} images; {self.model} accepts {limit}"
+            )
         started = time.perf_counter()
         try:
             # The raw response times the final HTTP attempt alone, apart from SDK retries.
@@ -103,7 +112,13 @@ class OpenAICompatibleClient:
                     call_ms=_attempt_ms(error.response),
                 ) from error
             raise LLMError(f"{self._name} HTTP 400: {error.message}") from error
+        except (openai.AuthenticationError, openai.PermissionDeniedError) as error:
+            raise ProviderAccessError(
+                f"{self._name} HTTP {error.status_code}: {error.message}"
+            ) from error
         except openai.APIStatusError as error:
+            if error.status_code == HTTP_CONTENT_TOO_LARGE:
+                raise RequestTooLargeError(f"{self._name}: {error.message}") from error
             raise LLMError(f"{self._name} HTTP {error.status_code}: {error.message}") from error
         return self._to_response(completion, _elapsed_ms(started), _attempt_ms(raw.http_response))
 
@@ -112,7 +127,7 @@ class OpenAICompatibleClient:
             raise LLMError(f"{self._name} returned no content")
         choice = completion.choices[0]
         if choice.finish_reason == "length":
-            raise LLMError(f"{self._name} hit the output token limit")
+            raise OutputLimitError(f"{self._name} hit the output token limit")
         # Some providers omit usage; None says "unknown", never a made-up zero.
         usage = None
         if completion.usage is not None:

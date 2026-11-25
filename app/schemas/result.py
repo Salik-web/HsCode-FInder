@@ -17,8 +17,10 @@ StageStatus = Literal["ok", "needs_review", "failed", "not_run"]
 
 class StageResult(BaseModel):
     status: StageStatus
-    error: str | None
+    error: str | None  # technical detail
     retryable: bool
+    # A provider error in plain language, for the reviewer. None for anything else.
+    message: str | None = None
 
 
 class FieldCheck(BaseModel):
@@ -69,7 +71,12 @@ class PipelineResult(BaseModel):
     schema_version: SchemaVersion = SCHEMA_VERSION
     prompt_version: str
     model: str  # the model configured; each LLMCall records the one that answered
-    page_count: int | None
+    page_count: int | None  # pages in the file
+    # Pages sent to the model: fewer than page_count when the model's image limit cut the
+    # document. None when nothing was read, and on runs before 2026-11-25.
+    pages_read: int | None = None
+    # Plain-language cautions about the whole document; any warning sends it to review.
+    warnings: list[str] = []
     preprocess: StageResult
     extract: StageResult
     invoice: RawInvoice | None  # set only when extract is ok: validated output or nothing

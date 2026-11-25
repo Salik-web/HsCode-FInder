@@ -114,6 +114,7 @@ Retrieval is the bottleneck. When the right code is among the 10 candidates, the
 - **Photos send about four fifths of their fields to review.** There is no OCR text layer to verify them against yet.
 - **Charges and discounts** between subtotal and total aren't extracted yet (prompt v4), so the total check flags such invoices.
 - **Two-page invoices** are tested only on seen layouts.
+- **Extra pages aren't recognised.** A long document is read from the front (see below), so terms or instructions printed before the last invoice page can push that page out. Choosing the invoice pages is planned for v1.1. Documents over 2 pages are not in any eval set.
 - **Generated text layers can differ slightly between systems.** Regenerated with the bundled fonts, 121 of 122 PDFs have the same text layer on Windows and Linux. `inv_00027` has a stray `k` line at the end of page 1 on Linux. The frozen eval data and the CI gate aren't affected.
 - **Free-tier quotas.** Groq allows about 200,000 tokens a day per model, which is why the demo limits uploads.
 
@@ -121,7 +122,7 @@ Retrieval is the bottleneck. When the right code is among the 10 candidates, the
 
 **Before you start**
 
-- **Commercial invoices only.** Packing lists and bills of lading aren't supported, and nothing checks the document type: one of those would be read as if it were an invoice. Files can be PDF, JPEG or PNG, up to 10 MB and 5 pages. An invoice with more than about 16 lines may not fit Groq's free-tier output limit.
+- **Commercial invoices only.** Packing lists and bills of lading aren't supported, and nothing checks the document type: one of those would be read as if it were an invoice. Files can be PDF, JPEG or PNG, up to 10 MB and 5 pages. The model takes at most 3 page images, and about 2 fit Groq's free tier; only the first pages that fit are read, with a warning, and the document goes to review. An invoice with more than about 16 lines may not fit Groq's free-tier output limit.
 - **HS codes are for Pakistan only.** Suggestions come from the Pakistan Customs Tariff (PCT 2026-27). They are suggestions for a customs professional to check, not a classification. Another country's tariff would need its own table and its own evaluation.
 - **Accuracy is measured on synthetic invoices only**, never on real ones. Expect different results on yours, and review every document before you use it.
 - **Your documents leave your machine.** Page images and extracted text go to Groq (or the provider you configure), so check that you are allowed to send them. Uploads stay in `storage/`, extracted data in Postgres, and model answers in `.cache/llm` (set `LLM_CACHE_ENABLED=false` to stop that last one). Outside demo mode nothing is deleted automatically, and there is no login: keep the API and the UI on your own machine.

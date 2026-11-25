@@ -341,6 +341,7 @@ def _routes(app: FastAPI) -> None:
             )
         provenance = {
             "document_id": document_id,
+            "warnings": PipelineResult.model_validate(run.result).warnings,
             "run_id": run.id,
             "model": run.model,
             "prompt_version": run.prompt_version,

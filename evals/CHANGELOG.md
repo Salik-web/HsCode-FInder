@@ -2,6 +2,12 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-25: page limit per model (pipeline change; no score change)
+
+- Why: a 4-page PDF failed with Groq's HTTP 400, "This model supports up to 3 images". Documents are now cut to the model's `max_images`, then page by page while the provider says the request is too large; the result records `pages_read` and a warning.
+- Re-scored offline from the frozen data and answers: all 7 v3 reports are identical to those before the change, and the gate passes. No eval set has a document over 2 pages, so accuracy on longer documents is **not measured**.
+- One live check on a synthetic 4-page PDF (a two-page invoice plus two pages of terms): 3 pages were refused (8,124 input tokens against Groq's free 7,000 a minute), then 2 pages worked (5,213 input tokens, 13 lines).
+
 ## 2026-11-25: extraction eval data and recorded answers frozen and archived (no API calls, no score change)
 
 - The font change below means the generator no longer produces the files the results were measured on, so `data/synthetic`, `data/diagnostic_ledger` and `data/heldout_manifest` are now a frozen eval set. They are archived as `tradedoc-eval-data-frozen-2026-11-25.zip`, a GitHub Release asset.

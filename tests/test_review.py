@@ -80,6 +80,11 @@ def test_one_field_in_review_or_one_hs_step_not_ok_needs_review() -> None:
     assert status_after_run(result(invoice()), [hs_line(), hs_line(FAILED)]) == "needs_review"
 
 
+def test_a_warning_needs_review_even_when_every_field_passed() -> None:
+    cut = result(invoice()).model_copy(update={"warnings": ["Only the first 3 of 4 pages"]})
+    assert status_after_run(cut, [hs_line()]) == "needs_review"
+
+
 def test_no_invoice_is_failed_unless_extraction_asked_for_review() -> None:
     assert status_after_run(result(None, extract=FAILED, statuses=()), []) == "failed"
     assert status_after_run(result(None, extract=REVIEW, statuses=()), []) == "needs_review"

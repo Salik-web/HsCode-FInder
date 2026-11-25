@@ -46,9 +46,14 @@ class PreparedDocument(BaseModel):
     document_sha256: str
     media_type: MediaType
     pages: list[ImageInput]
-    # A hint for the model, never the source of truth: it can be wrong where the page
-    # looks right. None when the file has no text layer (photos, scans).
-    text_layer: str | None
+    # One text per page. None for images.
+    page_texts: list[str] | None
+
+    @property
+    def text_layer(self) -> str | None:
+        """A hint for the model, never the source of truth: it can be wrong where the page
+        looks right. None when the pages have no text layer (photos, scans)."""
+        return None if self.page_texts is None else _join_page_texts(self.page_texts)
 
 
 def prepare_document(file_bytes: bytes) -> PreparedDocument:
@@ -60,12 +65,21 @@ def prepare_document(file_bytes: bytes) -> PreparedDocument:
     media_type = detect_media_type(file_bytes)
     sha256 = hashlib.sha256(file_bytes).hexdigest()
     if media_type == "application/pdf":
-        pages, text_layer = _prepare_pdf(file_bytes)
+        pages, page_texts = _prepare_pdf(file_bytes)
     else:
-        pages, text_layer = [_prepare_image(file_bytes, media_type)], None
+        pages, page_texts = [_prepare_image(file_bytes, media_type)], None
     return PreparedDocument(
-        document_sha256=sha256, media_type=media_type, pages=pages, text_layer=text_layer
+        document_sha256=sha256, media_type=media_type, pages=pages, page_texts=page_texts
     )
+
+
+def first_pages(document: PreparedDocument, limit: int | None) -> PreparedDocument:
+    """The document cut to its first `limit` pages: images and text layer together, so a
+    value can't be checked against a page the model didn't see."""
+    if limit is None or len(document.pages) <= limit:
+        return document
+    texts = None if document.page_texts is None else document.page_texts[:limit]
+    return document.model_copy(update={"pages": document.pages[:limit], "page_texts": texts})
 
 
 def detect_media_type(file_bytes: bytes) -> MediaType:
@@ -83,7 +97,7 @@ def clean_text_layer(text: str) -> str:
     return CONTROL_CHARACTERS.sub("", rejoined).strip()
 
 
-def _prepare_pdf(file_bytes: bytes) -> tuple[list[ImageInput], str | None]:
+def _prepare_pdf(file_bytes: bytes) -> tuple[list[ImageInput], list[str]]:
     try:
         document = pypdfium2.PdfDocument(file_bytes)
     except pypdfium2.PdfiumError as error:
@@ -95,7 +109,7 @@ def _prepare_pdf(file_bytes: bytes) -> tuple[list[ImageInput], str | None]:
             raise InvalidDocumentError("PDF has no pages")
         pages = [_render_page(page) for page in document]
         texts = [clean_text_layer(page.get_textpage().get_text_bounded()) for page in document]
-    return pages, _join_page_texts(texts)
+    return pages, texts
 
 
 def _render_page(page: pypdfium2.PdfPage) -> ImageInput:

@@ -21,6 +21,7 @@ from app.llm.client import (
     LLMUnavailableError,
     NotCachedError,
     RateLimitedError,
+    RequestTooLargeError,
     SchemaViolationError,
 )
 from app.pipeline.numbers import NumberReport, normalise_numbers, with_placeholders
@@ -82,6 +83,8 @@ class ExtractionOutcome(BaseModel):
     calls: list[LLMCall]
     # Changes made to the answer that was returned (code synonyms), for rules_applied.
     changes: list[str] = []
+    # The provider refused the request as too large: fewer pages may fit.
+    too_large: bool = False
 
 
 @cache
@@ -155,15 +158,22 @@ def extract_invoice(
             continue
         except LLMError as error:
             logger.warning(
-                "LLM call failed",
+                "LLM call failed: %s",
+                type(error).__name__,
                 extra={"document_sha256": document.document_sha256, "attempt": attempt},
             )
             stage = StageResult(
                 status="failed",
                 error=f"{type(error).__name__}: {error}",
                 retryable=isinstance(error, RETRYABLE_ERRORS),
+                message=error.plain,
             )
-            return ExtractionOutcome(stage=stage, invoice=None, calls=calls)
+            return ExtractionOutcome(
+                stage=stage,
+                invoice=None,
+                calls=calls,
+                too_large=isinstance(error, RequestTooLargeError),
+            )
         if previous_content is not None and response.content.strip() == previous_content:
             # The retry ignored the errors; asking again would only repeat it.
             calls.append(

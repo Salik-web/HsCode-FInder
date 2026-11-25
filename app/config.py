@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Literal
 from urllib.parse import quote_plus
 
-from pydantic import BaseModel, SecretStr, field_validator
+from pydantic import BaseModel, Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ProviderName = Literal["gemini", "openrouter", "groq"]
@@ -56,6 +56,8 @@ class ProviderConfig(BaseModel):
     requests_per_minute: int | None
     # Per-call output cap. Thinking models spend output tokens on reasoning too.
     max_output_tokens: int
+    # Page images the model accepts in one call. None: no known limit.
+    max_images: int | None
 
 
 class Settings(BaseSettings):
@@ -111,6 +113,10 @@ class Settings(BaseSettings):
     llm_tokens_per_minute: int | None = 8_000
     llm_output_tokens_per_minute: int | None = 1_000
     llm_requests_per_minute: int | None = 30
+    # Groq refuses a fourth image for this model (HTTP 400, 2026-11-25). Change it with the
+    # model; a longer document is read up to the limit, with a warning. On the free tier about
+    # two pages fit the 7,000 input tokens a minute; the pipeline then drops pages to fit.
+    llm_max_images: int | None = Field(default=3, ge=1)
     llm_input_usd_per_million_tokens: Decimal = Decimal(0)
     llm_output_usd_per_million_tokens: Decimal = Decimal(0)
 
@@ -122,6 +128,7 @@ class Settings(BaseSettings):
     fallback_tokens_per_minute: int | None = 8_000
     fallback_output_tokens_per_minute: int | None = 1_000
     fallback_requests_per_minute: int | None = 30
+    fallback_max_images: int | None = Field(default=3, ge=1)
     fallback_input_usd_per_million_tokens: Decimal = Decimal(0)
     fallback_output_usd_per_million_tokens: Decimal = Decimal(0)
 
@@ -135,6 +142,7 @@ class Settings(BaseSettings):
     hs_tokens_per_minute: int | None = 8_000
     hs_output_tokens_per_minute: int | None = None
     hs_requests_per_minute: int | None = 30
+    hs_max_images: int | None = 0  # text only
     hs_input_usd_per_million_tokens: Decimal = Decimal(0)
     hs_output_usd_per_million_tokens: Decimal = Decimal(0)
     # Reasoning counts against the cap; low effort uses a few hundred tokens.
@@ -178,6 +186,9 @@ class Settings(BaseSettings):
         "hs_tokens_per_minute",
         "hs_output_tokens_per_minute",
         "hs_requests_per_minute",
+        "llm_max_images",
+        "fallback_max_images",
+        "hs_max_images",
         "database_url",
         "gemini_api_key",
         "openrouter_api_key",
@@ -202,6 +213,14 @@ class Settings(BaseSettings):
 
     def hs_provider_config(self) -> ProviderConfig:
         return self._provider_config("hs", self.hs_provider)
+
+    def extraction_max_images(self, use_fallback: bool) -> int | None:
+        """The most pages every model that may answer accepts; None when none has a limit."""
+        limits = [self.llm_max_images]
+        if use_fallback and self.fallback_provider is not None:
+            limits.append(self.fallback_max_images)
+        known = [limit for limit in limits if limit is not None]
+        return min(known) if known else None
 
     def sqlalchemy_url(self) -> str:
         """DATABASE_URL when set, else the docker-compose database on this machine."""
@@ -235,4 +254,5 @@ class Settings(BaseSettings):
             output_tokens_per_minute=getattr(self, f"{role}_output_tokens_per_minute"),
             requests_per_minute=getattr(self, f"{role}_requests_per_minute"),
             max_output_tokens=getattr(self, f"{role}_max_output_tokens"),
+            max_images=getattr(self, f"{role}_max_images"),
         )

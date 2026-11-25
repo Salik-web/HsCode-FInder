@@ -153,6 +153,7 @@ def _offline_eval(
         as_of=ANCHOR_DATE,
         offline=True,
         hs_codes=load_hs_code_table(),
+        max_images=settings.extraction_max_images(use_fallback=False),
     )
     documents = load_documents(settings.data_dir, dataset, split)
     with tempfile.TemporaryDirectory() as reports:

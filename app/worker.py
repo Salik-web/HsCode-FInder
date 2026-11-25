@@ -54,6 +54,8 @@ class WorkerDeps:
     embedder: Embedder
     index: TariffIndex
     hs_codes: HSCodeTable
+    # The most page images the extraction model accepts; None: no limit.
+    max_images: int | None
     invoice_prompt_version: str
     query_prompt: TaskPrompt
     rerank_prompt: TaskPrompt
@@ -75,6 +77,7 @@ def build_deps(settings: Settings) -> WorkerDeps:
         embedder=SentenceTransformerEmbedder(settings.embedding_model),
         index=PgVectorTariffIndex(engine, settings.embedding_model),
         hs_codes=hs_codes,
+        max_images=settings.extraction_max_images(use_fallback=True),
         invoice_prompt_version=settings.invoice_prompt_version,
         query_prompt=load_task_prompt(QUERY_TASK, settings.hs_query_prompt_version),
         rerank_prompt=load_task_prompt(RERANK_TASK, settings.hs_rerank_prompt_version),
@@ -121,13 +124,16 @@ def process_document(deps: WorkerDeps, document_id: str, today: date) -> None:
                 query_prompt_version=deps.query_prompt.version,
                 rerank_prompt_version=deps.rerank_prompt.version,
             )
-        failed_stage = result.extract if result.extract.status == "failed" else result.preprocess
+        # Extraction fails only on a provider error. The file itself is fine, so a person may
+        # retry it even where the pipeline wouldn't by itself (after a config change, say).
+        provider_failed = result.extract.status == "failed"
+        failed_stage = result.extract if provider_failed else result.preprocess
         repository.set_status(
             session,
             document_id,
             status_after_run(result, list(hs.values())),
-            error=failed_stage.error,
-            retryable=failed_stage.retryable,
+            error=failed_stage.message or failed_stage.error,
+            retryable=provider_failed or failed_stage.retryable,
         )
 
 
@@ -201,7 +207,10 @@ def _run(
     if preprocessed.document is not None:
         deps.storage.save_pages(document_id, preprocessed.document.pages)
     config = PipelineConfig(
-        prompt_version=deps.invoice_prompt_version, as_of=today, hs_codes=deps.hs_codes
+        prompt_version=deps.invoice_prompt_version,
+        as_of=today,
+        hs_codes=deps.hs_codes,
+        max_images=deps.max_images,
     )
     result = complete_pipeline(preprocessed, config, deps.extract_client)
     hs: dict[int, HSLineResult] = {}

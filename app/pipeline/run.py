@@ -12,9 +12,14 @@ from pydantic import BaseModel
 
 from app.llm.client import LLMClient
 from app.pipeline.confidence import assess_fields
-from app.pipeline.extract import extract_invoice
-from app.pipeline.preprocess import InvalidDocumentError, PreparedDocument, prepare_document
-from app.pipeline.prompts import load_prompt
+from app.pipeline.extract import ExtractionOutcome, extract_invoice
+from app.pipeline.preprocess import (
+    InvalidDocumentError,
+    PreparedDocument,
+    first_pages,
+    prepare_document,
+)
+from app.pipeline.prompts import Prompt, load_prompt
 from app.pipeline.validate import HSCodeTable, verify_invoice
 from app.schemas.result import PipelineResult, StageResult
 
@@ -29,6 +34,9 @@ class PipelineConfig(BaseModel):
     doc_type: Literal["invoice"] = "invoice"
     # The tariff's codes for the HS-code check; None skips it (no tariff loaded).
     hs_codes: HSCodeTable | None = None
+    # The most page images the model accepts (Settings.extraction_max_images); longer
+    # documents are read up to it, with a warning. None: no limit.
+    max_images: int | None = None
 
 
 class Preprocessed(BaseModel):
@@ -68,17 +76,22 @@ def complete_pipeline(
     )
     if preprocessed.document is None:
         return result
-    outcome = extract_invoice(preprocessed.document, prompt, client)
+    document, outcome = _extract_pages_that_fit(
+        first_pages(preprocessed.document, config.max_images), prompt, client
+    )
+    total, read = len(preprocessed.document.pages), len(document.pages)
     result = result.model_copy(
         update={
-            "page_count": len(preprocessed.document.pages),
+            "page_count": total,
+            "pages_read": read,
+            "warnings": [] if read == total else [unread_pages_warning(read, total)],
             "extract": outcome.stage,
             "llm_calls": outcome.calls,
         }
     )
     if outcome.invoice is None:
         return result
-    text_layer = preprocessed.document.text_layer
+    text_layer = document.text_layer
     rules = verify_invoice(
         outcome.invoice, config.as_of, text_layer=text_layer, hs_codes=config.hs_codes
     )
@@ -91,6 +104,31 @@ def complete_pipeline(
             "field_checks": rules.checks,
             "assessments": assessments,
         }
+    )
+
+
+def _extract_pages_that_fit(
+    document: PreparedDocument, prompt: Prompt, client: LLMClient
+) -> tuple[PreparedDocument, ExtractionOutcome]:
+    """Extract, dropping the last page while the provider says the request is too large.
+
+    The image limit alone isn't enough: on Groq's free tier three pages pass it but exceed
+    the input tokens allowed in a minute (7,000), which depends on the pages' content.
+    A refused request costs no tokens. One page that is too large stays a failure.
+    """
+    outcome = extract_invoice(document, prompt, client)
+    while outcome.too_large and len(document.pages) > 1:
+        document = first_pages(document, len(document.pages) - 1)
+        refused = outcome
+        outcome = extract_invoice(document, prompt, client)
+        outcome = outcome.model_copy(update={"calls": [*refused.calls, *outcome.calls]})
+    return document, outcome
+
+
+def unread_pages_warning(read: int, total: int) -> str:
+    return (
+        f"Only the first {read} of {total} pages were read. Check the other pages for "
+        "invoice lines, totals or charges."
     )
 
 

@@ -26,9 +26,13 @@ from app.llm.client import (
     LLMRequest,
     LLMResponse,
     LLMUnavailableError,
+    NotCachedError,
+    OutputLimitError,
+    ProviderAccessError,
     RateLimitedError,
     RequestTooLargeError,
     SchemaViolationError,
+    TooManyImagesError,
     Usage,
 )
 from app.llm.fallback import FallbackClient
@@ -83,6 +87,7 @@ def provider_config(**changes: Any) -> ProviderConfig:
         "output_tokens_per_minute": None,
         "requests_per_minute": None,
         "max_output_tokens": 100,
+        "max_images": None,
     }
     return ProviderConfig(**(values | changes))
 
@@ -273,6 +278,52 @@ def test_bad_request_maps_to_llm_error() -> None:
         client.complete(make_request())
 
 
+def page_images(count: int) -> list[ImageInput]:
+    return [ImageInput(media_type="image/png", data=b"page") for _ in range(count)]
+
+
+def test_more_images_than_the_model_accepts_are_never_sent() -> None:
+    """Regression: a 4-page PDF got Groq's HTTP 400, "Too many images provided"."""
+    sent: list[httpx2.Request] = []
+
+    def handler(request: httpx2.Request) -> httpx2.Response:
+        sent.append(request)
+        return httpx2.Response(200, json=completion_body("{}"))
+
+    client = provider_with(handler, config=provider_config(max_images=3))
+    with pytest.raises(TooManyImagesError, match="4 images; model-a accepts 3"):
+        client.complete(make_request(images=page_images(4)))
+    assert sent == []
+    assert client.complete(make_request(images=page_images(3))).content == "{}"
+    assert len(sent) == 1
+
+
+@pytest.mark.parametrize("status", [401, 403])
+def test_a_refused_key_maps_to_provider_access(status: int) -> None:
+    client = provider_with(lambda _: httpx2.Response(status, json={"error": {"message": "no"}}))
+    with pytest.raises(ProviderAccessError, match=f"HTTP {status}"):
+        client.complete(make_request())
+
+
+@pytest.mark.parametrize(
+    "error",
+    [
+        LLMError,
+        RateLimitedError,
+        LLMUnavailableError,
+        ProviderAccessError,
+        NotCachedError,
+        RequestTooLargeError,
+        TooManyImagesError,
+        OutputLimitError,
+    ],
+)
+def test_every_provider_error_has_a_plain_message(error: type[LLMError]) -> None:
+    for technical in ("HTTP", "Error", "groq", "400", "429", "token", "{"):
+        assert technical not in error.plain
+    assert error.plain.endswith(".")
+
+
 def test_request_too_large_is_permanent_not_a_rate_limit() -> None:
     message = (
         "Request too large for model `qwen/qwen3.8-27b` on output tokens per minute (OTPM): "
@@ -282,6 +333,13 @@ def test_request_too_large_is_permanent_not_a_rate_limit() -> None:
         lambda _: httpx2.Response(429, json={"error": {"message": message}}, headers=NO_WAIT)
     )
     with pytest.raises(RequestTooLargeError, match="OTPM"):
+        client.complete(make_request())
+
+
+def test_http_413_is_too_large_whatever_its_message() -> None:
+    body = {"error": {"message": "Request too large on input tokens per minute (ITPM)"}}
+    client = provider_with(lambda _: httpx2.Response(413, json=body))
+    with pytest.raises(RequestTooLargeError, match="ITPM"):
         client.complete(make_request())
 
 
@@ -401,6 +459,29 @@ def test_each_role_has_its_own_output_cap() -> None:
     fallback = settings.fallback_provider_config()
     assert fallback is not None
     assert fallback.max_output_tokens == 1_000
+
+
+def test_max_images_is_set_per_model() -> None:
+    settings = Settings(_env_file=None, groq_api_key=SecretStr("k"))
+    assert settings.primary_provider().max_images == 3  # qwen3.8-27b on Groq
+    assert settings.hs_provider_config().max_images == 0  # text only
+    assert settings.extraction_max_images(use_fallback=False) == 3
+
+
+def test_the_image_limit_is_the_smallest_of_the_models_that_may_answer(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("LLM_MAX_IMAGES", "")  # no known limit
+    settings = Settings(_env_file=None, fallback_max_images=2)
+    assert settings.extraction_max_images(use_fallback=False) is None
+    assert settings.extraction_max_images(use_fallback=True) == 2
+    no_fallback = settings.model_copy(update={"fallback_provider": None})
+    assert no_fallback.extraction_max_images(use_fallback=True) is None
+
+
+def test_an_image_limit_below_one_page_is_refused() -> None:
+    with pytest.raises(ValueError, match="greater than or equal to 1"):
+        Settings(_env_file=None, llm_max_images=0)
 
 
 def test_hs_reranker_defaults_to_gpt_oss_on_groq() -> None:
