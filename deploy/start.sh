@@ -25,7 +25,7 @@ PY
 python -m app.worker &
 # XSRF and CORS checks break file uploads inside the Space's iframe; the UI is the only
 # public port and the API isn't reachable from outside.
-streamlit run ui/app.py \
+streamlit run ui/streamlit_app.py \
     --server.port 7860 --server.address 0.0.0.0 --server.headless true \
     --server.maxUploadSize 10 --server.enableXsrfProtection false --server.enableCORS false \
     --browser.gatherUsageStats false &

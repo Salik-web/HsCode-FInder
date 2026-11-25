@@ -1,16 +1,22 @@
 """Review UI (Streamlit): upload, review fields next to the page, choose HS codes, export.
 
-uv run streamlit run ui/app.py
+uv run streamlit run ui/streamlit_app.py
 
 Talks to the API only (API_URL, default http://127.0.0.1:8000); it holds no logic of its
 own. Every edit goes back as a correction, which the API validates against the schema.
 """
 
+import sys
+from pathlib import Path
 from typing import Any
 
 import httpx
 import pandas as pd
 import streamlit as st
+
+# `streamlit run` puts only this script's folder on the import path, not the repo root. For
+# the same reason, a file here must never be named app.py: it would shadow the app package.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.config import Settings
 

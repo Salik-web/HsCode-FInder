@@ -150,7 +150,7 @@ Retrieval is the bottleneck. When the right code is among the 10 candidates, the
    ```bash
    uv run uvicorn app.api.main:create_app --factory
    uv run python -m app.worker
-   uv run streamlit run ui/app.py --server.address 127.0.0.1
+   uv run streamlit run ui/streamlit_app.py --server.address 127.0.0.1
    ```
 
 6. Open <http://localhost:8501>, upload an invoice, correct what is flagged, choose the HS codes, approve and export. On Groq's free tier, plan on about 30 invoices a day and about 120 lines with HS codes.
@@ -168,7 +168,7 @@ uv run python -m tariff.ingest --csv tariff/pct_2026-27.csv --version 2026-27   
 
 uv run uvicorn app.api.main:create_app --factory   # API on :8000 (docs at /docs)
 uv run python -m app.worker                         # processes uploads
-uv run streamlit run ui/app.py                      # review UI on :8501
+uv run streamlit run ui/streamlit_app.py            # review UI on :8501
 
 uv run pytest                                       # tests; the LLM is always mocked
 uv run python -m evals.gate                         # offline eval gate, as in CI
