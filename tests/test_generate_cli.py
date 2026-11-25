@@ -10,6 +10,7 @@ import pypdfium2
 import pytest
 from PIL import Image
 
+from app.pipeline.preprocess import PDFIUM_WRAPPED_HYPHEN, clean_text_layer
 from app.schemas.raw import RawInvoice
 from synth import generate
 from synth.augment import STRENGTH_RANGES, TRANSFORM_ORDER, augment_pdf
@@ -44,15 +45,19 @@ from synth.manifest import (
     layout_group_for,
 )
 from synth.render import (
+    FALLBACK_FAMILY,
     FIXED_PDF_TIMESTAMP,
-    PDFIUM_WRAPPED_HYPHEN,
+    FONT_FACES,
+    TEMPLATE_DIR,
     count_pages,
     find_missing_text,
     normalise_pdf,
+    normalise_printed_text,
     open_browser_page,
     print_pdf,
     render_html,
     render_pdf,
+    with_bundled_fonts,
 )
 
 SEED = 42
@@ -283,19 +288,98 @@ def test_long_invoices_span_two_pages_and_short_ones_do_not(template: str) -> No
     assert find_missing_text(long_pdf, varied["longest_with_hs"], template) == []
 
 
-def test_text_check_handles_a_hyphen_at_a_line_wrap() -> None:
-    """Regression: invoice 91 failed in `compact`, where this address wraps at its hyphen."""
-    invoice = generate_ground_truth(SEED, 0, load_catalogue()).invoice
-    shipper = invoice.shipper.model_copy(
-        update={"address": "H.No. 098 Prasad Ganj, Anantapuram-986086", "country": "IN"}
-    )
-    wrapped = invoice.model_copy(update={"shipper": shipper})
+# PDFium separates wrapped lines with CR LF.
+PDFIUM_LINE_BREAK = "\r\n"
+BOX_HTML = (
+    '<!DOCTYPE html><html><head><style>div {{ font-family: "Bundled Liberation Mono"; '
+    "font-size: 12pt; width: {width}ch; }}</style></head><body><div>{text}</div></body></html>"
+)
+
+
+def pdfium_text_in_a_box(text: str, width_ch: int) -> str:
+    """PDFium's text for `text` printed in a fixed-width box in the bundled monospace font.
+
+    A fixed width in a font shipped with the repo decides the line wrap, so it's the same on
+    every machine; it used to depend on a layout's column and the OS's fonts.
+    """
+    html = with_bundled_fonts(BOX_HTML.format(width=width_ch, text=text))
     with open_browser_page() as page:
-        pdf = render_pdf(page, render_html(wrapped, "compact", LABELS))
+        pdf = print_pdf(page, html)
     with pypdfium2.PdfDocument(pdf) as document:
-        text = document[0].get_textpage().get_text_bounded()
-    assert PDFIUM_WRAPPED_HYPHEN in text, "address no longer wraps, so this test proves nothing"
-    assert find_missing_text(pdf, wrapped, "compact") == []
+        return document[0].get_textpage().get_text_bounded()
+
+
+def test_text_check_handles_a_hyphen_at_a_line_wrap() -> None:
+    """Regression: invoice 91's address wrapped at its hyphen, which PDFium turns into a
+    control character joining the lines."""
+    text = pdfium_text_in_a_box("H.No. 098 Prasad Ganj, Anantapuram-986086", width_ch=13)
+    assert f"Anantapuram{PDFIUM_WRAPPED_HYPHEN}986086" in text, "the box no longer wraps there"
+    assert "anantapuram-986086" in normalise_printed_text(text)
+    assert "Anantapuram-986086" in clean_text_layer(text)
+
+
+def test_text_check_handles_a_hyphen_kept_at_a_digit_line_wrap() -> None:
+    """After a digit, PDFium keeps the hyphen and the line break instead."""
+    text = pdfium_text_in_a_box("Plot 1234-5678", width_ch=6)
+    assert f"1234-{PDFIUM_LINE_BREAK}5678" in text, "the box no longer wraps there"
+    assert "plot 1234-5678" in normalise_printed_text(text)
+    assert "1234-5678" in clean_text_layer(text)
+
+
+@pytest.mark.parametrize(
+    ("pdfium_output", "comparable"),
+    [
+        (
+            f"Prasad Ganj, Anantapuram{PDFIUM_WRAPPED_HYPHEN}986086",
+            "prasad ganj anantapuram-986086",
+        ),
+        (
+            f"Gewerbepark 12-34-{PDFIUM_LINE_BREAK}56-78 Lobenstein",
+            "gewerbepark 12-34-56-78 lobenstein",
+        ),
+        (f"INV-2026-17447{PDFIUM_LINE_BREAK}Total 7,423.03", "inv-2026-17447 total 7423.03"),
+    ],
+)
+def test_printed_text_normaliser_undoes_both_pdfium_hyphen_quirks(
+    pdfium_output: str, comparable: str
+) -> None:
+    assert normalise_printed_text(pdfium_output) == comparable
+
+
+# PostScript names of the bundled fonts as a PDF embeds them: "Carlito-Regular", and
+# "LiberationMono" for LiberationMono-Regular.ttf.
+BUNDLED_POSTSCRIPT_NAMES = {
+    name
+    for face in FONT_FACES
+    for name in (Path(face.file).stem, Path(face.file).stem.removesuffix("-Regular"))
+}
+GENERIC_FAMILIES = {"serif", "sans-serif", "monospace"}
+EMBEDDED_FONT_NAME = re.compile(rb"/(?:BaseFont|FontName)\s*/[A-Z]{6}\+([A-Za-z0-9-]+)")
+
+
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_templates_name_only_bundled_fonts(template: str) -> None:
+    """No OS font is named, so none can be picked; the bundled fallback is always there."""
+    source = (TEMPLATE_DIR / f"{template}.html.j2").read_text(encoding="utf-8")
+    stacks = re.findall(r"font-family:\s*([^;]+);", source)
+    assert stacks
+    bundled = {face.family for face in FONT_FACES}
+    for stack in stacks:
+        families = [family.strip().strip('"') for family in stack.split(",")]
+        assert families[0] in bundled
+        assert FALLBACK_FAMILY in families
+        assert set(families) <= bundled | GENERIC_FAMILIES
+
+
+@pytest.mark.parametrize("template", TEMPLATES)
+def test_rendered_pdfs_embed_only_bundled_fonts(template: str) -> None:
+    """The real guard: Chromium embeds what it drew with, so an OS font would show here."""
+    invoice = generate_ground_truth(SEED, 0, load_catalogue()).invoice
+    with open_browser_page() as page:
+        pdf = render_pdf(page, render_html(invoice, template, LABELS))
+    embedded = {name.decode() for name in EMBEDDED_FONT_NAME.findall(pdf)}
+    assert embedded
+    assert embedded <= BUNDLED_POSTSCRIPT_NAMES
 
 
 @pytest.mark.parametrize("template", TEMPLATES)

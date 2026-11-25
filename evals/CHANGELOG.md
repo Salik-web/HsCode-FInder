@@ -2,6 +2,13 @@
 
 One entry per eval run: date, prompt version, model, key metrics, what changed and why. Numbers are seen-layout dev unless marked otherwise; each carries its document count.
 
+## 2026-11-25: bundled fonts in the synthetic generator (no eval run, no API calls, no score change)
+
+- Why: CI failed on Linux because the layouts named Windows-only fonts, so lines wrapped differently there. The templates now use open fonts in `synth/fonts` through `@font-face`, and Chromium runs without font hinting. Before: 5 of 1,046 tests failed on Linux with the fonts alone (hinting shifted letters); now 1,046 pass on Linux and on Windows.
+- **`data/`, the gate fixtures and the demo samples were not regenerated** (Salik): they, every report and every cached answer belong to the PDFs printed with the old fonts. The gate replays with the same numbers as its baseline on Windows and on Linux, and the 4 demo samples are answered from cache on Linux.
+- Measured in a scratch folder (seeds 42, 1116, 1117): ground truth of all 122 invoices unchanged, and so are the clean documents' ids and splits. All bytes change, the text layer changes in 34 of the 100 main PDFs (0 of 22 elsewhere), and four two-page `airy` invoices now fit one page (7 two-page invoices become 3), which changes the draw of photo sources: 5 of 16 dev and 2 of 7 test photos become other documents.
+- Windows vs Linux, regenerated on both: same ids, splits, page counts and ground truth; text layer identical in 121 of 122 PDFs (`inv_00027` has a stray `k` line on Linux). PDF bytes and page images still differ, so the image-free fixture keys stay.
+
 ## 2026-11-23: CI eval gate baseline (Phase 7; no API calls)
 
 - `evals/gate.py` replays a smoke set from committed fixtures (`evals/fixtures`): clean dev 12 (seen), photo dev 4 (seen), and the first 4 by id of test_unseen_layout (2 `ledger` now seen, 2 `sidebar` unseen), plus the 60-document injected set. Prompt v3, `qwen/qwen3.8-27b`, git of this branch.

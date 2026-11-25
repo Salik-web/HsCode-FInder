@@ -69,14 +69,16 @@ Built by Salik (Full Stack AI Engineer) for his freight forwarding business (H &
   - Unit prices are random, not tied to the goods. Accepted for now.
   - pypdfium2 has only been tested on our own Chromium PDFs. Verify it on scanned and real documents in Phase 3.
   - PDFium mangles hyphens at a line wrap in two ways. After a letter it substitutes `\x02` and joins the lines (`Anantapuram-986086` becomes `Anantapuram\x02986086`). After a digit it keeps the hyphen and the line break (`4-3` becomes `4-` then `3`). This is observed behaviour, not documented. The Phase 2 text layer must clean both before the text reaches the LLM; `synth/render.py` handles this for its own check only.
-  - A PDF's text layer can be wrong even when the page looks right. Cambria left stray characters in one PDF: PDFium read `İçtaş İnşaat` as `İçİ taş İnİ şaat`, while PyMuPDF read it correctly. So `summary` uses Calibri, and Phase 2 should treat the text layer as a hint and the page image as the source of truth.
+  - A PDF's text layer can be wrong even when the page looks right. Cambria left stray characters in one PDF: PDFium read `İçtaş İnşaat` as `İçİ taş İnİ şaat`, while PyMuPDF read it correctly. So `summary` uses Carlito (metric-compatible with Calibri), and Phase 2 should treat the text layer as a hint and the page image as the source of truth.
   - PDFium isn't thread-safe. The Phase 6 worker must not render PDFs from multiple threads; use separate processes.
   - Synthetic layouts are still only 9 designs by one author, and `test_unseen_layout` shares their fonts, label lists and catalogue. It measures layout generalisation, not real-world accuracy, so report the `public` and `real` sets (DESIGN.md §6) separately.
   - Messy images are single-page only, so two-page invoices are tested in clean form only.
   - **PDFium renders PDF pages to different bytes on Linux than on Windows** (seen 2026-11-23); photos match. The LLM cache key hashes page images, so a Windows cache misses on Linux: the CI gate keys fixtures without images, and the demo cache is built by the image (`deploy/build_demo_cache.sh <database url>`). Rebuild it after changing a sample, a prompt or the model, then prune stale entries.
   - **The demo shares the Groq organization's daily quota with the evals** (limits are per organization, not per key). Worst case at the demo caps: about 143k tokens a day per model. Run big evals when the demo is quiet, or lower `DEMO_DAILY_UPLOADS`.
   - Docker Desktop runs on the dev machine; `docker compose up -d` (Postgres + pgvector) is in use since 2026-11-23. The tariff ingest embeds 7,605 rows in about 2 minutes on CPU.
-  - Synthetic files are byte-identical only on the same machine and Chromium version (fonts and renderer affect the bytes). Ground-truth JSON doesn't depend on either.
+  - Synthetic files are byte-identical only on the same machine and Chromium version (the renderer affects the bytes). Ground-truth JSON doesn't depend on it.
+  - **Synthetic fonts (2026-11-25):** layouts use only open fonts bundled in `synth/fonts`, embedded as data URIs, and Chromium runs with `--font-render-hinting=none`, so text and line wraps match across OSes (121/122 regenerated PDFs have the same text layer on Windows and Linux; `inv_00027` gets a stray `k` line on Linux). PDF bytes and PDFium page images still differ by OS, so the gate's image-free keys and the image-built demo cache stay. Rendering is about 2.3x slower per document on Windows (0.58 s to 1.34 s).
+  - **Don't regenerate `data/` (Salik, 2026-11-25).** It was printed with the old Windows fonts, and so were `evals/fixtures` and `demo/samples`; every report and cached answer belongs to those files. Regenerating gives the same ground truth but new bytes: all 100 scored v3 documents (about 104 Groq calls) and the 12 Gemini results would miss the cache, 5 of 16 dev and 2 of 7 test photos would become other documents, and two-page invoices drop from 7 to 3. New sets use the new fonts; decide again at the v1.1 bake-off. To try a regeneration, set `DATA_DIR` to another folder.
 
 (Phases 1–7 and their "Done when" checks are defined in docs/DESIGN.md and the kickoff prompt. Never start the next phase until the current one's check passes and Salik approves.)
 
@@ -88,7 +90,7 @@ docker compose up -d                                # postgres + pgvector
 uv run pytest                                       # all tests
 uv run pytest tests/test_metrics.py -q              # metrics tests (run after ANY metrics change)
 uv run ruff check . --fix && uv run ruff format .   # lint + format
-uv run python -m synth.generate --n 100 --messy 30 --seed 42
+uv run python -m synth.generate --n 100 --messy 30 --seed 42   # overwrites data/synthetic: see "Don't regenerate data/" in Known issues
 uv run python -m synth.generate --diagnostic ledger --n 10 --seed 1116   # one layout, own folder, outside every split
 uv run python -m synth.generate --held-out manifest --n 12 --messy 4 --seed 1117   # a held-out layout's test documents, own folder
 uv run python -m evals.run --dataset synthetic_clean --split test_unseen_layout --folder heldout_manifest --prompt v3   # reporting only
@@ -124,7 +126,7 @@ app/embeddings.py  local sentence-transformers embedder (bge-small)
 app/db/         SQLAlchemy 2.0 models, Alembic migrations, pgvector tariff index
 prompts/        versioned prompts: prompts/<doc_type>/v<N>.md and prompts/hs_rerank/v<N>.md (never edit an old version)
 evals/          metrics.py, dataset.py, report.py, run.py (CLI), guardrails.py (CLI), hs_metrics.py, hs_run.py (CLI), datasets/hs_gold.jsonl, reports/, CHANGELOG.md
-synth/          generator, layouts (+ label synonyms), Jinja2 templates, render, augment, manifest, generate (CLI), inject (CLI), catalogue.csv
+synth/          generator, layouts (+ label synonyms), Jinja2 templates, fonts/ (bundled open fonts + licences), render, augment, manifest, generate (CLI), inject (CLI), catalogue.csv
 tariff/         parse.py (PCT PDF -> pct_2026-27.csv, committed), ingest.py (CSV -> embeddings -> pgvector)
 app/worker.py   queue worker (one process, one thread: PDFium); app/storage.py: uploads by sha256 under storage/ (gitignored)
 app/demo.py, app/retention.py, demo/   public demo: samples + committed LLM cache, upload caps, deletion, cold starts

@@ -138,7 +138,7 @@ uv run python -m evals.gate                         # offline eval gate, as in C
 
 **CI.** GitHub Actions runs ruff and the tests (against a real Postgres), plus an offline eval gate. The gate replays a 20-document smoke set and the injected-error set from committed fixtures. It fails if critical-field accuracy drops by more than 2 points, if the guardrails catch less, or if a prompt changed without the evals being re-run.
 
-To reproduce the full evals, generate the synthetic data with `uv run python -m synth.generate --n 100 --messy 30 --seed 42`, then use the commands in `CLAUDE.md`.
+To run the full evals, generate the synthetic data with `uv run python -m synth.generate --n 100 --messy 30 --seed 42`, then use the commands in `CLAUDE.md`. The ground truth is identical to the one behind the results above, but the pages are not: those were printed with Windows fonts, and since 2026-11-25 the generator uses the open fonts in `synth/fonts`. Page layout, and which documents become photos, differ slightly, so expect slightly different numbers.
 
 ## Repository
 
