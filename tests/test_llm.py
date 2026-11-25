@@ -11,7 +11,14 @@ import openai
 import pytest
 from pydantic import SecretStr
 
-from app.config import MissingApiKeyError, MissingDatabaseConfigError, ProviderConfig, Settings
+from app import worker
+from app.config import (
+    API_KEY_SETUP_STEP,
+    MissingApiKeyError,
+    MissingDatabaseConfigError,
+    ProviderConfig,
+    Settings,
+)
 from app.llm.cache import CachingClient, cache_key
 from app.llm.client import (
     ImageInput,
@@ -314,6 +321,44 @@ def test_missing_key_names_the_setting_to_add(provider: str) -> None:
     settings = Settings(_env_file=None, llm_provider=provider)
     with pytest.raises(MissingApiKeyError, match=f"{provider.upper()}_API_KEY"):
         settings.primary_provider()
+
+
+@pytest.mark.parametrize("provider", ["gemini", "openrouter", "groq"])
+def test_an_empty_key_is_a_missing_key(provider: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Regression: a copied .env.example (`GROQ_API_KEY=`) passed an empty key to the OpenAI
+    SDK, whose error asked for OPENAI_API_KEY."""
+    monkeypatch.setenv(f"{provider.upper()}_API_KEY", "")
+    settings = Settings(_env_file=None, llm_provider=provider)
+    with pytest.raises(MissingApiKeyError, match=f"{provider.upper()}_API_KEY is not set"):
+        settings.primary_provider()
+
+
+def test_empty_langfuse_keys_mean_no_tracing(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("LANGFUSE_PUBLIC_KEY", "")
+    monkeypatch.setenv("LANGFUSE_SECRET_KEY", "")
+    settings = Settings(_env_file=None)
+    assert settings.langfuse_public_key is None
+    assert settings.langfuse_secret_key is None
+
+
+def test_the_missing_key_error_points_at_the_readme_step_that_sets_it() -> None:
+    with pytest.raises(MissingApiKeyError) as raised:
+        Settings(_env_file=None).primary_provider()
+    assert API_KEY_SETUP_STEP in str(raised.value)
+    readme = (Path(__file__).parents[1] / "README.md").read_text(encoding="utf-8")
+    section = readme.split("## Using it with your own documents", 1)[1]
+    step_2 = next(line for line in section.splitlines() if line.startswith("2. "))
+    assert "GROQ_API_KEY" in step_2
+
+
+def test_the_worker_stops_with_the_missing_key_message(monkeypatch: pytest.MonkeyPatch) -> None:
+    def no_key(_: Settings) -> None:
+        raise MissingApiKeyError("GROQ_API_KEY is not set")
+
+    monkeypatch.setattr(worker, "build_deps", no_key)
+    monkeypatch.setattr("sys.argv", ["worker", "--once"])
+    with pytest.raises(SystemExit, match="Worker not started: GROQ_API_KEY is not set"):
+        worker.main()
 
 
 def test_groq_is_the_default_with_qwen_and_thinking_off() -> None:

@@ -22,6 +22,9 @@ PROVIDER_BASE_URLS: dict[ProviderName, str] = {
     "groq": "https://api.groq.com/openai/v1",
 }
 
+# Where a reader sets an API key; tests/test_llm.py checks the README still says so.
+API_KEY_SETUP_STEP = "README, 'Using it with your own documents', step 2"
+
 
 class MissingApiKeyError(RuntimeError):
     """The configured provider has no API key in the environment."""
@@ -176,11 +179,16 @@ class Settings(BaseSettings):
         "hs_output_tokens_per_minute",
         "hs_requests_per_minute",
         "database_url",
+        "gemini_api_key",
+        "openrouter_api_key",
+        "groq_api_key",
+        "langfuse_public_key",
+        "langfuse_secret_key",
         mode="before",
     )
     @classmethod
     def _empty_means_unset(cls, value: object) -> object:
-        """An empty value in .env means "not set" (no reasoning option, no limit)."""
+        """An empty value in .env means "not set" (no key, no reasoning option, no limit)."""
         return None if value == "" else value
 
     def primary_provider(self) -> ProviderConfig:
@@ -210,7 +218,9 @@ class Settings(BaseSettings):
     def _provider_config(self, role: Role, name: ProviderName) -> ProviderConfig:
         api_key = getattr(self, f"{name}_api_key")
         if api_key is None:
-            raise MissingApiKeyError(f"set {name.upper()}_API_KEY in .env to use {name}")
+            raise MissingApiKeyError(
+                f"{name.upper()}_API_KEY is not set: add it to .env ({API_KEY_SETUP_STEP})"
+            )
         return ProviderConfig(
             name=name,
             base_url=PROVIDER_BASE_URLS[name],

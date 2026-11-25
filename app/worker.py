@@ -8,6 +8,7 @@ Scale by running more worker processes; SKIP LOCKED gives each a different docum
 
 import argparse
 import logging
+import sys
 import time
 from dataclasses import dataclass
 from datetime import UTC, date, datetime
@@ -15,7 +16,7 @@ from datetime import UTC, date, datetime
 from sqlalchemy import Engine, select
 from sqlalchemy.orm import Session
 
-from app.config import Settings
+from app.config import MissingApiKeyError, Settings
 from app.db import repository
 from app.db.models import TariffCode
 from app.db.session import make_engine
@@ -226,7 +227,10 @@ def main() -> None:
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     settings = Settings()
-    deps = build_deps(settings)
+    try:
+        deps = build_deps(settings)
+    except MissingApiKeyError as error:
+        sys.exit(f"Worker not started: {error}")
     last_cleanup = 0.0
     while True:
         if settings.demo_mode and time.monotonic() - last_cleanup > CLEANUP_INTERVAL_SECONDS:
